@@ -1,0 +1,111 @@
+/* Import Font Awesome library */
+@import url("https://kit.fontawesome.com/your-fontawesome-kit-code.css");
+/* ... other styles ... */
+
+.decard-container {
+   
+    
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.decard {
+    /* ... other styles ... */
+text-size-adjust: 0.11;
+    margin-bottom: 20px;
+    margin-top: 50px;
+    
+}
+
+/* ... media queries for responsiveness ... */
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+.decard {
+    font-size: smaller;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 22%;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 10px;
+
+    background-color: #ffffff; 
+    transition: background-color 0.3s ease; 
+}
+
+.decard-icon {
+    margin-bottom: 14px;
+    font-size: 30px;
+    color: #4CAF50;
+
+    transition: color 0.5s ease;
+}
+
+.decard-content {
+    font-size: 14px;
+   line-height: 0cm;
+   text-decoration-color: #4CAF50;
+
+}
+.sureity{
+    line-height: 0.5;
+}
+
+/* Responsive media queries for smaller screens */
+@media only screen and (max-width: 768px) {
+    .decard {
+        width: 45%;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .decard {
+        width: 100%;
+    }
+}
+
+
+.decard:hover {
+    
+    box-shadow: 0 5px 10px rgba(0, 100, 255, 0.3), 0 0 10px rgba(0, 100, 255, 0.2); 
+}
+
+.decard:hover .decard-icon {
+   color: hsl(240deg, 80%, 60%); /* Example color */
+}
+.decard-content h3 {
+    background: linear-gradient(to right bottom, #ffa84f, #ffa345, #ff9d3a, #ff982f, #ff9223);
+    
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.card {
+    /* ... other styles ... */
+    opacity: 0;   /* Initially hide the cards */
+}
+
+.decard.animate__animated.animate__fadeInUp {
+    opacity: 1;   /* Make cards visible on animation */
+    animation-duration: 2s;
+} 
+
+
+
+/* ... other styles ... */
+
+/* ... other styles ... */
+
+
+

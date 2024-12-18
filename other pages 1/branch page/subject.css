@@ -1,0 +1,113 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex; /* To center the content */
+    flex-direction: column; /* Stack items vertically */
+    min-height: 100vh; /* Make the body at least the viewport height */
+}
+
+
+.ytre{
+    background-color: #f0f0f0; /* Light gray background */
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    flex: 1; /* Allow main to take up remaining space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.stream-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns of equal width */
+    gap: 30px;
+}
+
+.stream {
+    text-decoration-color: rgb(219, 6, 6);
+    background-color: #e37bcc; /* Light blue background */
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transitions */
+}
+
+.stream:hover {
+    transform: translateY(-5px); /* Move slightly up on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase shadow */
+}
+body {
+    /* ... (rest of the body styles) */
+    animation: fadeIn 1s ease-in-out; /* Fade-in animation for the entire page */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+header {
+    /* ... (rest of the header styles) */
+    animation: slideDown 1s ease-in-out; /* Slide-down animation for the header */
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+.stream-container {
+    /* ... (rest of the stream-container styles) */
+    animation: scaleUp 1s ease-in-out; /* Scale-up animation for the stream container */
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.stream {
+    /* ... (rest of the stream styles) */
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease; /* Smoother transition for background color */
+}
+
+.stream:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: #90caf9; /* Brighter blue on hover */
+}
+/* ... (Your existing styles for body, header, and animations) ... */
+
+.stream-container {
+    /* ... (Existing styles) ... */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive columns */
+}
+
+/* Media Query for Tablets and Smaller Desktops */
+@media (max-width: 992px) {
+    .stream-container {
+        grid-template-columns: repeat(2, 1fr); /* Two columns on tablets */
+    }
+}
+
+/* Media Query for Mobile Phones */
+@media (max-width: 576px) {
+    .stream-container {
+        grid-template-columns: 1fr; /* One column on phones */
+    }
+
+    header h1 {
+        font-size: 24px;
+         /* Adjust header font size on phones */
+    }
+
+    header p {
+        font-size: 16px; /* Adjust paragraph font size on phones */
+    }
+}

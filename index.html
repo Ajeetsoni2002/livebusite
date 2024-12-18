@@ -1,0 +1,3093 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="robots" content="index, follow" />
+<meta name="author" content="BARKTAULLAH UNIVERSITY" />
+<link rel="canonical" href="" />
+<title>Barkatullah university institute of technology bhopal - BUIT</title>
+<meta name="description" content="" />
+<meta name="keywords" content="Barkaullah university previous year papers, barkatullah papers, , bupapers, barkatullah university." />
+<meta property="og:title" content="Here we provide BU previous year papers">
+<meta property="og:site_name" content="BU">
+<meta property="og:url" content="">
+<meta property="og:description" content="Here you can download the papers">
+<meta property="og:image" content="">
+
+
+<script id="myjsonid" type="application/ld+json" async>
+    
+</script>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="assets/style.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/dark.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/font-icons.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/animate.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/magnific-popup.css" type="text/css" />
+<link rel="stylesheet" href="assets/slick/slick.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/custom.css" type="text/css" />
+<link rel="stylesheet" href="assets/css/header.css" type="text/css" />
+
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/plugins.js"></script>
+<script src="assets/slick/slick.js"></script>
+<script src="assets/js/speak.js"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WKLQCVXZ47"></script>
+<script>
+	window.dataLayer = window.dataLayer || []; 
+
+	function gtag() {
+		dataLayer.push(arguments);
+	}
+	gtag('js', new Date());
+
+	//gtag('config', 'G-WKLQCVXZ47');
+	gtag('config', 'G-WKLQCVXZ47', {
+		'debug_mode': true
+	});
+</script>
+<meta name="facebook-domain-verification" content="d74i0evfzxh0cwgidur9wie8r8f84t" />
+<meta name="facebook-domain-verification" content="4j6ls5p9jvwsbb177etbiga8sgf1tu" />
+
+
+<script>
+	//Log UTM per session
+	ps_GTMLogUTM();
+
+	$(document).ready(function () {
+
+		if (String(window.location.pathname).startsWith('/programmes/')) {
+			$(document).ajaxSuccess(function (event, request, settings) {
+				if (String(settings.url).endsWith('api/programsearch/GetProgramDetail')) {
+
+					window.dataLayer.push(function () {
+						this.reset();
+					});
+
+					ps_GTMInit();
+				}
+			});
+
+			//allow dataLayer to reset
+			setTimeout(() => {
+				//setup programme pages GTM events
+				ps_GTMProgramPages();
+			}, 500);
+		} else {
+			ps_GTMInit();
+		}
+
+		//setup general GTM events
+		ps_GTMGeneralPages();
+
+	});
+
+	function ps_GTMInit() {
+		//Page view GTM
+		ps_GTMLogView();
+
+		//Log Device per session
+		ps_GTMLogDevice();
+	}
+
+	function ps_GTMProgramPages() {
+		var sections = [{
+				name: 'Programme Details',
+				id: '#areaPD'
+			},
+			{
+				name: 'Career Overview',
+				id: '#ps-curriculum'
+			},
+			{
+				name: 'Curriculum',
+				id: '#curr'
+			},
+			{
+				name: 'Fee',
+				id: '#ps-fee'
+			},
+			{
+				name: 'Scholarships',
+				id: '#ps-scholarships'
+			},
+			{
+				name: 'Programme Outcomes',
+				id: '#ps-career-prospects'
+			},
+			{
+				name: 'How to Apply',
+				id: '#ps-how-to-apply'
+			},
+			{
+				name: 'Important Dates',
+				id: '#ps-important-dates'
+			}
+		];
+
+		/*
+		https://stackoverflow.com/a/14092859
+		https://stackoverflow.com/a/31223774
+		*/
+		var lastScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+		$(window).scroll(function () {
+			let searchSections = sections.slice();
+
+			//reverse the search array so that the section currently being viewed is identified correctly.
+			var st = window.pageYOffset || document.documentElement
+			.scrollTop; /* https://github.com/qeremy/so/blob/master/so.dom.js#L426 */
+			if (st > lastScrollTop) {
+				// downscroll
+				searchSections = searchSections.reverse();
+			}
+			lastScrollTop = st <= 0 ? 0 : st;
+
+			//detect when scroll stops
+			clearTimeout($.data(this, 'scrollTimer'));
+			$.data(this, 'scrollTimer', setTimeout(function () {
+				// scroll stop
+				for (let x of searchSections) {
+					if (ps_ElementInView(x.id, false)) {
+						ps_GTMClick('Programme Details', 'Section Viewed', x.name, 'Scroll');
+						//console.log(x.name);
+						break;
+					}
+				}
+			}, 250));
+		});
+
+		//Program Menu
+		$('#course-filter a[ddl]').click(function (e) {
+			let title = $(this).text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Programme Details', 'Section Viewed', title, 'Click');
+		});
+
+		//Career Overview
+		$('#pathwaydiv .career-pros-circle,#ps-curriculum-mobile .career-pros-circle').click(function (e) {
+			let title = $(this).closest('.FlipPanel').attr('title').trim();
+
+			ps_GTMClick('Career Overview', 'Tab Viewed', title, 'Click');
+		});
+
+		//Curriculum Year
+		$('#degree_year a[role=tab]').click(function (e) {
+			let title = $(this).text().replace(/\s+/g, ' ').trim();
+			//alert(title);
+
+			ps_GTMClick('Curriculum', 'Year Tab Viewed', title, 'Click');
+		});
+
+		//Curriculum Term
+		$('#corecourse').on('click', '.toggle[data-value]', function (e) {
+			let title = $(this).find('.togglet').text().replace(/\s+/g, ' ').trim();
+			let code = $(this).attr('data-value');
+			let term = $($(this).parent('div').find('h4')[0]).text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Curriculum', `Accordian Viewed | ${term} | ${code}`, title, 'Click');
+		});
+// give some information about the main question 
+// if there are any possible solution availabel solve this and give output
+		//Curriculum Electives Offered In Curriculum
+		$('#elect').on('click', '.tabs-title>a', function (e) {
+			let title = $(this).text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Curriculum', 'Elective Tab Viewed', title, 'Click');
+		});
+
+		//Fee Tab
+		$('#example-tabs1 a[role=tab]').click(function (e) {
+			let title = $(this).text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Fee Details', 'Phase Viewed', title, 'Click');
+		});
+
+		//Scholarships
+		$('#scholarship1').on('click', '>.toggle', function (e) {
+			let title = $(this).find('.togglet').text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Scholarships', 'Scholarship detail toggle', title, 'Click');
+		});
+
+		//Programme Outcomes Tabs
+		$('#features a[role=tab]').click(function (e) {
+			let title = $(this).text().replace(/\s+/g, ' ').trim();
+
+			ps_GTMClick('Programme Outcomes', 'Tab Viewed', title, 'Click');
+		});
+
+		//How to apply now
+		$('#Apply').on('click', '#Launchh', function (e) {
+			ps_GTMClick('How to apply', 'Apply Now', 'Apply Now', 'Click');
+		})
+	}
+
+	/* https://stackoverflow.com/a/488073 */
+	function ps_ElementInView(element, fullyInView) {
+		if ($(element).length < 1) {
+			return false;
+		}
+
+		var pageTop = $(window).scrollTop();
+		var pageBottom = pageTop + $(window).height();
+		var elementTop = $(element).offset().top;
+		var elementBottom = elementTop + $(element).height();
+
+		if (fullyInView === true) {
+			return ((pageTop < elementTop) && (pageBottom > elementBottom));
+		} else {
+			return ((elementTop <= pageBottom) && (elementBottom >= pageTop));
+		}
+	}
+
+	function ps_GTMClick(section, eventCategory, eventLabel, eventAction) {
+		let obj = {
+			event: section,
+			eventCategory: eventCategory,
+			eventLabel: eventLabel,
+			eventAction: eventAction
+		};
+		//alert(JSON.stringify(obj))
+		dataLayer.push(obj);
+	}
+
+	function ps_GTMLogView() {
+		let ref = document.referrer;
+		let hostName = window.location.hostname;
+		let pageAddress = window.location.pathname;
+
+		let pageTitle = $('head title').text().trim();
+
+		dataLayer.push({
+			pageview: {
+				pageTitle: pageTitle,
+				pageReferrer: ref,
+				hostName: hostName,
+				pageAddress: pageAddress
+			}
+		});
+	}
+
+	function ps_GTMLogUTM() {
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const ref = document.referrer;
+
+		let source = urlParams.get('utm_source');
+		let medium = urlParams.get('utm_medium');
+		let campaign = urlParams.get('utm_campaign');
+		let term = urlParams.get('utm_keyword');
+
+		if (sessionStorage.getItem('ps_gtm_utm') == null) {
+
+			if (source == null) {
+				if (ref.trim() == '') {
+					source = 'Direct';
+				} else {
+					source = 'Organic';
+				}
+			}
+
+			const traffic = {
+				trafficSource: source,
+				trafficMedium: medium,
+				trafficCampaign: campaign,
+				trafficTerm: term
+			};
+
+			sessionStorage.setItem('ps_gtm_utm', JSON.stringify(traffic));
+
+			dataLayer.push({
+				traffic: traffic
+			});
+		}
+	}
+
+	/* http://detectmobilebrowser.com/mobile */
+	function ps_GTMCheckMobile() {
+		const a = navigator.userAgent || navigator.vendor || window.opera;
+
+		const isMobile = (
+			/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i
+			.test(a) ||
+			/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i
+			.test(a.substr(0, 4)));
+
+		return isMobile;
+	}
+	// give some information about the main question
+	// also give some explanation about the main question
+
+	function ps_GTMLogDevice() {
+
+		'use strict';
+
+		const pushInfo = (geoLat, geoLong) => {
+
+			let connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+			$.getJSON('https://api64.ipify.org/?format=json', function (d) {
+
+				const user = {
+					userDevice: (navigator.maxTouchPoints > 0 && ps_GTMCheckMobile() ? 'Mobile' :
+						'Desktop'),
+					userViewPort: `${window.innerWidth} x ${window.innerHeight}`,
+					userIP: d.ip,
+					userLang: navigator.language,
+					userAgent: navigator.userAgent,
+					network: (connection ? connection.effectiveType : 'unknown'),
+					geoLat: geoLat,
+					geoLong: geoLong
+				};
+				sessionStorage.setItem('ps_gtm_device', JSON.stringify(user));
+				dataLayer.push({
+					user: user
+				});
+			});
+		};
+
+		const geoSuccess = (position) => {
+			const latitude = position.coords.latitude;
+			const longitude = position.coords.longitude;
+
+			pushInfo(latitude, longitude);
+		};
+
+		const geoError = () => pushInfo(null, null);
+
+		if (sessionStorage.getItem('ps_gtm_device') == null) {
+
+			if (!navigator.geolocation) {
+				geoError();
+			} else {
+				navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+			}
+
+		}
+	}
+
+	function ps_GTMGeneralPages() {
+
+		console.log('GTM init ' + (new Date()).toString());
+
+		//Main Menu GTM Click
+		$("#primary-menu a").click(function () {
+			let mlink = $(this).text().trim();
+
+			let section = '';
+			if ($(this).closest('.mega-menu-title').length > 0 &&
+				$(this).closest('.mega-menu-title').find('>.mhead').length > 0
+			) {
+				section = $($(this).closest('.mega-menu-title').find('>.mhead')[0]).text().trim();
+			}
+
+			let header = '';
+			if ($(this).closest('[data-gtm-title]').length > 0) {
+				header = $(this).closest('[data-gtm-title]').attr('data-gtm-title').trim();
+			}
+
+			let sep = (header != '' && section != '') ? ' | ' : '';
+
+			//console.log(`${header}${sep}${section} | ${mlink}`);
+
+			ps_GTMClick('Header Click', `Header | ${header}${sep}${section}`, mlink, 'Click');
+		});
+
+		//Footer GTM Click
+		$(".ps-main-footer-menu a").click(function () {
+			let mlink = $(this).text().trim();
+
+			let section = '';
+			if ($(this).closest('section').find('>.ps-menu-title').length > 0) {
+				section = $($(this).closest('section').find('>.ps-menu-title')[0]).text().trim();
+			}
+
+			let sep = (section != '') ? ' | ' : '';
+
+			//console.log(`Footer${sep}${section} | ${mlink}`);
+
+			ps_GTMClick('Footer Click', `Footer${sep}${section}`, mlink, 'Click');
+		});
+
+		//Footer Copyright GTM Click
+		$(".copyrights-menu.fc-menu a").click(function () {
+			let mlink = $(this).text().trim();
+
+			ps_GTMClick('Footer Click', `Secondary Menu`, mlink, 'Click');
+		});
+
+		//Banner click
+		$('[data-gtm-section="banner"]').click(function () {
+			let type = $(this).attr('data-gtm-type');
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('Banner Click', `Banner ${type}`, title, 'Click');
+		});
+
+		//Banner apply button click
+		$('.apply-now-button a[data-gtm-title]').click(function () {
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('Banner Click', `Think Big`, title, 'Click');
+		});
+
+		//All pages apply button click
+		$('[data-gtm-ps-applynow]').click(function () {
+			let title = $(this).attr('data-gtm-ps-applynow');
+
+			ps_GTMClick('Apply Now Click', 'Apply Now', title, 'Click');
+		});
+
+		//Sticky click
+		$('[data-gtm-section="sticky"]').click(function () {
+			let title = $(this).text().trim();
+
+			ps_GTMClick('Sticky Click', `Sticky Menu`, title, 'Click');
+		});
+
+		//Read More/See More click
+		$('[data-gtm-section="readmore"]').click(function () {
+			let title = $(this).closest('.entry').find('.entry-title');
+			title = title.length > 0 ? $(title[0]).text().trim() : '';
+
+			let header = $(this).attr('data-gtm-title').trim();
+
+			ps_GTMClick('Readmore Click', header, title, 'Click');
+		});
+
+		//Happening portfolio
+		$('[data-gtm-section="A HAPPENING CAMPUS"]').click(function () {
+			let type = $(this).attr('data-gtm-type');
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('A HAPPENING CAMPUS', `Happening ${type}`, title, 'Click');
+		});
+
+		//campus portfolio
+		$('[data-gtm-section="Campus Portfolio"]').click(function () {
+			let type = $(this).attr('data-gtm-type');
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('Campus Portfolio', `Campus ${type}`, title, 'Click');
+		});
+
+		//Testimonials
+		$('[data-gtm-section="Student Testimonials"]').click(function () {
+			let type = $(this).attr('data-gtm-type');
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('Student Testimonials', `Testimonial ${type}`, title, 'Click');
+		});
+
+		//Event notifications
+		$('[data-gtm-section="Event Notification"]').click(function () {
+			let title = $(this).attr('data-gtm-title');
+
+			ps_GTMClick('Event Notification', `Event Notification`, title, 'Click');
+		});
+
+		//Newsletter subscription
+		$("#widget-subscribe-form").bind('ps_gtm_subscribe_email', function (e, email) {
+			ps_GTMClick('Newsletter', `Subscribe email`, email, 'Submit');
+		});
+
+		//Toast notification click
+		$('#bt-notification').bind('ps_gtm_toast_click', function (e, title) {
+			ps_GTMClick('Toast Notification', `Toast Link`, title, 'Click');
+		});
+
+	}
+</script>
+
+
+
+<script>
+	! function (f, b, e, v, n, t, s) {
+		if (f.fbq) return;
+		n = f.fbq = function () {
+			n.callMethod ?
+				n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+		};
+		if (!f._fbq) f._fbq = n;
+		n.push = n;
+		n.loaded = !0;
+		n.version = '2.0';
+		n.queue = [];
+		t = b.createElement(e);
+		t.async = !0;
+		t.src = v;
+		s = b.getElementsByTagName(e)[0];
+		s.parentNode.insertBefore(t, s)  
+	}(window, document, 'script',
+		'https://connect.facebook.net/en_US/fbevents.js');
+	fbq('init', '507132620377537');
+	fbq('track', 'PageView');
+</script>
+<noscript><img height="" 1"" width="" 1"" style="" display:none"" src=""
+		https://www.facebook.com/tr?id=507132620377537&ev=PageView&noscript=1" /></noscript>
+
+
+
+
+<script src="cdnt.netcoresmartech.com/smartechclient.js">
+</script>
+<script>
+	smartech('create', 'ADGMOT35CHFLVDHBJNIG50K9689MO9BEINHG654A27UKHE5JMR0G');
+	smartech('register', 'd4eadf31baacc32de5e71b5db339e514');
+	smartech('identify', '');
+</script>
+<script type="text/javascript">
+	(function (c, l, a, r, i, t, y) {
+		c[a] = c[a] || function () {
+			(c[a].q = c[a].q || []).push(arguments)
+		};
+		t = l.createElement(r);
+		t.async = 1;
+		t.src = "https://www.clarity.ms/tag/" + i;
+		y = l.getElementsByTagName(r)[0];
+		y.parentNode.insertBefore(t, y);
+	})(window, document, "clarity", "script", "h9c6eqysbs");
+</script>
+<style>
+.announcement-bar {
+    display:none;
+}
+</style>
+</head>
+<body class="stretched">
+
+<div id="wrapper" class="clearfix">
+<div class="mobile-sticky-header">
+<style>
+.announcement-bar{
+    background: #FEE5C7;
+    border-bottom: 2px solid #F58220;
+    padding: 10px 0;
+text-align: center;
+}
+
+.announcement-bar ul{list-style: none;padding:0;margin:0;}
+.announcement-bar ul li a{color:#000;font-weight:700;}
+</style>
+<section class="announcement-bar">
+<div class="container">
+<ul class="topbar-slider">
+<li><a href="other pages 1/branch page/choose branch.html" target="_blank"> BU previous year papers available 2024. download Now.</a></li>
+
+</ul>
+</div>
+</section>
+<script>
+$(".topbar-slider").slick({
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+});
+</script> <header id="header">
+<div class="container-fluid">
+<div class="header-row">
+
+<div id="logo">
+<a href="">
+<img height=""  src="images/logo.png" alt="BU LOGO" class="Scro" />
+<img src="images/textsvj3.svg " alt="BU LOGO" class="scroll" />
+</a>
+
+</div>
+<div class="header-right">
+<div class="top-links">
+<ul class="top-links-container">
+<li class="top-links-item d-lg-block d-sm-none d-none"><a href="" class="jobs-color">This website is used for only educational purpose</a></li>
+<li class="top-links-item d-lg-block d-sm-none d-none"><a href="" class="jobs-color">! It is not an official website !..</a></li>
+<li class="top-links-item d-lg-block d-sm-none d-none"><a href="" class="jobs-color">Created by.....</a></li>
+<li class="top-links-item d-lg-block d-sm-none d-none"><a href="Portfolio_Website/portfolio website/index.html" target="_blank">ajeet soni</a></li>
+
+</ul>
+<div class="top-links-right">
+
+
+</div>
+</div>
+<div class="menu-wrapper">
+<div id="primary-menu-trigger">
+<svg class="svg-trigger" viewBox="0 0 100 100">
+<path d="m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20">
+</path>
+<path d="m 30,50 h 40"></path>
+<path d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20">
+</path>
+</svg>
+</div>
+<div class="primary-menu-wrapper">
+<nav class="primary-menu">
+<ul class="menu-container">
+<li class="menu-item current"><a class="menu-link" href="#">
+<div>About</div>
+</a>
+<ul class="sub-menu-container">
+
+<li class="menu-item"><a class="menu-link" href="">
+<div>Authers</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="Portfolio_Website/portfolio website/index.html">
+<div>AJEET</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="">
+<div>ARYAN</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="" target="_blank">
+<div>PRABHAT</div>
+</a></li>
+
+</ul>
+</li>
+<li class="menu-item mega-menu"><a class="menu-link" href="#">
+<div style="border-bottom:1px solid #011418;">B.tech{CS}</div>
+</a>
+<div class="mega-menu-content mega-menu-style-2">
+<div class="container">
+<div class="row">
+<ul class="sub-menu-container mega-menu-column col-lg-3">
+<li class="menu-item mega-menu-title">
+<div class="mega-menu-title">
+<a class="menu-link">
+<div>1st year papers</div>
+</a>
+</div>
+<ul class="sub-menu-container">
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active"> <b>1st semester</b>{2021-22}</div>
+		</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-101(2023).pdf">
+<div>CSE-101</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-102(2023-24).pdf">
+<div>CSE-102</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-103(2023-24).pdf">
+<div>CSE-103</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-104(2023-24).pdf">
+<div>CSE-104</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-105(2023-24).pdf">
+<div>CSE-105</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" target="_blank" href="">
+<div class="sp-active"><B>2nd semester</B>{2021-22}</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-201(2023).pdf" target="_blank">
+<div>CSE-201</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-202(2023).pdf" target="_blank">
+<div>CSE-202</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-203(2023) (1).pdf" target="_blank">
+<div>CSE-203</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-204(2023).pdf" target="_blank">
+<div>CSE-204</div>
+</a></li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-205(2023).pdf" target="_blank">
+<div>CSE-205</div>
+</a></li>
+
+<li class="menu-item"><a class="menu-link" target="_blank" href="other pages 1/branch page/choose branch.html">
+	<div class="sp-active">CLICK HERE FOR MORE!....</div>
+	</a></li>
+</ul>
+</li>
+</ul>
+<ul class="sub-menu-container mega-menu-column col-lg-3">
+<li>
+<div class="mega-menu-title">
+<a class="menu-link" href="">
+<div>2nd year papers</div>
+</a>
+</div>
+<ul class="sub-menu-container">
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active"><B>3rd semester</B>{2022-23}</div>
+		</a></li>
+	<li class="menu-item"><a class="menu-link" href="papers/CSE-301(2023-24).pdf">
+		<div>CSE-301</div>
+		</a>
+		</li>
+
+<li class="menu-item"><a class="menu-link" href="papers/CSE-302(2023-24).pdf">
+<div>CSE-302</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-303(2023-24).pdf">
+<div>CSE-303</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-304(2023-24).pdf">
+<div>CSE-304</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-305(2023-24).pdf">
+<div>CSE-305</div>
+</a>
+</li></ul>
+<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div class="sp-active"><B>4th semester</B>{2022-23}</div>
+	</a></li>
+
+<li class="menu-item"><a class="menu-link" href="">
+<div>CSE-401</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-402( 2023).pdf">
+<div>CSE-402</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-403( 2023).pdf">
+<div>CSE-403</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-404( 2023).pdf">
+<div>CSE-404</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" href="papers/CSE-405( 2023).pdf">
+<div>CSE-405</div>
+</a>
+</li>
+<li class="menu-item"><a class="menu-link" target="_blank" href="other pages 1/branch page/choose branch.html">
+	<div class="sp-active">Click here for more!...</div>
+	</a></li>
+
+</ul>
+<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div>3rd year papers</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active"><B>5th semester</B>{2022-23}</div>
+				</a></li>
+			<li class="menu-item"><a class="menu-link" href="papers/CSE-501(2023-24).pdf">
+				<div>CSE-501</div>
+				</a>
+				</li>
+		
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-502(2023-24).pdf">
+		<div>CSE-502</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-503(2023-24).pdf">
+		<div>CSE-503</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-504( 2022-23).pdf">
+		<div>CSE-504</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-505(2023-24).pdf">
+		<div>CSE-505</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active"><B>6th semester</B>{2022-23}</div>
+			</a></li>
+		
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-601( 2023).pdf">
+		<div>CSE-601</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-602( 2023).pdf">
+		<div>CSE-602</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-603</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-604</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/cse605">
+		<div>CSE-605</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="other pages 1/branch page/choose branch.html">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+		
+</ul>
+
+
+</ul>
+<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div>4th year papers</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active"><B>7th semester</B>{2022-23}</div>
+				</a></li>
+			<li class="menu-item"><a class="menu-link" href="papers/CSE-701( 2023-24).pdf">
+				<div>CSE-701</div>
+				</a>
+				</li>
+		
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-702( 2023).pdf">
+		<div>CSE-702</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="papers/CSE-703( 2023).pdf">
+		<div>CSE-703</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-704</div>
+		</a>
+		</li>
+		
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active"><B>8th semester</B>{2022-23}</div>
+			</a></li>
+		
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-801</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-802</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-803</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-804</div>
+		</a>
+		</li>
+		
+		<li class="menu-item"><a class="menu-link" target="_blank" href="other pages 1/branch page/choose branch.html">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+		
+
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</li>
+<li class="menu-item mega-menu"><a class="menu-link" href="#">
+	<div style="border-bottom:1px solid #011418;">B.tech{IT}</div>
+	</a>
+	<div class="mega-menu-content mega-menu-style-2">
+	<div class="container">
+	<div class="row">
+	<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li class="menu-item mega-menu-title">
+	<div class="mega-menu-title">
+	<a class="menu-link">
+	<div>1st year papers</div>
+	</a>
+	</div>
+	<ul class="sub-menu-container">
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active"> <B>1ST SEMESTER</B> </div>
+			</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-101</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-102</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-103</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-104</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-105</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div class="sp-active">Click here for more!...</div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="" target="_blank">
+	<div></div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="" target="_blank">
+	<div></div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="" target="_blank">
+	<div></div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div></div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="" target="_blank">
+	<div> </div>
+	</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div></div>
+	</a></li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div>2nd year papers</div>
+	</a>
+	</div>
+	<ul class="sub-menu-container">
+		<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-201</div>
+			</a>
+			</li>
+	
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-202</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-203</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-204</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-205</div>
+	</a>
+	</li></ul>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active">Click here for more!...</div>
+		</a></li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div></div>
+	</a>
+	</li>
+	
+	
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	</li>
+	</ul>
+	<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div>3rd YEAR PAPERS</div>
+	</a>
+	</div>
+	<ul class="sub-menu-container mb-3">
+	
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-301</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-302
+	</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-303
+	</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-304</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" href="">
+	<div>CSE-305</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active">Click here for more!...</div>
+		</a></li>
+	</ul>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	
+	</li>
+	</ul>
+	<ul class="sub-menu-container mega-menu-column col-lg-3">
+	<li>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div>4th YEAR PAPERS</div>
+	</a>
+	</div>
+	<ul class="sub-menu-container mb-3">
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div>CSE-401</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div>CSE-402</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div>CSE-403</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div>CSE-404</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div>CSE-405</div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active">Click here for more!...</div>
+		</a></li>
+	</ul>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<ul class="sub-menu-container mb-3">
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div></div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div></div>
+	</a>
+	</li>
+	</ul>
+	<div class="mega-menu-title">
+	<a class="menu-link" href="">
+	<div></div>
+	</a>
+	</div>
+	<ul class="sub-menu-container mb-3">
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div></div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div></div>
+	</a>
+	</li>
+	<li class="menu-item"><a class="menu-link" target="_blank" href="">
+	<div></div>
+	</a>
+	</li>
+	</ul>
+	</li>
+	</ul>
+	</div>
+	</div>
+	</div>
+	</li>
+
+	<li class="menu-item mega-menu"><a class="menu-link" href="#">
+		<div style="border-bottom:1px solid #011418;">Electr. Eng.</div>
+		</a>
+		<div class="mega-menu-content mega-menu-style-2">
+		<div class="container">
+		<div class="row">
+		<ul class="sub-menu-container mega-menu-column col-lg-3">
+		<li class="menu-item mega-menu-title">
+		<div class="mega-menu-title">
+		<a class="menu-link">
+		<div>1st year papers</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active"> <B>1ST SEMESTER</B> </div>
+				</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-101</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-102</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-103</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-104</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-105</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div class="sp-active">Click here for more!...</div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="" target="_blank">
+		<div></div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="" target="_blank">
+		<div></div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="" target="_blank">
+		<div></div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div></div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="" target="_blank">
+		<div> </div>
+		</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div></div>
+		</a></li>
+		</ul>
+		</li>
+		</ul>
+		<ul class="sub-menu-container mega-menu-column col-lg-3">
+		<li>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div>2nd year papers</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container">
+			<li class="menu-item"><a class="menu-link" href="">
+				<div>CSE-201</div>
+				</a>
+				</li>
+		
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-202</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-203</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-204</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-205</div>
+		</a>
+		</li></ul>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div></div>
+		</a>
+		</li>
+		
+		
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		</li>
+		</ul>
+		<ul class="sub-menu-container mega-menu-column col-lg-3">
+		<li>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div>3rd YEAR PAPERS</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container mb-3">
+		
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-301</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-302
+		</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-303
+		</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-304</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" href="">
+		<div>CSE-305</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+		</ul>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		
+		</li>
+		</ul>
+		<ul class="sub-menu-container mega-menu-column col-lg-3">
+		<li>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div>4th YEAR PAPERS</div>
+		</a>
+		</div>
+		<ul class="sub-menu-container mb-3">
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div>CSE-401</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div>CSE-402</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div>CSE-403</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div>CSE-404</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div>CSE-405</div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+		</ul>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<ul class="sub-menu-container mb-3">
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div></div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div></div>
+		</a>
+		</li>
+		</ul>
+		<div class="mega-menu-title">
+		<a class="menu-link" href="">
+		<div></div>
+		</a>
+		</div>
+		<ul class="sub-menu-container mb-3">
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div></div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div></div>
+		</a>
+		</li>
+		<li class="menu-item"><a class="menu-link" target="_blank" href="">
+		<div></div>
+		</a>
+		</li>
+		</ul>
+		</li>
+		</ul>
+		</div>
+		</div>
+		</div>
+		</li>
+
+		<li class="menu-item mega-menu"><a class="menu-link" href="#">
+			<div style="border-bottom:1px solid #011418;">Mech. Eng.</div>
+			</a>
+			<div class="mega-menu-content mega-menu-style-2">
+			<div class="container">
+			<div class="row">
+			<ul class="sub-menu-container mega-menu-column col-lg-3">
+			<li class="menu-item mega-menu-title">
+			<div class="mega-menu-title">
+			<a class="menu-link">
+			<div>1st year papers</div>
+			</a>
+			</div>
+			<ul class="sub-menu-container">
+				<li class="menu-item"><a class="menu-link" target="_blank" href="">
+					<div class="sp-active"> <B>1ST SEMESTER</B> </div>
+					</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-101</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-102</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-103</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-104</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-105</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div class="sp-active">Click here for more!...</div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="" target="_blank">
+			<div></div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="" target="_blank">
+			<div></div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="" target="_blank">
+			<div></div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div></div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="" target="_blank">
+			<div> </div>
+			</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div></div>
+			</a></li>
+			</ul>
+			</li>
+			</ul>
+			<ul class="sub-menu-container mega-menu-column col-lg-3">
+			<li>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div>2nd year papers</div>
+			</a>
+			</div>
+			<ul class="sub-menu-container">
+				<li class="menu-item"><a class="menu-link" href="">
+					<div>CSE-201</div>
+					</a>
+					</li>
+			
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-202</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-203</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-204</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-205</div>
+			</a>
+			</li></ul>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active">Click here for more!...</div>
+				</a></li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div></div>
+			</a>
+			</li>
+			
+			
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			</li>
+			</ul>
+			<ul class="sub-menu-container mega-menu-column col-lg-3">
+			<li>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div>3rd YEAR PAPERS</div>
+			</a>
+			</div>
+			<ul class="sub-menu-container mb-3">
+			
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-301</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-302
+			</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-303
+			</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-304</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" href="">
+			<div>CSE-305</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active">Click here for more!...</div>
+				</a></li>
+			</ul>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			
+			</li>
+			</ul>
+			<ul class="sub-menu-container mega-menu-column col-lg-3">
+			<li>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div>4th YEAR PAPERS</div>
+			</a>
+			</div>
+			<ul class="sub-menu-container mb-3">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div>CSE-401</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div>CSE-402</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div>CSE-403</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div>CSE-404</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div>CSE-405</div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+				<div class="sp-active">Click here for more!...</div>
+				</a></li>
+			</ul>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<ul class="sub-menu-container mb-3">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div></div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div></div>
+			</a>
+			</li>
+			</ul>
+			<div class="mega-menu-title">
+			<a class="menu-link" href="">
+			<div></div>
+			</a>
+			</div>
+			<ul class="sub-menu-container mb-3">
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div></div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div></div>
+			</a>
+			</li>
+			<li class="menu-item"><a class="menu-link" target="_blank" href="">
+			<div></div>
+			</a>
+			</li>
+			</ul>
+			</li>
+			</ul>
+			</div>
+			</div>
+			</div>
+			</li>
+<li class="menu-item">
+<a class="menu-link" href="">
+<div>Other</div>
+</a>
+</li>
+</ul>
+</nav>
+</div>
+<form action="" class="top-search-form" name="form2" id="form2">
+<input type="hidden" name="cx" value="partner-pub-016589675364233558975:gl7zrlhae3u" />
+<input type="hidden" name="cof" value="FORID:11" />
+<input type="hidden" name="ie" value="ISO-8859-1" />
+<input type="text" name="q" onclick="make_blank();" class="form-control" placeholder="Type &amp; Hit Enter.." autocomplete="off" />
+</form>
+<div id="top-search" class="header-misc-icon">
+<a href="#" id="top-search-trigger"><i class="icon-line-search"></i><i class="icon-line-cross"></i></a>
+</div>
+<div class="nav-apply-now">
+<a href="" target="_blank" class="lpu-btn">
+papers
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</header>
+</div> <style>
+    /* #slider{
+margin:0 auto;
+text-align: center;
+}
+.desktop-show{
+width:100%;
+} */
+    .mobile-show {
+        display: none;
+    }
+
+
+    @media(max-width:600px) {
+        .desktop-show {
+            display: none;
+        }
+
+        .mobile-show {
+            display: block;
+        }
+    }
+
+</style>
+
+<style>
+.lpu-announcement{
+text-align: center;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    margin-top: -7px;
+}
+// give some information about the this question
+// also please explain this 
+
+.lpu-announcement ul{list-style: none;margin:0;background: #F58220;
+padding:18px;}
+.lpu-announcement ul li a{color:#fff;font-weight:700; font-size: 19px;}
+.lpu-announcement .slider-apply{background: #fff;padding:18px;border-bottom:2px solid #F58220; border-top:2px solid #F58220;font-weight: 700;cursor: pointer;}
+.topbar-btn{
+ border: 1px solid #FFF;
+    display: inline-block;
+    padding: 2px 15px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+   color: #fff; 
+}
+.topbar-btn:hover{color: #000;background:rgba(255,255,255,.5);}
+@media (max-width:1400px) {
+        .lpu-announcement {
+            margin-top: -60px;
+            position: relative;
+        }
+
+    }
+@media(max-width:1100px){
+.lpu-announcement{
+    grid-template-columns: 70% 30%;
+}
+}
+@media(max-width:992px){
+.lpu-announcement{display:none;}
+.announcement-bar{display: block !important;}
+}
+
+</style>
+<section class="lpu-announcement">
+<ul class="topbar-slid">
+<li><a href="other pages 1/branch page/choose branch.html"> Welcome to barkatullah previous year papers. <span class="topbar-btn">download papers</span></a></li>
+</ul>
+<a href="other pages 1/branch page/choose branch.html" target="_blank" class="slider-apply">show papers <i class="icon-angle-right"></i></a>
+</section>
+<script>
+$(".topbar-slid").slick({
+  infinite: true,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+});
+</script>
+ <section class="section lpu-highlights">
+<div class="container">
+<div class="heading-wraper">
+<div class="main-head">
+<h2>Barkatullah University<br><a href="other pages 1/branch page/choose branch.html">Download all PYQ papers</a> </h2>
+<div class="call-div">
+<div class="call-action">
+<a href="other pages 1/branch page/choose branch.html" class="link-btn"><img src="assets/images/icons/chevron-right.svg"> Papers</a>
+</div>
+<!-- <div class="call-action">
+<a href="" class="link-btn"><img src="lpu-assets/images/icons/chevron-right.svg"> Accreditation</a>
+</div> -->
+</div>
+</div>
+</div>
+<div class="single-image-slider">
+
+<a href><img src="images/bannermainbu.png" alt="Slider"></a>
+<a href><img src="images/slider/2 (1).jpg" alt="Slider"></a>
+<a href><img src="images/slider/3.jpg" alt="Slider"></a>
+<a href><img src="images/slider/4.jpg" alt="Slider"></a>
+<a href><img src="images/slider/5.jpg" alt="Slider"></a>
+<a href><img src="images/slider/6.jpg" alt="Slider"></a>
+</div>
+ 
+</section>
+<section class="section-red left-pattern"> 
+<div class="events-slider-wrapper">
+<div class="events-right">
+<div class="events-slider">
+<div class="event-cell">
+<div class="event-img"><img   src="images/New folder/diwaker-removebg-preview (2).png" /></div>
+<div class="event-content-left">
+<a href target="_blank">
+H.O.D - Dr. <b>Divakar Singh</b> embodies passion, guidance, and dedication, inspiring students to excel in their academic and professional pursuits.
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img order-xl-2"><img src="images/New folder/madav-removebg-preview.png" /></div>
+<div class="event-content-right order-xl-1">
+<a href="" target="_blank">
+A. Prof. Mr. <b>Madhav chaturvedi</b>  loves what they teach, helps students a lot, and never gives up on them, inspiring everyone to do their best and learn as much as they can.
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img"><img  src="images/New folder/kavita_2-removebg-preview.png" />
+</div>
+<div class="event-content-left">
+<a href="" class="readmore" target="_blank" tabindex="0">
+A.	Prof. Mrs. <b>Kavita chourasia</b>  inspiration, guiding her students with care and expertise, fostering a love for learning and empowering them.
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img order-xl-2"><img src="images/New folder/jagriti-removebg-preview.png" /></div>
+<div class="event-content-right order-xl-1">
+	<a href="" class="readmore" target="_blank" tabindex="0">
+		A. Prof. Mrs. <b> Jagriti chand </b>incredibly friendly and supportive, always there to lend a helping hand and a listening ear to students, making learning a joyful and enriching experience for everyone.
+	</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img"><img src="images/New folder/neha-removebg-preview.png" />
+</div>
+<div class="event-content-left">
+<a href="" class="readmore" target="_blank" tabindex="0">
+	A.	Prof. Mrs. <b>Neha Lidoriya</b> is an incredible role model, guiding her students with care and expertise, and inspiring them to excel in their studies and beyond.
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img order-xl-2"><img src="images/New folder/human-icon-people-picture-profile-600nw-1012771615-1 555.jpg" alt="Guru Randhawa at LPU" /></div>
+<div class="event-content-right order-xl-1">
+
+<a href="" class="readmore" target="_blank" tabindex="0">
+	A. Prof. Dr. <b>Amit jha</b> brings a world of knowledge and care into the classroom, guiding her students with passion and dedication to help them succeed in their B.Tech journey..
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img"><img src="images/New folder/human-icon-people-picture-profile-600nw-1012771615-1 555.jpg" />
+</div>
+<div class="event-content-left">
+<a href="#" class="readmore" target="_blank" tabindex="0">
+	A. Prof. Mr. <b> Hari singh jatav</b>warmth and support create a welcoming environment where students feel valued and encouraged to thrive, fostering a strong sense of community and success.
+	
+</a>
+</div>
+</div>
+<div class="event-cell">
+<div class="event-img order-xl-2"><img src="images/New folder/human-icon-people-picture-profile-600nw-1012771615-1 555.jpg" /></div>
+<div class="event-content-right order-xl-1">
+<a href="" class="readmore" target="_blank" tabindex="0">
+	A.	Prof. Mrs. <b>pooja</b> brings fresh perspectives and relatability to the classroom, connecting with students on their level and inspiring them with their enthusiasm and energy for teaching.
+</a>
+</div>
+</div>
+
+
+</div>
+</div>
+<div class="events-left">
+<div class="event-heading">
+<div>
+<div class="sub-head">faculties and team members</div>
+<h3 class="main-head">In the guidance<br> of these faculty<br> </h3>
+</div>
+<div class="call-action">
+<a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Faculties</a>
+<a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">team members</a>
+</div>
+</div>
+<div class="events-slider-nav">
+<button id="prev_event_slide" class="event-prev-arrow">
+<img src="assets/images/icons/arrow-circle-up-w.svg" />
+</button>
+<button id="next_event_slide" class="event-next-arrow">
+<img src="assets/images/icons/arrow-circle-down-w.svg" />
+</button>
+</div>
+</div>
+</div>
+</section> <section class="section placement-careers">
+
+</section>
+<section class="section section-gray latest-news left-pattern"> 
+<div class="container">
+<div class="heading-wraper">
+<div class="main-head">
+<h3>Team members and events</h3>
+</div>
+<div class="news-slider-nav">
+<button id="prev_news_slide" class="news-prev-arrow">
+<img src="assets/images/icons/vector-left.svg" />
+</button>
+<button id="next_news_slide" class="news-next-arrow">
+<img src="assets/images/icons/vector-right.svg" />
+</button>
+</div>
+</div>
+<div class="news-slider row">
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img  src="images/son/IMG_20240111_201440898-01-01 (1)9999.jpeg" />
+</div>
+<div class="news-tag">AJEET SONI</div>
+<div class="news-des">I'm a third-year Computer Science and Engineering student at BUIT, passionate about leveraging technology to solve real-world challenges.</div>
+<div class="news-call-action"><a href="Portfolio_Website/portfolio website/index.html" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG_20240111_201355472-55.jpg" />
+</div>
+<div class="news-tag">PRABHAT SHAH</div>
+<div class="news-des">As a third-year Computer Science and Engineering student at BUIT, I'm driven by a fervent curiosity to explore the intersections of technology and society, aiming to innovate and create solutions that positively impact the world around me.</div>
+<div class="news-call-action"><a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG_20240111_201631975-11.jpg" />
+</div>
+<div class="news-tag">ARYAN PARNAMI</div>
+<div class="news-des">I'm a third-year Computer Science and Engineering student at BUIT, with a fervent curiosity for the intersections of technology and human experience, seeking to innovate solutions that transcend traditional boundaries.</div>
+<div class="news-call-action"><a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG_20240111_193650755-44.jpg" />
+</div>
+<div class="news-tag">SANDEEP SAKET</div>
+<div class="news-des">I'm a third-year Computer Science and Engineering student at BUIT, with a knack for coding, a passion for problem-solving, and a drive to innovate in the ever-evolving tech landscape.</div>
+
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG_20240127_224438266-22.jpg" />
+</div>
+<div class="news-tag">MAYURI CHOURASE</div>
+<div class="news-des">
+	I'm a third-year Computer Science and Engineering student at BUIT, dedicated to unraveling the complexities of technology and innovating solutions for tomorrow's challenges.</div>
+
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG20220514201605-88.jpg" />
+</div>
+<div class="news-tag">TECH. FEST</div>
+<div class="news-des">TEKNISKA A tech fest is a dynamic gathering where enthusiasts, professionals, and innovators converge to showcase, discuss, and explore the latest trends and advancements in technology held in BUIT .</div>
+<div class="news-call-action"><a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img height="225"  src="images/freshers.png" />
+</div>
+<div class="news-tag">FRESHERS PARTY</div>
+<div class="news-des">"AARAMBH: Where new beginnings meet excitement and camaraderie, marking the kickoff of an unforgettable college journey."</div>
+<div class="news-call-action"><a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+<div class="col-md-4">
+<div class="news-cell">
+<div class="event-img">
+<img src="images/son/IMG20230809122148-77.jpg" />
+</div>
+<div class="news-tag">IOT PRESENTATION</div>
+<div class="news-des">IoT representation involves visually depicting the interconnectedness and functionality of devices and systems within the IoT ecosystem using various graphical models and diagrams.</div>
+<div class="news-call-action"><a href="" class="link-btn"><img src="assets/images/icons/chevron-right.svg">Know more</a></div>
+</div>
+</div>
+
+
+</div>
+</div>
+</section> <section class="section section-red crafting-global-community left-pattern">
+<div class="container">
+<div class="heading-wraper m-0">
+<div class="sub-head white">
+SPECIAL THANKS TO
+</div>
+</div>
+<div class="heading-wraper">
+<div class="main-head">
+<h2 class="white">These contributers<br> who provide most of the papers</h2>
+<div class="global-community-slider-nav">
+<div class="call-action">
+<a href="" class="link-btn white"><img src="assets/images/icons/chevron-right.svg"> Friends</a>
+</div>
+<div>
+<button id="prev_global-community" class="global-community-prev-arrow">
+<img src="assets/images/icons/vector-left.svg" />
+</button>
+<button id="next_global-community" class="global-community-next-arrow">
+<img src="assets/images/icons/vector-right.svg" />
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="container-fluid">
+<div class="row">
+<div class="col-lg-12 col-xl-10 p-0 offset-xl-2">
+<div class="row">
+<div class="col-lg-8 order-lg-2">
+<div class="global-community-slider">
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/Screenshot_20240425-150034 666.jpg" />
+<div class="caption">"Ambresh vaishya"( CSE 4th year) - it Helps juniors understand the exam format.</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/Screenshot_20240425-145142 444.jpg" />
+<div class="caption">"Vijay shah"( CSE 3rd year) - it Provides practice and helps identify strengths and weaknesses.
+</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/human-icon-people-picture-profile-600nw-1012771615-1 555.jpg" />
+<div class="caption"> "Devansh mishra"(CSE 3rd year) -Focus on Important Topics, Identifies recurring topics for focused study.</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/Screenshot_20240425-145506 111.jpg" />
+<div class="caption">"Manav dubey"(CSE 3rd year) - Learning from Mistakes, Allows juniors to analyze errors and improve.</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/img1695457950957-1 333.jpg" />
+<div class="caption"> "Priyanka deware"(CSE 3rd year) -By analyzing previous year papers, juniors can develop effective exam strategies.</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/Screenshot_20240420-165145 222.jpg" />
+<div class="caption">"Shalini vishwakarma"(CSE 2nd year) - it Boosts confidence for better exam performance.
+</div>
+</div>
+</div>
+<div class="global-community-cell">
+<div class="event-img">
+<img src="images/will/human-icon-people-picture-profile-600nw-1012771615-1 555.jpg" />
+<div class="caption">Contribute and your photo will be included here,{So,why are you waiting for!}</div>
+</div>
+</div>
+
+</div>
+</div>
+<div class="col-lg-4 p-0 order-lg-1">
+<div class="global-community-sigle-cell">
+<h2>YOU CAN ALSO HELPS JUNIORS BY SENDING PYQ PAPERS.Per/2 question papers you have earn 50rs.Send me on WHATSAPP (7869687254). only after 2021 papers accepted</h2>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section> 
+
+<div class="container">
+<div class="heading-wraper">
+<div class="main-head">
+<h2>Here are quick links <br>to download papers</h2>
+<div class="history-making-about">
+
+	Welcome to Barkatullah previous year papers, your premier destination for accessing authentic previous year exam papers. 
+</div>
+</div>
+</div>
+</div>
+<div class="container-fluid">
+<div class="row single-image-slider-custom-nav-wraper">
+<div class="col-md-4 offset-md-1 history-about">
+ 
+<a href="" target="_blank">Get Now</a>
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-4">
+<div class="history-facts">
+<ul>
+<li>
+<a href="other pages 1/branch page/choose branch.html">B.tech papers-2024</a>
+</li>
+<li>
+<a href="other pages 1/branch page/choose branch.html">B.tech papers-2023</a>
+</li>
+<li>
+<a href="other pages 1/branch page/choose branch.html">B.tech papers-2022</a>
+</li>
+<li>
+<a href="other pages 1/branch page/choose branch.html">B.tech papers-2021</a>
+</li>
+
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section> <link rel="stylesheet" href="css/radio-checkbox.css" type="text/css" />
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@7.28.11/dist/sweetalert2.min.css" rel="stylesheet" />
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="assets/css/footer.css" type="text/css" />
+<script src="js/jquery.popupwindow.js" defer></script>
+<style>
+   
+
+   
+
+
+    #feedback-modal .custom-popup h4 {
+        font-family: inherit;
+    }
+
+    #feedback-modal .custom-popup .left {
+        background: url('images/feedback-bg.png') #f1f1f1;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 500px;
+    }
+
+    #feedback-modal .custom-popup .right h3 {
+        background: #f68220;
+        width: fit-content;
+        margin: 0 auto;
+        padding: 5px 10px;
+        color: #FFF;
+        text-transform: uppercase;
+        font-family: inherit;
+    }
+
+    #feedback-modal .custom-popup .radio-style-2-label {
+        color: #333 !important;
+        font-weight: 500;
+        margin: 5px 15px !important;
+        line-height: 35px;
+    }
+
+    @media(max-width:1030px) {
+        #feedback-modal .custom-popup .right h3 {
+            font-size: 20px;
+        }
+
+        #feedback-modal .modal-dialog {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+
+    @media(max-width:770px) {
+        #feedback-modal .custom-popup .left {
+            display: none;
+        }
+
+        #feedback-modal .custom-popup {
+            width: 85%;
+            height: auto;
+            padding: 0 25px;
+            margin: 0 auto;
+        }
+
+    }
+</style>
+<div class="modal fade" id="convocation" role="dialog">
+
+</div>
+<div class="clearfix"></div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-bs-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="nirf" role="dialog">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="exampleModalLabel">NIRF</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<div class="tabs tabs-bb clearfix" id="tab-9">
+<ul class="tab-nav clearfix">
+
+</ul>
+<div class="tab-container">
+<div class="tab-content clearfix" id="tabs-38">
+
+</div>
+<div class="tab-content clearfix" id="tabs-24">
+
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<ul class="iconlist text-center nirf" style="margin:0 !important;">
+<li class="nirf-hd">Email ID for Comments & Feedback : <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d0a2b5b7b9a3a4a2b1a290bca0a5feb3bffeb9be">[email&#160;protected]</a></span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="modal fade" id="ariia" role="dialog">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="exampleModalLabel">ARIIA</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<div class="tabs tabs-bb clearfix" id="tab-9">
+<ul class="tab-nav clearfix">
+<li><a href="#tabs-33">2020</a></li>
+</ul>
+<div class="tab-container">
+<div class="tab-content clearfix" id="tabs-33">
+<ul class="iconlist nirf" style="margin:0 0 0 30px;">
+<li><a href="https://www.lpu.in/downloads/ariia-2020.pdf" target="_blank" class="nirf-hd"><i class="icon-ok"></i>Atal Ranking of Institutions on
+Innovation Achievements (ARIIA) - 2020<br></a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<ul class="iconlist text-center nirf" style="margin:0 !important;">
+<li class="nirf-hd">Email ID for Comments & Feedback : <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="ec9e898b859f989e8d9eac809c99c28f83c28582">[email&#160;protected]</a></span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="sexual-harrassment-footer" class="modal fade" role="dialog">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="exampleModalLabel">ICC</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-bs-dismiss="modal"></button>
+</div>
+</div>
+</div>
+</div>
+<div id="live-video-counselling" class="modal fade" role="dialog">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="exampleModalLabel">(Papers - 2024 barkatullah university)</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+<p>You can diractly interact with our Team members <strong> AJEET,PRABHAT,ARYAN,MAYURI,SANDEEP</strong> for any types of doubt or queries
+<strong>Available from 10 am to 5 pm on all working days.</strong>
+</p>
+<div class="text-center">
+<a href="https://whatsapp.com/channel/0029VaT1MLs65yD38bLJ6b0N" target="_blank" class="button button-small button-border button-rounded"><strong>Join chat</strong></a>
+</div>
+</div>
+<div class="modal-footer">
+</div>
+</div>
+</div>
+</div>
+<div id="feedback-modal" class="modal fade" role="dialog">
+<div class="modal-dialog modal-lg modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-body p-0">
+<div class="custom-popup">
+<div class="row">
+<div class="col-md-4 left"></div>
+<div class="col-md-8 pt30 pb30 right">
+<button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+<h3 class="text-center">Share your Feedback</h3>
+<div id="dvfeedback" class="p-4"></div>
+<div class="text-center p-4" id="dvWaitFeeback"><script type="text/javascript" style="display:none">
+//<![CDATA[
+window.__mirage2 = {petok:"hJ_yytg0x3VAOiJxijFkfdPt3PbdZOFWgP0Cp4lznlA-1800-0.0.1.1"};
+//]]>
+</script>
+<script type="text/javascript" src="https://ajax.cloudflare.com/cdn-cgi/scripts/04b3eb47/cloudflare-static/mirage2.min.js"></script>
+<img data-cfsrc="images/feedback-loading.gif" style="display:none;visibility:hidden;" /><noscript><img src="images/feedback-loading.gif" /></noscript></div>
+<div class="text-center pa20" id="feebackSubmitbtn"><a href="#" class="button button-small button-dark button-rounded" onclick="submitFeeback();">Submit</a></div>
+<div class="text-center pa20" id="feebackSubmitbtn1" style="display:none;"><a href="#" class="button button-small button-dark button-rounded" onclick="gotoNextNew();">Next</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>(function(){var js = "window['__CF$cv$params']={r:'860c0df07ee63e2d',t:'MTcwOTgyOTkxMS4xNTAwMDA='};_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js',document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/v84a3a4012de94ce1a686ba8c167c359c1696973893317" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon="{&quot;rayId&quot;:&quot;860c0df07ee63e2d&quot;,&quot;b&quot;:1,&quot;version&quot;:&quot;2024.2.4&quot;,&quot;token&quot;:&quot;c5db119ec2de4adc8b8b1d95388884a3&quot;}" crossorigin="anonymous"></script>
+<style>
+	#cross-asset-syncing {
+		display: none;
+	}
+</style>
+
+<footer>
+	<div class="container-fuild">
+	<div class="footer-wrap">
+	<div class="footer-address">
+	<div class="logo"><img src="images/text logo2.png" /></div>
+	<div class="address">
+	<div  class="locate"  > <a href="https://maps.app.goo.gl/A6Xakdefship9R256"> Locate Us </a></div>
+	<div class="uni-name">Barkatullah University</div>
+	<div class="uni-address">5CXX+P4R, Barkatullah University, Habib Ganj  <br>Bhopal, Madhya Pradesh<br>(INDIA) -462026.
+	</div>
+	</div>
+	<div class="uni-contact">
+	<a href="tel:+917869687254">Tel: +91-7869-687254</a>
+	<a href="tel:+916265058210">Tel: +91-6265-058210</a>
+	</div>
+	<div class="get-directions">
+	<a href="https://maps.app.goo.gl/A6Xakdefship9R256" class="link-btn"><img src="assets/images/icons/chevron-right.svg"> Get Directions</a>
+	</div>
+	</div>
+	<div class="footer-right">
+	<div class="footer-links">
+	<div class="footer-other-links">
+	<div class="heading">CSE PAPERS</div>
+	<ul>
+	<li><a href="">1st year(2021-22-23-24)
+	</a></li>
+	<li><a target="_blank" href="">2nd year</a></li>
+	<li><a target="_blank" href="">3rd year</a></li>
+	<li><a target="_blank" href="">4th year</a></li>
+
+	<li><a href="">FAQs</a></li>
+	</ul>
+	</div>
+	<div class="footer-other-links">
+	<div class="heading">IT PAPERS</div>
+	<ul>
+		<li><a href="">1st year(2021-22-23-24)
+		</a></li>
+		<li><a target="_blank" href="">2nd year</a></li>
+		<li><a target="_blank" href="">3rd year</a></li>
+		<li><a target="_blank" href="">4th year</a></li>
+	
+	</ul>
+	</div>
+	<div class="footer-other-links">
+	<div class="heading">Machenical papers</div>
+	<ul>
+		<li><a href="">1st year(2021-22-23-24)
+		</a></li>
+		<li><a target="_blank" href="">2nd year</a></li>
+		<li><a target="_blank" href="">3rd year</a></li>
+		<li><a target="_blank" href="">4th year</a></li>
+	</ul>
+	</div>
+	<div class="footer-other-links">
+	<div class="heading">Others</div>
+	<ul>
+		<li><a href="">1st year(2021-22-23-24)
+		</a></li>
+		<li><a target="_blank" href="">2nd year</a></li>
+		<li><a target="_blank" href="">3rd year</a></li>
+		<li><a target="_blank" href="">4th year</a></li>
+	</ul>
+	</div>
+	</div>
+	<div class="footer-icon-links">
+	<div class="follow-us">
+	<div class="heading">Follow us</div>
+	<div>
+	<ul>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
+	<path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z" />
+	</svg></a></li>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+	<path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
+	</svg></a></li>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+	<path d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+	</svg></a></li>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+	<path d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z" />
+	</svg></a></li>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512">
+	<path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" />
+	</svg></a></li>
+	</ul>
+	</div>
+	</div>
+	<div class="follow-us">
+	<div class="heading">BU community</div>
+	<div>
+	<ul>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512">
+	<path d="M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM127 384.5c-5.5 9.6-17.8 12.8-27.3 7.3-9.6-5.5-12.8-17.8-7.3-27.3l14.3-24.7c16.1-4.9 29.3-1.1 39.6 11.4L127 384.5zm138.9-53.9H84c-11 0-20-9-20-20s9-20 20-20h51l65.4-113.2-20.5-35.4c-5.5-9.6-2.2-21.8 7.3-27.3 9.6-5.5 21.8-2.2 27.3 7.3l8.9 15.4 8.9-15.4c5.5-9.6 17.8-12.8 27.3-7.3 9.6 5.5 12.8 17.8 7.3 27.3l-85.8 148.6h62.1c20.2 0 31.5 23.7 22.7 40zm98.1 0h-29l19.6 33.9c5.5 9.6 2.2 21.8-7.3 27.3-9.6 5.5-21.8 2.2-27.3-7.3-32.9-56.9-57.5-99.7-74-128.1-16.7-29-4.8-58 7.1-67.8 13.1 22.7 32.7 56.7 58.9 102h52c11 0 20 9 20 20 0 11.1-9 20-20 20z" />
+	</svg></a></li>
+	<li><a href="" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+	<path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z" />
+	</svg></a></li>
+	</ul>
+	</div>
+	</div>
+	<div class="footer-academics">
+	<div class="heading"><a href="" target="_blank"><img src="assets/images/icons/360-view.svg" width="auto" height="30" alt="" /></a></div>
+	<div><a href="" target="_blank"><img src="" width="auto" height="30" alt="" /></a></div>
+	</div>
+	<div class="footer-others">
+	<div class="heading">BU students unity</div>
+	<div><a href="">NSUI , ABVP</a></div>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
+	<div class="footer-wrap footer-bottom">
+	<div class="footer-bottom-link">
+	<ul>
+	<li><a style="cursor:pointer" target="_blank" data-bs-toggle="modal" data-bs-target="" href="">&copy; Copyright 2024 barkatullahpapers.site
+	</a></li>
+	<li><a style="cursor:pointer" target="_blank" data-bs-toggle="modal" data-bs-target="" href="">Feedback</a></li>
+	</ul>
+	</div>
+	<div class="contact-webmaster">
+	<a href>Problem with this page? <a style="font-size:12px;" href="https://whatsapp.com/channel/0029VaT1MLs65yD38bLJ6b0N">Contact
+	Me</a></a>
+	</div>
+	</div>
+	</footer>
+	<style>
+		.sticky-bar {
+			display: block;
+			bottom: 15%;
+			right: -138px;
+			position: fixed;
+			z-index: 1040;
+			width: 184px;
+		}
+	
+		.sticky-bar ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+	
+		.sticky-bar ul li {
+			/* background:  rgba(255, 255, 255, .7); */
+			box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+			background: #b1040e;
+			margin: 4px;
+			transition: all .2s ease-in;
+			padding: 0 10px;
+			height: 45px;
+			display: flex;
+			align-items: center;
+		}
+	
+		.sticky-bar ul li a {
+			color: #fff;
+			font-size: 12px;
+			font-weight: 600;
+			letter-spacing: .5px;
+			display: flex;
+			align-items: center;
+			line-height: 14px;
+		}
+	
+		.sticky-bar ul li img {
+			width: auto;
+			height: 22px;
+			padding-right: 11px;
+			/* -webkit-filter: invert(1);
+				filter: invert(1); */
+		}
+	
+		.sticky-bar ul li:hover {
+			margin-left: -122px;
+			/* background:  rgba(255, 255, 255, .7); */
+			box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+			background: #b1040e;
+		}
+	
+		.sticky-bar ul li.apply-now-outer {
+			display: none;
+		}
+	
+		@media(max-width:992px) {
+			.sticky-bar ul li.apply-now-outer {
+				display: block;
+			}
+	
+			.sticky-bar {
+				background: #b1040e;
+				bottom: 0;
+				right: 0;
+				position: fixed;
+				z-index: 9;
+				width: 100%;
+				display: block !important;
+			}
+	
+			.sticky-bar ul {
+				display: flex;
+				justify-content: flex-start;
+				padding-left: 10px;
+			}
+	
+			.sticky-bar ul li a .st-label {
+				display: none;
+			}
+	
+			.sticky-bar ul li {
+				background: transparent;
+				box-shadow: none;
+				transition: all .2s ease-in;
+				padding: 10px 2px;
+				height: 50px;
+			}
+	
+			.sticky-bar ul li .apply-now {
+				display: block;
+				font-size: 16px;
+				background: #fff;
+				color: #b1040e;
+				padding: 8px !important;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+	
+			.sticky-bar ul li:hover {
+				margin-left: 0;
+				box-shadow: none;
+				background: transparent;
+			}
+		}
+	</style>
+<div class="sticky-bar">
+<ul>
+<li class="apply-now-outer">
+<a target="_blank" href="" data-gtm-section="sticky">
+<span class="apply-now">Ajeet</span>
+</a>
+</li>
+<li>
+<a target="" href class="" data-gtm-section="sticky">
+<img width="auto" height="auto" src="assets/images/icons/phone-full.svg" alt="new-call-icon">
+<span class="st-label">Call for queries</span>
+</a>
+</li>
+<li>
+<a target="_blank" href="https://api.whatsapp.com/send?phone=+917869687254&amp;text=Hi%2C%20I%20need%20assistance%20for%20Papers%202024." data-gtm-section="sticky">
+<img width="auto" height="auto" src="assets/images/icons/whatsapp-white.svg" alt="new-whatsapp-icon">
+<span class="st-label">Whatsapp only <br>+917869687254</span>
+</a>
+</li>
+<li>
+<a target="_blank" href="#" data-gtm-section="sticky" data-bs-toggle="modal" data-bs-target="#live-video-counselling">
+<img width="auto" height="auto" src="assets/images/icons/live-video.svg" alt="new-video-chat">
+<span class="st-label">Give a <br>rewiew</span>
+</a>
+</li>
+<li><a href="https://maps.app.goo.gl/A6Xakdefship9R256" data-gtm-section="sticky">
+<img width="auto" height="auto" src="assets/images/icons/town.svg" alt="new-location-icon">
+<span class="st-label">Locate BU</span></a>
+</li>
+
+</ul>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/javascript">
+	var s = document.createElement("script");
+	s.type = "text/javascript";
+	s.async = true;
+	s.src = "";
+	document.body.appendChild(s);
+</script>
+<script>
+	let ncount = 0;
+	$('.feedback-btn').click(function() {
+		ncount = 0;
+		feedbackForms();
+		$('#feedback-modal').removeAttr("style");
+		$('#feedback-modal').css("display", "flex");
+	});
+	let allQuestionAnswers = [];
+	let firstQuestion = [];
+	let yesQuestion = [];
+	let noQuestion = [];
+	feedbackForms();
+	let lengthNumber = 0;
+	let totalLength = 0;
+	let nextIndex = 0;
+	let alreadyUsed = 0;
+
+	function feedbackForms() {
+		$("#feebackSubmitbtn1").hide();
+
+		$.get('', function(data) {
+			//$.get('http://localhost:64383/api/website/GetFeeBackQuestionAnswers', function(data) {
+			//debugger;
+			// console.log(data);
+
+			alreadyUsed = 0;
+			nextIndex = 0;
+
+			let linkedQue = '';
+			let dt = data.filter(x => x.LinkedQUestion != '0');
+
+			if (dt.length > 0) {
+				yesQuestion = [];
+				firstQuestion = dt[0];
+				let newAll = data.filter(x => x.QuestionId != dt[0]['LinkedQUestion']);
+				for (let i = 1; i < newAll.length; i++) {
+					yesQuestion.push(newAll[i]);
+				}
+
+				// yesQuestions = data.filter(x=>x.QuestionId != dt[0]['LinkedQUestion']);
+				linkedQue = dt[0]['LinkedQUestion'];
+				noQuestion = [];
+				//  noQuestion.push(dt[0]);
+				noQuestion.push(data.filter(x => x.QuestionId == linkedQue)[0]);
+				let dddd = data;
+				dddd = dddd.filter(x => x.QuestionId != dt[0].QuestionId);
+				dddd = dddd.filter(x => x.QuestionId != linkedQue);
+				for (let i = 0; i < dddd.length; i++) {
+					noQuestion.push(dddd[i]);
+				}
+			}
+
+
+			var item = yesQuestion;
+			var html1 = '';
+			$("#dvWaitFeeback").hide();
+			$("#dvfeedback").html('');
+			$("#feebackSubmitbtn").hide();
+			//debugger;
+			let allData = yesQuestion;
+			let allDataN = noQuestion;
+			allQuestionAnswers = allData;
+			totalLength = allData.length;
+
+
+			html1 = "<div id='dvQuestions0' ><h4 id='question0' class='mb10'>Q1:" + firstQuestion.Question +
+				"</h4>";
+
+			var htmlAnswer1 = "<div>";
+			if (firstQuestion.Type == 'text') {
+				htmlAnswer1 += "<textarea rows='4' onclick='gotonext(0);' id='AnswerQuesion_" +
+					firstQuestion["QuestionId"] +
+					"'  class='feedbackData form-control' style='width: 95%;resize: none;'    />";
+			} else {
+				for (let j = 0; j < firstQuestion.feedBackAnswers.length; j++) {
+					htmlAnswer1 += "<input id='Answer" + firstQuestion.feedBackAnswers[j]["AnswerId"] +
+						"' onclick='gotonext(0);' class='radio-style feedbackData' name='radio-group-" +
+						firstQuestion.QuestionId + "' type='radio'><label for='Answer" + firstQuestion
+						.feedBackAnswers[j]["AnswerId"] + "' class='radio-style-2-label'>" + firstQuestion
+						.feedBackAnswers[j]["Answer"] + "</label>";
+				}
+			}
+
+			html1 += htmlAnswer1;
+			$("#dvfeedback").html(html1);
+		});
+	}
+
+
+	function gotoNextNew() {
+		$("#dvQuestions" + nextIndex).hide();
+		$("#feebackSubmitbtn1").hide();
+
+		nextIndex++;
+		ncount++;
+		$("#dvQuestions" + nextIndex).show();
+		$("#dvWaitFeeback").hide();
+		// gotonext(nextIndex);
+	}
+
+	function gotonext11(i) {
+		alreadyUsed = 1;
+		nextIndex = i;
+		$("#feebackSubmitbtn1").show();
+	}
+
+	function gotonext(i) {
+
+		var html = '';
+		if (i == 0) {
+
+			let ddd = firstQuestion;
+			let datas = $('input[name="radio-group-' + firstQuestion.QuestionId + '"]:checked')[0][
+				'id'
+			];
+			let splitValue = datas.split('Answer');
+			var params = {};
+
+			$('input[name="radio-group-' + firstQuestion.QuestionId + '"]:checked').each(function() {
+				var idVal = $(this).attr("id");
+				if ($("label[for='" + idVal + "']").text() == 'No') {
+
+
+					var x = 0;
+					let allQUestionsN = [];
+					allQUestionsN.push(firstQuestion);
+					for (let i = 0; i < noQuestion.length; i++) {
+						allQUestionsN.push(noQuestion[i]);
+					}
+					allQuestionAnswers = allQUestionsN;
+					let allData = allQuestionAnswers;
+					for (let i = 1; i < allData.length; i++) {
+						let qIndex = i + 1;
+						html += "<div id='dvQuestions" + i + "' style='display:none;'><h4 id='question" + i +
+							"' class='mb10'>Q " + qIndex + ": " + allData[i].Question + "</h4>";
+
+						var htmlAnswer = "<div>";
+						if (allData[i].Type == 'text') {
+							let h = i;
+							if (h + 1 == allData.length) {
+								htmlAnswer += "<textarea rows='4' onclick='gotonext(" + i +
+									");' id='AnswerQuesion_" +
+									allData[i]["QuestionId"] +
+									"'  class='feedbackData form-control' style='width: 95%;resize: none;'    />";
+							} else {
+								htmlAnswer += "<textarea rows='4' onclick='gotonext11(" + i +
+									");' id='AnswerQuesion_" +
+									allData[i]["QuestionId"] +
+									"'  class='feedbackData form-control' style='width: 95%;resize: none;'    />";
+							}
+						} else {
+							for (let j = 0; j < allData[i].feedBackAnswers.length; j++) {
+								htmlAnswer += "<input id='Answer" + allData[i].feedBackAnswers[j]["AnswerId"] +
+									"' onclick='gotonext(" + i +
+									");' class='radio-style feedbackData' name='radio-group-" +
+									allData[i].QuestionId + "' type='radio'><label for='Answer" + allData[i]
+									.feedBackAnswers[j]["AnswerId"] + "' class='radio-style-2-label'>" +
+									allData[i]
+									.feedBackAnswers[j]["Answer"] + "</label>";
+							}
+						}
+						htmlAnswer += "</div></div>"
+						html += htmlAnswer;
+					}
+// ADD SOME COMMENTS OF THIS CODE 
+// and also give some information of the above solution to calculate the probability of the irrigigation
+
+
+
+					$("#dvfeedback").append(html);
+
+					totalLength = allData.length;
+
+
+				} else {
+					let allQUestionsN = [];
+					allQUestionsN.push(firstQuestion);
+					for (let i = 0; i < yesQuestion.length; i++) {
+						allQUestionsN.push(yesQuestion[i]);
+					}
+					allQuestionAnswers = allQUestionsN;
+					let allData = allQuestionAnswers;
+					for (let i = 1; i < allData.length; i++) {
+
+						let qIndex = i + 1;
+						html += "<div id='dvQuestions" + i + "' style='display:none;'><h4 id='question" + i +
+							"' class='mb10'>Q " + qIndex + ": " + allData[i].Question + "</h4>";
+
+						var htmlAnswer = "<div>";
+						if (allData[i].Type == 'text') {
+							htmlAnswer += "<textarea rows='4' onclick='gotonext(" + i +
+								");' id='AnswerQuesion_" +
+								allData[i]["QuestionId"] +
+								"'  class='feedbackData form-control' style='width: 95%;resize: none;'    />";
+						} else {
+							for (let j = 0; j < allData[i].feedBackAnswers.length; j++) {
+								htmlAnswer += "<input id='Answer" + allData[i].feedBackAnswers[j]["AnswerId"] +
+									"' onclick='gotonext(" + i +
+									");' class='radio-style feedbackData' name='radio-group-" +
+									allData[i].QuestionId + "' type='radio'><label for='Answer" + allData[i]
+									.feedBackAnswers[j]["AnswerId"] + "' class='radio-style-2-label'>" +
+									allData[i]
+									.feedBackAnswers[j]["Answer"] + "</label>";
+							}
+						}
+						htmlAnswer += "</div></div>"
+						html += htmlAnswer;
+					}
+
+
+
+					$("#dvfeedback").append(html);
+					totalLength = allData.length;
+
+				}
+			});
+
+
+		}
+
+
+		if (totalLength != ncount) {
+			ncount++;
+			$("#dvWaitFeeback").show();
+		} else {
+			$("#dvWaitFeeback").hide();
+		}
+		let v = i + 1;
+		lengthNumber = v;
+		setTimeout(function() {
+			if (totalLength == ncount) {
+				$("#dvWaitFeeback").hide();
+				$("#feebackSubmitbtn").show();
+			} else {
+				$("#dvQuestions" + i).hide();
+				$("#dvQuestions" + lengthNumber).show();
+				$("#dvWaitFeeback").hide();
+			}
+			if (alreadyUsed > 0) {
+				if (allQuestionAnswers[i + 1]['Type'] == 'text') {
+					$("#feebackSubmitbtn").show();
+				}
+			}
+
+		}, 700);
+	}
+
+	function submitFeeback() {
+		let counts = 0;
+		let allAnsers = '';
+		for (let i = 0; i < allQuestionAnswers.length; i++) {
+			if (allQuestionAnswers[i]['Type'] == 'text') {
+				let newAnswers = $('#AnswerQuesion_' + allQuestionAnswers[i]['QuestionId']).val()
+				allAnsers += allQuestionAnswers[i].QuestionId + "," + newAnswers + "_";
+
+			} else {
+				if ($('input[name="radio-group-' + allQuestionAnswers[i].QuestionId + '"]:checked').length > 0) {
+					let datas = $('input[name="radio-group-' + allQuestionAnswers[i].QuestionId + '"]:checked')[0][
+						'id'
+					];
+					let splitValue = datas.split('Answer');
+					var params = {};
+					// params['QuestionId'] = allQuestionAnswers[i].QuestionId;
+					// params['AnswereId'] = splitValue[1];
+					allAnsers += allQuestionAnswers[i].QuestionId + "," + splitValue[1] + "_";
+					//allAnsers.push({ QuestionId: allQuestionAnswers[i].QuestionId, AnswerId: splitValue[1]});
+				} else {
+					counts++;
+				}
+			}
+		}
+		//debugger;
+		if (counts > 0) {
+			Swal.fire(
+				'Good job!',
+				'Please fill all feedback forms !',
+				'error'
+			)
+			//alert("");
+		} else {
+			var questionAnswers = [];
+			var d = {
+				Questions: allAnsers
+			}
+
+			questionAnswers.push(d);
+			//debugger;
+			$.post('', d,
+				function(data) {
+					Swal.fire(
+						'Good job!',
+						'Feedback captured successfully !',
+						'success'
+					)
+					feedbackForms();
+					$('#feedback-modal').modal('hide');
+				});
+		}
+	}
+
+
+	function IsEmail(email) {
+		var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if (!regex.test(email)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	$("#btnSGOTP").click(function() {
+		if ($("#txtSGEmail").val() != '') {
+			if (IsEmail($("#txtSGEmail").val())) {
+				$("#btnSGOTP").hide();
+				$("#btnSGOtpLoader").show();
+				//  $.get('http://localhost:44319/api/Event/sendOtp?email=' + $("#txtSGEmail").val(), function (
+				$.get('' + $("#txtSGEmail").val(), function(
+					data) {
+					if (data == 'success') {
+						Swal.fire(
+							'Success!',
+							'otp sent on your email id please check !',
+							'success'
+						)
+						$('#btnSGOTP').hide();
+						$('#dvOtpSend').show();
+						$("#btnSGOtpLoader").hide();
+					} else {
+						Swal.fire(
+							'error!',
+							'something wrong try again later !',
+							'error'
+						)
+						$("#btnSGOTP").show();
+						$("#btnSGOtpLoader").hide();
+					}
+				});
+			} else {
+				Swal.fire(
+					'Error!',
+					'Please enter valid email !',
+					'error'
+				)
+			}
+		} else {
+			Swal.fire(
+				'Error!',
+				'Please enter email !',
+				'error'
+			)
+		}
+	});
+	$("#aStudentGrievance").click(function() {
+		$('#txtSGName').val('');
+		$('#txtSGEmail').val('');
+		$('#txtSGPhone').val('');
+		$('#txtSGDesc').val('');
+		$('#txtSGSubject').val('');
+		$('#ddlNG').val('');
+		$('#txtOtp').val('');
+		$('#btnSGOTP').show();
+		$('#dvOtpSend').hide();
+
+		$('#StudentGrievance').modal('hide');
+		$("#btnSGOtpLoader").hide();
+		$("#btnSGLoader").hide();
+	});
+
+	$("#btnSG").click(function() {
+		// txtSGName,txtSGEmail,txtOtp,txtSGPhone,txtSGDesc
+		if ($('#txtSGName').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter name !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#txtSGEmail').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter email !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#txtSGPhone').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter phone !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#txtOtp').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter otp !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#ddlNG').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please select nature of grievance !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#txtSGSubject').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter subject !',
+				'error'
+			)
+			return false;
+		}
+		if ($('#txtSGDesc').val() == '') {
+			Swal.fire(
+				'Error!',
+				'Please enter description !',
+				'error'
+			)
+			return false;
+		}
+		var d = {
+			Name: $('#txtSGName').val(),
+			Email: $('#txtSGEmail').val(),
+			Phone: $('#txtSGPhone').val(),
+			Desc: $('#txtSGDesc').val(),
+			Otp: $('#txtOtp').val()
+		}
+		$("#btnSG").hide();
+		$("#btnSGLoader").show();
+// give tools systems about us technology
+		var formData = new FormData();
+		formData.append("SGName", $("#txtSGName").val());
+		formData.append("SGEmail", $("#txtSGEmail").val());
+		formData.append("SGPhone", $("#txtSGPhone").val());
+		formData.append("SGDesc", $("#txtSGDesc").val());
+		formData.append("Otp", $("#txtOtp").val());
+		formData.append("nature", $("#ddlNG").val());
+		formData.append("SGSubject", $("#txtSGSubject").val());
+		formData.append("file", $("#txtFile")[0].files[0]);
+
+
+		$.ajax({
+			url: '',
+			type: 'POST',
+			data: formData,
+			cache: false,
+			contentType: false,
+			processData: false,
+			success: function(data) {
+
+				if (data == 'otp not verified') {
+					Swal.fire(
+						'Error!',
+						'Invalid OTP !',
+						'error'
+					)
+					$("#btnSG").show();
+					$("#btnSGLoader").hide();
+
+				} else if (data == '0') {
+					Swal.fire(
+						'Error!',
+						'Something wrong try again later !',
+						'error'
+					)
+					$("#btnSG").show();
+					$("#btnSGLoader").hide();
+
+				} else {
+					Swal.fire(
+						'Success!',
+						'Student Grievance feedback captured successfully !',
+						'success'
+					)
+					$("#btnSG").show();
+					$("#btnSGLoader").hide();
+
+					$('#txtSGName').val('');
+					$('#txtSGEmail').val('');
+					$('#txtSGPhone').val('');
+					$('#txtSGDesc').val('');
+					$('#txtSGSubject').val('');
+					$('#ddlNG').val('');
+					$('#txtOtp').val('');
+					$('#btnSGOTP').show();
+					$('#dvOtpSend').hide();
+					$('#StudentGrievance').modal('hide');
+				}
+
+			},
+		});
+	});
+
+
+
+	// chat start
+	function initFreshChat() {
+		var data = window.location.href;
+		var arr = data.split('/');
+		var token = "fd4cfee2-38d2-464c-9dda-fd63659017fb";
+		if (arr[3].toLowerCase() == "international") {
+			token = null;
+		}
+		window.fcWidget.init({
+			token: token,
+			host: ""
+		});
+	}
+
+	function initialize(i, t) {
+		var e;
+		i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src =
+			"", e.onload = initFreshChat, i.head.appendChild(e))
+	}
+
+	function initiateCall() {
+		initialize(document, "freshchat-js-sdk")
+	}
+	window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load",
+		initiateCall, !1);
+	// chat end
+</script> </div>
+// give some information about the main question and give explaination of the block of cloudflare-static
+//
+
+<div id="gotoTop" class="icon-angle-up"></div>
+
+<script src="assets/js/functions.js"></script>
+<script src="assets/js/custom.js"></script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v84a3a4012de94ce1a686ba8c167c359c1696973893317" integrity="sha512-euoFGowhlaLqXsPWQ48qSkBSCFs3DPRyiwVu3FjR96cMPx+Fr+gpWRhIafcHwqwCqWS42RZhIudOvEI+Ckf6MA==" data-cf-beacon='{"rayId":"860c0dee593ef347","version":"2024.2.4","token":"c5db119ec2de4adc8b8b1d95388884a3"}' crossorigin="anonymous"></script>
+</body>
+</html>
