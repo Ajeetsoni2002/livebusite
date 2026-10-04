@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "node scripts/prepare-static.mjs && tsc --noEmit && vite build && node scripts/prerender.mjs",
-    "lint": "eslint src vite.config.ts && tsc --noEmit",
+    "lint": "eslint src ../functions vite.config.ts && tsc --noEmit && tsc -p ../functions/tsconfig.json",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {

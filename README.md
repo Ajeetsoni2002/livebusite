@@ -6,6 +6,8 @@ This is an unofficial student resource created by [Ajeet Kumar Soni](https://aje
 
 Hindi/Hinglish launch instructions: [step-by-step deployment guide](docs/DEPLOYMENT-HI.md).
 
+Cloudflare Pages without a custom domain: [same-origin API proxy setup](docs/PAGES-API-PROXY-HI.md). The root `functions/api/[[path]].ts` forwards `/api/*` to the configured `API_ORIGIN`; the frontend must build with `VITE_API_BASE_URL=/api`.
+
 ## Local setup
 
 Requires Node 22.14+ (or supported Node 24), npm, and a MongoDB replica set.
@@ -139,10 +141,11 @@ regenerate secrets and invalidate sessions. Results: [docs/VERIFICATION.md](docs
    `https://api.<your-domain>/api`, `VITE_SITE_URL` to your canonical frontend
    origin and `VITE_CONTACT_EMAIL` to the real contact. Include all www/staging
    origins in backend CORS explicitly; arbitrary preview origins are not allowed.
-6. **Cookies:** host the frontend/API under the same registrable domain so Secure,
-   httpOnly, SameSite=Lax cookies work. Raw `vercel.app` + `onrender.com` origins
-   are cross-site and will not support this cookie configuration. Use custom
-   sibling domains before staff authentication acceptance testing.
+6. **Cookies:** direct frontend/API requests require the same registrable domain
+   so Secure, httpOnly, SameSite=Lax cookies work. Provider subdomains are separate
+   sites. For Cloudflare Pages without a custom domain, use the implemented
+   [same-origin API proxy](docs/PAGES-API-PROXY-HI.md) and test staff authentication
+   after deploying its Function and runtime binding.
 7. **Cloudflare:** SSL/TLS → Overview → **Full (strict)**; keep valid origin TLS.
    Cache Rules → API hostname or `/api/*` → **Bypass cache**. Remove browser/JS
    challenges from API requests using a narrow API rule; keep application rate
