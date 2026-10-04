@@ -1,0 +1,1776 @@
+{
+  "generatedAt": "2026-10-03T18:12:29.078Z",
+  "sourceFileCount": 140,
+  "assets": [
+    {
+      "hash": "780b08083f9b424b114ac500e743c7c5fa8fcd8b6477a6426415ea5562557e67",
+      "size": 435846,
+      "sources": [
+        "papers/2024_04_13 18_57 Office Lens.pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/2024_04_13 18_57 Office Lens.pdf"
+      ],
+      "originalName": "2024_04_13 18_57 Office Lens.pdf",
+      "title": "2024_04_13 18_57 Office Lens",
+      "year": 2024,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "71c60f382a4f019af6b56b12dd539ce10a899af78b6fff753bff671bcde24eb0",
+      "size": 846031,
+      "sources": [
+        "papers/CSE-101( 2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-101( 2021-22).pdf"
+      ],
+      "originalName": "CSE-101( 2021-22).pdf",
+      "code": "CSE-101",
+      "title": "CSE-101 · Engineering Mathematics-I",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-101",
+          "href": "papers/CSE-101( 2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "fa7c9807abd5990fdddd014bcc19b84aaaa9027125ac1d0a254754f5782dfd72",
+      "size": 317725,
+      "sources": [
+        "papers/CSE-101(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-101(2023).pdf"
+      ],
+      "originalName": "CSE-101(2023).pdf",
+      "code": "CSE-101",
+      "title": "CSE-101 · Engineering Mathematics-I",
+      "year": 2023,
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-101",
+          "href": "papers/CSE-101(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "67610fdac27cb67f2487bfd065c142a24eb46e2e3f929e5562e34e2ff6e73b6c",
+      "size": 445365,
+      "sources": [
+        "papers/CSE-101(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-101(2023-24).pdf"
+      ],
+      "originalName": "CSE-101(2023-24).pdf",
+      "code": "CSE-101",
+      "title": "CSE-101 · Engineering Mathematics-I",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "",
+          "subject": "CSE-101",
+          "href": "papers/CSE-101(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "7caddf7593841cfad16407bfd1e8f48b9fb15fff1effeea2427b2586ca445fcd",
+      "size": 955699,
+      "sources": [
+        "papers/CSE-102(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-102(2021-22).pdf"
+      ],
+      "originalName": "CSE-102(2021-22).pdf",
+      "code": "CSE-102",
+      "title": "CSE-102 · Engineering Chemistry",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [
+        "Catalog year 2023 disagrees with filename year 2021"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-102",
+          "href": "papers/CSE-102(2021-22).pdf"
+        },
+        {
+          "label": "2023",
+          "subject": "CSE-102",
+          "href": "papers/CSE-102(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "e15353de8d4b4f2957de94db0c2c3822859867e6c60f12c5ed5d73df685106a0",
+      "size": 465604,
+      "sources": [
+        "papers/CSE-102(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-102(2023).pdf"
+      ],
+      "originalName": "CSE-102(2023).pdf",
+      "code": "CSE-102",
+      "title": "CSE-102 · Engineering Chemistry",
+      "year": 2023,
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-102",
+          "href": "papers/CSE-102(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "1f2e00469b0e5bb173f1a8832d6d9a7a5b6facab1be10f3c23e0cdd333f091b1",
+      "size": 458895,
+      "sources": [
+        "papers/CSE-102(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-102(2023-24).pdf"
+      ],
+      "originalName": "CSE-102(2023-24).pdf",
+      "code": "CSE-102",
+      "title": "CSE-102 · Engineering Chemistry",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": []
+    },
+    {
+      "hash": "80e49b401016f45b84965c68c9628aa11d6987c5409560e53b93c162de0ebc42",
+      "size": 1234058,
+      "sources": [
+        "papers/CSE-103(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-103(2021-22).pdf"
+      ],
+      "originalName": "CSE-103(2021-22).pdf",
+      "code": "CSE-103",
+      "title": "CSE-103 · Technical English",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-103",
+          "href": "papers/CSE-103(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "d7034f3ee0628396b85096f05efe15cfbc1436e6ef4c20094f3bd1fae737c7e6",
+      "size": 480724,
+      "sources": [
+        "papers/CSE-103(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-103(2023).pdf"
+      ],
+      "originalName": "CSE-103(2023).pdf",
+      "code": "CSE-103",
+      "title": "CSE-103 · Technical English",
+      "year": 2023,
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-103",
+          "href": "papers/CSE-103(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "f23aeb6cfeea39870c1a79ed222f437584bbe5329e1e76a8dfed78b0ad72274e",
+      "size": 814875,
+      "sources": [
+        "papers/CSE-103(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-103(2023-24).pdf"
+      ],
+      "originalName": "CSE-103(2023-24).pdf",
+      "code": "CSE-103",
+      "title": "CSE-103 · Technical English",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-103",
+          "href": "papers/CSE-103(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "97b2f8faf53f2f346b341127ed55c712f0e394dc8f47aefcda0fed57397a84aa",
+      "size": 1596990,
+      "sources": [
+        "papers/CSE-104(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-104(2021-22).pdf"
+      ],
+      "originalName": "CSE-104(2021-22).pdf",
+      "code": "CSE-104",
+      "title": "CSE-104 · Basic Mechanical Engineering",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-104",
+          "href": "papers/CSE-104(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "43fd80046ce21d0d20e19e86b927345b9fd027d3e306eee08e9f34cf0af94f41",
+      "size": 712972,
+      "sources": [
+        "papers/CSE-104(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-104(2023).pdf"
+      ],
+      "originalName": "CSE-104(2023).pdf",
+      "code": "CSE-104",
+      "title": "CSE-104 · Basic Mechanical Engineering",
+      "year": 2023,
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-104",
+          "href": "papers/CSE-104(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c0f3ba5ffd19ccd71d3d5e8c1fa2823e3b8ad42817598378701286c3e445eceb",
+      "size": 925253,
+      "sources": [
+        "papers/CSE-104(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-104(2023-24).pdf"
+      ],
+      "originalName": "CSE-104(2023-24).pdf",
+      "code": "CSE-104",
+      "title": "CSE-104 · Basic Mechanical Engineering",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-104",
+          "href": "papers/CSE-104(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "21721ede7d15c9b77ea5b51bdd429b0e803da1bb4e4152fd8f1c111ca6503f28",
+      "size": 641216,
+      "sources": [
+        "papers/CSE-105(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-105(2021-22).pdf"
+      ],
+      "originalName": "CSE-105(2021-22).pdf",
+      "code": "CSE-105",
+      "title": "CSE-105 · Basic Electronics Engineering",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-105",
+          "href": "papers/CSE-105(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "a50314f4618d2d429467dc2dcd99dcea2d736f9168ae5085e33d9fcb76b974a0",
+      "size": 485485,
+      "sources": [
+        "papers/CSE-105(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-105(2023).pdf"
+      ],
+      "originalName": "CSE-105(2023).pdf",
+      "code": "CSE-105",
+      "title": "CSE-105 · Basic Electronics Engineering",
+      "year": 2023,
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-105",
+          "href": "papers/CSE-105(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "a7fa61af0547854edf01d12c1286ebf9a15d3c530083304ae1187bf79d811445",
+      "size": 343478,
+      "sources": [
+        "papers/CSE-105(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-105(2023-24).pdf"
+      ],
+      "originalName": "CSE-105(2023-24).pdf",
+      "code": "CSE-105",
+      "title": "CSE-105 · Basic Electronics Engineering",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-105",
+          "href": "papers/CSE-105(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "0ddbed2de1d6cabb52e38fb14b39def4f0002f0edeead4c5e51df1ed4400a0b3",
+      "size": 457133,
+      "sources": [
+        "papers/CSE-201(2022).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-201(2022).pdf"
+      ],
+      "originalName": "CSE-201(2022).pdf",
+      "code": "CSE-201",
+      "title": "CSE-201 · Engineering Physics",
+      "year": 2022,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-201",
+          "href": "papers/CSE-201(2022).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c2fb52cb436e714a37d6675d353f8490260f5741a78542bf9f1ad9dd93d0ee7b",
+      "size": 550777,
+      "sources": [
+        "papers/CSE-201(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-201(2023).pdf"
+      ],
+      "originalName": "CSE-201(2023).pdf",
+      "code": "CSE-201",
+      "title": "CSE-201 · Engineering Physics",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-201",
+          "href": "papers/CSE-201(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "4b1af5a83bb44346572557fb10abca78ebf9454f6569ed5e8c10e559789c560a",
+      "size": 1021681,
+      "sources": [
+        "papers/CSE-202(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-202(2021-22).pdf"
+      ],
+      "originalName": "CSE-202(2021-22).pdf",
+      "code": "CSE-202",
+      "title": "CSE-202 · Basic Electrical Engineering",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-202",
+          "href": "papers/CSE-202(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "d992aa4832a00dc83712eaa8b02ce8a33e8bda1c92f0db5a24d0b2dd551e54a6",
+      "size": 1009414,
+      "sources": [
+        "papers/CSE-202(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-202(2022-23).pdf"
+      ],
+      "originalName": "CSE-202(2022-23).pdf",
+      "code": "CSE-202",
+      "title": "CSE-202 · Basic Electrical Engineering",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-202",
+          "href": "papers/CSE-202(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "5492704aa9f8293dd1d979cb79ae4c97b5aae162c84bdc4ba0b111ed5a71d08d",
+      "size": 1030785,
+      "sources": [
+        "papers/CSE-202(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-202(2023).pdf"
+      ],
+      "originalName": "CSE-202(2023).pdf",
+      "code": "CSE-202",
+      "title": "CSE-202 · Basic Electrical Engineering",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-202",
+          "href": "papers/CSE-202(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "e2718b26e2f7617fb2a83c6b8f55354eff60c82647bc3d9ad88798225614bcc4",
+      "size": 384008,
+      "sources": [
+        "papers/CSE-203(2022).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-203(2022).pdf"
+      ],
+      "originalName": "CSE-203(2022).pdf",
+      "code": "CSE-203",
+      "title": "CSE-203 · Fundamentals of Computer Programming",
+      "year": 2022,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-203",
+          "href": "papers/CSE-203(2022).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "59585b1a5a9e579de0be51d2434bd9eaded43ba4bfdf0eab0bcf8e4bc1f9d923",
+      "size": 404249,
+      "sources": [
+        "papers/CSE-203(2023) (1).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-203(2023) (1).pdf"
+      ],
+      "originalName": "CSE-203(2023) (1).pdf",
+      "code": "CSE-203",
+      "title": "CSE-203 · Fundamentals of Computer Programming",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-203",
+          "href": "papers/CSE-203(2023) (1).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "a9ba947c1b32621fe5ac091322699f43d71fb378043cd24a57c2f9d0f30ccf41",
+      "size": 517469,
+      "sources": [
+        "papers/CSE-204(2022).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-204(2022).pdf"
+      ],
+      "originalName": "CSE-204(2022).pdf",
+      "code": "CSE-204",
+      "title": "CSE-204 · Basic Civil Engineering & Engineering Mechanics",
+      "year": 2022,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-204",
+          "href": "papers/CSE-204(2022).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "900c9fb0977717ab470a605c632dbc2841528a64241338100756e9eccd748915",
+      "size": 387899,
+      "sources": [
+        "papers/CSE-204(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-204(2023).pdf"
+      ],
+      "originalName": "CSE-204(2023).pdf",
+      "code": "CSE-204",
+      "title": "CSE-204 · Basic Civil Engineering & Engineering Mechanics",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-204",
+          "href": "papers/CSE-204(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "3078b0dabb0f02addb846296e9f2861a378ea270b257a60ee9fef2647da630aa",
+      "size": 602923,
+      "sources": [
+        "papers/CSE-205(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-205(2022-23).pdf"
+      ],
+      "originalName": "CSE-205(2022-23).pdf",
+      "code": "CSE-205",
+      "title": "CSE-205 · Engineering Graphics & CAD",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-205",
+          "href": "papers/CSE-205(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "7f572978ce8d4b80d9a7bc2e8f7d192cefcd6953d547d8aba4259f370c547d83",
+      "size": 652305,
+      "sources": [
+        "papers/CSE-205(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-205(2023).pdf"
+      ],
+      "originalName": "CSE-205(2023).pdf",
+      "code": "CSE-205",
+      "title": "CSE-205 · Engineering Graphics & CAD",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-205",
+          "href": "papers/CSE-205(2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "845c94c69ebee34e37e0a6e28f713de63b2aba35f23b63fa51b9c41118ca49a5",
+      "size": 315964,
+      "sources": [
+        "papers/CSE-301(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-301(2021-22).pdf"
+      ],
+      "originalName": "CSE-301(2021-22).pdf",
+      "code": "CSE-301",
+      "title": "CSE-301 · ENGINERING MATHEMATICS II",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-301",
+          "href": "papers/CSE-301(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "87948da7e692e066ee70a2af6e5d63f9a8fde1c31422e1ced313aeda33f123de",
+      "size": 369661,
+      "sources": [
+        "papers/CSE-301(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-301(2022-23).pdf"
+      ],
+      "originalName": "CSE-301(2022-23).pdf",
+      "code": "CSE-301",
+      "title": "CSE-301 · ENGINERING MATHEMATICS II",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-301",
+          "href": "papers/CSE-301(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "9c0dc8e6788911ea5ebffd4684456703782f6204510f41317fa43e3a7aac636b",
+      "size": 250325,
+      "sources": [
+        "papers/CSE-301(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-301(2023-24).pdf"
+      ],
+      "originalName": "CSE-301(2023-24).pdf",
+      "code": "CSE-301",
+      "title": "CSE-301 · ENGINERING MATHEMATICS II",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-301",
+          "href": "papers/CSE-301(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "e76bb7b002ba4158a25803f7866dca03f71b9f23b4e1e10608d53160760ce57c",
+      "size": 321542,
+      "sources": [
+        "papers/CSE-302(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-302(2021-22).pdf"
+      ],
+      "originalName": "CSE-302(2021-22).pdf",
+      "code": "CSE-302",
+      "title": "CSE-302 · DIGITAL ELECTRONICS",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-302",
+          "href": "papers/CSE-302(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "70a1eeb85a3bf0ee14bb9ce5676a702a0db457ca922aa8f0f69b69a36e41ba11",
+      "size": 607639,
+      "sources": [
+        "papers/CSE-302(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-302(2022-23).pdf"
+      ],
+      "originalName": "CSE-302(2022-23).pdf",
+      "code": "CSE-302",
+      "title": "CSE-302 · DIGITAL ELECTRONICS",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-302",
+          "href": "papers/CSE-302(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c95de71647fe0473e91d007be08808c3ca55debc1ba792d49cdd495250a79719",
+      "size": 392390,
+      "sources": [
+        "papers/CSE-302(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-302(2023-24).pdf"
+      ],
+      "originalName": "CSE-302(2023-24).pdf",
+      "code": "CSE-302",
+      "title": "CSE-302 · DIGITAL ELECTRONICS",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-302",
+          "href": "papers/CSE-302(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "103339d55317af3e745d5f787ed35c57b3b01e08a23133a9f5a248495d8ad857",
+      "size": 432167,
+      "sources": [
+        "papers/CSE-303(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-303(2021-22).pdf"
+      ],
+      "originalName": "CSE-303(2021-22).pdf",
+      "code": "CSE-303",
+      "title": "CSE-303 · DATA STRUCTURE AND ALGORITHM",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-303",
+          "href": "papers/CSE-303(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c147fecf28638fe08bafb40f7f7dc3d4bf8cce74b4eccf3d905ffdbfc05e5c9a",
+      "size": 417997,
+      "sources": [
+        "papers/CSE-303(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-303(2022-23).pdf"
+      ],
+      "originalName": "CSE-303(2022-23).pdf",
+      "code": "CSE-303",
+      "title": "CSE-303 · DATA STRUCTURE AND ALGORITHM",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-303",
+          "href": "papers/CSE-303(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "767e9e07f47655d64717de59855fa2cd8ad032ed8e30076f3a36a6b8eebe125c",
+      "size": 384621,
+      "sources": [
+        "papers/CSE-303(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-303(2023-24).pdf"
+      ],
+      "originalName": "CSE-303(2023-24).pdf",
+      "code": "CSE-303",
+      "title": "CSE-303 · DATA STRUCTURE AND ALGORITHM",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-303",
+          "href": "papers/CSE-303(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "3dfd509f94a5b5c8517cdc6afdbf3599726d370de5059452d5f5e1de8231d920",
+      "size": 453803,
+      "sources": [
+        "papers/CSE-304(2022-2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-304(2022-2023).pdf"
+      ],
+      "originalName": "CSE-304(2022-2023).pdf",
+      "code": "CSE-304",
+      "title": "CSE-304 · DATA BASE MANAGEMENT SYSTEM",
+      "year": 2022,
+      "session": "2022-2023",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-304",
+          "href": "papers/CSE-304(2022-2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "dd85fbbf824a7f3c00073b0f91655d233ece008646266fe603be3aab5497e353",
+      "size": 416900,
+      "sources": [
+        "papers/CSE-304(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-304(2022-23).pdf"
+      ],
+      "originalName": "CSE-304(2022-23).pdf",
+      "code": "CSE-304",
+      "title": "CSE-304 · DATA BASE MANAGEMENT SYSTEM",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": []
+    },
+    {
+      "hash": "429dd8359fc9554e58cabc5f20d5e805fb57fc652da4649ad8572496ce7c1f11",
+      "size": 277442,
+      "sources": [
+        "papers/CSE-304(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-304(2023-24).pdf"
+      ],
+      "originalName": "CSE-304(2023-24).pdf",
+      "code": "CSE-304",
+      "title": "CSE-304 · DATA BASE MANAGEMENT SYSTEM",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-304",
+          "href": "papers/CSE-304(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "5fb9edbe4cffce57c9edf37365023f212b488c609e72a4771ec208b54969252c",
+      "size": 423212,
+      "sources": [
+        "papers/CSE-305(2021-22).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-305(2021-22).pdf"
+      ],
+      "originalName": "CSE-305(2021-22).pdf",
+      "code": "CSE-305",
+      "title": "CSE-305 · DISCRETE STRUCTURE",
+      "year": 2021,
+      "session": "2021-22",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-305",
+          "href": "papers/CSE-305(2021-22).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "8ffe9fcd68203c42399a8877089e89b3104f532a1647faa77ee909e7d3ce74b3",
+      "size": 423252,
+      "sources": [
+        "papers/CSE-305(2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-305(2022-23).pdf"
+      ],
+      "originalName": "CSE-305(2022-23).pdf",
+      "code": "CSE-305",
+      "title": "CSE-305 · DISCRETE STRUCTURE",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-305",
+          "href": "papers/CSE-305(2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "e63edf42d89a4c63d47596f1f5101ceee400bd427892950b7e366e8e29b893fd",
+      "size": 257817,
+      "sources": [
+        "papers/CSE-305(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-305(2023-24).pdf"
+      ],
+      "originalName": "CSE-305(2023-24).pdf",
+      "code": "CSE-305",
+      "title": "CSE-305 · DISCRETE STRUCTURE",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-305",
+          "href": "papers/CSE-305(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "f44e404b5e946c7d42d0f0c203d0a756f938f3376091b6a91d35b23a691e286c",
+      "size": 501775,
+      "sources": [
+        "papers/CSE-402( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-402( 2023).pdf"
+      ],
+      "originalName": "CSE-402( 2023).pdf",
+      "code": "CSE-402",
+      "title": "CSE-402 · DATA SCIENCE",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-402",
+          "href": "papers/CSE-402( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "7d339597b2dadf4828fddd1fa582bbc68bc198fc15a54415c5e4973921ec8db5",
+      "size": 286267,
+      "sources": [
+        "papers/CSE-403( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-403( 2023).pdf"
+      ],
+      "originalName": "CSE-403( 2023).pdf",
+      "code": "CSE-403",
+      "title": "CSE-403 · INTERNET OF THINGS",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-403",
+          "href": "papers/CSE-403( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "510ab1c0844a20ee4c414bce8c1a8391d6f0836e4aba634c17225932fa89501b",
+      "size": 293577,
+      "sources": [
+        "papers/CSE-403(2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-403(2023).pdf"
+      ],
+      "originalName": "CSE-403(2023).pdf",
+      "code": "CSE-403",
+      "title": "CSE-403 · INTERNET OF THINGS",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": []
+    },
+    {
+      "hash": "9377d2c4e4c55812d42f0cddc4c33f2203da7f973625de2414beed9a8857ed2f",
+      "size": 420268,
+      "sources": [
+        "papers/CSE-403.pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-403.pdf"
+      ],
+      "originalName": "CSE-403.pdf",
+      "code": "CSE-403",
+      "title": "CSE-403 · INTERNET OF THINGS",
+      "conflicts": [
+        "Exam year is unknown"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "3f989766a234237041ef39585664dfceade686ff87de3384a02c0c731d8b1ee7",
+      "size": 829997,
+      "sources": [
+        "papers/CSE-404( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-404( 2023).pdf"
+      ],
+      "originalName": "CSE-404( 2023).pdf",
+      "code": "CSE-404",
+      "title": "CSE-404 · THEORY OF COMPUTATION",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-404",
+          "href": "papers/CSE-404( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "47a1a8290f5babf7dd859fd16a332e23f49d26e9794c81927a8b834cba672f7b",
+      "size": 1191158,
+      "sources": [
+        "papers/CSE-405( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-405( 2023).pdf"
+      ],
+      "originalName": "CSE-405( 2023).pdf",
+      "code": "CSE-405",
+      "title": "CSE-405 · COMPUTER SYSTEM ORGANIZATION",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-405",
+          "href": "papers/CSE-405( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "a1e849eb0d0807c24fd8e778a9986a145b0210aa0680c55aca74a20b66b9c44c",
+      "size": 507715,
+      "sources": [
+        "papers/CSE-501( 2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-501( 2022-23).pdf"
+      ],
+      "originalName": "CSE-501( 2022-23).pdf",
+      "code": "CSE-501",
+      "title": "CSE-501 · Machine Learning",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-501",
+          "href": "papers/CSE-501( 2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "eaf9cae4ce12b4fc5260276463bc801d1ace15b082701eb86843c002d34135a1",
+      "size": 439852,
+      "sources": [
+        "papers/CSE-501(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-501(2023-24).pdf"
+      ],
+      "originalName": "CSE-501(2023-24).pdf",
+      "code": "CSE-501",
+      "title": "CSE-501 · Machine Learning",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [
+        "Catalog subject CSE-504 points to CSE-501"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-501",
+          "href": "papers/CSE-501(2023-24).pdf"
+        },
+        {
+          "label": "2023",
+          "subject": "CSE-504",
+          "href": "papers/CSE-501(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "8c571985cec8d20469ea1c8376fe051e5afefb1ec51090af0f8e3d91beba2151",
+      "size": 284090,
+      "sources": [
+        "papers/CSE-502( 2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-502( 2022-23).pdf"
+      ],
+      "originalName": "CSE-502( 2022-23).pdf",
+      "code": "CSE-502",
+      "title": "CSE-502 · IEBO",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-502",
+          "href": "papers/CSE-502( 2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "373036d0137ac4bff1f51a38e4fd8e170b6432406aba1c536cd0f1940edcbde8",
+      "size": 273474,
+      "sources": [
+        "papers/CSE-502(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-502(2023-24).pdf"
+      ],
+      "originalName": "CSE-502(2023-24).pdf",
+      "code": "CSE-502",
+      "title": "CSE-502 · IEBO",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-502",
+          "href": "papers/CSE-502(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "84c5c90a95cc7a820fd20e1ad48af6b7233e20982010836a81d7f6ded19784c3",
+      "size": 513073,
+      "sources": [
+        "papers/CSE-503( 2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-503( 2022-23).pdf"
+      ],
+      "originalName": "CSE-503( 2022-23).pdf",
+      "code": "CSE-503",
+      "title": "CSE-503 · Operating System",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Catalog year 2021 disagrees with filename year 2022"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2021",
+          "subject": "CSE-503",
+          "href": "papers/CSE-503( 2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "f687ff848594dc84a50954afd31089dd704145603876b1625806c541f03fd48c",
+      "size": 546715,
+      "sources": [
+        "papers/CSE-503(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-503(2023-24).pdf"
+      ],
+      "originalName": "CSE-503(2023-24).pdf",
+      "code": "CSE-503",
+      "title": "CSE-503 · Operating System",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [
+        "Catalog year 2022 disagrees with filename year 2023"
+      ],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-503",
+          "href": "papers/CSE-503(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "2e9b06333730992d3dd07370437243b15a489f187ebe3c99053f562aef1760d3",
+      "size": 326722,
+      "sources": [
+        "papers/CSE-504( 2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-504( 2022-23).pdf"
+      ],
+      "originalName": "CSE-504( 2022-23).pdf",
+      "code": "CSE-504",
+      "title": "CSE-504 · Computer Graphics & Multimedia",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-504",
+          "href": "papers/CSE-504( 2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "2a2caad0984092edf419a8e896428e22dc8c7676bfad5f7e0e4930a4e666de0e",
+      "size": 473075,
+      "sources": [
+        "papers/CSE-505( 2022-23).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-505( 2022-23).pdf"
+      ],
+      "originalName": "CSE-505( 2022-23).pdf",
+      "code": "CSE-505",
+      "title": "CSE-505 · Core Elective-I",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2022",
+          "subject": "CSE-505",
+          "href": "papers/CSE-505( 2022-23).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "031a72f1bc9ffb0982e196ef7abba6ea767413e2c730f6dbe023846cfed02533",
+      "size": 461612,
+      "sources": [
+        "papers/CSE-505(2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-505(2023-24).pdf"
+      ],
+      "originalName": "CSE-505(2023-24).pdf",
+      "code": "CSE-505",
+      "title": "CSE-505 · Core Elective-I",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-505",
+          "href": "papers/CSE-505(2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "113da8cb6b817093b1b40f71ddd760f8b1e1de6ad63968f3c5d50037f39de9f4",
+      "size": 406037,
+      "sources": [
+        "papers/CSE-601( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-601( 2023).pdf"
+      ],
+      "originalName": "CSE-601( 2023).pdf",
+      "code": "CSE-601",
+      "title": "CSE-601 · Computer Network",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-601",
+          "href": "papers/CSE-601( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "f617e8388903b6eb33254597dfb90184708583a4118a165a8eee171ef6836ec8",
+      "size": 535138,
+      "sources": [
+        "papers/CSE-602( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-602( 2023).pdf"
+      ],
+      "originalName": "CSE-602( 2023).pdf",
+      "code": "CSE-602",
+      "title": "CSE-602 · Complier Design",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-602",
+          "href": "papers/CSE-602( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c12da5e658f109d10fd5b3cffebff7a29550d5e6f6e5205a5ae2d2a23771ed27",
+      "size": 563149,
+      "sources": [
+        "papers/CSE-605( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-605( 2023).pdf"
+      ],
+      "originalName": "CSE-605( 2023).pdf",
+      "code": "CSE-605",
+      "title": "CSE-605 · Open Elective I(DIP)",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-605",
+          "href": "papers/CSE-605( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "c8db18f4a199e7d4c85713601da3ed65cddc2a073a372713b70dc1abc547faca",
+      "size": 460435,
+      "sources": [
+        "papers/CSE-701( 2023-24).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-701( 2023-24).pdf"
+      ],
+      "originalName": "CSE-701( 2023-24).pdf",
+      "code": "CSE-701",
+      "title": "CSE-701 · Big data Analytics",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-701",
+          "href": "papers/CSE-701( 2023-24).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "dcaef93b2de7bb7f987708f235641b246a1fbf6be9a2190d946285470cdeeac5",
+      "size": 436170,
+      "sources": [
+        "papers/CSE-702( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-702( 2023).pdf"
+      ],
+      "originalName": "CSE-702( 2023).pdf",
+      "code": "CSE-702",
+      "title": "CSE-702 · Soft Computing",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-702",
+          "href": "papers/CSE-702( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "df2864a65a61ec727ed194391637dac8b411071e45440c27f80d59441c8764a5",
+      "size": 384097,
+      "sources": [
+        "papers/CSE-703( 2023).pdf",
+        "other pages 1/branch page/other pages2/papers page/papers/CSE-703( 2023).pdf"
+      ],
+      "originalName": "CSE-703( 2023).pdf",
+      "code": "CSE-703",
+      "title": "CSE-703 · Core Elective III(block chain)",
+      "year": 2023,
+      "conflicts": [],
+      "catalogLinks": [
+        {
+          "label": "2023",
+          "subject": "CSE-703",
+          "href": "papers/CSE-703( 2023).pdf"
+        }
+      ]
+    },
+    {
+      "hash": "666047c81c1b7dd563fe8420bc9f603f283da3d234718199cbb12644b4a0c349",
+      "size": 388989,
+      "sources": [
+        "New papers/CSE,IT,Elec.-201 2024.pdf"
+      ],
+      "originalName": "CSE,IT,Elec.-201 2024.pdf",
+      "title": "CSE,IT,Elec.-201 2024",
+      "year": 2024,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "11aa61ebe3731ceabb99ca4b8a005146a1af49e89b64c705ec41d0897bcfbe5f",
+      "size": 163325,
+      "sources": [
+        "New papers/CSE,IT,Elec.-204. (2024).pdf"
+      ],
+      "originalName": "CSE,IT,Elec.-204. (2024).pdf",
+      "title": "CSE,IT,Elec.-204. (2024)",
+      "year": 2024,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "b36273bef835938f4ccd9178097afec5394fe29937e3174adb9f583a08c3bdc6",
+      "size": 202008,
+      "sources": [
+        "New papers/IT -302(2022-23).pdf"
+      ],
+      "originalName": "IT -302(2022-23).pdf",
+      "code": "IT-302",
+      "title": "IT -302(2022-23)",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "feef1193f99ff2e11c4454fb424b0bfb15dc17c44ccf9e4a7575c863db2e52a9",
+      "size": 252075,
+      "sources": [
+        "New papers/IT-301 2024.pdf"
+      ],
+      "originalName": "IT-301 2024.pdf",
+      "code": "IT-301",
+      "title": "IT-301 2024",
+      "year": 2024,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "01559a505aad136e66b16e91cd4cbc6770d381b29a99911b5ee2409ee5104ec7",
+      "size": 292931,
+      "sources": [
+        "New papers/IT-301(2022-23).pdf"
+      ],
+      "originalName": "IT-301(2022-23).pdf",
+      "code": "IT-301",
+      "title": "IT-301(2022-23)",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "34d1e2cb3de8694702602fb21ffb308cf6b093196921b4f394c1280c128111fc",
+      "size": 196890,
+      "sources": [
+        "New papers/IT-303 2023-24.pdf"
+      ],
+      "originalName": "IT-303 2023-24.pdf",
+      "code": "IT-303",
+      "title": "IT-303 2023-24",
+      "year": 2023,
+      "session": "2023-24",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "b436ddc906569f88e719e38f75bea6be3e9cec376d235368400883975049688a",
+      "size": 384541,
+      "sources": [
+        "New papers/IT-303(2022-23).pdf"
+      ],
+      "originalName": "IT-303(2022-23).pdf",
+      "code": "IT-303",
+      "title": "IT-303(2022-23)",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "f5fbf6d89f5e34efb2851bfb6dafaf793bddb4bbf865c9888a1045ffd9e7e5db",
+      "size": 336745,
+      "sources": [
+        "New papers/IT-304(2022-23).pdf"
+      ],
+      "originalName": "IT-304(2022-23).pdf",
+      "code": "IT-304",
+      "title": "IT-304(2022-23)",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "bf1fd42cca2bb669e6e4bcd148b419d2b66f51b53432815e50ff2310a62e4fb2",
+      "size": 286516,
+      "sources": [
+        "New papers/IT-305(2022-23).pdf"
+      ],
+      "originalName": "IT-305(2022-23).pdf",
+      "code": "IT-305",
+      "title": "IT-305(2022-23)",
+      "year": 2022,
+      "session": "2022-23",
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "00b97d38fc492005be4fcf42f81aa83a39ab5d9734d1b11dbfa0fbfcac521f67",
+      "size": 305790,
+      "sources": [
+        "New papers/IT-401 2024.pdf"
+      ],
+      "originalName": "IT-401 2024.pdf",
+      "code": "IT-401",
+      "title": "IT-401 2024",
+      "year": 2024,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "66f761812926ac6a2e449e17b373f284ff49ad1617d76786a9e803de4d922a7f",
+      "size": 299005,
+      "sources": [
+        "New papers/Mach.civil - 203 (2022).pdf"
+      ],
+      "originalName": "Mach.civil - 203 (2022).pdf",
+      "title": "Mach.civil - 203 (2022)",
+      "year": 2022,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "2019d4e22e49731d2d947fb841247592209c212e6e456f8daedce57e5d0b71dd",
+      "size": 314233,
+      "sources": [
+        "New papers/Mech,civil, 103-(2022).pdf"
+      ],
+      "originalName": "Mech,civil, 103-(2022).pdf",
+      "title": "Mech,civil, 103-(2022)",
+      "year": 2022,
+      "conflicts": [
+        "Subject/offering requires verification"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "985f2348280207c7c65e066cf31ed3d7b5c61b9d5abdf2866890b23d13e38922",
+      "size": 280289,
+      "sources": [
+        "images/son/Data science .pdf"
+      ],
+      "originalName": "Data science .pdf",
+      "title": "Data science ",
+      "conflicts": [
+        "Subject/offering requires verification",
+        "Exam year is unknown"
+      ],
+      "catalogLinks": []
+    },
+    {
+      "hash": "2e6a1b53adf6e6da0ea2eff7db5a9c4b7eac834e026526f5579a76010ff9be5d",
+      "size": 291116,
+      "sources": [
+        "images/son/Data science _01.pdf"
+      ],
+      "originalName": "Data science _01.pdf",
+      "title": "Data science _01",
+      "conflicts": [
+        "Subject/offering requires verification",
+        "Exam year is unknown"
+      ],
+      "catalogLinks": []
+    }
+  ],
+  "subjects": [
+    {
+      "code": "CSE-101",
+      "name": "Engineering Mathematics-I",
+      "semester": 1,
+      "originalLabel": "CSE-101,Engineering Mathematics-I"
+    },
+    {
+      "code": "CSE-102",
+      "name": "Engineering Chemistry",
+      "semester": 1,
+      "originalLabel": "CSE-102,Engineering Chemistry"
+    },
+    {
+      "code": "CSE-103",
+      "name": "Technical English",
+      "semester": 1,
+      "originalLabel": "CSE-103,Technical English"
+    },
+    {
+      "code": "CSE-104",
+      "name": "Basic Mechanical Engineering",
+      "semester": 1,
+      "originalLabel": "CSE-104, Basic Mechanical Engineering"
+    },
+    {
+      "code": "CSE-105",
+      "name": "Basic Electronics Engineering",
+      "semester": 1,
+      "originalLabel": "CSE-105,Basic Electronics Engineering"
+    },
+    {
+      "code": "CSE-201",
+      "name": "Engineering Physics",
+      "semester": 2,
+      "originalLabel": "CSE-201, Engineering Physics"
+    },
+    {
+      "code": "CSE-202",
+      "name": "Basic Electrical Engineering",
+      "semester": 2,
+      "originalLabel": "CSE-202, Basic Electrical Engineering"
+    },
+    {
+      "code": "CSE-203",
+      "name": "Fundamentals of Computer Programming",
+      "semester": 2,
+      "originalLabel": "CSE-203, Fundamentals of Computer Programming"
+    },
+    {
+      "code": "CSE-204",
+      "name": "Basic Civil Engineering & Engineering Mechanics",
+      "semester": 2,
+      "originalLabel": "CSE-204, Basic Civil Engineering & Engineering Mechanics"
+    },
+    {
+      "code": "CSE-205",
+      "name": "Engineering Graphics & CAD",
+      "semester": 2,
+      "originalLabel": "CSE-205, Engineering Graphics & CAD"
+    },
+    {
+      "code": "CSE-301",
+      "name": "ENGINERING MATHEMATICS II",
+      "semester": 3,
+      "originalLabel": "CSE-301-ENGINERING MATHEMATICS II"
+    },
+    {
+      "code": "CSE-302",
+      "name": "DIGITAL ELECTRONICS",
+      "semester": 3,
+      "originalLabel": "CSE- 302-DIGITAL ELECTRONICS"
+    },
+    {
+      "code": "CSE-303",
+      "name": "DATA STRUCTURE AND ALGORITHM",
+      "semester": 3,
+      "originalLabel": "CSE-303-DATA STRUCTURE AND ALGORITHM"
+    },
+    {
+      "code": "CSE-304",
+      "name": "DATA BASE MANAGEMENT SYSTEM",
+      "semester": 3,
+      "originalLabel": "CSE- 304-DATA BASE MANAGEMENT SYSTEM"
+    },
+    {
+      "code": "CSE-305",
+      "name": "DISCRETE STRUCTURE",
+      "semester": 3,
+      "originalLabel": "CSE-305-DISCRETE STRUCTURE"
+    },
+    {
+      "code": "CSE-401",
+      "name": "ENGINEERING MATHEMATICS III",
+      "semester": 4,
+      "originalLabel": "CSE-401-ENGINEERING MATHEMATICS III"
+    },
+    {
+      "code": "CSE-402",
+      "name": "DATA SCIENCE",
+      "semester": 4,
+      "originalLabel": "CSE-402-DATA SCIENCE"
+    },
+    {
+      "code": "CSE-403",
+      "name": "INTERNET OF THINGS",
+      "semester": 4,
+      "originalLabel": "CSE-403-INTERNET OF THINGS"
+    },
+    {
+      "code": "CSE-404",
+      "name": "THEORY OF COMPUTATION",
+      "semester": 4,
+      "originalLabel": "CSE-404-THEORY OF COMPUTATION"
+    },
+    {
+      "code": "CSE-405",
+      "name": "COMPUTER SYSTEM ORGANIZATION",
+      "semester": 4,
+      "originalLabel": "CSE-405-COMPUTER SYSTEM ORGANIZATION"
+    },
+    {
+      "code": "CSE-501",
+      "name": "Machine Learning",
+      "semester": 5,
+      "originalLabel": "CSE-501-Machine Learning"
+    },
+    {
+      "code": "CSE-502",
+      "name": "IEBO",
+      "semester": 5,
+      "originalLabel": "CSE- 502-IEBO"
+    },
+    {
+      "code": "CSE-503",
+      "name": "Operating System",
+      "semester": 5,
+      "originalLabel": "CSE-503-Operating System"
+    },
+    {
+      "code": "CSE-504",
+      "name": "Computer Graphics & Multimedia",
+      "semester": 5,
+      "originalLabel": "CSE- 504-Computer Graphics & Multimedia"
+    },
+    {
+      "code": "CSE-505",
+      "name": "Core Elective-I",
+      "semester": 5,
+      "originalLabel": "CSE-505-Core Elective-I"
+    },
+    {
+      "code": "CSE-601",
+      "name": "Computer Network",
+      "semester": 6,
+      "originalLabel": "CSE-601-Computer Network"
+    },
+    {
+      "code": "CSE-602",
+      "name": "Complier Design",
+      "semester": 6,
+      "originalLabel": "CSE-602-Complier Design"
+    },
+    {
+      "code": "CSE-603",
+      "name": "Object Oriented Software Engineering",
+      "semester": 6,
+      "originalLabel": "CSE-603-Object Oriented Software Engineering"
+    },
+    {
+      "code": "CSE-604",
+      "name": "Core Elective - II(deep learning)",
+      "semester": 6,
+      "originalLabel": "CSE-604-Core Elective - II(deep learning)"
+    },
+    {
+      "code": "CSE-605",
+      "name": "Open Elective I(DIP)",
+      "semester": 6,
+      "originalLabel": "CSE-605-Open Elective I(DIP)"
+    },
+    {
+      "code": "CSE-701",
+      "name": "Big data Analytics",
+      "semester": 7,
+      "originalLabel": "CSE-701-Big data Analytics"
+    },
+    {
+      "code": "CSE-702",
+      "name": "Soft Computing",
+      "semester": 7,
+      "originalLabel": "CSE- 702-Soft Computing"
+    },
+    {
+      "code": "CSE-703",
+      "name": "Core Elective III(block chain)",
+      "semester": 7,
+      "originalLabel": "CSE-703-Core Elective III(block chain)"
+    },
+    {
+      "code": "CSE-704",
+      "name": "Open Elective II(cloud computing)",
+      "semester": 7,
+      "originalLabel": "CSE- 704-Open Elective II(cloud computing)"
+    },
+    {
+      "code": "CSE-801",
+      "name": "Digital marketing",
+      "semester": 8,
+      "originalLabel": "CSE-801-Digital marketing"
+    },
+    {
+      "code": "CSE-802",
+      "name": "Core Elective - IV(network security)",
+      "semester": 8,
+      "originalLabel": "CSE-802-Core Elective - IV(network security)"
+    },
+    {
+      "code": "CSE-803",
+      "name": "Core Elective - V(AI,A. Operating system)",
+      "semester": 8,
+      "originalLabel": "CSE-803-Core Elective - V(AI,A. Operating system)"
+    },
+    {
+      "code": "CSE-804",
+      "name": "Open Elective - III(NLP)",
+      "semester": 8,
+      "originalLabel": "CSE-804-Open Elective - III(NLP)"
+    }
+  ],
+  "branches": [
+    {
+      "name": "Computer Science and Engineering",
+      "code": "CSE",
+      "slug": "cse"
+    },
+    {
+      "name": "Electronics and Communications Engineering",
+      "code": "ECE",
+      "slug": "ece"
+    },
+    {
+      "name": "Information Technology",
+      "code": "IT",
+      "slug": "it"
+    },
+    {
+      "name": "Electrical Engineering",
+      "code": "EE",
+      "slug": "electrical"
+    },
+    {
+      "name": "Mechanical Engineering",
+      "code": "ME",
+      "slug": "mechanical"
+    },
+    {
+      "name": "Civil Engineering",
+      "code": "CE",
+      "slug": "civil"
+    }
+  ]
+}

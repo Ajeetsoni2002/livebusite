@@ -1,0 +1,42 @@
+{
+  "stage": "before",
+  "categories": {
+    "performance": 96,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": 1716.1554,
+    "largest-contentful-paint": 2466.4727,
+    "total-blocking-time": 103.15864999999985,
+    "cumulative-layout-shift": 0
+  },
+  "bundle": [
+    {
+      "name": "/assets/index-D6nHFsXS.js",
+      "bytes": 363261,
+      "gzip": 116059
+    },
+    {
+      "name": "/assets/react-DB-4Zxce.js",
+      "bytes": 8529,
+      "gzip": 3280
+    },
+    {
+      "name": "/assets/jsx-runtime-BtH0gOTJ.js",
+      "bytes": 424,
+      "gzip": 294
+    },
+    {
+      "name": "/assets/createLucideIcon-Cpszxddz.js",
+      "bytes": 3089,
+      "gzip": 1481
+    },
+    {
+      "name": "/assets/index-B9glLk-j.css",
+      "bytes": 29636,
+      "gzip": 7580
+    }
+  ]
+}

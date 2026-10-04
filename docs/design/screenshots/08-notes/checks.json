@@ -1,0 +1,26 @@
+[
+  {
+    "name": "home",
+    "width": 390,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "notes",
+    "width": 390,
+    "path": "/notes",
+    "errors": []
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "notes",
+    "width": 1440,
+    "path": "/notes",
+    "errors": []
+  }
+]

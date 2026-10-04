@@ -1,0 +1,62 @@
+{
+  "tool": "12.8.2",
+  "url": "http://127.0.0.1:4173/",
+  "mode": "mobile",
+  "performance": {
+    "median": 95,
+    "range": [
+      84,
+      96
+    ]
+  },
+  "runs": [
+    {
+      "date": "2026-10-03T23:12:01.678Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": "1.7 s",
+        "largest-contentful-paint": "2.3 s",
+        "total-blocking-time": "140 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "1.7 s"
+      }
+    },
+    {
+      "date": "2026-10-03T23:12:12.688Z",
+      "scores": {
+        "performance": 84,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": "1.9 s",
+        "largest-contentful-paint": "2.5 s",
+        "total-blocking-time": "490 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "1.9 s"
+      }
+    },
+    {
+      "date": "2026-10-03T23:12:24.761Z",
+      "scores": {
+        "performance": 95,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": "1.7 s",
+        "largest-contentful-paint": "2.3 s",
+        "total-blocking-time": "190 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "1.7 s"
+      }
+    }
+  ]
+}

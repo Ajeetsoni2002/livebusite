@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solar Archive — before and after</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#f5f2eb;color:#29251f;font:16px/1.6 system-ui,sans-serif;padding:32px}main{max-width:1500px;margin:auto}h1{font-size:clamp(30px,4vw,56px);line-height:1.1;margin:12px 0}p{color:#696158}nav{display:flex;gap:20px;flex-wrap:wrap;margin:28px 0}label{display:grid;gap:6px;font-weight:600}select{font:inherit;padding:8px 12px;border:1px solid #8b8072;border-radius:8px;background:#fffcf6;color:inherit}.comparison{display:grid;grid-template-columns:1fr 1fr;gap:24px}figure{margin:0;min-width:0}figcaption{display:flex;justify-content:space-between;gap:16px;margin-bottom:12px}img{display:block;width:100%;border:1px solid #8b8072;border-radius:12px}a{color:#a34220}select:focus-visible,a:focus-visible{outline:3px solid #46621b;outline-offset:3px}@media(max-width:700px){body{padding:20px}.comparison{grid-template-columns:1fr}}
+</style>
+<main>
+<span>BUIT PAPERS / DESIGN REVIEW</span>
+<h1>Solar Archive.</h1>
+<p>Compare the original interface with the completed dark and light themes. Captures cover five page types at mobile and desktop widths.</p>
+<nav aria-label="Screenshot selection">
+<label>Page<select id="page"><option value="home">Home</option><option value="branch">Branch</option><option value="listing">Paper listing</option><option value="detail">Paper detail</option><option value="notes">Notes</option></select></label>
+<label>Viewport<select id="width"><option value="1440">Desktop · 1440 px</option><option value="390">Mobile · 390 px</option></select></label>
+<label>After theme<select id="theme"><option value="after">Dark</option><option value="after-light">Light</option></select></label>
+</nav>
+<div class="comparison">
+<figure><figcaption><strong>Before</strong><a id="before-full">Open full page</a></figcaption><img id="before" alt="Original interface"></figure>
+<figure><figcaption><strong>After</strong><a id="after-full">Open full page</a></figcaption><img id="after" alt="Solar Archive interface"></figure>
+</div>
+<p>These screenshots use reduced motion. See <a href="../../DESIGN.md">DESIGN.md</a> for tokens, interactions, accessibility, and performance results.</p>
+</main>
+<script>
+const page=document.getElementById('page'), width=document.getElementById('width'), theme=document.getElementById('theme');
+function update(){for(const [id,folder] of [['before','before'],['after',theme.value]]){const base=`screenshots/${folder}/${page.value}-${width.value}`;document.getElementById(id).src=base+'-viewport.png';document.getElementById(id).alt=`${id==='before'?'Original':'Solar Archive '+theme.selectedOptions[0].text} ${page.selectedOptions[0].text}, ${width.value} pixels`;document.getElementById(id+'-full').href=base+'.png';}}
+for(const control of [page,width,theme])control.addEventListener('change',update);update();
+</script>
+</html>

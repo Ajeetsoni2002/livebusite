@@ -1,0 +1,58 @@
+@font-face {
+  font-family: "Space Grotesk";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/space-grotesk-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/manrope-latin.woff2") format("woff2");
+}
+:root {
+  --ink: #0b0b0d;
+  --surface: #171719;
+  --raised: #222225;
+  --text: #f5f2ea;
+  --muted: #adaab3;
+  --primary: #ff956f;
+  --accent: #c6ff66;
+  --border: #ffffff18;
+  --control-border: #77737e;
+  --success: #a8e6ad;
+  --danger: #ff9b9b;
+  --hero-gradient: linear-gradient(120deg, #ff683b, #ffc078);
+  --branch-cse: #c6ff66;
+  --branch-ece: #bba5ff;
+  --branch-it: #78dfc9;
+  --branch-ee: #ffd166;
+  --branch-me: #ff9975;
+  --branch-ce: #9ac3ff;
+  --font-display: "Space Grotesk", "Arial", sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --radius-control: 10px;
+  --radius-card: 18px;
+  --radius-feature: 28px;
+  --shadow-card: 0 8px 24px #00000033;
+  --shadow-float: 0 24px 64px #00000066;
+  --glow-focus: 0 0 28px #c6ff661f;
+  --duration-fast: 150ms;
+  --duration-hover: 240ms;
+  --duration-reveal: 360ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Compatibility aliases for shared staff controls. */
+  --cyan: var(--accent);
+  --orange: var(--primary);
+}

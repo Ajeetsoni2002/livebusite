@@ -1,0 +1,332 @@
+import { Router } from "express";
+import { z } from "zod";
+import { rateLimit } from "express-rate-limit";
+import { createHash } from "node:crypto";
+import { config } from "../config.js";
+import { HttpError, identifier, ok } from "../lib/http.js";
+import {
+  taxonomyModels,
+  contentModels,
+  Subject,
+  SubjectOffering,
+  publicationFilter,
+  Paper,
+  Note,
+  Report,
+  PaperRequest,
+} from "./models.js";
+const id = z.string().regex(/^[a-f0-9]{24}$/i);
+const filters = z
+  .object({
+    q: z.string().max(120).optional(),
+    branch: id.optional(),
+    semester: id.optional(),
+    subject: id.optional(),
+    offering: id.optional(),
+    year: z.coerce.number().int().min(1900).max(2200).optional(),
+    examType: z
+      .enum(["Mid-Sem", "End-Sem", "Supplementary", "Other", "Unknown"])
+      .optional(),
+    sort: z.enum(["newest", "downloads"]).default("newest"),
+    page: z.coerce.number().int().min(1).max(1000).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(20),
+  })
+  .strict();
+export const escaped = (text: string) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+export async function catalogFilter(raw: unknown, publicOnly = true) {
+  const input = filters.parse(raw);
+  const filter: any = publicOnly ? { ...publicationFilter } : {};
+  if (input.branch || input.semester || input.subject || input.offering) {
+    const query: any = {};
+    for (const key of ["branch", "semester", "subject"])
+      if (input[key]) query[key] = input[key];
+    if (input.offering) query._id = input.offering;
+    filter.offerings = {
+      $in: (await SubjectOffering.find(query).select("_id").lean()).map(
+        (o) => o._id,
+      ),
+    };
+  }
+  if (input.year) filter.year = input.year;
+  if (input.examType) filter.examType = input.examType;
+  if (input.q?.trim()) {
+    const regex = new RegExp(escaped(input.q.trim()), "i");
+    const subjects = await Subject.find({
+      $or: [{ name: regex }, { code: regex }, { aliases: regex }],
+    })
+      .select("_id")
+      .limit(50)
+      .lean();
+    const offerings = await SubjectOffering.find({
+      subject: { $in: subjects.map((s) => s._id) },
+    })
+      .select("_id")
+      .lean();
+    filter.$or = [
+      { title: regex },
+      { tags: regex },
+      { offerings: { $in: offerings.map((o) => o._id) } },
+    ];
+    if (/^20\d{2}$/.test(input.q)) filter.$or.push({ year: Number(input.q) });
+  }
+  return { input, filter };
+}
+export async function listContent(
+  kind: string,
+  raw: unknown,
+  publicOnly = true,
+) {
+  const model = contentModels[kind];
+  if (!model) throw new HttpError(404, "Unknown content type");
+  const { input, filter } = await catalogFilter(raw, publicOnly);
+  const [data, total] = await Promise.all([
+    model
+      .find(filter)
+      .select("-revisions -provenance -rejectionReason")
+      .populate({
+        path: "offerings",
+        populate: [
+          { path: "subject" },
+          { path: "branch" },
+          { path: "semester" },
+          { path: "program" },
+        ],
+      })
+      .populate("author", "name")
+      .populate("asset", "thumbnailKey deletedAt")
+      .sort(
+        input.sort === "downloads"
+          ? { downloads: -1, _id: -1 }
+          : { createdAt: -1, _id: -1 },
+      )
+      .skip((input.page - 1) * input.limit)
+      .limit(input.limit)
+      .lean(),
+    model.countDocuments(filter),
+  ]);
+  return {
+    data: data.map(withThumbnail),
+    meta: { total, page: input.page, pages: Math.ceil(total / input.limit) },
+  };
+}
+function withThumbnail(item: any) {
+  const { asset, ...content } = item;
+  return {
+    ...content,
+    hasThumbnail: Boolean(asset?.thumbnailKey && !asset.deletedAt),
+  };
+}
+export function cached(req: any, res: any, data: unknown, meta?: unknown) {
+  const body = JSON.stringify({ data, ...(meta ? { meta } : {}) });
+  const etag = `"${createHash("sha256").update(body).digest("hex")}"`;
+  res.set({
+    "Cache-Control": "public, max-age=30, must-revalidate",
+    ETag: etag,
+  });
+  if (req.get("If-None-Match") === etag) return res.status(304).end();
+  res.type("json").send(body);
+}
+export const catalogRouter = Router();
+for (const [name, model] of Object.entries(taxonomyModels)) {
+  catalogRouter.get(`/${name}`, async (req, res) => {
+    const query: any = { active: true };
+    if (name === "offerings") delete query.active;
+    for (const key of ["program", "branch", "semester", "subject"])
+      if (req.query[key]) query[key] = identifier(req.query[key]);
+    const data = await model
+      .find(query)
+      .sort({ order: 1, name: 1 })
+      .populate(
+        name === "offerings"
+          ? [
+              { path: "subject" },
+              { path: "branch" },
+              { path: "semester" },
+              { path: "program" },
+            ]
+          : [],
+      )
+      .lean();
+    cached(req, res, data);
+  });
+}
+catalogRouter.get("/subjects/:id", async (req, res) => {
+  const subject = await Subject.findOne({
+    _id: identifier(req.params.id),
+    active: true,
+  }).lean();
+  if (!subject) throw new HttpError(404, "Subject not found");
+  const offerings = await SubjectOffering.find({ subject: subject._id })
+    .populate("branch semester program")
+    .lean();
+  cached(req, res, { ...subject, offerings });
+});
+for (const kind of ["papers", "notes"]) {
+  catalogRouter.get(`/${kind}`, async (req, res) => {
+    const result = await listContent(kind, req.query);
+    cached(req, res, result.data, result.meta);
+  });
+  catalogRouter.get(`/${kind}/:id`, async (req, res) => {
+    const key = String(req.params.id);
+    const query = /^[a-f0-9]{24}$/i.test(key) ? { _id: key } : { slug: key };
+    const item = await contentModels[kind]
+      .findOne({ ...query, ...publicationFilter })
+      .select("-provenance -rejectionReason -revisions")
+      .populate({
+        path: "offerings",
+        populate: [
+          { path: "subject" },
+          { path: "branch" },
+          { path: "semester" },
+          { path: "program" },
+        ],
+      })
+      .populate("author", "name")
+      .populate("asset", "thumbnailKey deletedAt")
+      .lean();
+    if (!item) throw new HttpError(404, "Content not found");
+    cached(req, res, withThumbnail(item));
+  });
+}
+catalogRouter.get("/papers/:id/related", async (req, res) => {
+  const item = await Paper.findOne({
+    _id: identifier(req.params.id),
+    ...publicationFilter,
+  });
+  if (!item) throw new HttpError(404, "Paper not found");
+  const related = await Paper.find({
+    ...publicationFilter,
+    _id: { $ne: item._id },
+    offerings: { $in: item.offerings },
+  })
+    .select("-revisions -provenance -rejectionReason")
+    .sort({ year: -1 })
+    .limit(8)
+    .populate({
+      path: "offerings",
+      populate: ["subject", "branch", "semester", "program"],
+    })
+    .populate("author", "name")
+    .populate("asset", "thumbnailKey deletedAt")
+    .lean();
+  cached(req, res, related.map(withThumbnail));
+});
+const searchLimit = rateLimit({
+  windowMs: 60_000,
+  limit: 60,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
+catalogRouter.get("/search/suggestions", searchLimit, async (req, res) => {
+  const query = z.string().min(2).max(120).parse(req.query.q);
+  let subjects: any[];
+  if (config.atlasSearch) {
+    try {
+      subjects = await Subject.aggregate([
+        {
+          $search: {
+            index: "subject_autocomplete",
+            autocomplete: { query, path: "name", fuzzy: { maxEdits: 1 } },
+          },
+        },
+        { $match: { active: true } },
+        { $limit: 8 },
+        { $project: { name: 1, code: 1, slug: 1 } },
+      ]);
+    } catch {
+      subjects = null;
+    }
+  }
+  if (!subjects?.length) {
+    const regex = new RegExp(escaped(query), "i");
+    subjects = await Subject.find({
+      active: true,
+      $or: [{ name: regex }, { code: regex }, { aliases: regex }],
+    })
+      .select("name code slug")
+      .limit(8)
+      .lean();
+  }
+  if (subjects.length < 8) {
+    const { filter } = await catalogFilter({ q: query });
+    const resources = await Promise.all(
+      [Paper, Note].map((model) =>
+        model
+          .find(filter)
+          .select("title year slug")
+          .limit(8 - subjects.length)
+          .lean(),
+      ),
+    );
+    subjects.push(
+      ...resources
+        .flat()
+        .slice(0, 8 - subjects.length)
+        .map((item) => ({
+          _id: item._id,
+          name: item.title,
+          slug: item.slug,
+          code: item.year ? String(item.year) : "",
+        })),
+    );
+  }
+  ok(res, subjects);
+});
+catalogRouter.get("/search", searchLimit, async (req, res) => {
+  const query = { q: z.string().max(120).parse(req.query.q), limit: 10 };
+  const [papers, notes] = await Promise.all([
+    listContent("papers", query),
+    listContent("notes", query),
+  ]);
+  ok(res, {
+    papers: papers.data,
+    notes: notes.data,
+    total: papers.meta.total + notes.meta.total,
+  });
+});
+catalogRouter.get("/stats", async (req, res) => {
+  const [papers, notes, downloads] = await Promise.all([
+    Paper.countDocuments(publicationFilter),
+    Note.countDocuments(publicationFilter),
+    Promise.all(
+      [Paper, Note].map((model) =>
+        model.aggregate([
+          { $match: publicationFilter },
+          { $group: { _id: null, total: { $sum: "$downloads" } } },
+        ]),
+      ),
+    ).then((rows) => rows.flat()),
+  ]);
+  cached(req, res, {
+    papers,
+    notes,
+    downloads: downloads.reduce((total, row) => total + row.total, 0),
+  });
+});
+const inboxLimit = rateLimit({
+  windowMs: 3600_000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
+const submission = z
+  .object({
+    message: z.string().trim().min(10).max(2000),
+    email: z.email().max(254).optional().or(z.literal("")),
+    contentType: z.enum(["papers", "notes"]).optional(),
+    content: id.optional(),
+    offering: id.optional(),
+    year: z.coerce.number().int().min(1900).max(2200).optional(),
+  })
+  .strict();
+for (const [name, model] of [
+  ["reports", Report],
+  ["paper-requests", PaperRequest],
+] as const)
+  catalogRouter.post(`/${name}`, inboxLimit, async (req, res) => {
+    const data = submission.parse(req.body);
+    await model.create(data);
+    res.status(201);
+    ok(res, { received: true });
+  });

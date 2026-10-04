@@ -1,0 +1,26 @@
+[
+  {
+    "name": "home",
+    "width": 390,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 390,
+    "path": "/papers",
+    "errors": []
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 1440,
+    "path": "/papers",
+    "errors": []
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "name": "buit-papers-platform",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n API,WEB -c cyan,magenta \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm test -w backend && node --import tsx --test frontend/tests/*.test.ts",
+    "import:dry": "npm run import:dry -w backend",
+    "smoke": "node scripts/smoke-test.mjs",
+    "db:dev": "tsx backend/scripts/dev-db.ts",
+    "snapshot:legacy": "tsx backend/scripts/export-snapshot.ts --legacy",
+    "snapshot:refresh": "npm run snapshot -w backend && npm run snapshot:validate -w backend && npm run build -w frontend",
+    "snapshot:package": "node --import tsx frontend/scripts/package-snapshot.mjs",
+    "thumbnails:backfill": "npm run thumbnails:backfill -w backend",
+    "test:browser": "node --import tsx scripts/browser-smoke.mjs",
+    "test:thumbnails": "node --import tsx scripts/thumbnail-browser-smoke.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
+    "sharp": "^0.35.5",
+    "typescript-eslint": "^8.71.0"
+  }
+}

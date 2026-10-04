@@ -1,0 +1,256 @@
+/* Solar Archive / Daylight. Semantic colors also cover staff and recovery states. */
+.theme-toggle {
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--surface);
+  flex-shrink: 0;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink: #f5f2eb;
+  --surface: #fffcf6;
+  --raised: #e9e3d9;
+  --text: #29251f;
+  --muted: #696158;
+  --primary: #a34220;
+  --accent: #46621b;
+  --border: #3e30251f;
+  --control-border: #8b8072;
+  --success: #296247;
+  --danger: #ab3029;
+  --hero-gradient: linear-gradient(120deg, #ad3e1d, #965514);
+  --branch-cse: #42621a;
+  --branch-ece: #6c43a9;
+  --branch-it: #20675b;
+  --branch-ee: #805b09;
+  --branch-me: #a13f25;
+  --branch-ce: #345da1;
+  --shadow-card: 0 8px 24px #563c2008;
+  --shadow-float: 0 24px 64px #563c2024;
+  --glow-focus: 0 0 28px #46621b14;
+}
+[data-theme="light"] .navbar {
+  background: #f5f2ebee;
+}
+[data-theme="light"] .button:hover {
+  background: #883519;
+}
+[data-theme="light"] .button.secondary {
+  background: #ffffff40;
+  color: var(--text);
+}
+[data-theme="light"] .button.secondary:hover {
+  background: var(--raised);
+}
+[data-theme="light"] .search-box,
+[data-theme="light"] .filter-search {
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+[data-theme="light"] .search-box .button:hover {
+  background: #354d12;
+}
+[data-theme="light"] .search-box input,
+[data-theme="light"] .filter-search input {
+  color: var(--text);
+}
+[data-theme="light"] .search-box input::placeholder,
+[data-theme="light"] .filter-search input::placeholder {
+  color: var(--muted);
+}
+[data-theme="light"] .solar-hero::before {
+  background: radial-gradient(ellipse at 80% 40%, #dc79341a, transparent 60%);
+}
+[data-theme="light"] .scene-grid {
+  background-image:
+    linear-gradient(#50391b0c 1px, transparent 1px),
+    linear-gradient(90deg, #50391b0c 1px, transparent 1px);
+}
+[data-theme="light"] .scene-tag {
+  background: #f5f5dfef;
+  border-color: #46621b40;
+}
+[data-theme="light"] .hero-paper {
+  box-shadow: 0 28px 60px #57382030;
+}
+[data-theme="light"] .finder {
+  background:
+    radial-gradient(ellipse at top left, #ff956f0e, transparent 70%),
+    var(--surface);
+}
+[data-theme="light"] .finder-steps select {
+  background: var(--ink);
+}
+[data-theme="light"] .resource:hover {
+  background: #fffaf0;
+  border-color: #a3422060;
+}
+[data-theme="light"] .resource .card-top {
+  background:
+    radial-gradient(ellipse at 50% 100%, #b66b2520, transparent 75%), #ede7dc;
+}
+[data-theme="light"] .resource .card-top .pill {
+  background: #fffcf6;
+  color: var(--text);
+}
+[data-theme="light"] .resource .card-top .pdf-thumbnail {
+  box-shadow: 0 12px 28px #6748252b;
+}
+[data-theme="light"] .resource .card-top .file-icon {
+  background: #a342200c;
+  border-color: #a3422030;
+}
+[data-theme="light"] .resource-actions button:hover {
+  background: var(--raised);
+}
+[data-theme="light"] .semester-popover {
+  background: #fffcf6f8;
+}
+[data-theme="light"] .semester-popover > div a {
+  background: var(--raised);
+}
+[data-theme="light"] .semester-tabs button[aria-pressed="true"] {
+  color: #fff;
+}
+[data-theme="light"] .subject-shortcuts a {
+  color: var(--text);
+}
+[data-theme="light"] .subject-shortcuts small {
+  color: var(--muted);
+}
+[data-theme="light"] .detail-sidebar {
+  background: linear-gradient(150deg, #f3e5d5, var(--surface) 45%);
+}
+[data-theme="light"] .preview {
+  background:
+    radial-gradient(ellipse at 50% 40%, #ba783516, transparent 75%),
+    var(--surface);
+}
+[data-theme="light"] .preview-placeholder .button {
+  color: #fff;
+  background: var(--accent);
+}
+[data-theme="light"] .markdown pre {
+  background: var(--raised);
+}
+[data-theme="light"] .command-modal {
+  background: #fffcf6fa;
+  border-color: var(--control-border);
+}
+[data-theme="light"] .command-results button:hover,
+[data-theme="light"] .command-results button[aria-selected="true"],
+[data-theme="light"] .suggestions button:hover,
+[data-theme="light"] .suggestions button.selected {
+  background: #46621b12;
+}
+[data-theme="light"] .notes-showcase {
+  background: #e7dcc8;
+}
+[data-theme="light"] .notes-showcase-copy > .button {
+  color: #f5f2ea;
+  background: #25231e;
+}
+[data-theme="light"] .notes-showcase-resource {
+  color: var(--text);
+}
+[data-theme="light"] .note-resource .card-top {
+  background: #e8ecd8;
+}
+[data-theme="light"] .notes-welcome {
+  background: #e7dcc8;
+}
+[data-theme="light"] .site-footer {
+  background: #eae3d8;
+}
+[data-theme="light"] .footer-wordmark {
+  color: #877667;
+}
+[data-theme="light"] .notice {
+  background: #a3422007;
+  border-color: #a3422030;
+}
+[data-theme="light"] .notice.error {
+  background: #ab302909;
+  border-color: #ab302933;
+}
+[data-theme="light"] .skeleton {
+  background: linear-gradient(100deg, var(--surface), #e7dfd4, var(--surface));
+  background-size: 200% 100%;
+}
+[data-theme="light"] .skeleton-paper,
+[data-theme="light"] .skeleton-line {
+  background: #3e302510;
+}
+[data-theme="light"] .staff-nav a.active,
+[data-theme="light"] .tabs button.active {
+  background: #46621b10;
+}
+[data-theme="light"] .row-actions button {
+  background: #ffffff50;
+}
+[data-theme="light"] .status {
+  color: var(--muted);
+  background: var(--raised);
+}
+[data-theme="light"] .status.published {
+  color: var(--success);
+  background: #29624712;
+}
+[data-theme="light"] .status.pending {
+  color: #805b09;
+  background: #805b0912;
+}
+[data-theme="light"] .status.rejected {
+  color: var(--danger);
+  background: #ab302912;
+}
+[data-theme="light"] .dropzone {
+  border-color: var(--accent);
+  background: #46621b05;
+}
+[data-theme="light"] .cursor-glow {
+  background: radial-gradient(circle, #a3422009, transparent 65%);
+}
+@media (max-width: 760px) {
+  .nav-inner {
+    gap: 8px;
+  }
+  .nav-inner > .theme-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+  }
+  .nav-inner > .palette-trigger {
+    min-width: 44px;
+    width: 44px;
+  }
+  .nav-inner > .mobile-toggle {
+    min-width: 44px;
+    width: 44px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  [data-theme="light"] .navbar nav.open {
+    background: var(--surface);
+  }
+  [data-theme="light"] .paper-scene {
+    background: #eee4d5;
+  }
+}
+@media (max-width: 380px) {
+  .nav-inner {
+    gap: 5px;
+    padding-inline: 16px;
+  }
+  .nav-inner .brand strong {
+    font-size: 16px;
+  }
+  .nav-inner .brand small {
+    font-size: 6px;
+  }
+  .nav-inner .brand img {
+    width: 30px;
+    height: 30px;
+  }
+}

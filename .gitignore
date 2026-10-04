@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+uploads/
+coverage/
+.npm-cache/
+.worktrees/
+.superpowers/
+playwright-report/
+test-results/
+.vercel/

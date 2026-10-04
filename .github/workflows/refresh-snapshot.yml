@@ -1,0 +1,60 @@
+name: Refresh published library snapshot
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: published-library-snapshot
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.event_name == 'workflow_dispatch' || vars.SNAPSHOT_AUTOMATION_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22.14.0"
+          package-manager-cache: false
+      - run: npm ci --include=dev
+      - name: Export and validate published content
+        env:
+          SNAPSHOT_MONGODB_URI: ${{ secrets.SNAPSHOT_MONGODB_URI }}
+        run: |
+          test -n "$SNAPSHOT_MONGODB_URI" || { echo 'Configure the read-only SNAPSHOT_MONGODB_URI secret.'; exit 1; }
+          npm run snapshot -w backend
+          npm run snapshot:validate -w backend
+      - name: Build the static fallback
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_SITE_URL: ${{ vars.VITE_SITE_URL }}
+          VITE_CONTACT_EMAIL: ${{ vars.VITE_CONTACT_EMAIL }}
+        run: |
+          node scripts/check-snapshot-build-env.mjs
+          npm run build -w frontend
+          npm run snapshot:package
+      - uses: actions/upload-artifact@v7
+        with:
+          name: published-library-${{ github.run_id }}
+          path: .vercel/output/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+      - name: Publish the prepared frontend
+        if: vars.SNAPSHOT_DEPLOY_ENABLED == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+        run: |
+          test -n "$VERCEL_TOKEN" && test -n "$VERCEL_ORG_ID" && test -n "$VERCEL_PROJECT_ID" || { echo 'Configure Vercel credentials before enabling snapshot deployment.'; exit 1; }
+          npx --yes vercel@62.2.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"

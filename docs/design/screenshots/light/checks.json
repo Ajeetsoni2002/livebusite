@@ -1,0 +1,62 @@
+[
+  {
+    "name": "home",
+    "width": 390,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "branch",
+    "width": 390,
+    "path": "/programs/btech/cse",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 390,
+    "path": "/papers",
+    "errors": []
+  },
+  {
+    "name": "detail",
+    "width": 390,
+    "path": "/papers/btech/cse/sem-7/cse-703/2023/cse-703-2023-df2864a6",
+    "errors": []
+  },
+  {
+    "name": "notes",
+    "width": 390,
+    "path": "/notes",
+    "errors": []
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "branch",
+    "width": 1440,
+    "path": "/programs/btech/cse",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 1440,
+    "path": "/papers",
+    "errors": []
+  },
+  {
+    "name": "detail",
+    "width": 1440,
+    "path": "/papers/btech/cse/sem-7/cse-703/2023/cse-703-2023-df2864a6",
+    "errors": []
+  },
+  {
+    "name": "notes",
+    "width": 1440,
+    "path": "/notes",
+    "errors": []
+  }
+]

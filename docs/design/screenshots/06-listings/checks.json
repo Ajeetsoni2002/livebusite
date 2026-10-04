@@ -1,0 +1,26 @@
+[
+  {
+    "name": "branch",
+    "width": 390,
+    "path": "/programs/btech/cse",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 390,
+    "path": "/papers",
+    "errors": []
+  },
+  {
+    "name": "branch",
+    "width": 1440,
+    "path": "/programs/btech/cse",
+    "errors": []
+  },
+  {
+    "name": "listing",
+    "width": 1440,
+    "path": "/papers",
+    "errors": []
+  }
+]

@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: buit-papers-api
+    runtime: node
+    plan: starter
+    buildCommand: npm ci --include=dev && npm run build -w backend
+    startCommand: npm run start -w backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: STORAGE_DRIVER
+        value: s3
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ANALYTICS_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: SITE_URL
+        sync: false
+      - key: API_URL
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_REGION
+        value: auto
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
+      - key: TRUST_PROXY
+        sync: false

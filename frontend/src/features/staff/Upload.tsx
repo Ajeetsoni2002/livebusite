@@ -1,0 +1,472 @@
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { UploadCloud } from "lucide-react";
+import { api, apiUrl, errorMessage } from "../../lib/api";
+import { useUser } from "./Auth";
+import { usePublic } from "../../lib/queries";
+import type { Offering, ContentItem } from "../../lib/types";
+type Row = { title: string; offering: string; year: string; examType: string };
+export default function Upload() {
+  const user = useUser(),
+    [params] = useSearchParams(),
+    navigate = useNavigate(),
+    client = useQueryClient(),
+    [kind, setKind] = useState(params.get("kind") || "papers"),
+    [format, setFormat] = useState("pdf"),
+    [files, setFiles] = useState<File[]>([]),
+    [rows, setRows] = useState<Row[]>([]),
+    [message, setMessage] = useState(""),
+    [busy, setBusy] = useState(false);
+  const edit = params.get("edit"),
+    offerings = usePublic<Offering[]>("/offerings"),
+    item = useQuery({
+      queryKey: ["edit", kind, edit],
+      queryFn: async () =>
+        (await api.get(`/${user.role}/${kind}/${edit}`)).data
+          .data as ContentItem,
+      enabled: !!edit,
+    });
+  useEffect(() => {
+    if (item.data) {
+      setFormat(item.data.format || "pdf");
+    }
+  }, [item.data]);
+  function choose(list: File[]) {
+    setFiles(list.slice(0, 5));
+    setRows(
+      list.slice(0, 5).map((file) => ({
+        title: file.name.replace(/\.pdf$/i, ""),
+        offering: "",
+        year: "",
+        examType: "Unknown",
+      })),
+    );
+  }
+  const options = offerings.data?.data || [];
+  function offeringOptions() {
+    return (
+      <>
+        <option value="">Choose subject / branch / semester</option>
+        {options.map((o) => (
+          <option key={o._id} value={o._id}>
+            {o.branch.code || o.branch.name} · {o.semester.name} ·{" "}
+            {o.subject.code} · {o.subject.name}
+          </option>
+        ))}
+      </>
+    );
+  }
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setBusy(true);
+    setMessage("");
+    const form = new FormData(event.currentTarget);
+    try {
+      if (files.length > 1 && !edit) {
+        if (rows.some((r) => !r.offering))
+          throw new Error("Choose a subject for every PDF.");
+        const data = new FormData();
+        files.forEach((f) => data.append("files", f));
+        data.append(
+          "metadata",
+          JSON.stringify(
+            rows.map((row) => ({
+              title: row.title,
+              offerings: [row.offering],
+              ...(kind === "papers"
+                ? {
+                    year: row.year ? Number(row.year) : undefined,
+                    examType: row.examType,
+                  }
+                : { format: "pdf" }),
+              ...(user.role === "admin"
+                ? { status: String(form.get("status") || "pending") }
+                : {}),
+            })),
+          ),
+        );
+        const result = await api.post(`/${user.role}/${kind}/bulk`, data, {
+          timeout: 120_000,
+        });
+        setMessage(
+          result.data.data
+            .map(
+              (r: { index: number; error?: string; item?: ContentItem }) =>
+                `${files[r.index].name}: ${r.error || r.item?.status}`,
+            )
+            .join("\n"),
+        );
+        setFiles([]);
+      } else {
+        const metadata: Record<string, unknown> = {
+          title: String(form.get("title")),
+          offerings: form.getAll("offering").map(String).filter(Boolean),
+          credit: String(form.get("credit") || ""),
+          tags: String(form.get("tags") || "")
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean),
+        };
+        if (kind === "papers") {
+          if (form.get("year")) metadata.year = Number(form.get("year"));
+          metadata.examType = String(form.get("examType") || "Unknown");
+          metadata.session = String(form.get("session") || "");
+        } else {
+          metadata.format = format;
+          metadata.unit = String(form.get("unit") || "");
+          metadata.topic = String(form.get("topic") || "");
+          if (format === "markdown")
+            metadata.markdown = String(form.get("markdown") || "");
+        }
+        if (user.role === "admin")
+          metadata.status = String(form.get("status") || "pending");
+        if (edit) {
+          await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
+          if (files[0]) {
+            const replacement = new FormData();
+            replacement.append("file", files[0]);
+            await api.post(
+              `/${user.role}/${kind}/${edit}/replace-file`,
+              replacement,
+              { timeout: 120_000 },
+            );
+          }
+        } else {
+          const data = new FormData();
+          data.append("metadata", JSON.stringify(metadata));
+          if (files[0]) data.append("file", files[0]);
+          await api.post(`/${user.role}/${kind}`, data, { timeout: 120_000 });
+        }
+        setMessage(edit ? "Resource updated." : "Uploaded successfully.");
+        await client.invalidateQueries({ queryKey: ["staff-content"] });
+        navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
+      }
+    } catch (error) {
+      setMessage(errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (edit && item.isPending) return <p>Loading resource…</p>;
+  const data = item.data;
+  const selectedOfferings = (data?.offerings || []).map((offering) =>
+    typeof offering === "string" ? offering : offering._id,
+  );
+  return (
+    <>
+      <h2>{edit ? "Inspect / edit resource" : "Share a resource"}</h2>
+      <p>
+        {user.role === "contributor"
+          ? "Your submission will be reviewed before publication."
+          : "Upload PDFs with metadata, or write a Markdown note."}
+      </p>
+      <div className="toolbar">
+        <label>
+          Resource type
+          <select
+            aria-label="Resource type"
+            value={kind}
+            disabled={!!edit}
+            onChange={(e) => {
+              setKind(e.target.value);
+              setFiles([]);
+            }}
+          >
+            <option value="papers">Question paper</option>
+            <option value="notes">Short note</option>
+          </select>
+        </label>
+        {kind === "notes" && (
+          <label>
+            Format
+            <select
+              aria-label="Format"
+              value={format}
+              onChange={(e) => setFormat(e.target.value)}
+            >
+              <option value="pdf">PDF</option>
+              <option value="markdown">Markdown</option>
+            </select>
+          </label>
+        )}
+      </div>
+      {data?.metadataNeedsReview && (
+        <div className="notice">
+          Source conflicts: {data.provenance?.conflicts?.join("; ")}. Verify the
+          PDF and correct metadata before approval.
+        </div>
+      )}
+      {edit && format === "pdf" && (
+        <a
+          className="text-link"
+          href={apiUrl(`/${kind}/${edit}/preview`)}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Inspect current PDF →
+        </a>
+      )}
+      <form
+        className="card staff-card staff-form"
+        onSubmit={submit}
+        key={`${edit || "new"}-${kind}-${data?._id || "loading"}`}
+      >
+        {format === "pdf" && (
+          <div
+            className="dropzone wide"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              choose(Array.from(e.dataTransfer.files));
+            }}
+          >
+            <UploadCloud size={30} />
+            <p>
+              Drop PDFs here, or choose files.
+              <br />
+              Up to 5 PDFs per batch, 20 MB each by default.
+            </p>
+            <input
+              aria-label="Choose PDFs"
+              type="file"
+              accept="application/pdf,.pdf"
+              multiple={!edit}
+              onChange={(e) => choose(Array.from(e.target.files || []))}
+            />
+          </div>
+        )}
+        {files.length > 1 && !edit ? (
+          <div className="table-scroll wide">
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>FILE / TITLE</th>
+                  <th>SUBJECT OFFERING</th>
+                  {kind === "papers" && (
+                    <>
+                      <th>YEAR</th>
+                      <th>EXAM TYPE</th>
+                    </>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row, i) => (
+                  <tr key={i}>
+                    <td>
+                      <small>{files[i].name}</small>
+                      <input
+                        aria-label={`Title ${i + 1}`}
+                        value={row.title}
+                        onChange={(e) =>
+                          setRows((old) =>
+                            old.map((r, index) =>
+                              index === i ? { ...r, title: e.target.value } : r,
+                            ),
+                          )
+                        }
+                      />
+                    </td>
+                    <td>
+                      <select
+                        aria-label={`Subject ${i + 1}`}
+                        required
+                        value={row.offering}
+                        onChange={(e) =>
+                          setRows((old) =>
+                            old.map((r, index) =>
+                              index === i
+                                ? { ...r, offering: e.target.value }
+                                : r,
+                            ),
+                          )
+                        }
+                      >
+                        {offeringOptions()}
+                      </select>
+                    </td>
+                    {kind === "papers" && (
+                      <>
+                        <td>
+                          <input
+                            type="number"
+                            min="1900"
+                            max="2200"
+                            aria-label={`Year ${i + 1}`}
+                            value={row.year}
+                            onChange={(e) =>
+                              setRows((old) =>
+                                old.map((r, index) =>
+                                  index === i
+                                    ? { ...r, year: e.target.value }
+                                    : r,
+                                ),
+                              )
+                            }
+                          />
+                        </td>
+                        <td>
+                          <select
+                            aria-label={`Exam ${i + 1}`}
+                            value={row.examType}
+                            onChange={(e) =>
+                              setRows((old) =>
+                                old.map((r, index) =>
+                                  index === i
+                                    ? { ...r, examType: e.target.value }
+                                    : r,
+                                ),
+                              )
+                            }
+                          >
+                            {[
+                              "Unknown",
+                              "Mid-Sem",
+                              "End-Sem",
+                              "Supplementary",
+                              "Other",
+                            ].map((s) => (
+                              <option key={s}>{s}</option>
+                            ))}
+                          </select>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <>
+            <label className="wide">
+              Title
+              <input
+                name="title"
+                required
+                minLength={3}
+                maxLength={240}
+                defaultValue={data?.title}
+              />
+            </label>
+            <label className="wide">
+              Subject / branch / semester (select all that apply)
+              <select
+                name="offering"
+                multiple
+                size={5}
+                required
+                defaultValue={selectedOfferings}
+              >
+                {offeringOptions()}
+              </select>
+            </label>
+            {kind === "papers" ? (
+              <>
+                <label>
+                  Year
+                  <input
+                    type="number"
+                    name="year"
+                    min="1900"
+                    max="2200"
+                    defaultValue={data?.year}
+                  />
+                </label>
+                <label>
+                  Exam type
+                  <select
+                    name="examType"
+                    defaultValue={data?.examType || "Unknown"}
+                  >
+                    {[
+                      "Unknown",
+                      "Mid-Sem",
+                      "End-Sem",
+                      "Supplementary",
+                      "Other",
+                    ].map((s) => (
+                      <option key={s}>{s}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Session
+                  <input
+                    name="session"
+                    defaultValue={data?.session}
+                    placeholder="Only enter a verified session"
+                  />
+                </label>
+              </>
+            ) : (
+              <>
+                <label>
+                  Unit
+                  <input name="unit" defaultValue={data?.unit} />
+                </label>
+                <label>
+                  Topic
+                  <input name="topic" defaultValue={data?.topic} />
+                </label>
+                {format === "markdown" && (
+                  <label className="wide">
+                    Markdown content
+                    <textarea
+                      name="markdown"
+                      required
+                      maxLength={100000}
+                      rows={16}
+                      defaultValue={data?.markdown}
+                    />
+                  </label>
+                )}
+              </>
+            )}
+            <label>
+              Author credit
+              <input
+                name="credit"
+                defaultValue={data?.credit}
+                maxLength={160}
+              />
+            </label>
+            <label>
+              Tags · comma separated
+              <input name="tags" defaultValue={data?.tags?.join(", ")} />
+            </label>
+          </>
+        )}
+        {user.role === "admin" && (
+          <label>
+            Status
+            <select name="status" defaultValue={data?.status || "pending"}>
+              {["draft", "pending", "published"].map((s) => (
+                <option key={s}>{s}</option>
+              ))}
+            </select>
+          </label>
+        )}
+        <button className="button wide" disabled={busy}>
+          {busy
+            ? "Saving…"
+            : edit
+              ? "Save changes"
+              : files.length > 1
+                ? "Upload batch"
+                : "Submit resource"}
+        </button>
+        {message && (
+          <p
+            className="notice wide"
+            role="status"
+            style={{ whiteSpace: "pre-line" }}
+          >
+            {message}
+          </p>
+        )}
+      </form>
+    </>
+  );
+}

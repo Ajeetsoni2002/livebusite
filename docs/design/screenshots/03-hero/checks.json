@@ -1,0 +1,14 @@
+[
+  {
+    "name": "home",
+    "width": 390,
+    "path": "/",
+    "errors": []
+  },
+  {
+    "name": "home",
+    "width": 1440,
+    "path": "/",
+    "errors": []
+  }
+]
