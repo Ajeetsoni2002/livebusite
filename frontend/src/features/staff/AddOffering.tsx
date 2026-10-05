@@ -10,12 +10,8 @@ const slug = (text: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 const list = async (name: string) =>
-  (await api.get(`/admin/taxonomy/${name}`)).data.data as (Entity & {
-    _id: string;
-    subject?: string;
-    branch?: string;
-    semester?: string;
-  })[];
+  (await api.get(`/admin/taxonomy/${name}`)).data.data as Entity[];
+type Link = { _id: string; subject: string; branch: string; semester: string };
 
 // Admin-only: create a missing branch / semester / subject and link them, without leaving the upload form.
 export default function AddOffering({
@@ -117,7 +113,9 @@ export default function AddOffering({
         offeringId = (await post("offerings", link))._id;
       } catch (e) {
         // Already linked: reuse the existing offering instead of failing.
-        const existing = (await list("offerings")).find(
+        const existing = (
+          (await api.get("/admin/taxonomy/offerings")).data.data as Link[]
+        ).find(
           (o) =>
             o.subject === link.subject &&
             o.branch === link.branch &&
