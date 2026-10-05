@@ -1,0 +1,242 @@
+/* Nebula: site-wide futuristic layer. Loaded last; only tokens, no per-page colors.
+   Motion animates transform/opacity only and is removed under prefers-reduced-motion. */
+
+/* 01 — Canvas: static aurora behind everything (no layout cost, no repaint on scroll). */
+body {
+  background: var(--ink);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20vh -20vw;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 18% 12%, var(--aurora-1), transparent 70%),
+    radial-gradient(38% 32% at 85% 18%, var(--aurora-2), transparent 70%),
+    radial-gradient(45% 40% at 60% 95%, var(--aurora-3), transparent 70%);
+  animation: aurora-drift 40s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes aurora-drift {
+  to {
+    transform: translate3d(3vw, -2vh, 0) scale(1.06);
+  }
+}
+.perspective-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  transform: perspective(700px) rotateX(58deg) translateY(28%);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, #000 10%, transparent 75%);
+  opacity: 0.6;
+}
+
+/* 02 — Glass surfaces for floating chrome. Cards stay solid for scroll performance. */
+.glass,
+.navbar,
+.command-modal,
+.quick-preview,
+.semester-popover {
+  background: var(--glass);
+  border-color: var(--glass-border);
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+}
+/* 03 — Typography accents. */
+.gradient-text {
+  background: var(--hero-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+::selection {
+  background: color-mix(in srgb, var(--primary) 35%, transparent);
+  color: var(--text);
+}
+
+/* 04 — Focus: visible ring plus soft glow in both themes. */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  box-shadow: var(--glow-focus);
+}
+
+/* 05 — Micro-interactions. */
+.button,
+.icon-button,
+.row-actions button {
+  transition:
+    transform var(--duration-fast) var(--ease),
+    box-shadow var(--duration-hover) var(--ease),
+    background var(--duration-fast),
+    border-color var(--duration-fast),
+    color var(--duration-fast);
+}
+.button:hover {
+  box-shadow: var(--glow);
+  transform: translateY(-1px);
+}
+.button:active,
+.icon-button:active,
+.row-actions button:active {
+  transform: scale(0.97);
+}
+.button.secondary {
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--control-border);
+  color: var(--text);
+}
+.button.secondary:hover {
+  border-color: var(--primary);
+}
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  transition:
+    border-color var(--duration-fast),
+    box-shadow var(--duration-hover) var(--ease);
+}
+input:not([type="checkbox"]):not([type="radio"]):focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--primary);
+  outline-offset: 0;
+}
+
+/* 06 — 3D tilt (driven by lib/tilt.ts via --rx/--ry/--mx/--my). */
+[data-tilt] {
+  transform: perspective(900px) rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg)) translateZ(0);
+  transition: transform 300ms var(--ease);
+}
+[data-tilt].tilting {
+  transition: transform 80ms linear;
+}
+[data-tilt]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--text) 9%, transparent),
+    transparent 45%
+  );
+  transition: opacity 240ms;
+}
+[data-tilt].tilting::after {
+  opacity: 1;
+}
+
+/* 07 — Toasts and confirm dialog (components/Feedback.tsx). */
+.toast-region {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  display: grid;
+  gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--primary);
+  border-radius: 12px;
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-float);
+  color: var(--text);
+  font-size: 14px;
+  pointer-events: auto;
+  animation: toast-in 260ms var(--ease);
+}
+.toast.success {
+  border-left-color: var(--success);
+}
+.toast.error {
+  border-left-color: var(--danger);
+}
+.toast p {
+  flex: 1;
+  margin: 0;
+  white-space: pre-line;
+}
+.toast button {
+  padding: 2px;
+  color: var(--muted);
+  background: none;
+  border: 0;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+.confirm-dialog {
+  width: min(440px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+}
+.confirm-dialog::backdrop {
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
+  backdrop-filter: blur(6px);
+}
+.confirm-dialog form {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+}
+.confirm-dialog h2 {
+  margin: 0;
+  font-size: 20px;
+}
+.confirm-dialog p {
+  margin: 0;
+  color: var(--muted);
+}
+.confirm-dialog .row-actions {
+  justify-content: flex-end;
+}
+.confirm-dialog .danger {
+  color: var(--ink);
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+  [data-tilt] {
+    transform: none !important;
+  }
+  [data-tilt]::after {
+    display: none;
+  }
+  .button:hover {
+    transform: none;
+  }
+  .toast {
+    animation: none;
+  }
+}

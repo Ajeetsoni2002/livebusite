@@ -88,7 +88,7 @@ h3 {
   border-radius: 16px;
 }
 .button {
-  border: 1px solid #67e8f950;
+  border: 1px solid color-mix(in srgb, var(--primary) 31%, transparent);
   background: var(--cyan);
   color: #08252c;
   border-radius: 9px;
@@ -108,12 +108,12 @@ h3 {
   transform: translateY(-1px);
 }
 .button.secondary {
-  background: #ffffff06;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
   color: #dce6f7;
-  border-color: #ffffff20;
+  border-color: color-mix(in srgb, var(--text) 13%, transparent);
 }
 .button.secondary:hover {
-  background: #ffffff10;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
 }
 .button.full {
   width: 100%;
@@ -155,8 +155,8 @@ h3 {
   font-size: 12px;
   font-weight: 650;
   letter-spacing: 0.07em;
-  border: 1px solid #ffffff14;
-  background: #ffffff06;
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  background: color-mix(in srgb, var(--text) 2%, transparent);
   color: #bcc7dc;
   padding: 5px 8px;
   border-radius: 5px;
@@ -227,7 +227,7 @@ h3 {
   align-items: center;
   gap: 9px;
   color: #abb8ce;
-  background: #ffffff04;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 9px 12px;
@@ -237,8 +237,8 @@ kbd {
   font: inherit;
   font-size: 12px;
   padding: 2px 5px;
-  background: #ffffff07;
-  border: 1px solid #ffffff14;
+  background: color-mix(in srgb, var(--text) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 8%, transparent);
   border-radius: 4px;
 }
 .mobile-toggle {
@@ -303,14 +303,14 @@ footer {
   align-items: center;
   gap: 12px;
   background: #0e1725;
-  border: 1px solid #67e8f933;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
   border-radius: 12px;
   padding: 8px 10px 8px 18px;
-  box-shadow: 0 0 32px #22d3ee06;
+  box-shadow: 0 0 32px color-mix(in srgb, var(--primary) 2%, transparent);
   color: var(--cyan);
 }
 .search-box:focus-within {
-  border-color: #67e8f977;
+  border-color: color-mix(in srgb, var(--primary) 47%, transparent);
 }
 .search-box input {
   flex: 1;
@@ -335,7 +335,7 @@ footer {
   left: 0;
   right: 0;
   background: #141e2e;
-  border: 1px solid #c6ff6644;
+  border: 1px solid color-mix(in srgb, var(--accent) 27%, transparent);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 20px 45px #0008;
@@ -353,7 +353,7 @@ footer {
 }
 .suggestions button:hover,
 .suggestions button.selected {
-  background: #67e8f911;
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
 }
 .suggestions small {
   color: var(--cyan);
@@ -411,12 +411,12 @@ footer {
   background: var(--cyan);
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 12px #c6ff6655;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 33%, transparent);
 }
 .hero-label-line {
   width: 52px;
   height: 1px;
-  background: #ffffff18;
+  background: color-mix(in srgb, var(--text) 9%, transparent);
 }
 .hero h1 {
   font-size: clamp(38px, 4.5vw, 62px);
@@ -459,8 +459,15 @@ footer {
   align-items: center;
   justify-content: center;
   background-image:
-    linear-gradient(#ffffff03 1px, transparent 1px),
-    linear-gradient(90deg, #ffffff03 1px, transparent 1px);
+    linear-gradient(
+      color-mix(in srgb, var(--text) 1%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--text) 1%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 28px 28px;
   mask-image: radial-gradient(ellipse, #000 35%, #000d 60%, transparent 76%);
 }
@@ -468,7 +475,7 @@ footer {
   position: absolute;
   width: 315px;
   height: 315px;
-  border: 1px solid #67e8f921;
+  border: 1px solid color-mix(in srgb, var(--primary) 13%, transparent);
   border-radius: 50%;
 }
 .ring-two {
@@ -480,14 +487,14 @@ footer {
 .ring-three {
   width: 370px;
   height: 370px;
-  border-color: #ffffff08;
+  border-color: color-mix(in srgb, var(--text) 3%, transparent);
 }
 .orbit-core {
   width: 155px;
   height: 155px;
   border-radius: 30px;
   transform: rotate(-8deg);
-  border: 1px solid #67e8f92b;
+  border: 1px solid color-mix(in srgb, var(--primary) 17%, transparent);
   background: linear-gradient(140deg, #203548, #101a2c);
   display: flex;
   align-items: center;
@@ -495,8 +502,8 @@ footer {
   flex-direction: column;
   gap: 18px;
   box-shadow:
-    0 0 65px #c6ff660b,
-    12px 12px 0 #ffffff02;
+    0 0 65px color-mix(in srgb, var(--accent) 4%, transparent),
+    12px 12px 0 color-mix(in srgb, var(--text) 1%, transparent);
   color: #8bddf0;
 }
 .orbit-core span {
@@ -513,7 +520,7 @@ footer {
   align-items: center;
   font-size: 12px;
   padding: 13px 17px;
-  border: 1px solid #ffffff16;
+  border: 1px solid color-mix(in srgb, var(--text) 9%, transparent);
   background: #142236ed;
   border-radius: 9px;
   box-shadow: 0 12px 24px #0005;
@@ -614,7 +621,7 @@ footer {
     transform 0.2s;
 }
 .branch-card:hover {
-  border-color: #67e8f94d;
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
   transform: translateY(-2px);
 }
 .branch-card > span:nth-child(2) {
@@ -643,7 +650,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #c6ff660b;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
   color: #82d6e8;
   flex-shrink: 0;
 }
@@ -652,16 +659,16 @@ footer {
   background: #a78bfa0b;
 }
 .tone-2 {
-  color: #ffc08a;
-  background: #fb923c0b;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
 }
 .tone-3 {
   color: #89d4b4;
-  background: #34d3990b;
+  background: color-mix(in srgb, var(--success) 4%, transparent);
 }
 .tone-4 {
-  color: #fda4af;
-  background: #fb71850b;
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 4%, transparent);
 }
 .tone-5 {
   color: #9dbdf8;
@@ -683,7 +690,7 @@ footer {
     background 0.2s;
 }
 .resource:hover {
-  border-color: #67e8f94b;
+  border-color: color-mix(in srgb, var(--primary) 29%, transparent);
   transform: translateY(-3px);
   background: linear-gradient(135deg, #18283bcc, #111a29);
 }
@@ -701,7 +708,7 @@ footer {
   width: 35px;
   height: 35px;
   border-radius: 8px;
-  background: #67e8f90a;
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
   color: #83d6ea;
   display: flex;
   align-items: center;
@@ -717,9 +724,9 @@ footer {
   width: 64px;
   height: 84px;
   padding: 3px;
-  border: 1px solid #ffffff20;
+  border: 1px solid color-mix(in srgb, var(--text) 13%, transparent);
   border-radius: 6px;
-  background: #fff;
+  background: var(--text);
   overflow: hidden;
 }
 .pdf-thumbnail img {
@@ -908,7 +915,7 @@ select,
 textarea {
   background: var(--ink);
   color: var(--text);
-  border: 1px solid #ffffff1c;
+  border: 1px solid color-mix(in srgb, var(--text) 11%, transparent);
   border-radius: 7px;
   padding: 10px 12px;
   min-width: 0;
@@ -929,8 +936,8 @@ textarea {
   font-size: 12px;
 }
 .notice {
-  border: 1px solid #67e8f92e;
-  background: #67e8f908;
+  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+  background: color-mix(in srgb, var(--primary) 3%, transparent);
   color: var(--text);
   padding: 15px 18px;
   border-radius: 10px;
@@ -940,8 +947,8 @@ textarea {
 }
 .notice.error {
   color: var(--danger);
-  border-color: #fb718533;
-  background: #fb718508;
+  border-color: color-mix(in srgb, var(--danger) 20%, transparent);
+  background: color-mix(in srgb, var(--danger) 3%, transparent);
 }
 .notice button {
   margin-left: 12px;
@@ -979,7 +986,7 @@ textarea {
   margin-top: 22px;
 }
 .subject-shortcuts > a {
-  background: #ffffff03;
+  background: color-mix(in srgb, var(--text) 1%, transparent);
   border: 1px solid var(--border);
   border-radius: 9px;
   padding: 13px;
@@ -991,7 +998,7 @@ textarea {
   color: var(--muted);
 }
 .subject-shortcuts > a:hover {
-  border-color: #c6ff6644;
+  border-color: color-mix(in srgb, var(--accent) 27%, transparent);
 }
 .subject-shortcuts span {
   color: var(--cyan);
@@ -1012,15 +1019,15 @@ textarea {
 .tabs button {
   padding: 11px 24px;
   border-radius: 7px;
-  background: #ffffff03;
+  background: color-mix(in srgb, var(--text) 1%, transparent);
   border: 1px solid var(--border);
   color: var(--muted);
   font-size: 12px;
 }
 .tabs button.active {
   color: var(--cyan);
-  background: #67e8f90a;
-  border-color: #c6ff6644;
+  background: color-mix(in srgb, var(--primary) 4%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 27%, transparent);
 }
 .detail-layout {
   display: grid;
@@ -1196,7 +1203,7 @@ textarea {
 }
 .staff-nav a.active {
   color: var(--cyan);
-  background: #c6ff660b;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
 }
 .staff-title {
   display: flex;
@@ -1400,12 +1407,12 @@ textarea {
   border: 1px solid var(--border);
   border-radius: 5px;
   padding: 5px 8px;
-  background: #ffffff04;
+  background: color-mix(in srgb, var(--text) 2%, transparent);
   color: var(--text);
   font-size: 12px;
 }
 .row-actions button:hover {
-  border-color: #c6ff6644;
+  border-color: color-mix(in srgb, var(--accent) 27%, transparent);
   color: var(--cyan);
 }
 .status {
@@ -1413,20 +1420,20 @@ textarea {
   display: inline-block;
   padding: 4px 7px;
   border-radius: 5px;
-  background: #ffffff0a;
+  background: color-mix(in srgb, var(--text) 4%, transparent);
   color: var(--muted);
 }
 .status.published {
   color: var(--success);
-  background: #34d39912;
+  background: color-mix(in srgb, var(--success) 7%, transparent);
 }
 .status.pending {
-  color: #f3cd83;
-  background: #fbbf2412;
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 7%, transparent);
 }
 .status.rejected {
   color: var(--danger);
-  background: #fb718512;
+  background: color-mix(in srgb, var(--danger) 7%, transparent);
 }
 .stat-cards {
   display: grid;
@@ -1469,9 +1476,9 @@ textarea {
 }
 .dropzone {
   padding: 32px;
-  border: 1px dashed #c6ff6655;
+  border: 1px dashed color-mix(in srgb, var(--accent) 33%, transparent);
   border-radius: 12px;
-  background: #c6ff6605;
+  background: color-mix(in srgb, var(--accent) 2%, transparent);
   text-align: center;
 }
 .dropzone input {

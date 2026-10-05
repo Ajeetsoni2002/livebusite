@@ -1,23 +1,25 @@
-# BUIT Papers — Solar Archive
+# BUIT Papers — Nebula
 
-Solar Archive puts real papers, fast search, and student contributions at the center of the library. Its two themes share typography, layout, component structure, and interaction rules. Dark is the default; the navbar theme button saves the user's choice locally and synchronizes it across tabs.
+Nebula (October 2026) re-themes the Solar Archive layout: a deep-navy dark mode with neon cyan/violet accents and glass chrome, and a cool frosted light mode where glows become soft colored shadows. Both themes share typography, layout, component structure, and interaction rules. On a first visit the theme follows the operating system (`prefers-color-scheme`); the navbar button saves an explicit choice locally (storage wrapped in try/catch), synchronizes it across tabs, and `public/theme.js` applies it before CSS paints.
 
 ## Foundations
 
-Semantic tokens live in `frontend/src/styles/tokens.css`; daylight overrides live in `frontend/src/styles/light.css`. Component styling lives in `frontend/src/styles/solar.css`. The original `styles.css` retains shared layout and staff form/table rules.
+Semantic tokens live in `frontend/src/styles/tokens.css`; light overrides live in `frontend/src/styles/light.css`. Component styling lives in `frontend/src/styles/solar.css`; the site-wide futuristic layer (aurora canvas, glass chrome, focus glow, micro-interactions, tilt, toasts, confirm dialog) lives in `frontend/src/styles/nebula.css`, loaded last. The original `styles.css` retains shared layout and staff form/table rules. Component CSS uses tokens (or `color-mix()` of tokens) instead of brand hex values.
 
 | Role | Dark | Light |
 | --- | --- | --- |
-| Canvas | `#0B0B0D` | `#F5F2EB` |
-| Surface | `#171719` | `#FFFCF6` |
-| Raised | `#222225` | `#E9E3D9` |
-| Text | `#F5F2EA` | `#29251F` |
-| Secondary text | `#ADAAB3` | `#696158` |
-| Primary | `#FF956F` | `#A34220` |
-| Focus / sharp accent | `#C6FF66` | `#46621B` |
-| Control boundary | `#77737E` | `#8B8072` |
-| Success | `#A8E6AD` | `#296247` |
-| Error | `#FF9B9B` | `#AB3029` |
+| Canvas `--ink` | `#070B16` | `#EEF2F8` |
+| Surface | `#0E1424` | `#FFFFFF` |
+| Surface elevated `--raised` | `#172036` | `#E2E8F2` |
+| Glass | `#111A2ECC` | `#FFFFFFB8` |
+| Text | `#E8EEFB` | `#0E1628` |
+| Secondary text | `#9BA8C4` | `#475369` |
+| Primary (cyan) | `#5EE1FF` | `#0B6E8C` |
+| Accent (violet) | `#B39DFF` | `#6A3FD1` |
+| Control boundary | `#66749A` | `#6F7B92` |
+| Success / Warning / Error | `#6EE7B7` / `#FFCF70` / `#FF8FA3` | `#0B6B4A` / `#8A5A00` / `#B4232F` |
+
+All text tokens meet WCAG AA (4.5:1) against canvas, surface and raised surfaces in both themes; control borders meet 3:1.
 
 Branch colors use stable codes, never array position. CSE is lime/olive, ECE lilac/purple, IT mint/teal, EE amber/ochre, ME coral/rust, and CE blue. Each has a distinct Lucide icon and darker daylight token for contrast. Text and icons accompany color everywhere.
 
@@ -25,7 +27,7 @@ Branch colors use stable codes, never array position. CSE is lime/olive, ECE lil
 - **Scale:** display approximately 40–78 px; section 28–42 px; resource heading 21–22 px; body 14–16 px; compact metadata 10–13 px. Numbers use tabular figures. Mobile form inputs are 16 px.
 - **Spacing:** 4, 8, 12, 16, 24, 32, 48, 64, and 96 px tokens. Public content has a maximum 1280 px inner width, with 20 px mobile gutters.
 - **Radius:** 10 px controls, 18 px shared cards, 20 px branch cards, 24 px finder/dialog, 28 px feature panels.
-- **Elevation:** card `0 8px 24px #00000033`, floating panel `0 24px 64px #00000066`; daylight uses softer brown shadows. Focus glow supplements a visible outline.
+- **Elevation:** `--shadow-1/2/3` (card uses 2, floating panels 3); light mode uses soft navy-tinted shadows. Focus = 2 px primary outline plus `--glow-focus` ring.
 
 ## Components
 

@@ -1,4 +1,4 @@
-/* Solar Archive / Daylight. Semantic colors also cover staff and recovery states. */
+/* Nebula / Light. Semantic colors also cover staff and recovery states. */
 .theme-toggle {
   border: 1px solid var(--border);
   color: var(--text);
@@ -7,36 +7,46 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --ink: #f5f2eb;
-  --surface: #fffcf6;
-  --raised: #e9e3d9;
-  --text: #29251f;
-  --muted: #696158;
-  --primary: #a34220;
-  --accent: #46621b;
-  --border: #3e30251f;
-  --control-border: #8b8072;
-  --success: #296247;
-  --danger: #ab3029;
-  --hero-gradient: linear-gradient(120deg, #ad3e1d, #965514);
-  --branch-cse: #42621a;
+  /* Nebula — light: cool frosted base; accents toned down, glows become soft colored shadows. */
+  --ink: #eef2f8;
+  --surface: #ffffff;
+  --raised: #e2e8f2;
+  --glass: #ffffffb8;
+  --glass-border: #1e2a5014;
+  --text: #0e1628;
+  --muted: #475369;
+  --primary: #0b6e8c;
+  --accent: #6a3fd1;
+  --on-primary: #ffffff;
+  --border: #1e2a501a;
+  --control-border: #6f7b92;
+  --success: #0b6b4a;
+  --warning: #8a5a00;
+  --danger: #b4232f;
+  --glow: 0 10px 30px #0b6e8c1f, 0 4px 14px #6a3fd114;
+  --hero-gradient: linear-gradient(115deg, #0b6e8c, #3b5bdb 50%, #6a3fd1);
+  --aurora-1: #3b82f61f;
+  --aurora-2: #8b5cf61a;
+  --aurora-3: #06b6d41a;
+  --branch-cse: #3f6b12;
   --branch-ece: #6c43a9;
-  --branch-it: #20675b;
-  --branch-ee: #805b09;
+  --branch-it: #0f6b62;
+  --branch-ee: #7c5800;
   --branch-me: #a13f25;
-  --branch-ce: #345da1;
-  --shadow-card: 0 8px 24px #563c2008;
-  --shadow-float: 0 24px 64px #563c2024;
-  --glow-focus: 0 0 28px #46621b14;
+  --branch-ce: #2f5bb0;
+  --shadow-1: 0 1px 2px #1e2a5014;
+  --shadow-2: 0 8px 24px #1e2a5014, 0 2px 6px #1e2a500d;
+  --shadow-3: 0 24px 64px #1e2a5029;
+  --glow-focus: 0 0 0 4px #0b6e8c26;
 }
 [data-theme="light"] .navbar {
-  background: #f5f2ebee;
+  background: color-mix(in srgb, var(--ink) 88%, transparent);
 }
 [data-theme="light"] .button:hover {
-  background: #883519;
+  background: color-mix(in srgb, var(--primary) 82%, black);
 }
 [data-theme="light"] .button.secondary {
-  background: #ffffff40;
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
   color: var(--text);
 }
 [data-theme="light"] .button.secondary:hover {
@@ -48,7 +58,7 @@
   box-shadow: var(--shadow-card);
 }
 [data-theme="light"] .search-box .button:hover {
-  background: #354d12;
+  background: color-mix(in srgb, var(--primary) 82%, black);
 }
 [data-theme="light"] .search-box input,
 [data-theme="light"] .filter-search input {
@@ -59,52 +69,57 @@
   color: var(--muted);
 }
 [data-theme="light"] .solar-hero::before {
-  background: radial-gradient(ellipse at 80% 40%, #dc79341a, transparent 60%);
+  background: radial-gradient(
+    ellipse at 80% 40%,
+    var(--aurora-1),
+    transparent 60%
+  );
 }
 [data-theme="light"] .scene-grid {
   background-image:
-    linear-gradient(#50391b0c 1px, transparent 1px),
-    linear-gradient(90deg, #50391b0c 1px, transparent 1px);
+    linear-gradient(#1e2a500c 1px, transparent 1px),
+    linear-gradient(90deg, #1e2a500c 1px, transparent 1px);
 }
 [data-theme="light"] .scene-tag {
-  background: #f5f5dfef;
-  border-color: #46621b40;
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 25%, transparent);
 }
 [data-theme="light"] .hero-paper {
-  box-shadow: 0 28px 60px #57382030;
+  box-shadow: 0 28px 60px #1e2a5029;
 }
 [data-theme="light"] .finder {
   background:
-    radial-gradient(ellipse at top left, #ff956f0e, transparent 70%),
+    radial-gradient(ellipse at top left, var(--aurora-3), transparent 70%),
     var(--surface);
 }
 [data-theme="light"] .finder-steps select {
   background: var(--ink);
 }
 [data-theme="light"] .resource:hover {
-  background: #fffaf0;
-  border-color: #a3422060;
+  background: var(--surface);
+  border-color: color-mix(in srgb, var(--primary) 38%, transparent);
 }
 [data-theme="light"] .resource .card-top {
   background:
-    radial-gradient(ellipse at 50% 100%, #b66b2520, transparent 75%), #ede7dc;
+    radial-gradient(ellipse at 50% 100%, var(--aurora-1), transparent 75%),
+    #e6ecf6;
 }
 [data-theme="light"] .resource .card-top .pill {
-  background: #fffcf6;
+  background: var(--surface);
   color: var(--text);
 }
 [data-theme="light"] .resource .card-top .pdf-thumbnail {
-  box-shadow: 0 12px 28px #6748252b;
+  box-shadow: 0 12px 28px #1e2a502b;
 }
 [data-theme="light"] .resource .card-top .file-icon {
-  background: #a342200c;
-  border-color: #a3422030;
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 19%, transparent);
 }
 [data-theme="light"] .resource-actions button:hover {
   background: var(--raised);
 }
 [data-theme="light"] .semester-popover {
-  background: #fffcf6f8;
+  background: color-mix(in srgb, var(--surface) 97%, transparent);
 }
 [data-theme="light"] .semester-popover > div a {
   background: var(--raised);
@@ -119,11 +134,11 @@
   color: var(--muted);
 }
 [data-theme="light"] .detail-sidebar {
-  background: linear-gradient(150deg, #f3e5d5, var(--surface) 45%);
+  background: linear-gradient(150deg, #e3ecfb, var(--surface) 45%);
 }
 [data-theme="light"] .preview {
   background:
-    radial-gradient(ellipse at 50% 40%, #ba783516, transparent 75%),
+    radial-gradient(ellipse at 50% 40%, var(--aurora-1), transparent 75%),
     var(--surface);
 }
 [data-theme="light"] .preview-placeholder .button {
@@ -134,59 +149,59 @@
   background: var(--raised);
 }
 [data-theme="light"] .command-modal {
-  background: #fffcf6fa;
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
   border-color: var(--control-border);
 }
 [data-theme="light"] .command-results button:hover,
 [data-theme="light"] .command-results button[aria-selected="true"],
 [data-theme="light"] .suggestions button:hover,
 [data-theme="light"] .suggestions button.selected {
-  background: #46621b12;
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
 }
 [data-theme="light"] .notes-showcase {
-  background: #e7dcc8;
+  background: #e3e9f7;
 }
 [data-theme="light"] .notes-showcase-copy > .button {
-  color: #f5f2ea;
-  background: #25231e;
+  color: #eef2fb;
+  background: #121829;
 }
 [data-theme="light"] .notes-showcase-resource {
   color: var(--text);
 }
 [data-theme="light"] .note-resource .card-top {
-  background: #e8ecd8;
+  background: #e6ecf6;
 }
 [data-theme="light"] .notes-welcome {
-  background: #e7dcc8;
+  background: #e3e9f7;
 }
 [data-theme="light"] .site-footer {
-  background: #eae3d8;
+  background: #e4e9f2;
 }
 [data-theme="light"] .footer-wordmark {
-  color: #877667;
+  color: #7b869c;
 }
 [data-theme="light"] .notice {
-  background: #a3422007;
-  border-color: #a3422030;
+  background: color-mix(in srgb, var(--primary) 3%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 19%, transparent);
 }
 [data-theme="light"] .notice.error {
-  background: #ab302909;
-  border-color: #ab302933;
+  background: color-mix(in srgb, var(--danger) 4%, transparent);
+  border-color: color-mix(in srgb, var(--danger) 20%, transparent);
 }
 [data-theme="light"] .skeleton {
-  background: linear-gradient(100deg, var(--surface), #e7dfd4, var(--surface));
+  background: linear-gradient(100deg, var(--surface), #e6ecf5, var(--surface));
   background-size: 200% 100%;
 }
 [data-theme="light"] .skeleton-paper,
 [data-theme="light"] .skeleton-line {
-  background: #3e302510;
+  background: #1e2a5010;
 }
 [data-theme="light"] .staff-nav a.active,
 [data-theme="light"] .tabs button.active {
-  background: #46621b10;
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
 }
 [data-theme="light"] .row-actions button {
-  background: #ffffff50;
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
 }
 [data-theme="light"] .status {
   color: var(--muted);
@@ -194,22 +209,26 @@
 }
 [data-theme="light"] .status.published {
   color: var(--success);
-  background: #29624712;
+  background: color-mix(in srgb, var(--success) 8%, transparent);
 }
 [data-theme="light"] .status.pending {
-  color: #805b09;
-  background: #805b0912;
+  color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 8%, transparent);
 }
 [data-theme="light"] .status.rejected {
   color: var(--danger);
-  background: #ab302912;
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
 }
 [data-theme="light"] .dropzone {
   border-color: var(--accent);
-  background: #46621b05;
+  background: color-mix(in srgb, var(--primary) 3%, transparent);
 }
 [data-theme="light"] .cursor-glow {
-  background: radial-gradient(circle, #a3422009, transparent 65%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--primary) 4%, transparent),
+    transparent 65%
+  );
 }
 @media (max-width: 760px) {
   .nav-inner {
@@ -235,7 +254,7 @@
     background: var(--surface);
   }
   [data-theme="light"] .paper-scene {
-    background: #eee4d5;
+    background: #e6ecf6;
   }
 }
 @media (max-width: 380px) {
@@ -253,4 +272,7 @@
     width: 30px;
     height: 30px;
   }
+}
+[data-theme="light"] .popular-rank {
+  opacity: 0.9;
 }

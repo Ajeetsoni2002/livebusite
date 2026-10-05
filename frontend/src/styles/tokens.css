@@ -13,24 +13,37 @@
   src: url("/fonts/manrope-latin.woff2") format("woff2");
 }
 :root {
-  --ink: #0b0b0d;
-  --surface: #171719;
-  --raised: #222225;
-  --text: #f5f2ea;
-  --muted: #adaab3;
-  --primary: #ff956f;
-  --accent: #c6ff66;
-  --border: #ffffff18;
-  --control-border: #77737e;
-  --success: #a8e6ad;
-  --danger: #ff9b9b;
-  --hero-gradient: linear-gradient(120deg, #ff683b, #ffc078);
-  --branch-cse: #c6ff66;
-  --branch-ece: #bba5ff;
-  --branch-it: #78dfc9;
+  color-scheme: dark;
+  /* Nebula — dark: deep navy base, neon cyan/violet accents, glass surfaces. */
+  --ink: #070b16;
+  --surface: #0e1424;
+  --raised: #172036;
+  --surface-elevated: var(--raised);
+  --glass: #111a2ecc;
+  --glass-border: #9fb4ff1f;
+  --text: #e8eefb;
+  --muted: #9ba8c4;
+  --primary: #5ee1ff;
+  --accent: #b39dff;
+  --accent-primary: var(--primary);
+  --accent-secondary: var(--accent);
+  --on-primary: #04121c;
+  --border: #9fb4ff1a;
+  --control-border: #66749a;
+  --success: #6ee7b7;
+  --warning: #ffcf70;
+  --danger: #ff8fa3;
+  --glow: 0 0 32px #5ee1ff33, 0 0 64px #b39dff1f;
+  --hero-gradient: linear-gradient(115deg, #5ee1ff, #8fa8ff 45%, #c39dff);
+  --aurora-1: #2c6bff33;
+  --aurora-2: #8b5cf62e;
+  --aurora-3: #22d3ee24;
+  --branch-cse: #9dff7a;
+  --branch-ece: #c3a8ff;
+  --branch-it: #5ee1d6;
   --branch-ee: #ffd166;
-  --branch-me: #ff9975;
-  --branch-ce: #9ac3ff;
+  --branch-me: #ff9d80;
+  --branch-ce: #8fb8ff;
   --font-display: "Space Grotesk", "Arial", sans-serif;
   --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --space-1: 4px;
@@ -45,14 +58,17 @@
   --radius-control: 10px;
   --radius-card: 18px;
   --radius-feature: 28px;
-  --shadow-card: 0 8px 24px #00000033;
-  --shadow-float: 0 24px 64px #00000066;
-  --glow-focus: 0 0 28px #c6ff661f;
+  --shadow-1: 0 1px 2px #02040a66;
+  --shadow-2: 0 8px 24px #02040a73;
+  --shadow-3: 0 24px 64px #02040a99;
+  --shadow-card: var(--shadow-2);
+  --shadow-float: var(--shadow-3);
+  --glow-focus: 0 0 0 4px #5ee1ff33, 0 0 24px #5ee1ff26;
   --duration-fast: 150ms;
   --duration-hover: 240ms;
   --duration-reveal: 360ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   /* Compatibility aliases for shared staff controls. */
-  --cyan: var(--accent);
+  --cyan: var(--primary);
   --orange: var(--primary);
 }

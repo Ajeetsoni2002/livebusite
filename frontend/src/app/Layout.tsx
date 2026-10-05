@@ -3,6 +3,8 @@ import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { Command, Menu, X } from "lucide-react";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
+import { FeedbackHost } from "../components/Feedback";
+import { startTilt } from "../lib/tilt";
 const CommandPalette = lazy(() => import("../components/CommandPalette"));
 const AmbientEffects = lazy(() => import("../components/AmbientEffects"));
 export default function Layout() {
@@ -29,6 +31,7 @@ export default function Layout() {
     const timer = setTimeout(() => setEffects(true), 1600);
     return () => clearTimeout(timer);
   }, []);
+  useEffect(() => (effects ? startTilt() : undefined), [effects]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -138,11 +141,17 @@ export default function Layout() {
             </button>
           </div>
         </header>
-        <div id="main" className={`route-content ${locationKey === initialLocation.current ? "" : "route-enter"}`} key={pathname} tabIndex={-1}>
+        <div
+          id="main"
+          className={`route-content ${locationKey === initialLocation.current ? "" : "route-enter"}`}
+          key={pathname}
+          tabIndex={-1}
+        >
           <Outlet />
         </div>
         <Footer />
       </div>
+      <FeedbackHost />
       {effects && (
         <Suspense fallback={null}>
           <AmbientEffects route={pathname} />
