@@ -23,6 +23,7 @@ export default function Upload() {
     [files, setFiles] = useState<File[]>([]),
     [rows, setRows] = useState<Row[]>([]),
     [chosen, setChosen] = useState<string[]>([]),
+    [created, setCreated] = useState<Offering[]>([]),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   const edit = params.get("edit"),
@@ -55,7 +56,16 @@ export default function Upload() {
       })),
     );
   }
-  const options = offerings.data?.data || [];
+  // Offerings created from the picker show up at once; the public list is cached briefly.
+  const loaded = offerings.data?.data || [],
+    options = [
+      ...loaded,
+      ...created.filter((c) => !loaded.some((o) => o._id === c._id)),
+    ],
+    onCreate =
+      user.role === "admin"
+        ? (offering: Offering) => setCreated((old) => [...old, offering])
+        : undefined;
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -270,6 +280,7 @@ export default function Upload() {
                       <OfferingPicker
                         label={`Subject ${i + 1}`}
                         options={options}
+                        onCreate={onCreate}
                         value={row.offerings}
                         onChange={(offerings) =>
                           setRows((old) =>
@@ -368,6 +379,7 @@ export default function Upload() {
               <OfferingPicker
                 label="Subject / branch / semester"
                 options={options}
+                onCreate={onCreate}
                 value={chosen}
                 onChange={setChosen}
               />

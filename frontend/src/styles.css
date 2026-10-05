@@ -1332,6 +1332,18 @@ textarea {
   margin-top: 2px;
   flex: none;
 }
+.add-offering {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px dashed var(--control-border);
+  border-radius: 10px;
+}
+.add-offering-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 8px;
+}
 .branch-checks {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

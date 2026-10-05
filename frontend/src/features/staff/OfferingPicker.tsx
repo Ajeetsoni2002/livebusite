@@ -1,6 +1,7 @@
 import { useId, useMemo, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import type { Offering } from "../../lib/types";
+import AddOffering from "./AddOffering";
 
 export const offeringLabel = (o: Offering) =>
   `${o.branch.code || o.branch.name} · ${o.semester.name} · ${o.subject.code} · ${o.subject.name}`;
@@ -12,15 +13,19 @@ export default function OfferingPicker({
   onChange,
   label,
   name,
+  onCreate,
 }: {
   options: Offering[];
   value: string[];
   onChange: (ids: string[]) => void;
   label: string;
   name?: string;
+  /** Admin only: lets the picker create a missing branch / semester / subject. */
+  onCreate?: (offering: Offering) => void;
 }) {
   const [open, setOpen] = useState(false),
     [query, setQuery] = useState(""),
+    [adding, setAdding] = useState(false),
     panelId = useId();
   const byId = useMemo(
     () => new Map(options.map((o) => [o._id, o])),
@@ -129,6 +134,25 @@ export default function OfferingPicker({
             ))}
             {!shown.length && <p className="muted">No matching offering.</p>}
           </div>
+          {onCreate &&
+            (adding ? (
+              <AddOffering
+                onCancel={() => setAdding(false)}
+                onCreated={(offering) => {
+                  onCreate(offering);
+                  if (!selected.has(offering._id))
+                    onChange([...value, offering._id]);
+                  setAdding(false);
+                  setQuery("");
+                }}
+              />
+            ) : (
+              <div className="row-actions">
+                <button type="button" onClick={() => setAdding(true)}>
+                  + Not in the list? Add branch / semester / subject
+                </button>
+              </div>
+            ))}
         </div>
       )}
     </div>
