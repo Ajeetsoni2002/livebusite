@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Redirecting to livebusite.pages.dev</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://livebusite.pages.dev/">
+<script>
+  // Keep the old path (minus the /livebusite prefix) so legacy links land on the right page.
+  (function () {
+    var path = location.pathname.replace(/^\/livebusite/, "") || "/";
+    location.replace("https://livebusite.pages.dev" + path + location.search + location.hash);
+  })();
+</script>
+<meta http-equiv="refresh" content="0; url=https://livebusite.pages.dev/">
+</head>
+<body>
+<p>This site has moved to <a href="https://livebusite.pages.dev/">livebusite.pages.dev</a>.</p>
+</body>
+</html>
