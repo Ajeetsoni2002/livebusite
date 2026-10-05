@@ -6,7 +6,8 @@ import Home from "../features/catalog/Home";
 import { PageAnalytics } from "../lib/analytics";
 const Browse = lazy(() => import("../features/catalog/Browse")),
   Detail = lazy(() => import("../features/catalog/Detail")),
-  Info = lazy(() => import("../features/Info"));
+  Info = lazy(() => import("../features/Info")),
+  Leaderboard = lazy(() => import("../features/community/Leaderboard"));
 const Login = lazy(() =>
     import("../features/staff/Auth").then((m) => ({ default: m.Login })),
   ),
@@ -53,6 +54,7 @@ export default function App() {
               />
               <Route path="/paper/:slug" element={<Detail />} />
               <Route path="/notes/:slug" element={<Detail kind="notes" />} />
+              <Route path="/contributors" element={<Leaderboard />} />
               <Route path="/papers/:filename.pdf" element={<Legacy />} />
               <Route path="/New papers/*" element={<Legacy />} />
               <Route path="/images/:filename.pdf" element={<Legacy />} />
@@ -65,7 +67,10 @@ export default function App() {
                   element={<Info page={page} />}
                 />
               ))}
-              <Route path="/our-story" element={<Navigate to="/about" replace />} />
+              <Route
+                path="/our-story"
+                element={<Navigate to="/about" replace />}
+              />
               <Route path="/story" element={<Navigate to="/about" replace />} />
               <Route path="/admin/login" element={<Login />} />
               <Route path="/contributor/login" element={<Login />} />

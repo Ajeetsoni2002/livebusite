@@ -12,6 +12,7 @@ import {
   publicationFilter,
   Paper,
   Note,
+  User,
   Report,
   PaperRequest,
 } from "./models.js";
@@ -301,6 +302,74 @@ catalogRouter.get("/search", searchLimit, async (req, res) => {
     notes: notes.data,
     total: papers.meta.total + notes.meta.total,
   });
+});
+// Public leaderboard: names and counts only (no emails or ids). Admin uploads and legacy imports are excluded.
+catalogRouter.get("/contributors", async (req, res) => {
+  const period = z
+    .enum(["all", "year", "month"])
+    .default("all")
+    .parse(req.query.period);
+  const match: Record<string, unknown> = {
+    ...publicationFilter,
+    author: { $ne: null },
+  };
+  if (period !== "all")
+    match.publishedAt = {
+      $gte: new Date(Date.now() - (period === "year" ? 365 : 30) * 86_400_000),
+    };
+  const [papers, notes] = await Promise.all(
+    [Paper, Note].map((model) =>
+      model.aggregate([
+        { $match: match },
+        {
+          $group: {
+            _id: "$author",
+            total: { $sum: 1 },
+            downloads: { $sum: "$downloads" },
+            first: { $min: "$publishedAt" },
+          },
+        },
+      ]),
+    ),
+  );
+  const ids = [...new Set([...papers, ...notes].map((row) => String(row._id)))];
+  const users = await User.find({
+    _id: { $in: ids },
+    role: "contributor",
+    active: { $ne: false },
+  })
+    .select("name createdAt")
+    .lean();
+  const count = (rows: any[], id: string) =>
+    rows.find((row) => String(row._id) === id);
+  const board = users
+    .map((user: any) => {
+      const id = String(user._id),
+        p = count(papers, id),
+        n = count(notes, id),
+        firsts = [p?.first, n?.first].filter(Boolean) as Date[];
+      return {
+        name: user.name as string,
+        papers: p?.total || 0,
+        notes: n?.total || 0,
+        total: (p?.total || 0) + (n?.total || 0),
+        downloads: (p?.downloads || 0) + (n?.downloads || 0),
+        joinedAt: user.createdAt as Date,
+        firstPublishedAt: firsts.length
+          ? new Date(Math.min(...firsts.map((d) => +new Date(d))))
+          : null,
+      };
+    })
+    .filter((row) => row.total > 0)
+    .sort(
+      (a, b) =>
+        b.total - a.total ||
+        b.downloads - a.downloads ||
+        a.name.localeCompare(b.name),
+    )
+    .slice(0, 50)
+    .map((row, index) => ({ rank: index + 1, ...row }));
+  cached(req, res, board);
 });
 catalogRouter.get("/stats", async (req, res) => {
   const [papers, notes, downloads] = await Promise.all([

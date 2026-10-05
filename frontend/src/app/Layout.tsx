@@ -112,6 +112,9 @@ export default function Layout() {
               <NavLink to="/notes" onClick={() => setMenu(false)}>
                 Short notes
               </NavLink>
+              <NavLink to="/contributors" onClick={() => setMenu(false)}>
+                Contributors
+              </NavLink>
               <NavLink to="/about" onClick={() => setMenu(false)}>
                 Our community
               </NavLink>

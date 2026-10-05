@@ -266,6 +266,93 @@ test("thumbnail storage failures never reject or delete a valid PDF upload", asy
     if (asset) await storage.delete(asset.key);
   }
 });
+test("public contributors leaderboard ranks published work without private fields", async () => {
+  const [amy, bob, boss] = await User.create([
+    {
+      email: "amy@example.test",
+      name: "Amy",
+      role: "contributor",
+      passwordHash: "x",
+    },
+    {
+      email: "bob@example.test",
+      name: "Bob",
+      role: "contributor",
+      passwordHash: "x",
+    },
+    {
+      email: "boss@example.test",
+      name: "Boss",
+      role: "admin",
+      passwordHash: "x",
+    },
+  ]);
+  const old = new Date(Date.now() - 90 * 86_400_000);
+  await Paper.create([
+    {
+      title: "a1",
+      slug: "lb-a1",
+      status: "published",
+      author: amy._id,
+      publishedAt: new Date(),
+      downloads: 4,
+    },
+    {
+      title: "a2",
+      slug: "lb-a2",
+      status: "published",
+      author: amy._id,
+      publishedAt: old,
+    },
+    {
+      title: "b1",
+      slug: "lb-b1",
+      status: "published",
+      author: bob._id,
+      publishedAt: new Date(),
+    },
+    { title: "b2", slug: "lb-b2", status: "pending", author: bob._id },
+    {
+      title: "x1",
+      slug: "lb-x1",
+      status: "published",
+      author: boss._id,
+      publishedAt: new Date(),
+    },
+  ]);
+  await Note.create({
+    title: "bn",
+    slug: "lb-bn",
+    status: "published",
+    author: bob._id,
+    publishedAt: new Date(),
+    format: "markdown",
+    markdown: "x",
+  });
+  const all = (await request(app).get("/api/contributors")).body.data;
+  assert.deepEqual(
+    all.map((r: any) => [r.rank, r.name, r.papers, r.notes]),
+    [
+      [1, "Amy", 2, 0],
+      [2, "Bob", 1, 1],
+    ],
+  );
+  assert.equal(JSON.stringify(all).includes("example.test"), false);
+  assert.equal("_id" in all[0], false);
+  const month = (await request(app).get("/api/contributors?period=month")).body
+    .data;
+  assert.deepEqual(
+    month.map((r: any) => [r.name, r.total]),
+    [
+      ["Bob", 2],
+      ["Amy", 1],
+    ],
+  );
+  assert.equal(
+    (await request(app).get("/api/contributors?period=week")).status,
+    400,
+  );
+});
 test("public listing supports every sort order", async () => {
   await Paper.create([
     {

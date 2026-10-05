@@ -40,6 +40,12 @@ routes.set("/notes", {
   title: "Short notes · BUIT Papers",
   body: `<main class="page"><h1>Short notes</h1>${snapshot.notes.length ? cards(snapshot.notes, true) : "<p>No notes published yet. Request or contribute a resource.</p>"}</main>`,
 });
+routes.set("/contributors", {
+  title: "Top contributors · BUIT Papers",
+  description:
+    "The students who shared Barkatullah University papers and notes with the next batch.",
+  body: `<main class="page community-page"><div class="page-heading"><div class="eyebrow">BUIT / COMMUNITY</div><h1>The people behind the papers.</h1><p>Every paper and note here was shared by a student who wanted the next batch to have it easier.</p></div><p><a href="/contact">Contribute a paper</a></p></main>`,
+});
 routes.set("/about", {
   title: "Our story · Ajeet Kumar Soni · BUIT Papers",
   description:
