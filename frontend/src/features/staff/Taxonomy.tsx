@@ -57,7 +57,12 @@ export default function Taxonomy() {
   }
   return (
     <>
-      <h2>Keep the library organized.</h2>
+      <h2>Branches, semesters & subjects</h2>
+      <p className="muted">
+        New branch or semester? Add it in Branches / Semesters, add the subject
+        in Subjects, then link them in Offerings (subject + branch + semester).
+        Only offerings appear in the upload subject picker.
+      </p>
       <div className="tabs" style={{ flexWrap: "wrap" }}>
         {categories.map((c) => (
           <button
@@ -75,7 +80,7 @@ export default function Taxonomy() {
         ))}
       </div>
       {message && (
-        <p className="notice" role="status">
+        <p className="notice" role="status" style={{ whiteSpace: "pre-line" }}>
           {message}
         </p>
       )}
@@ -162,6 +167,39 @@ export default function Taxonomy() {
               : key === "active"
                 ? value === "true"
                 : value;
+          }
+          if (category === "offerings" && !edit) {
+            // One offering per ticked branch: a common subject reaches every branch in one save.
+            const branches = form.getAll("branch").map(String);
+            if (!branches.length) {
+              setMessage("Tick at least one branch.");
+              return;
+            }
+            void (async () => {
+              const results = await Promise.allSettled(
+                branches.map((branch) =>
+                  api.post("/admin/taxonomy/offerings", { ...payload, branch }),
+                ),
+              );
+              await data.refetch();
+              const created = results.filter(
+                  (r) => r.status === "fulfilled",
+                ).length,
+                failed = results
+                  .map((r, i) =>
+                    r.status === "rejected"
+                      ? `${name("branches", branches[i])}: ${errorMessage(r.reason)}`
+                      : "",
+                  )
+                  .filter(Boolean);
+              setMessage(
+                [
+                  `Created ${created} offering${created === 1 ? "" : "s"}.`,
+                  ...failed,
+                ].join("\n"),
+              );
+            })();
+            return;
           }
           run(async () => {
             if (edit)
@@ -265,6 +303,22 @@ export default function Taxonomy() {
         {category === "offerings" &&
           ["subjects", "branches", "semesters"].map((c) => {
             const singular = c.slice(0, -1);
+            if (c === "branches" && !edit)
+              return (
+                <fieldset key={c} className="wide branch-checks">
+                  <legend>
+                    Branches · tick every branch that studies this subject in
+                    this semester
+                  </legend>
+                  {data.data?.branches?.map((p: TaxRecord) => (
+                    <label key={p._id}>
+                      <input type="checkbox" name="branch" value={p._id} />
+                      {p.code ? p.code + " · " : ""}
+                      {p.name}
+                    </label>
+                  ))}
+                </fieldset>
+              );
             return (
               <label key={c}>
                 {singular}

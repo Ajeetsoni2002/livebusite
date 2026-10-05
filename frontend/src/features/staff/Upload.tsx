@@ -6,7 +6,13 @@ import { api, apiUrl, errorMessage } from "../../lib/api";
 import { useUser } from "./Auth";
 import { usePublic } from "../../lib/queries";
 import type { Offering, ContentItem } from "../../lib/types";
-type Row = { title: string; offering: string; year: string; examType: string };
+import OfferingPicker from "./OfferingPicker";
+type Row = {
+  title: string;
+  offerings: string[];
+  year: string;
+  examType: string;
+};
 export default function Upload() {
   const user = useUser(),
     [params] = useSearchParams(),
@@ -16,6 +22,7 @@ export default function Upload() {
     [format, setFormat] = useState("pdf"),
     [files, setFiles] = useState<File[]>([]),
     [rows, setRows] = useState<Row[]>([]),
+    [chosen, setChosen] = useState<string[]>([]),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   const edit = params.get("edit"),
@@ -30,6 +37,11 @@ export default function Upload() {
   useEffect(() => {
     if (item.data) {
       setFormat(item.data.format || "pdf");
+      setChosen(
+        (item.data.offerings || []).map((offering) =>
+          typeof offering === "string" ? offering : offering._id,
+        ),
+      );
     }
   }, [item.data]);
   function choose(list: File[]) {
@@ -37,26 +49,13 @@ export default function Upload() {
     setRows(
       list.slice(0, 5).map((file) => ({
         title: file.name.replace(/\.pdf$/i, ""),
-        offering: "",
+        offerings: [],
         year: "",
         examType: "Unknown",
       })),
     );
   }
   const options = offerings.data?.data || [];
-  function offeringOptions() {
-    return (
-      <>
-        <option value="">Choose subject / branch / semester</option>
-        {options.map((o) => (
-          <option key={o._id} value={o._id}>
-            {o.branch.code || o.branch.name} · {o.semester.name} ·{" "}
-            {o.subject.code} · {o.subject.name}
-          </option>
-        ))}
-      </>
-    );
-  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -64,8 +63,8 @@ export default function Upload() {
     const form = new FormData(event.currentTarget);
     try {
       if (files.length > 1 && !edit) {
-        if (rows.some((r) => !r.offering))
-          throw new Error("Choose a subject for every PDF.");
+        if (rows.some((r) => !r.offerings.length))
+          throw new Error("Choose at least one subject for every PDF.");
         const data = new FormData();
         files.forEach((f) => data.append("files", f));
         data.append(
@@ -73,7 +72,7 @@ export default function Upload() {
           JSON.stringify(
             rows.map((row) => ({
               title: row.title,
-              offerings: [row.offering],
+              offerings: row.offerings,
               ...(kind === "papers"
                 ? {
                     year: row.year ? Number(row.year) : undefined,
@@ -101,13 +100,15 @@ export default function Upload() {
       } else {
         const metadata: Record<string, unknown> = {
           title: String(form.get("title")),
-          offerings: form.getAll("offering").map(String).filter(Boolean),
+          offerings: chosen,
           credit: String(form.get("credit") || ""),
           tags: String(form.get("tags") || "")
             .split(",")
             .map((s) => s.trim())
             .filter(Boolean),
         };
+        if (!chosen.length)
+          throw new Error("Choose at least one subject / branch / semester.");
         if (kind === "papers") {
           if (form.get("year")) metadata.year = Number(form.get("year"));
           metadata.examType = String(form.get("examType") || "Unknown");
@@ -150,9 +151,6 @@ export default function Upload() {
   }
   if (edit && item.isPending) return <p>Loading resource…</p>;
   const data = item.data;
-  const selectedOfferings = (data?.offerings || []).map((offering) =>
-    typeof offering === "string" ? offering : offering._id,
-  );
   return (
     <>
       <h2>{edit ? "Inspect / edit resource" : "Share a resource"}</h2>
@@ -268,23 +266,38 @@ export default function Upload() {
                         }
                       />
                     </td>
-                    <td>
-                      <select
-                        aria-label={`Subject ${i + 1}`}
-                        required
-                        value={row.offering}
-                        onChange={(e) =>
+                    <td className="offering-cell">
+                      <OfferingPicker
+                        label={`Subject ${i + 1}`}
+                        options={options}
+                        value={row.offerings}
+                        onChange={(offerings) =>
                           setRows((old) =>
                             old.map((r, index) =>
-                              index === i
-                                ? { ...r, offering: e.target.value }
-                                : r,
+                              index === i ? { ...r, offerings } : r,
                             ),
                           )
                         }
-                      >
-                        {offeringOptions()}
-                      </select>
+                      />
+                      {i === 0 &&
+                        rows.length > 1 &&
+                        row.offerings.length > 0 && (
+                          <div className="row-actions">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setRows((old) =>
+                                  old.map((r) => ({
+                                    ...r,
+                                    offerings: row.offerings,
+                                  })),
+                                )
+                              }
+                            >
+                              Use these subjects for all files
+                            </button>
+                          </div>
+                        )}
                     </td>
                     {kind === "papers" && (
                       <>
@@ -350,18 +363,15 @@ export default function Upload() {
                 defaultValue={data?.title}
               />
             </label>
-            <label className="wide">
-              Subject / branch / semester (select all that apply)
-              <select
-                name="offering"
-                multiple
-                size={5}
-                required
-                defaultValue={selectedOfferings}
-              >
-                {offeringOptions()}
-              </select>
-            </label>
+            <div className="wide field">
+              <span>Subject / branch / semester (select all that apply)</span>
+              <OfferingPicker
+                label="Subject / branch / semester"
+                options={options}
+                value={chosen}
+                onChange={setChosen}
+              />
+            </div>
             {kind === "papers" ? (
               <>
                 <label>

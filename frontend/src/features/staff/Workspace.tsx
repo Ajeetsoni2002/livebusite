@@ -14,7 +14,7 @@ export default function Workspace() {
           ["notes", "Notes"],
           ["upload", "Upload / bulk"],
           ["moderation", "Moderation"],
-          ["taxonomy", "Taxonomy"],
+          ["taxonomy", "Branches & subjects"],
           ["contributors", "Contributors"],
           ["inbox", "Reports & requests"],
           ["audit", "Audit log"],
