@@ -1332,6 +1332,19 @@ textarea {
   margin-top: 2px;
   flex: none;
 }
+.review-preview .review-meta {
+  margin: 6px 0 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.quick-preview.review-preview iframe {
+  height: 70dvh;
+}
+.review-markdown {
+  max-height: 62dvh;
+  overflow: auto;
+  padding: 0 24px 16px;
+}
 .add-offering {
   display: grid;
   gap: 10px;

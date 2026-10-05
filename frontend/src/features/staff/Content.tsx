@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import type { ContentItem } from "../../lib/types";
 import { api, errorMessage } from "../../lib/api";
 import { useUser } from "./Auth";
+import ReviewPreview from "./ReviewPreview";
 export default function Content({
   kind = "papers",
   moderation = false,
@@ -18,7 +19,10 @@ export default function Content({
     [deleted, setDeleted] = useState(false),
     [page, setPage] = useState(1),
     [search, setSearch] = useState(""),
-    [message, setMessage] = useState("");
+    [message, setMessage] = useState(""),
+    [reviewing, setReviewing] = useState<
+      (ContentItem & { _kind?: string }) | null
+    >(null);
   const [queryText, setQueryText] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -69,19 +73,21 @@ export default function Content({
       let body = {};
       if (name === "reject") {
         const reason = prompt("Reason for rejection");
-        if (!reason) return;
+        if (!reason) return false;
         body = { reason };
       }
       if (
         name === "delete" &&
         !confirm(`Soft-delete “${item.title}”? You can restore it.`)
       )
-        return;
+        return false;
       await api.post(`/admin/${itemKind}/${item._id}/${name}`, body);
       await client.invalidateQueries({ queryKey: ["staff-content"] });
       setMessage("Saved.");
+      return true;
     } catch (e) {
       setMessage(errorMessage(e));
+      return false;
     }
   }
   return (
@@ -187,6 +193,9 @@ export default function Content({
                   </td>
                   <td>
                     <div className="row-actions">
+                      <button onClick={() => setReviewing(item)}>
+                        Preview
+                      </button>
                       <button
                         onClick={() =>
                           navigate(
@@ -249,6 +258,21 @@ export default function Content({
           <p className="staff-card muted">No uploads in this view.</p>
         )}
       </div>
+      {reviewing && (
+        <ReviewPreview
+          item={reviewing}
+          kind={reviewing._kind || kind}
+          onClose={() => setReviewing(null)}
+          onAction={
+            user.role === "admin"
+              ? async (name) => {
+                  if (await action(reviewing, name, reviewing._kind || kind))
+                    setReviewing(null);
+                }
+              : undefined
+          }
+        />
+      )}
       {!moderation && query.data?.meta?.pages > 1 && (
         <div className="pagination">
           <button
