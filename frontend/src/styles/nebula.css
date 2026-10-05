@@ -479,3 +479,38 @@ textarea:focus-visible {
 .list-view .resource .card-top .pill {
   display: none;
 }
+
+/* 09 — Hero WebGL backdrop (components/HeroScene.tsx). Static CSS scene shows until it fades in. */
+.hero-scene-3d {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 900ms var(--ease);
+}
+.hero-scene-3d.ready {
+  opacity: 1;
+}
+.hero-scene-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.site-footer .perspective-grid {
+  inset: auto 0 0;
+  height: 70%;
+  opacity: 0.45;
+}
+.footer-top h2 span,
+.hero h1 span {
+  background: var(--hero-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

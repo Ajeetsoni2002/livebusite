@@ -4,6 +4,7 @@ import CreatorLink from "./CreatorLink";
 export default function Footer() {
   return (
     <footer className="site-footer">
+      <div className="perspective-grid" aria-hidden="true" />
       <div className="footer-inner">
         <div className="footer-top">
           <div>

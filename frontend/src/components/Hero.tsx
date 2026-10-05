@@ -6,6 +6,7 @@ import CreatorLink from "./CreatorLink";
 import { PdfThumbnail } from "./PdfThumbnail";
 import { contentPath, type ContentItem } from "../lib/types";
 const PaperParallax = lazy(() => import("./PaperParallax"));
+const HeroScene = lazy(() => import("./HeroScene"));
 
 export default function Hero({ papers }: { papers: ContentItem[] }) {
   const [enhanced, setEnhanced] = useState(false);
@@ -129,6 +130,7 @@ export default function Hero({ papers }: { papers: ContentItem[] }) {
         </div>
         {enhanced && (
           <Suspense fallback={null}>
+            <HeroScene />
             <PaperParallax scene={scene} />
           </Suspense>
         )}
