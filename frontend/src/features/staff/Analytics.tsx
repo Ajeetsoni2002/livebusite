@@ -10,6 +10,7 @@ import {
   Tooltip,
 } from "recharts";
 import { api, errorMessage } from "../../lib/api";
+import { useThemeColors } from "../../lib/useThemeColors";
 type Stats = {
   day: string;
   visitors: number;
@@ -38,7 +39,8 @@ export default function Analytics() {
         (await api.get("/admin/analytics", { params: { days } })).data
           .data as Report,
     });
-  const data = query.data;
+  const data = query.data,
+    colors = useThemeColors();
   return (
     <>
       <div className="section-head">
@@ -105,28 +107,29 @@ export default function Analytics() {
                   data={data.timeseries}
                   margin={{ top: 15, right: 15, left: -20, bottom: 5 }}
                 >
-                  <CartesianGrid stroke="#ffffff10" vertical={false} />
+                  <CartesianGrid stroke={colors.border} vertical={false} />
                   <XAxis
                     dataKey="day"
-                    tick={{ fill: "#96a4bd", fontSize: 10 }}
+                    tick={{ fill: colors.muted, fontSize: 10 }}
                     tickFormatter={(day) => day.slice(5)}
                     minTickGap={25}
                   />
                   <YAxis
                     allowDecimals={false}
-                    tick={{ fill: "#96a4bd", fontSize: 10 }}
+                    tick={{ fill: colors.muted, fontSize: 10 }}
                   />
                   <Tooltip
                     contentStyle={{
-                      background: "#142236",
-                      border: "1px solid #ffffff20",
+                      background: colors.raised,
+                      color: colors.text,
+                      border: `1px solid ${colors.border}`,
                       borderRadius: 8,
                     }}
                   />
                   <Line
                     type="monotone"
                     dataKey="visitors"
-                    stroke="#67e8f9"
+                    stroke={colors.primary}
                     strokeWidth={2}
                     dot={false}
                     isAnimationActive={false}

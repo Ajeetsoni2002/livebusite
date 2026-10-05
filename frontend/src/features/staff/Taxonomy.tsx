@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, errorMessage } from "../../lib/api";
+import { confirmDialog } from "../../components/Feedback";
 type TaxRecord = {
   _id: string;
   name?: string;
@@ -393,11 +394,13 @@ export default function Taxonomy() {
             <button
               className="button secondary"
               disabled={!from || !to || from === to}
-              onClick={() => {
+              onClick={async () => {
                 if (
-                  confirm(
-                    "Merge these records and move their content relationships?",
-                  )
+                  await confirmDialog({
+                    title: "Merge these records?",
+                    body: "Content moves to the record you keep; the duplicate becomes inactive.",
+                    confirmLabel: "Merge",
+                  })
                 )
                   run(() =>
                     api.post(`/admin/taxonomy/${category}/merge`, { from, to }),

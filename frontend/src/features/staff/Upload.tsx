@@ -25,7 +25,14 @@ export default function Upload() {
     [chosen, setChosen] = useState<string[]>([]),
     [created, setCreated] = useState<Offering[]>([]),
     [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [progress, setProgress] = useState<number | null>(null);
+  const upload = {
+    timeout: 120_000,
+    onUploadProgress: (event: { loaded: number; total?: number }) =>
+      event.total &&
+      setProgress(Math.round((event.loaded / event.total) * 100)),
+  };
   const edit = params.get("edit"),
     offerings = usePublic<Offering[]>("/offerings"),
     item = useQuery({
@@ -69,6 +76,7 @@ export default function Upload() {
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
+    setProgress(null);
     setMessage("");
     const form = new FormData(event.currentTarget);
     try {
@@ -95,9 +103,11 @@ export default function Upload() {
             })),
           ),
         );
-        const result = await api.post(`/${user.role}/${kind}/bulk`, data, {
-          timeout: 120_000,
-        });
+        const result = await api.post(
+          `/${user.role}/${kind}/bulk`,
+          data,
+          upload,
+        );
         setMessage(
           result.data.data
             .map(
@@ -140,14 +150,14 @@ export default function Upload() {
             await api.post(
               `/${user.role}/${kind}/${edit}/replace-file`,
               replacement,
-              { timeout: 120_000 },
+              upload,
             );
           }
         } else {
           const data = new FormData();
           data.append("metadata", JSON.stringify(metadata));
           if (files[0]) data.append("file", files[0]);
-          await api.post(`/${user.role}/${kind}`, data, { timeout: 120_000 });
+          await api.post(`/${user.role}/${kind}`, data, upload);
         }
         setMessage(edit ? "Resource updated." : "Uploaded successfully.");
         await client.invalidateQueries({ queryKey: ["staff-content"] });
@@ -157,6 +167,7 @@ export default function Upload() {
       setMessage(errorMessage(error));
     } finally {
       setBusy(false);
+      setProgress(null);
     }
   }
   if (edit && item.isPending) return <p>Loading resource…</p>;
@@ -479,6 +490,25 @@ export default function Upload() {
                 ? "Upload batch"
                 : "Submit resource"}
         </button>
+        {busy && progress !== null && (
+          <div className="upload-progress wide" role="status">
+            <div
+              className="upload-progress-bar"
+              role="progressbar"
+              aria-label="Upload progress"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={progress}
+            >
+              <span style={{ transform: `scaleX(${progress / 100})` }} />
+            </div>
+            <small>
+              {progress < 100
+                ? `Uploading… ${progress}%`
+                : "Processing on the server…"}
+            </small>
+          </div>
+        )}
         {message && (
           <p
             className="notice wide"

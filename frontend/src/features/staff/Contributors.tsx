@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api, errorMessage } from "../../lib/api";
+import { confirmDialog, promptDialog } from "../../components/Feedback";
 type Contributor = {
   _id: string;
   name: string;
@@ -77,13 +78,16 @@ export default function Contributors() {
                       {user.active ? "Deactivate" : "Activate"}
                     </button>
                     <button
-                      onClick={() => {
+                      onClick={async () => {
                         if (
-                          confirm(
-                            user.trusted
-                              ? "Require review again?"
-                              : "Allow this contributor to publish automatically?",
-                          )
+                          await confirmDialog({
+                            title: user.trusted
+                              ? `Require review for ${user.name} again?`
+                              : `Let ${user.name} publish without review?`,
+                            body: user.trusted
+                              ? "New uploads will wait in the moderation queue."
+                              : "New uploads go live immediately.",
+                          })
                         )
                           run(() =>
                             api.patch(`/admin/contributors/${user._id}`, {
@@ -95,10 +99,17 @@ export default function Contributors() {
                       Toggle trust
                     </button>
                     <button
-                      onClick={() => {
-                        const password = prompt(
-                          "New temporary password · at least 12 characters",
-                        );
+                      onClick={async () => {
+                        const password = await promptDialog({
+                          title: `Reset password for ${user.name}`,
+                          body: "They must change it at their next sign-in. Share it privately.",
+                          confirmLabel: "Reset password",
+                          input: {
+                            label: "New temporary password (12+ characters)",
+                            minLength: 12,
+                            type: "password",
+                          },
+                        });
                         if (password)
                           run(() =>
                             api.post(
