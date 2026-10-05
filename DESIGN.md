@@ -87,3 +87,15 @@ Accessibility, best practices, and SEO scored 100 in both audits. The after buil
 **Open performance limitation:** the requested mobile score of 85+ and LCP below 2.5 seconds were not reached. The final run measured the hero heading as LCP; initial rendering and main-thread work need further optimization. Removing initial route animation, simplifying the grain texture, and deferring finder taxonomy did not bring this measurement within target. No performance success is claimed.
 
 Final verification: 33 tests passed, both workspaces passed lint and build, staff browser smoke passed, and all eight design interaction scenarios passed. The accessibility matrix found no violations or horizontal overflow across six routes, two themes, and two widths (24 cases).
+
+## Nebula measurements (October 2026)
+
+Local production preview (`vite preview` + read-only proxy to the live API), Lighthouse 12 default desktop and mobile configs, one run each:
+
+| Route | Desktop perf | Mobile perf | Accessibility | Best practices | SEO |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `/` | 92 | 87 | 100 | 96 desktop / 100 mobile | 100 |
+| `/papers/` | 100 | 89 | 100 | 100 | 100 |
+| `/contributors/` | 100 | 96 | 100 | 100 | 100 |
+
+Desktop best practices on `/` lose points for console errors from legacy-paper thumbnails that return HTTP 500 from the live API (their thumbnail objects are missing in storage; new uploads are fine) and for intentionally disabled source maps. The three.js hero chunk (~134 kB gzip) loads only on wide, fine-pointer devices without reduced motion or Save-Data, after first paint. Mobile LCP (~3.3 s on `/`) remains above 2.5 s.

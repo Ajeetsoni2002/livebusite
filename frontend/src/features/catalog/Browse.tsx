@@ -453,6 +453,7 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
           </button>
         </div>
       </div>
+      <h2 className="sr-only">Results</h2>
       {items.isPending ? (
         <>
           <p className="muted" role="status">

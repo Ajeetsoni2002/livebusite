@@ -20,9 +20,7 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(base);
   if (check === "palette") {
-    await page
-      .getByRole("button", { name: "Open search", exact: true })
-      .click();
+    await page.locator(".palette-trigger").click();
     const dialog = page.getByRole("dialog", { name: "Search library" });
     await dialog.getByRole("combobox").fill("CSE");
     await expect(
@@ -35,7 +33,7 @@ try {
       dialog.getByRole("heading", { name: "Branches", exact: true }),
     ).toBeVisible();
     await expect(
-      dialog.getByRole("option", { name: /CSE-/ }).first(),
+      dialog.getByRole("option", { name: /(CSE|BE)-?\s?\d/ }).first(),
     ).toBeVisible();
     await dialog.getByRole("combobox").press("ArrowDown");
     await dialog.getByRole("combobox").press("Enter");
@@ -175,13 +173,11 @@ try {
     await light.close();
   }
   if (check === "palette-focus") {
-    await page
-      .getByRole("button", { name: "Open search", exact: true })
-      .click();
+    await page.locator(".palette-trigger").click();
     const dialog = page.getByRole("dialog", { name: "Search library" });
     await dialog.getByRole("combobox").fill("CSE");
     await expect(
-      dialog.getByRole("option", { name: /CSE-/ }).first(),
+      dialog.getByRole("option", { name: /(CSE|BE)-?\s?\d/ }).first(),
     ).toBeVisible();
     await dialog.getByRole("combobox").press("Tab");
     await expect(
@@ -214,9 +210,7 @@ try {
       await new Promise((r) => setTimeout(r, 800));
       await route.fulfill({ response });
     });
-    await page
-      .getByRole("button", { name: "Open search", exact: true })
-      .click();
+    await page.locator(".palette-trigger").click();
     const dialog = page.getByRole("dialog", { name: "Search library" });
     await dialog.getByRole("combobox").fill("CSE");
     const branch = dialog.getByRole("option", {
@@ -226,7 +220,7 @@ try {
     await dialog.getByRole("combobox").press("ArrowDown");
     await expect(branch).toHaveAttribute("aria-selected", "true");
     await expect(
-      dialog.getByRole("option", { name: /CSE-/ }).first(),
+      dialog.getByRole("option", { name: /(CSE|BE)-?\s?\d/ }).first(),
     ).toBeVisible();
     await expect(branch).toHaveAttribute("aria-selected", "true");
     await dialog.getByRole("combobox").press("Enter");

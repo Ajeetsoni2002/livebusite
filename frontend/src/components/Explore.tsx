@@ -272,11 +272,7 @@ function BranchCard({
         if (e.key === "Escape") setOpen(false);
       }}
     >
-      <Link
-        className="branch-main"
-        to={path}
-        aria-label={`${branch.code || branch.name} — ${branch.name}`}
-      >
+      <Link className="branch-main" to={path}>
         <div className="branch-top">
           <span className="branch-icon">
             <Icon size={25} />

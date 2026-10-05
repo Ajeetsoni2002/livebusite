@@ -125,7 +125,7 @@ export default function SearchBox({
         <button
           data-magnetic={large || undefined}
           className={large ? "button" : "icon-button"}
-          aria-label="Search papers"
+          aria-label={large ? undefined : "Search papers"}
           type="submit"
         >
           {large && <span>Find papers</span>}

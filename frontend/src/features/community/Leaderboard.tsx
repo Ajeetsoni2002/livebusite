@@ -143,11 +143,11 @@ export default function Leaderboard() {
       ) : people.length === 0 ? (
         <div className="empty card">
           <Trophy size={32} />
-          <h3>
+          <h2>
             {period === "all"
               ? "The podium is waiting for its first name."
               : "No new contributions in this period yet."}
-          </h3>
+          </h2>
           <p>Share a paper or a note and you could be first.</p>
           <Link className="button" to="/contact">
             Contribute a paper <ArrowUpRight size={16} />
@@ -156,6 +156,7 @@ export default function Leaderboard() {
       ) : (
         <>
           <section className="podium" aria-label="Top three contributors">
+            <h2 className="sr-only">Top three contributors</h2>
             {podium.map((person) => (
               <div
                 key={person.name}
@@ -182,6 +183,7 @@ export default function Leaderboard() {
             ))}
           </section>
           <section className="leaderboard" aria-label="Leaderboard">
+            <h2 className="sr-only">Leaderboard</h2>
             <ol>
               {people.map((person) => {
                 const earned = badges(person, earliest);

@@ -352,7 +352,7 @@ textarea:focus-visible {
   border-radius: 999px;
   color: var(--muted);
   background: color-mix(in srgb, var(--raised) 60%, transparent);
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.5;
 }
 .card-tags .branch-tag {
@@ -1084,7 +1084,7 @@ th[aria-sort="descending"] .sort-header {
   height: 105px;
 }
 .podium-loading .podium-slot {
-  height: 220px;
+  height: 330px;
   border-radius: 14px;
 }
 .leaderboard ol {
@@ -1128,7 +1128,7 @@ th[aria-sort="descending"] .sort-header {
   border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
   border-radius: 999px;
   color: var(--accent);
-  font-size: 11.5px;
+  font-size: 12px;
 }
 .leader-stats {
   display: flex;
@@ -1145,7 +1145,7 @@ th[aria-sort="descending"] .sort-header {
   align-items: center;
   gap: 5px;
   color: var(--muted);
-  font-size: 11.5px;
+  font-size: 12px;
 }
 .leader-stats dd {
   margin: 0;
@@ -1230,5 +1230,29 @@ th[aria-sort="descending"] .sort-header {
 @media (prefers-reduced-motion: reduce) {
   .podium-slot {
     animation: none;
+  }
+}
+
+/* Small catalog text stays legible on phones (Lighthouse font-size: 12px floor). */
+.resource .eyebrow,
+.resource .card-bottom,
+.resource .card-top .pill {
+  font-size: 12px;
+}
+.empty h2 {
+  font-size: 20px;
+}
+
+/* Phones hide the label visually but keep it as the control name for assistive tech. */
+@media (max-width: 760px) {
+  .palette-trigger span,
+  .search-box .button span {
+    display: inline;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 }

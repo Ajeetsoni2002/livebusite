@@ -126,11 +126,10 @@ export default function Layout() {
                 setMenu(false);
                 setPalette(true);
               }}
-              aria-label="Open search"
+              aria-keyshortcuts="Control+K Meta+K"
             >
               <Command size={15} />
-              <span>Search</span>
-              <kbd>{shortcut}</kbd>
+              <span>Search</span> <kbd>{shortcut}</kbd>
             </button>
             <ThemeToggle />
             <button

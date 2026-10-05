@@ -62,12 +62,12 @@ try {
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto(base);
   await page.getByRole("heading", { name: "Recently added" }).waitFor();
-  await page.getByRole("button", { name: "Open search", exact: true }).click();
+  await page.locator(".palette-trigger").click();
   await page.getByRole("dialog").waitFor();
   await page.keyboard.press("Escape");
   assert.equal(
     await page
-      .getByRole("button", { name: "Open search", exact: true })
+      .locator(".palette-trigger")
       .evaluate((el) => el === document.activeElement),
     true,
   );
