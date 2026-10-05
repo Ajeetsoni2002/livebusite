@@ -12,6 +12,7 @@ try {
   const context = await browser.newContext({
     viewport: { width: 390, height: 844 },
     extraHTTPHeaders: { DNT: "1" },
+    colorScheme: "dark",
   });
   const page = await context.newPage();
   page.setDefaultTimeout(8000);
@@ -166,6 +167,12 @@ try {
     await page.getByRole("button", { name: "Switch to dark mode" }).click();
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    // With no saved choice, the first visit follows the operating system.
+    const light = await browser.newContext({ colorScheme: "light" });
+    const fresh = await light.newPage();
+    await fresh.goto(base);
+    await expect(fresh.locator("html")).toHaveAttribute("data-theme", "light");
+    await light.close();
   }
   if (check === "palette-focus") {
     await page

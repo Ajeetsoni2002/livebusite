@@ -266,6 +266,74 @@ test("thumbnail storage failures never reject or delete a valid PDF upload", asy
     if (asset) await storage.delete(asset.key);
   }
 });
+test("public listing supports every sort order", async () => {
+  await Paper.create([
+    {
+      title: "beta paper",
+      slug: "s-b",
+      status: "published",
+      year: 2021,
+      downloads: 5,
+      views: 1,
+    },
+    {
+      title: "Alpha paper",
+      slug: "s-a",
+      status: "published",
+      year: 2024,
+      downloads: 1,
+      views: 9,
+    },
+    {
+      title: "gamma paper",
+      slug: "s-g",
+      status: "published",
+      year: 2022,
+      downloads: 3,
+      views: 4,
+    },
+  ]);
+  const titles = async (sort: string) =>
+    (await request(app).get(`/api/papers?sort=${sort}`)).body.data.map(
+      (p: { title: string }) => p.title,
+    );
+  assert.deepEqual(await titles("title"), [
+    "Alpha paper",
+    "beta paper",
+    "gamma paper",
+  ]);
+  assert.deepEqual(await titles("year-desc"), [
+    "Alpha paper",
+    "gamma paper",
+    "beta paper",
+  ]);
+  assert.deepEqual(await titles("year-asc"), [
+    "beta paper",
+    "gamma paper",
+    "Alpha paper",
+  ]);
+  assert.deepEqual(await titles("downloads"), [
+    "beta paper",
+    "gamma paper",
+    "Alpha paper",
+  ]);
+  assert.deepEqual(await titles("views"), [
+    "Alpha paper",
+    "gamma paper",
+    "beta paper",
+  ]);
+  assert.deepEqual(await titles("oldest"), [
+    "beta paper",
+    "Alpha paper",
+    "gamma paper",
+  ]);
+  assert.deepEqual(await titles("newest"), [
+    "gamma paper",
+    "Alpha paper",
+    "beta paper",
+  ]);
+  assert.equal((await request(app).get("/api/papers?sort=random")).status, 400);
+});
 test("public search sees published content only and rejects query operators", async () => {
   await Paper.create([
     {

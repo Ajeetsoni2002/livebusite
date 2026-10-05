@@ -57,10 +57,18 @@ export function readSnapshot<T>(
             ),
         ),
       );
+    // Mirrors the API sort orders so the saved library behaves the same offline.
+    const time = (p: any) => Date.parse(p.createdAt || "") || 0;
+    const orders: Record<string, (a: any, b: any) => number> = {
+      oldest: (a, b) => time(a) - time(b),
+      downloads: (a, b) => b.downloads - a.downloads,
+      views: (a, b) => (b.views || 0) - (a.views || 0),
+      "year-desc": (a, b) => (b.year || 0) - (a.year || 0),
+      "year-asc": (a, b) => (a.year || 0) - (b.year || 0),
+      title: (a, b) => String(a.title).localeCompare(String(b.title)),
+    };
     data.sort(
-      params.sort === "downloads"
-        ? (a: any, b: any) => b.downloads - a.downloads
-        : (a: any, b: any) => (b.year || 0) - (a.year || 0),
+      orders[String(params.sort)] || ((a: any, b: any) => time(b) - time(a)),
     );
     const total = data.length,
       page = Number(params.page || 1),

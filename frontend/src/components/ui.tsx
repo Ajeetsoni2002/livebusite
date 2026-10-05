@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Download, SearchX, ArrowRight, Eye } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, type CSSProperties } from "react";
+import { branchIdentity } from "../lib/branches";
 import { downloadResource } from "../lib/download";
 import { errorMessage } from "../lib/api";
 const QuickPreview = lazy(() => import("./QuickPreview"));
@@ -72,7 +73,15 @@ export function ContentCard({
   kind?: string;
   saved?: boolean;
 }) {
-  const subject = item.offerings[0]?.subject;
+  const offering = item.offerings[0],
+    subject = offering?.subject,
+    identity = branchIdentity(offering?.branch.code),
+    exam =
+      kind === "notes"
+        ? item.unit || item.format?.toUpperCase() || "NOTE"
+        : item.examType && item.examType !== "Unknown"
+          ? item.examType
+          : "";
   const [preview, setPreview] = useState(false),
     [busy, setBusy] = useState(false),
     [message, setMessage] = useState("");
@@ -91,6 +100,8 @@ export function ContentCard({
   return (
     <article
       className={`resource card ${kind === "notes" ? "note-resource" : ""}`}
+      style={{ "--branch": identity.color } as CSSProperties}
+      data-tilt
     >
       <Link className="resource-main" to={contentPath(item, kind)}>
         <div className="card-top">
@@ -99,6 +110,20 @@ export function ContentCard({
             id={item._id}
             kind={kind}
             available={item.hasThumbnail}
+            cover
+            fallback={
+              <span className="cover-art">
+                <identity.Icon size={22} />
+                <strong>
+                  {subject?.code || (kind === "notes" ? "NOTE" : "PAPER")}
+                </strong>
+                <small>
+                  {[offering?.semester.name, kind === "notes" ? "" : item.year]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </small>
+              </span>
+            }
           />
           <span className="pill">
             {kind === "notes" ? "SHORT NOTE" : item.year || "YEAR UNKNOWN"}
@@ -108,21 +133,17 @@ export function ContentCard({
         <div className="eyebrow">{subject?.code || "ARCHIVE"}</div>
         {item.featured && <span className="eyebrow">Featured resource</span>}
         <h3>{kind === "notes" ? item.title : subject?.name || item.title}</h3>
-        <p className="metadata">
-          {item.offerings[0]?.branch.code ||
-            item.offerings[0]?.branch.name ||
-            "Subject review"}{" "}
-          · {item.offerings[0]?.semester.name || "Semester review"}
-        </p>
+        <ul className="card-tags" aria-label="Details">
+          <li className="branch-tag">
+            {offering?.branch.code || offering?.branch.name || "Subject review"}
+          </li>
+          <li>{offering?.semester.name || "Semester review"}</li>
+          {kind !== "notes" && item.year && <li>{item.year}</li>}
+          {exam && <li className="exam-tag">{exam}</li>}
+        </ul>
       </Link>
       <div className="card-bottom">
-        <span>
-          {kind === "notes"
-            ? item.unit || item.format?.toUpperCase() || "NOTE"
-            : item.examType === "Unknown"
-              ? "Exam type unverified"
-              : item.examType}
-        </span>
+        <span>{kind === "notes" || exam ? "" : "Exam type unverified"}</span>
         <span aria-label={`${item.downloads} downloads`}>
           <Download size={13} />
           {item.downloads.toLocaleString()}

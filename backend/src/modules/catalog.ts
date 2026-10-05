@@ -16,6 +16,16 @@ import {
   PaperRequest,
 } from "./models.js";
 const id = z.string().regex(/^[a-f0-9]{24}$/i);
+// Every order ends with _id so pages never repeat or skip items with equal keys.
+const sortOrders: Record<string, Record<string, 1 | -1>> = {
+  newest: { createdAt: -1, _id: -1 },
+  oldest: { createdAt: 1, _id: 1 },
+  downloads: { downloads: -1, _id: -1 },
+  views: { views: -1, _id: -1 },
+  "year-desc": { year: -1, createdAt: -1, _id: -1 },
+  "year-asc": { year: 1, createdAt: -1, _id: -1 },
+  title: { title: 1, _id: 1 },
+};
 const filters = z
   .object({
     q: z.string().max(120).optional(),
@@ -27,7 +37,17 @@ const filters = z
     examType: z
       .enum(["Mid-Sem", "End-Sem", "Supplementary", "Other", "Unknown"])
       .optional(),
-    sort: z.enum(["newest", "downloads"]).default("newest"),
+    sort: z
+      .enum([
+        "newest",
+        "oldest",
+        "downloads",
+        "views",
+        "year-desc",
+        "year-asc",
+        "title",
+      ])
+      .default("newest"),
     page: z.coerce.number().int().min(1).max(1000).default(1),
     limit: z.coerce.number().int().min(1).max(50).default(20),
   })
@@ -95,11 +115,8 @@ export async function listContent(
       })
       .populate("author", "name")
       .populate("asset", "thumbnailKey deletedAt")
-      .sort(
-        input.sort === "downloads"
-          ? { downloads: -1, _id: -1 }
-          : { createdAt: -1, _id: -1 },
-      )
+      .sort(sortOrders[input.sort])
+      .collation({ locale: "en", strength: 2 })
       .skip((input.page - 1) * input.limit)
       .limit(input.limit)
       .lean(),

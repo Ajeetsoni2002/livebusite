@@ -7,6 +7,8 @@ import {
   X,
   ChevronDown,
   PenLine,
+  LayoutGrid,
+  List,
 } from "lucide-react";
 import { usePublic } from "../../lib/queries";
 import type { Entity, Offering, ContentItem } from "../../lib/types";
@@ -16,6 +18,15 @@ import { usePageMeta } from "../../lib/meta";
 import { useEffect, useState, type CSSProperties } from "react";
 import { branchIdentity } from "../../lib/branches";
 import { track } from "../../lib/analytics";
+const sortOptions = [
+  ["newest", "Newest added"],
+  ["oldest", "Oldest added"],
+  ["year-desc", "Year: newest first", "papers"],
+  ["year-asc", "Year: oldest first", "papers"],
+  ["title", "Title (A–Z)"],
+  ["downloads", "Most downloaded"],
+  ["views", "Most viewed"],
+] as const;
 export default function Browse({ kind = "papers" }: { kind?: string }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const params = useParams(),
@@ -52,6 +63,10 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
     page: Number(search.get("page") || 1),
   };
   const items = usePublic<ContentItem[]>(`/${currentKind}`, filter);
+  const view = search.get("view") === "list" ? "list" : "grid";
+  const sorts = sortOptions.filter(
+    (option) => option.length < 3 || option[2] === currentKind,
+  );
   const relevant = (offerings.data?.data || []).filter(
     (o) =>
       (!selectedBranch || o.branch._id === selectedBranch) &&
@@ -320,11 +335,20 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
           <span>Sort</span>
           <select
             aria-label="Sort"
-            value={search.get("sort") || "newest"}
-            onChange={(e) => update("sort", e.target.value)}
+            value={
+              sorts.some(([value]) => value === filter.sort)
+                ? filter.sort
+                : "newest"
+            }
+            onChange={(e) =>
+              update("sort", e.target.value === "newest" ? "" : e.target.value)
+            }
           >
-            <option value="newest">Newest first</option>
-            <option value="downloads">Most downloaded</option>
+            {sorts.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
           </select>
         </label>
         <button
@@ -356,6 +380,19 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
               <X size={12} />
             </button>
           ))}
+          {chips.length > 1 && (
+            <button
+              className="clear-all"
+              onClick={() => {
+                const next = new URLSearchParams();
+                for (const key of ["sort", "view", "tab"])
+                  if (search.get(key)) next.set(key, search.get(key)!);
+                setSearch(next);
+              }}
+            >
+              Clear all
+            </button>
+          )}
         </div>
       )}
       {branch && !subject && choices.length > 0 && (
@@ -397,7 +434,24 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
             ? "The notebook is growing"
             : `${items.data?.meta?.total ?? "…"} ${currentKind === "notes" ? "notes" : "papers"}`}
         </span>
-        <span className="muted">{subject?.code || "Made easier to find."}</span>
+        <div className="view-toggle" role="group" aria-label="Layout">
+          <button
+            aria-pressed={view === "grid"}
+            aria-label="Grid view"
+            title="Grid view"
+            onClick={() => update("view", "")}
+          >
+            <LayoutGrid size={16} />
+          </button>
+          <button
+            aria-pressed={view === "list"}
+            aria-label="List view"
+            title="List view"
+            onClick={() => update("view", "list")}
+          >
+            <List size={16} />
+          </button>
+        </div>
       </div>
       {items.isPending ? (
         <>
@@ -412,7 +466,7 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
           <button onClick={() => items.refetch()}>Try again</button>
         </div>
       ) : items.data?.data.length ? (
-        <div className="content-grid">
+        <div className={`content-grid ${view === "list" ? "list-view" : ""}`}>
           {items.data.data.map((item) => (
             <ContentCard
               key={item._id}
