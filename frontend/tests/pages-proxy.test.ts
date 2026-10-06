@@ -329,3 +329,33 @@ test("stream=1 refuses non-PDF storage answers and foreign redirect hosts", asyn
   assert.equal(foreign.headers.get("Location"), target);
   assert.equal(fetchMock.mock.callCount(), 3);
 });
+
+test("browser-style redirects with Express's HTML body still redirect, without the HTML", async (t) => {
+  const signed = "https://acct.r2.cloudflarestorage.com/bucket/a.pdf?sig=1";
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async () =>
+      new Response(
+        `<p>Found. Redirecting to <a href="${signed}">${signed}</a></p>`,
+        {
+          status: 302,
+          headers: {
+            Location: signed,
+            "Content-Type": "text/html; charset=utf-8",
+          },
+        },
+      ),
+  );
+  t.after(() => fetchMock.mock.restore());
+  const response = await onRequest({
+    request: new Request(origin + "/api/papers/id/preview", {
+      headers: { Accept: "text/html" },
+    }),
+    env,
+  });
+  assert.equal(response.status, 302);
+  assert.equal(response.headers.get("Location"), signed);
+  assert.equal(response.headers.get("Content-Type"), null);
+  assert.equal(await response.text(), "");
+});

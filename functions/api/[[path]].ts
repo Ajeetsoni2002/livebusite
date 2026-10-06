@@ -120,7 +120,12 @@ export async function onRequest(context: {
       redirect: "manual",
       cache: "no-store",
     });
-    if ((response.headers.get("Content-Type") || "").includes("text/html")) {
+    const redirect = response.status >= 300 && response.status < 400;
+    // Express answers Accept: text/html redirects with a tiny HTML body; those are ours.
+    if (
+      !redirect &&
+      (response.headers.get("Content-Type") || "").includes("text/html")
+    ) {
       await response.body?.cancel();
       return wakingUp();
     }
@@ -157,7 +162,13 @@ export async function onRequest(context: {
     }
     // Copy all response headers, including each separate Set-Cookie. The
     // backend's host-only cookies now belong to the Pages hostname.
-    return new Response(response.body, {
+    if (redirect) {
+      // Drop the redirect body so no HTML ever reaches the page, even ours.
+      await response.body?.cancel();
+      headers.delete("Content-Type");
+      headers.delete("Content-Length");
+    }
+    return new Response(redirect ? null : response.body, {
       status: response.status,
       statusText: response.statusText,
       headers,
