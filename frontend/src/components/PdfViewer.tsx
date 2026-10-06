@@ -20,7 +20,7 @@ GlobalWorkerOptions.workerSrc = workerUrl;
 
 type Phase =
   | { name: "loading" }
-  | { name: "waking"; attempt: number }
+  | { name: "waking"; attempt: number; preparing: boolean }
   | { name: "ready"; doc: PDFDocumentProxy; sizes: [number, number][] }
   | { name: "error"; message: string };
 
@@ -28,6 +28,7 @@ type Phase =
 const backoff = [3, 5, 8, 12, 15, 20, 25];
 
 class Retryable extends Error {}
+class Preparing extends Retryable {}
 
 /** Only ever accepts real PDF bytes; anything else (HTML, JSON errors) never reaches the page. */
 async function fetchPdf(kind: string, id: string, signal: AbortSignal) {
@@ -50,7 +51,12 @@ async function fetchPdf(kind: string, id: string, signal: AbortSignal) {
       return bytes;
     throw new Error("The file is not a readable PDF.");
   }
-  await response.body?.cancel();
+  // A brand-new upload is held until its watermarked copy exists.
+  if (response.status === 409) {
+    const body = await response.json().catch(() => null);
+    if (body?.error?.code === "PREPARING") throw new Preparing("preparing");
+  }
+  await response.body?.cancel().catch(() => {});
   if ([502, 503, 504, 429].includes(response.status) || type.includes("html"))
     throw new Retryable(String(response.status));
   throw new Error(
@@ -172,7 +178,11 @@ export default function PdfViewer({
           if (controller.signal.aborted) return;
           if (error instanceof Retryable && attempt < backoff.length) {
             wake(true);
-            setPhase({ name: "waking", attempt: attempt + 1 });
+            setPhase({
+              name: "waking",
+              attempt: attempt + 1,
+              preparing: error instanceof Preparing,
+            });
             await sleep(backoff[attempt]);
             if (controller.signal.aborted) return;
             continue;
@@ -291,13 +301,15 @@ export default function PdfViewer({
           <div className="pdf-state" role="status">
             <Loader2 className="spin" size={26} aria-hidden />
             <strong>
-              {phase.name === "waking"
-                ? "Waking up the library…"
-                : "Loading preview…"}
+              {phase.name !== "waking"
+                ? "Loading preview…"
+                : phase.preparing
+                  ? "Preparing this paper…"
+                  : "Waking up the library…"}
             </strong>
             <p>
               {phase.name === "waking"
-                ? `The server was resting. Retrying automatically (attempt ${phase.attempt} of ${backoff.length}).`
+                ? `${phase.preparing ? "It was just uploaded and is being watermarked." : "The server was resting."} Retrying automatically (attempt ${phase.attempt} of ${backoff.length}).`
                 : "Fetching the paper."}
             </p>
             <div className="pdf-skeleton" aria-hidden="true" />
