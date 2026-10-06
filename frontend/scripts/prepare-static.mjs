@@ -1,4 +1,5 @@
-import { readFile, writeFile, mkdir, cp } from "node:fs/promises";
+import { readFile, writeFile, mkdir, cp, readdir } from "node:fs/promises";
+import { createRequire } from "node:module";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -15,6 +16,15 @@ await cp(
   resolve(pub, "legacy/portfolio"),
   { recursive: true },
 );
+// PDF.js decoders for JPEG 2000 / JBIG2 scans and colour profiles, served same-origin.
+const pdfjsWasm = resolve(
+  dirname(createRequire(import.meta.url).resolve("pdfjs-dist/package.json")),
+  "wasm",
+);
+await mkdir(resolve(pub, "pdfjs/wasm"), { recursive: true });
+for (const name of await readdir(pdfjsWasm))
+  if (!name.startsWith("quickjs"))
+    await cp(resolve(pdfjsWasm, name), resolve(pub, "pdfjs/wasm", name));
 const manifest = JSON.parse(
   await readFile(resolve(root, "migration/manifest.json"), "utf8"),
 );

@@ -228,3 +228,104 @@ test("network failures produce a retryable 502 without exposing upstream details
   assert.equal(response.headers.get("Cache-Control"), "private, no-store");
   assert.doesNotMatch(await response.text(), /private internal error/);
 });
+
+test("a sleeping backend's HTML page becomes our JSON 503 and is never forwarded", async (t) => {
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async () =>
+      new Response("<html><body>SERVICE WAKING UP...</body></html>", {
+        status: 503,
+        headers: { "Content-Type": "text/html; charset=utf-8" },
+      }),
+  );
+  t.after(() => fetchMock.mock.restore());
+  for (const path of ["/api/papers?limit=1", "/api/papers/id/preview"]) {
+    const response = await onRequest({
+      request: new Request(origin + path, { headers: { Accept: "text/html" } }),
+      env,
+    });
+    assert.equal(response.status, 503);
+    assert.equal(response.headers.get("Retry-After"), "10");
+    assert.match(response.headers.get("Content-Type") || "", /json/);
+    const body = await response.text();
+    assert.doesNotMatch(body, /WAKING UP\.\.\.|<html/i);
+    assert.equal(JSON.parse(body).error.code, "WAKING_UP");
+  }
+});
+
+test("stream=1 previews follow the storage redirect and return only the PDF", async (t) => {
+  const signed =
+    "https://acct.r2.cloudflarestorage.com/bucket/a.pdf?X-Amz-Signature=x";
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async (request: Request | string, options: RequestInit) => {
+      const url = typeof request === "string" ? request : request.url;
+      if (url.startsWith(upstream)) {
+        assert.equal(url, upstream + "/api/papers/abc/preview?stream=1");
+        return new Response(null, {
+          status: 302,
+          headers: { Location: signed },
+        });
+      }
+      assert.equal(url, signed);
+      assert.equal(new Headers(options.headers).get("Cookie"), null);
+      return new Response("%PDF-1.7 bytes", {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Length": "14",
+          "Content-Disposition": 'inline; filename="a.pdf"',
+          "X-Amz-Request-Id": "secret",
+        },
+      });
+    },
+  );
+  t.after(() => fetchMock.mock.restore());
+  const response = await onRequest({
+    request: new Request(origin + "/api/papers/abc/preview?stream=1", {
+      headers: { Cookie: "access=token" },
+    }),
+    env,
+  });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("Content-Type"), "application/pdf");
+  assert.equal(response.headers.get("Location"), null);
+  assert.equal(response.headers.get("X-Amz-Request-Id"), null);
+  assert.equal(await response.text(), "%PDF-1.7 bytes");
+  assert.equal(fetchMock.mock.callCount(), 2);
+});
+
+test("stream=1 refuses non-PDF storage answers and foreign redirect hosts", async (t) => {
+  let target = "https://acct.r2.cloudflarestorage.com/bucket/a.pdf";
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async (request: Request | string) => {
+      const url = typeof request === "string" ? request : request.url;
+      if (url.startsWith(upstream))
+        return new Response(null, {
+          status: 302,
+          headers: { Location: target },
+        });
+      return new Response("<html>error</html>", {
+        status: 200,
+        headers: { "Content-Type": "text/html" },
+      });
+    },
+  );
+  t.after(() => fetchMock.mock.restore());
+  const ask = () =>
+    onRequest({
+      request: new Request(origin + "/api/notes/abc/preview?stream=1"),
+      env,
+    });
+  const html = await ask();
+  assert.equal(html.status, 502);
+  assert.equal((await html.json()).error.code, "PREVIEW_UNAVAILABLE");
+  target = "https://evil.example/a.pdf";
+  const foreign = await ask();
+  assert.equal(foreign.status, 302);
+  assert.equal(foreign.headers.get("Location"), target);
+  assert.equal(fetchMock.mock.callCount(), 3);
+});

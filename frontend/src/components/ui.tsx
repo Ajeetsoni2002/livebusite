@@ -3,6 +3,7 @@ import { ArrowUpRight, Download, SearchX, ArrowRight, Eye } from "lucide-react";
 import { lazy, Suspense, useState, type CSSProperties } from "react";
 import { branchIdentity } from "../lib/branches";
 import { downloadResource } from "../lib/download";
+import { wake } from "../lib/wake";
 import { errorMessage } from "../lib/api";
 const QuickPreview = lazy(() => import("./QuickPreview"));
 import type { ContentItem } from "../lib/types";
@@ -102,6 +103,8 @@ export function ContentCard({
       className={`resource card ${kind === "notes" ? "note-resource" : ""}`}
       style={{ "--branch": identity.color } as CSSProperties}
       data-tilt
+      onPointerEnter={() => wake()}
+      onFocus={() => wake()}
     >
       <Link className="resource-main" to={contentPath(item, kind)}>
         <div className="card-top">

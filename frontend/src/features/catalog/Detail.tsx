@@ -1,17 +1,19 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Download, Eye, Flag, ArrowLeft, ExternalLink } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import { usePublic } from "../../lib/queries";
-import { api, apiUrl, errorMessage } from "../../lib/api";
+import { api, errorMessage } from "../../lib/api";
 import { usePageMeta } from "../../lib/meta";
 import type { ContentItem } from "../../lib/types";
 import { ContentCard, SavedNotice, Skeleton } from "../../components/ui";
 import { track } from "../../lib/analytics";
 import { PdfThumbnail } from "../../components/PdfThumbnail";
 import { downloadResource } from "../../lib/download";
+import { wake } from "../../lib/wake";
+const PdfViewer = lazy(() => import("../../components/PdfViewer"));
 export default function Detail({ kind = "papers" }: { kind?: string }) {
   const { slug } = useParams(),
     item = usePublic<ContentItem>(`/${kind}/${slug}`),
@@ -38,6 +40,7 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
       setBusy(false);
     }
   }
+  useEffect(() => wake(), []);
   useEffect(() => {
     if (data && !item.data?.saved)
       track({ kind: "contentview", contentType: kind, contentId: data._id });
@@ -109,11 +112,14 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
                 </ReactMarkdown>
               </div>
             ) : preview && !item.data?.saved ? (
-              <iframe
-                title={`PDF preview: ${data.title}`}
-                src={apiUrl(`/${kind}/${data._id}/preview`)}
-                loading="lazy"
-              />
+              <Suspense fallback={<p role="status">Loading preview…</p>}>
+                <PdfViewer
+                  kind={kind}
+                  id={data._id}
+                  title={data.title}
+                  onDownload={download}
+                />
+              </Suspense>
             ) : (
               <div className="preview-placeholder">
                 <span className="eyebrow">THE READING ROOM</span>

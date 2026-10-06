@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSanitize from "rehype-sanitize";
 import { X } from "lucide-react";
-import { apiUrl } from "../../lib/api";
 import { usePublic } from "../../lib/queries";
 import type { ContentItem, Offering } from "../../lib/types";
 import { offeringLabel } from "./OfferingPicker";
+const PdfViewer = lazy(() => import("../../components/PdfViewer"));
 
 // Staff review: read the uploaded PDF (pending ones too) and decide without leaving the list.
 export default function ReviewPreview({
@@ -44,7 +44,6 @@ export default function ReviewPreview({
           : undefined,
     )
     .filter(Boolean) as Offering[];
-  const src = apiUrl(`/${kind}/${item._id}/preview`);
   return (
     <dialog
       ref={dialog}
@@ -103,19 +102,12 @@ export default function ReviewPreview({
             </ReactMarkdown>
           </div>
         ) : (
-          <iframe src={src} title={`PDF preview: ${item.title}`} />
+          <Suspense fallback={<p role="status">Loading preview…</p>}>
+            <PdfViewer kind={kind} id={item._id} title={item.title} />
+          </Suspense>
         )}
         <div className="quick-preview-footer">
-          {item.format !== "markdown" ? (
-            <span>
-              Preview not showing?{" "}
-              <a href={src} target="_blank" rel="noopener noreferrer">
-                Open in a new tab
-              </a>
-            </span>
-          ) : (
-            <span />
-          )}
+          <span />
           {onAction && (
             <div className="row-actions">
               <button onClick={() => onAction("approve")}>Approve</button>

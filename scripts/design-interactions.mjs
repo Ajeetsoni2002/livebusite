@@ -103,10 +103,9 @@ try {
     });
     await card.getByRole("button", { name: "Quick preview" }).click();
     const preview = page.getByRole("dialog", { name: /Preview:/ });
-    await expect(preview.locator("iframe")).toHaveAttribute(
-      "src",
-      /\/papers\/.+\/preview$/,
-    );
+    // The in-page viewer replaced the iframe so a sleeping API can never show its own page.
+    await expect(preview.locator(".pdf-viewer")).toBeVisible();
+    assert.equal(await preview.locator("iframe").count(), 0);
     assert.equal(downloads, 0, "Preview must not count as a download");
     await page.keyboard.press("Escape");
     await expect(preview).not.toBeVisible();

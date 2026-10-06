@@ -19,6 +19,64 @@ function failure(status: number, code: string, message: string) {
   );
 }
 
+// A sleeping Render service answers with its own HTML page. Visitors must never
+// see foreign HTML, so the proxy turns any HTML answer into our JSON 503.
+function wakingUp() {
+  const response = failure(
+    503,
+    "WAKING_UP",
+    "The library is waking up. This usually takes under a minute.",
+  );
+  response.headers.set("Retry-After", "10");
+  return response;
+}
+
+const previewPath = /^\/api\/(papers|notes)\/[^/]+\/preview$/;
+
+// The in-page PDF viewer asks for ?stream=1: follow the storage redirect here so
+// the browser reads the PDF same-origin (no bucket CORS) and only ever gets a PDF.
+async function streamPdf(target: URL, original: Request, sameOrigin: boolean) {
+  const headers = new Headers({ Accept: "application/pdf" });
+  const range = original.headers.get("Range");
+  if (range) headers.set("Range", range);
+  const cookie = original.headers.get("Cookie");
+  if (sameOrigin && cookie) headers.set("Cookie", cookie);
+  const file = await fetch(target.href, {
+    headers,
+    redirect: "manual",
+    cache: "no-store",
+  });
+  const type = (file.headers.get("Content-Type") || "").toLowerCase();
+  if (
+    (file.status !== 200 && file.status !== 206) ||
+    !type.includes("application/pdf")
+  ) {
+    await file.body?.cancel();
+    return failure(
+      502,
+      "PREVIEW_UNAVAILABLE",
+      "The preview could not be loaded. Please try again.",
+    );
+  }
+  const out = new Headers({
+    "Content-Type": "application/pdf",
+    "Cache-Control": "private, no-store",
+    "X-Content-Type-Options": "nosniff",
+  });
+  for (const name of [
+    "Content-Length",
+    "Content-Range",
+    "Accept-Ranges",
+    "Content-Disposition",
+    "ETag",
+    "Last-Modified",
+  ]) {
+    const value = file.headers.get(name);
+    if (value) out.set(name, value);
+  }
+  return new Response(file.body, { status: file.status, headers: out });
+}
+
 export async function onRequest(context: {
   request: Request;
   env: { API_ORIGIN?: string };
@@ -62,10 +120,29 @@ export async function onRequest(context: {
       redirect: "manual",
       cache: "no-store",
     });
+    if ((response.headers.get("Content-Type") || "").includes("text/html")) {
+      await response.body?.cancel();
+      return wakingUp();
+    }
     const headers = new Headers(response.headers);
     for (const header of hopHeaders) headers.delete(header);
     headers.set("Cache-Control", "private, no-store");
     const location = headers.get("Location");
+    if (
+      location &&
+      response.status >= 300 &&
+      response.status < 400 &&
+      previewPath.test(incoming.pathname) &&
+      incoming.searchParams.get("stream") === "1"
+    ) {
+      const target = new URL(location, upstream);
+      const sameOrigin = target.origin === upstream.origin;
+      if (
+        target.protocol === "https:" &&
+        (sameOrigin || target.hostname.endsWith(".r2.cloudflarestorage.com"))
+      )
+        return await streamPdf(target, context.request, sameOrigin);
+    }
     if (location) {
       const redirect = new URL(location, upstream);
       if (
