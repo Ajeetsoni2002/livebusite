@@ -83,6 +83,39 @@ const assetSchema = new Schema(
 );
 assetSchema.index({ hash: 1 }, { unique: true });
 export const FileAsset = model("FileAsset", assetSchema);
+// Versioned files: the original upload is never overwritten. `asset` is always the
+// file the public receives (the watermarked active version once processing is done).
+const fileVersions = new Schema(
+  {
+    original: ref("FileAsset"),
+    processed: ref("FileAsset"),
+    processedMeta: Schema.Types.Mixed,
+    watermarked: {
+      original: ref("FileAsset"),
+      processed: ref("FileAsset"),
+      originalSignature: String,
+      processedSignature: String,
+    },
+  },
+  { _id: false },
+);
+const watermarkState = new Schema(
+  {
+    status: {
+      type: String,
+      enum: ["none", "queued", "running", "done", "skipped", "failed"],
+      default: "none",
+    },
+    // New uploads stay off public routes until their first watermark is ready.
+    hold: { type: Boolean, default: false },
+    text: String,
+    revision: Number,
+    reason: String,
+    error: String,
+    appliedAt: Date,
+  },
+  { _id: false },
+);
 const contentFields = {
   title: { type: String, required: true, maxlength: 240 },
   slug: { type: String, required: true },
@@ -107,6 +140,13 @@ const contentFields = {
   ],
   provenance: Schema.Types.Mixed,
   metadataNeedsReview: { type: Boolean, default: false },
+  files: { type: fileVersions, default: undefined },
+  activeVersion: {
+    type: String,
+    enum: ["original", "processed"],
+    default: "original",
+  },
+  watermark: { type: watermarkState, default: undefined },
 };
 const paperSchema = new Schema(
   {
@@ -255,3 +295,48 @@ export const taxonomyModels = {
   offerings: SubjectOffering,
 };
 export const contentModels = { papers: Paper, notes: Note };
+
+export const Setting = model(
+  "Setting",
+  new Schema(
+    {
+      key: { type: String, required: true, unique: true },
+      value: Schema.Types.Mixed,
+      revision: { type: Number, default: 1 },
+      updatedBy: ref("User"),
+    },
+    options,
+  ),
+);
+const jobSchema = new Schema(
+  {
+    type: { type: String, enum: ["watermark"], required: true },
+    contentType: { type: String, enum: ["papers", "notes"], required: true },
+    content: { type: Schema.Types.ObjectId, required: true },
+    status: {
+      type: String,
+      enum: ["queued", "running", "done", "failed"],
+      default: "queued",
+    },
+    attempts: { type: Number, default: 0 },
+    runAfter: { type: Date, default: () => new Date() },
+    leaseUntil: Date,
+    error: String,
+    batch: String,
+    requestedBy: ref("User"),
+    startedAt: Date,
+    finishedAt: Date,
+    durationMs: Number,
+  },
+  options,
+);
+jobSchema.index({ status: 1, runAfter: 1, createdAt: 1 });
+jobSchema.index({ content: 1, type: 1, status: 1 });
+jobSchema.index(
+  { finishedAt: 1 },
+  {
+    expireAfterSeconds: 30 * 86_400,
+    partialFilterExpression: { status: "done" },
+  },
+);
+export const ProcessingJob = model("ProcessingJob", jobSchema);

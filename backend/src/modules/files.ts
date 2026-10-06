@@ -24,6 +24,13 @@ async function visible(req: AuthRequest) {
       String(item?.author) === String(req.user._id));
   if (!item || (!publicItem && !owner) || !item.asset || item.asset.deletedAt)
     throw new HttpError(404, "PDF is unavailable.");
+  // A new upload is public only once its watermarked copy exists.
+  if (!owner && item.watermark?.hold)
+    throw new HttpError(
+      409,
+      "This paper is being prepared. Please try again in a minute.",
+      "PREPARING",
+    );
   return item;
 }
 async function accessUrl(req: AuthRequest, attachment: boolean) {

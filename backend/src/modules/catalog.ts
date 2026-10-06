@@ -53,6 +53,8 @@ const filters = z
     limit: z.coerce.number().int().min(1).max(50).default(20),
   })
   .strict();
+const privateFields =
+  "-revisions -provenance -rejectionReason -files -watermark -activeVersion";
 export const escaped = (text: string) =>
   text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export async function catalogFilter(raw: unknown, publicOnly = true) {
@@ -104,7 +106,7 @@ export async function listContent(
   const [data, total] = await Promise.all([
     model
       .find(filter)
-      .select("-revisions -provenance -rejectionReason")
+      .select(privateFields)
       .populate({
         path: "offerings",
         populate: [
@@ -190,7 +192,7 @@ for (const kind of ["papers", "notes"]) {
     const query = /^[a-f0-9]{24}$/i.test(key) ? { _id: key } : { slug: key };
     const item = await contentModels[kind]
       .findOne({ ...query, ...publicationFilter })
-      .select("-provenance -rejectionReason -revisions")
+      .select(privateFields)
       .populate({
         path: "offerings",
         populate: [
@@ -218,7 +220,7 @@ catalogRouter.get("/papers/:id/related", async (req, res) => {
     _id: { $ne: item._id },
     offerings: { $in: item.offerings },
   })
-    .select("-revisions -provenance -rejectionReason")
+    .select(privateFields)
     .sort({ year: -1 })
     .limit(8)
     .populate({

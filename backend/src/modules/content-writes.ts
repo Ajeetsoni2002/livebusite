@@ -11,6 +11,12 @@ import { savePdf } from "../storage/index.js";
 import { contentModels, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
+import { enqueueWatermark } from "../processing/jobs.js";
+// The same PDF may sit in any version slot; it must not be uploaded twice.
+const usesAsset = (id: unknown) => ({
+  $or: [{ asset: id }, { "files.original": id }, { "files.processed": id }],
+  deletedAt: null,
+});
 const id = z.string().regex(/^[a-f0-9]{24}$/i);
 const shared = {
   title: z.string().trim().min(3).max(240),
@@ -136,6 +142,22 @@ export function contentWriteRouter(admin: boolean) {
       ]);
       ok(res, data, { total, page, pages: Math.ceil(total / 30) });
     });
+    router.get(`/${kind}/:id/processing`, async (req: AuthRequest, res) => {
+      const item: any = await model
+        .findOne({
+          _id: identifier(req.params.id),
+          ...(admin ? {} : { author: req.user._id }),
+        })
+        .select("activeVersion watermark files.processed files.processedMeta")
+        .lean();
+      if (!item) throw new HttpError(404, "Upload not found");
+      ok(res, {
+        activeVersion: item.activeVersion || "original",
+        hasProcessed: Boolean(item.files?.processed),
+        processedMeta: item.files?.processedMeta || null,
+        watermark: item.watermark || { status: "none" },
+      });
+    });
     router.get(`/${kind}/:id`, async (req: AuthRequest, res) => {
       const item = await model
         .findOne({
@@ -173,14 +195,17 @@ export function contentWriteRouter(admin: boolean) {
         if ((kind === "papers" || input.format === "pdf") && !req.file)
           throw new HttpError(400, "A PDF is required.");
         const asset = req.file ? await savePdf(req.file) : null;
-        if (
-          asset &&
-          (await model.exists({ asset: asset._id, deletedAt: null }))
-        )
+        if (asset && (await model.exists(usesAsset(asset._id))))
           throw new HttpError(409, "This PDF is already in the library.");
         const data = {
           ...input,
           asset: asset?._id,
+          ...(asset
+            ? {
+                files: { original: asset._id },
+                watermark: { status: "queued", hold: true },
+              }
+            : {}),
           author: req.user._id,
           status,
           slug: `${slugify(input.title)}-${randomUUID().slice(0, 8)}`,
@@ -188,6 +213,11 @@ export function contentWriteRouter(admin: boolean) {
         };
         if (status === "published") publishable(data);
         const item = await model.create(data);
+        if (asset)
+          await enqueueWatermark(kind as any, item._id, {
+            requestedBy: req.user._id,
+            hold: true,
+          });
         await audit(req, "upload", `${kind}/${item._id}`);
         res.status(201);
         ok(res, item);
@@ -219,7 +249,7 @@ export function contentWriteRouter(admin: boolean) {
               input: any = schema.parse(row);
             await validateOfferings(input.offerings);
             const asset = await savePdf(files[i]);
-            if (await model.exists({ asset: asset._id, deletedAt: null }))
+            if (await model.exists(usesAsset(asset._id)))
               throw new HttpError(409, "Duplicate PDF");
             const state = admin
               ? z
@@ -232,6 +262,8 @@ export function contentWriteRouter(admin: boolean) {
             const data = {
               ...input,
               asset: asset._id,
+              files: { original: asset._id },
+              watermark: { status: "queued", hold: true },
               author: req.user._id,
               status: state,
               slug: `${slugify(input.title)}-${randomUUID().slice(0, 8)}`,
@@ -239,6 +271,10 @@ export function contentWriteRouter(admin: boolean) {
             };
             if (state === "published") publishable(data);
             const item = await model.create(data);
+            await enqueueWatermark(kind as any, item._id, {
+              requestedBy: req.user._id,
+              hold: true,
+            });
             await audit(req, "bulk-upload", `${kind}/${item._id}`);
             results.push({ index: i, item });
           } catch (e: any) {
@@ -307,8 +343,15 @@ export function contentWriteRouter(admin: boolean) {
             actor: req.user._id,
           });
         item.asset = asset._id;
+        item.files = { original: asset._id };
+        item.activeVersion = "original";
+        item.watermark = { status: "queued", hold: true };
         if (kind === "notes") item.format = "pdf";
         await item.save();
+        await enqueueWatermark(kind as any, item._id, {
+          requestedBy: req.user._id,
+          hold: true,
+        });
         await audit(req, "replace-file", `${kind}/${item._id}`);
         ok(res, item);
       },

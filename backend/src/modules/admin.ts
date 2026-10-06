@@ -20,6 +20,14 @@ import {
   contentModels,
 } from "./models.js";
 import { dayKey } from "./analytics.js";
+import { randomUUID } from "node:crypto";
+import { Setting, ProcessingJob } from "./models.js";
+import { enqueueWatermark } from "../processing/jobs.js";
+import {
+  defaultWatermark,
+  getWatermarkSettings,
+  watermarkSettingsInput,
+} from "../processing/watermark.js";
 const id = z.string().regex(/^[a-f0-9]{24}$/i);
 const taxInput = z
   .object({
@@ -155,6 +163,102 @@ export async function mergeTaxonomy(name: string, from: string, to: string) {
   }
 }
 export const adminRouter = Router();
+adminRouter.get("/settings/watermark", async (_req, res) => {
+  const { settings, revision } = await getWatermarkSettings();
+  ok(res, { settings, revision, defaults: defaultWatermark });
+});
+adminRouter.put("/settings/watermark", async (req: AuthRequest, res) => {
+  const value = watermarkSettingsInput.parse(req.body);
+  if (!value.template.includes("{subjectCode}") && !value.template.trim())
+    throw new HttpError(400, "Enter watermark text.");
+  const saved: any = await Setting.findOneAndUpdate(
+    { key: "watermark" },
+    { $set: { value, updatedBy: req.user._id }, $inc: { revision: 1 } },
+    { upsert: true, returnDocument: "after" },
+  );
+  await audit(req, "watermark-settings", "settings/watermark", {
+    revision: saved.revision,
+    template: value.template,
+    enabled: value.enabled,
+  });
+  ok(res, { settings: value, revision: saved.revision });
+});
+// Re-apply the current watermark: dry run reports the count first; the job swaps files in place.
+const applyInput = z
+  .object({
+    scope: z.enum(["selected", "all"]),
+    items: z
+      .array(z.object({ kind: z.enum(["papers", "notes"]), id }).strict())
+      .max(500)
+      .default([]),
+    onlyOutdated: z.boolean().default(true),
+    dryRun: z.boolean().default(false),
+  })
+  .strict();
+adminRouter.post("/watermark/apply", async (req: AuthRequest, res) => {
+  const input = applyInput.parse(req.body);
+  const { revision } = await getWatermarkSettings();
+  const targets: { kind: "papers" | "notes"; id: unknown }[] = [];
+  for (const [kind, model] of Object.entries(contentModels) as [
+    "papers" | "notes",
+    any,
+  ][]) {
+    const ids = input.items.filter((i) => i.kind === kind).map((i) => i.id);
+    if (input.scope === "selected" && !ids.length) continue;
+    const filter: any = {
+      deletedAt: null,
+      asset: { $ne: null },
+      format: { $ne: "markdown" },
+      ...(input.scope === "selected" ? { _id: { $in: ids } } : {}),
+      ...(input.onlyOutdated
+        ? {
+            $or: [
+              { "watermark.revision": { $ne: revision } },
+              { "watermark.status": { $nin: ["done", "skipped"] } },
+            ],
+          }
+        : {}),
+    };
+    for (const row of await model.find(filter).select("_id").lean())
+      targets.push({ kind, id: row._id });
+  }
+  if (input.dryRun) return ok(res, { count: targets.length, revision });
+  const batch = randomUUID();
+  for (const target of targets)
+    await enqueueWatermark(target.kind, target.id, {
+      requestedBy: req.user._id,
+      batch,
+    });
+  await audit(req, "watermark-apply", "settings/watermark", {
+    batch,
+    count: targets.length,
+    scope: input.scope,
+  });
+  ok(res, { batch, queued: targets.length, revision });
+});
+adminRouter.get("/jobs/summary", async (req, res) => {
+  const batch = req.query.batch
+    ? z.string().uuid().parse(req.query.batch)
+    : undefined;
+  const match = batch
+    ? { batch }
+    : { createdAt: { $gte: new Date(Date.now() - 86_400_000) } };
+  const [counts, failed] = await Promise.all([
+    ProcessingJob.aggregate([
+      { $match: match },
+      { $group: { _id: "$status", n: { $sum: 1 } } },
+    ]),
+    ProcessingJob.find({ ...match, status: "failed" })
+      .select("contentType content error finishedAt")
+      .sort({ finishedAt: -1 })
+      .limit(20)
+      .lean(),
+  ]);
+  ok(res, {
+    counts: Object.fromEntries(counts.map((c) => [c._id, c.n])),
+    failed,
+  });
+});
 adminRouter.get("/dashboard", async (_req, res) => {
   const [papers, notes, downloads, contributors, pending, today] =
     await Promise.all([

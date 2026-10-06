@@ -14,7 +14,8 @@
     "create-admin": "tsx scripts/create-admin.ts",
     "snapshot": "tsx scripts/export-snapshot.ts",
     "snapshot:validate": "tsx scripts/validate-snapshot.ts",
-    "thumbnails:backfill": "tsx scripts/backfill-thumbnails.ts"
+    "thumbnails:backfill": "tsx scripts/backfill-thumbnails.ts",
+    "files:migrate": "tsx scripts/migrate-files.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1146.0",
