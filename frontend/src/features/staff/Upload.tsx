@@ -5,6 +5,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { UploadCloud } from "lucide-react";
 import { api, apiUrl, errorMessage } from "../../lib/api";
+import { ensureAwake } from "../../lib/wake";
+import { toast } from "../../components/Feedback";
 import { useUser } from "./Auth";
 import { usePublic } from "../../lib/queries";
 import type { Offering, ContentItem } from "../../lib/types";
@@ -35,7 +37,8 @@ export default function Upload() {
       file: File;
     } | null>(null);
   const upload = {
-    timeout: 120_000,
+    // Large scans on slow connections to a free instance can take minutes.
+    timeout: 600_000,
     onUploadProgress: (event: { loaded: number; total?: number }) =>
       event.total &&
       setProgress(Math.round((event.loaded / event.total) * 100)),
@@ -80,6 +83,12 @@ export default function Upload() {
       user.role === "admin"
         ? (offering: Offering) => setCreated((old) => [...old, offering])
         : undefined;
+  // Never send a file into a sleeping API: the request would be lost while it boots.
+  const wakeFirst = () =>
+    ensureAwake(() => {
+      setMessage("Waking up the server… this can take up to a minute.");
+      toast("Waking up the server… your upload starts automatically.");
+    });
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -110,6 +119,7 @@ export default function Upload() {
             })),
           ),
         );
+        await wakeFirst();
         const result = await api.post(
           `/${user.role}/${kind}/bulk`,
           data,
@@ -152,6 +162,7 @@ export default function Upload() {
         if (edit) {
           await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
           if (files[0]) {
+            await wakeFirst();
             const replacement = new FormData();
             replacement.append("file", files[0]);
             await api.post(
@@ -172,6 +183,7 @@ export default function Upload() {
           const data = new FormData();
           data.append("metadata", JSON.stringify(metadata));
           if (files[0]) data.append("file", files[0]);
+          await wakeFirst();
           await api.post(`/${user.role}/${kind}`, data, upload);
         }
         setMessage(edit ? "Resource updated." : "Uploaded successfully.");
@@ -180,6 +192,7 @@ export default function Upload() {
       }
     } catch (error) {
       setMessage(errorMessage(error));
+      toast(errorMessage(error), "error");
     } finally {
       setBusy(false);
       setProgress(null);
@@ -212,13 +225,21 @@ export default function Upload() {
             },
           ),
         );
+      await wakeFirst();
       await api.post(`/${user.role}/${kind}`, data, upload);
       setStudio(null);
+      toast(
+        user.role === "admin"
+          ? "Uploaded. The watermark is being added."
+          : "Uploaded! It will appear after review.",
+        "success",
+      );
       await client.invalidateQueries({ queryKey: ["staff-content"] });
       navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
     } catch (error) {
-      setStudio(null);
+      // The studio stays open and shows this, so the choice can be retried.
       setMessage(errorMessage(error));
+      throw new Error(`Upload failed: ${errorMessage(error)}`);
     } finally {
       setBusy(false);
       setProgress(null);

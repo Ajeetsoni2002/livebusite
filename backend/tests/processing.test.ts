@@ -181,7 +181,8 @@ test("new uploads stay private until every page is watermarked; the original is 
   );
   assert.equal(own.body.data.watermark.status, "queued");
 
-  assert.equal(await runNextJob(), true);
+  assert.equal(await runNextJob(), true, "watermark job");
+  assert.equal(await runNextJob(), true, "cover thumbnail job");
   assert.equal(await runNextJob(), false);
   const item: any = await Paper.findById(id).lean();
   assert.equal(item.watermark.status, "done");
@@ -212,7 +213,7 @@ test("PDFs that already carry the name are skipped and served as uploaded", asyn
     await samplePdf("BE-102 - Ajeet Soni"),
     "published",
   );
-  await runNextJob();
+  while (await runNextJob());
   const item: any = await Paper.findById(created.body.data._id).lean();
   assert.equal(item.watermark.status, "skipped");
   assert.equal(item.watermark.reason, "already-watermarked");
@@ -237,7 +238,7 @@ test("watermark settings are admin-only; re-apply re-marks outdated items in pla
     await samplePdf("Q1"),
     "published",
   );
-  await runNextJob();
+  while (await runNextJob());
   assert.equal(
     (await contributor.agent.get("/api/admin/settings/watermark")).status,
     403,
@@ -276,7 +277,7 @@ test("watermark settings are admin-only; re-apply re-marks outdated items in pla
       .status,
     302,
   );
-  await runNextJob();
+  while (await runNextJob());
   const pages = await pageTexts(await publicPdf(created.body.data._id));
   assert.match(pages[0], new RegExp(`${code} BUIT`));
   assert.doesNotMatch(pages[0], /Ajeet Soni/);
@@ -361,7 +362,7 @@ test("a contributor can upload a processed version and choose it; originals stay
   assert.equal(created.status, 201, JSON.stringify(created.body));
   const id = created.body.data._id;
   assert.equal(created.body.data.activeVersion, "processed");
-  await runNextJob();
+  while (await runNextJob());
   // The owner and admins can read both versions; the public and others cannot.
   for (const version of ["original", "processed"]) {
     const own = await contributor.agent
@@ -401,7 +402,7 @@ test("a contributor can upload a processed version and choose it; originals stay
     (await request(app).get(`/api/papers/${id}/preview`)).status,
     302,
   );
-  await runNextJob();
+  while (await runNextJob());
   pages = await pageTexts(await publicPdf(id));
   assert.match(pages[0], /Original scan/);
   // Switching back reuses the cached watermarked copy.
@@ -410,7 +411,7 @@ test("a contributor can upload a processed version and choose it; originals stay
     .set("X-CSRF-Token", admin.csrf)
     .send({ version: "processed" });
   const before = await FileAsset.countDocuments();
-  await runNextJob();
+  while (await runNextJob());
   assert.equal(await FileAsset.countDocuments(), before);
   assert.match((await pageTexts(await publicPdf(id)))[0], /Cleaned scan/);
 });
@@ -495,7 +496,7 @@ test("missing thumbnail objects return 404 and the repair job recreates them", a
       .send({ dryRun });
   assert.equal((await repair(true)).body.data.count, 1);
   assert.equal((await repair(false)).body.data.queued, 1);
-  await runNextJob();
+  while (await runNextJob());
   assert.equal(
     (await request(app).get(`/api/papers/${paper._id}/thumbnail`)).status,
     200,

@@ -1987,3 +1987,7 @@ th[aria-sort="descending"] .sort-header {
     position: static;
   }
 }
+.studio-error {
+  color: var(--danger);
+  font-weight: 600;
+}

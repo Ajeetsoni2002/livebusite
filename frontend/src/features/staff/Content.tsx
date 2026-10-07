@@ -119,7 +119,8 @@ export default function Content({
       setStudio(null);
       await client.invalidateQueries({ queryKey: ["staff-content"] });
     } catch (e) {
-      toast(errorMessage(e), "error");
+      // Shown inside the open studio (a toast would sit behind the modal).
+      throw new Error(`Saving failed: ${errorMessage(e)}`);
     }
   }
   async function watermark(targets: Row[]) {

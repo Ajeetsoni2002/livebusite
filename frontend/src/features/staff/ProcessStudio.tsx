@@ -93,6 +93,7 @@ export default function ProcessStudio({
   const [zoom, setZoom] = useState(1);
   const [busyPage, setBusyPage] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const partsRef = useRef(parts);
   partsRef.current = parts;
 
@@ -223,17 +224,30 @@ export default function ProcessStudio({
       return list;
     });
   }
+  /** Upload/save failures stay inside the studio so the choice can simply be retried. */
+  async function deliver(result: StudioResult) {
+    try {
+      await onDone(result);
+    } catch (error) {
+      setSaveError(
+        error instanceof Error && error.message
+          ? error.message
+          : "Saving failed. Please try again.",
+      );
+    }
+  }
   async function finish(choice: "original" | "processed") {
     setSaving(true);
+    setSaveError("");
     try {
-      if (choice === "original") return await onDone({ choice });
+      if (choice === "original") return await deliver({ choice });
       const chosen = visible.map((id) => byId.get(id)!);
       if (!chosen.length) throw new Error("Keep at least one page.");
       const blob = await assemblePdf(bytes, chosen, decisions, (done, total) =>
         setPhase({ name: "assembling", done, total }),
       );
       setPhase({ name: "ready" });
-      await onDone({ choice, blob, meta: reportOf(pages, chosen, applied) });
+      await deliver({ choice, blob, meta: reportOf(pages, chosen, applied) });
     } catch (error) {
       setPhase({
         name: "error",
@@ -585,24 +599,34 @@ export default function ProcessStudio({
       )}
 
       <footer className="studio-foot">
-        <span className="muted">
-          {pages.length
-            ? `${pages.length} page${pages.length === 1 ? "" : "s"} in → ${visible.length} out · ${
-                Object.values(parts)
-                  .flat()
-                  .filter((p) => p.split).length / 2
-              } split · ${
-                new Set(
+        {saveError ? (
+          <span className="studio-error" role="alert">
+            {saveError}
+          </span>
+        ) : saving ? (
+          <span role="status">
+            Saving… if the server was asleep this can take a minute.
+          </span>
+        ) : (
+          <span className="muted">
+            {pages.length
+              ? `${pages.length} page${pages.length === 1 ? "" : "s"} in → ${visible.length} out · ${
                   Object.values(parts)
                     .flat()
-                    .filter((p) => p.enhanced)
-                    .map((p) => p.page),
-                ).size
-              } cleaned`
-            : " "}
-          {phase.name === "assembling" &&
-            ` · building PDF ${phase.done}/${phase.total}`}
-        </span>
+                    .filter((p) => p.split).length / 2
+                } split · ${
+                  new Set(
+                    Object.values(parts)
+                      .flat()
+                      .filter((p) => p.enhanced)
+                      .map((p) => p.page),
+                  ).size
+                } cleaned`
+              : " "}
+            {phase.name === "assembling" &&
+              ` · building PDF ${phase.done}/${phase.total}`}
+          </span>
+        )}
         <div className="row-actions">
           <button onClick={() => finish("original")} disabled={saving}>
             {originalLabel}

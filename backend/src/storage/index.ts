@@ -40,15 +40,18 @@ export function safeFilename(name: string) {
       .slice(0, 120) || "paper.pdf"
   );
 }
-export async function savePdf(file: {
-  buffer: Buffer;
-  mimetype: string;
-  originalname: string;
-}) {
+export async function savePdf(
+  file: {
+    buffer: Buffer;
+    mimetype: string;
+    originalname: string;
+  },
+  { thumbnail = true }: { thumbnail?: boolean } = {},
+) {
   const metadata = await validatePdf(file.buffer, file.mimetype);
   const existing = await FileAsset.findOne({ hash: metadata.hash });
   if (existing) {
-    await ensureThumbnail(existing, file.buffer, storage);
+    if (thumbnail) await ensureThumbnail(existing, file.buffer, storage);
     return existing;
   }
   const key = `uploads/${randomUUID()}.pdf`;
@@ -60,7 +63,7 @@ export async function savePdf(file: {
       mime: "application/pdf",
       originalName: safeFilename(file.originalname),
     });
-    await ensureThumbnail(asset, file.buffer, storage);
+    if (thumbnail) await ensureThumbnail(asset, file.buffer, storage);
     return asset;
   } catch (e: any) {
     await storage.delete(key);

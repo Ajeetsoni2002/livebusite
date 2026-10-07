@@ -11,7 +11,13 @@ import { safeFilename, savePdf, storage } from "../storage/index.js";
 import { contentModels, FileAsset, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
-import { enqueueWatermark } from "../processing/jobs.js";
+import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
+// The free API has 0.1 CPU: requests only validate and store; covers render in the queue.
+const light = { thumbnail: false };
+async function afterUpload(kind: string, id: unknown, user: unknown) {
+  await enqueueWatermark(kind as any, id, { requestedBy: user, hold: true });
+  await enqueueJob("thumbnail", kind as any, id, { requestedBy: user });
+}
 import { withSharedOfferings } from "./standard-subjects.js";
 // The same PDF may sit in any version slot; it must not be uploaded twice.
 const usesAsset = (id: unknown) => ({
@@ -213,6 +219,9 @@ export function contentWriteRouter(admin: boolean) {
         requestedBy: req.user._id,
         hold: item.status !== "published",
       });
+      await enqueueJob("thumbnail", kind as any, item._id, {
+        requestedBy: req.user._id,
+      });
     }
     router.post(
       `/${kind}/:id/processed`,
@@ -225,7 +234,7 @@ export function contentWriteRouter(admin: boolean) {
         const raw = metadata(req);
         const meta = processedMetaInput.parse(raw.processedMeta);
         const activate = z.boolean().default(true).parse(raw.activate);
-        const asset = await savePdf(req.file);
+        const asset = await savePdf(req.file, light);
         if (!item.files) item.files = { original: item.asset };
         if (!item.files.original) item.files.original = item.asset;
         item.files.processed = asset._id;
@@ -329,14 +338,16 @@ export function contentWriteRouter(admin: boolean) {
           throw new HttpError(400, "Markdown content is required.");
         if ((kind === "papers" || input.format === "pdf") && !req.file)
           throw new HttpError(400, "A PDF is required.");
-        const asset = req.file ? await savePdf(req.file) : null;
+        const asset = req.file ? await savePdf(req.file, light) : null;
         if (asset && (await model.exists(usesAsset(asset._id))))
           throw new HttpError(409, "This PDF is already in the library.");
         const processedMeta =
           asset && processedFile
             ? processedMetaInput.parse(rawMeta)
             : undefined;
-        const processed = processedMeta ? await savePdf(processedFile!) : null;
+        const processed = processedMeta
+          ? await savePdf(processedFile!, light)
+          : null;
         const active =
           processed &&
           versionChoice.default("original").parse(rawVersion) === "processed"
@@ -364,11 +375,7 @@ export function contentWriteRouter(admin: boolean) {
         };
         if (status === "published") publishable(data);
         const item = await model.create(data);
-        if (asset)
-          await enqueueWatermark(kind as any, item._id, {
-            requestedBy: req.user._id,
-            hold: true,
-          });
+        if (asset) await afterUpload(kind, item._id, req.user._id);
         await audit(req, "upload", `${kind}/${item._id}`);
         res.status(201);
         ok(res, item);
@@ -401,7 +408,7 @@ export function contentWriteRouter(admin: boolean) {
             await validateOfferings(input.offerings);
             input.offerings = await withSharedOfferings(input.offerings);
             input.offerings = await withSharedOfferings(input.offerings);
-            const asset = await savePdf(files[i]);
+            const asset = await savePdf(files[i], light);
             if (await model.exists(usesAsset(asset._id)))
               throw new HttpError(409, "Duplicate PDF");
             const state = admin
@@ -424,10 +431,7 @@ export function contentWriteRouter(admin: boolean) {
             };
             if (state === "published") publishable(data);
             const item = await model.create(data);
-            await enqueueWatermark(kind as any, item._id, {
-              requestedBy: req.user._id,
-              hold: true,
-            });
+            await afterUpload(kind, item._id, req.user._id);
             await audit(req, "bulk-upload", `${kind}/${item._id}`);
             results.push({ index: i, item });
           } catch (e: any) {
@@ -491,7 +495,7 @@ export function contentWriteRouter(admin: boolean) {
         });
         if (!item) throw new HttpError(404, "Editable upload not found");
         if (!req.file) throw new HttpError(400, "Upload a PDF");
-        const asset = await savePdf(req.file);
+        const asset = await savePdf(req.file, light);
         if (item.asset)
           item.revisions.push({
             asset: item.asset,
@@ -504,10 +508,7 @@ export function contentWriteRouter(admin: boolean) {
         item.watermark = { status: "queued", hold: true };
         if (kind === "notes") item.format = "pdf";
         await item.save();
-        await enqueueWatermark(kind as any, item._id, {
-          requestedBy: req.user._id,
-          hold: true,
-        });
+        await afterUpload(kind, item._id, req.user._id);
         await audit(req, "replace-file", `${kind}/${item._id}`);
         ok(res, item);
       },
