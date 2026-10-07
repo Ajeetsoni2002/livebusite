@@ -9,6 +9,7 @@ import {
   taxonomyModels,
   contentModels,
   Subject,
+  Branch,
   SubjectOffering,
   publicationFilter,
   Paper,
@@ -57,6 +58,27 @@ const filters = z
   .strict();
 const privateFields =
   "-revisions -provenance -rejectionReason -files -watermark -activeVersion";
+/**
+ * Branches a free-text query refers to: exact code/slug/alias ("ECE", "it"), or the
+ * name for longer queries ("electronics"). Short codes never match by substring, so
+ * "CE" does not also pull in CSE or ECE.
+ */
+export async function matchingBranches(q: string) {
+  const text = q.trim();
+  if (text.length < 2) return [];
+  const exact = new RegExp(`^${escaped(text)}$`, "i");
+  return Branch.find({
+    active: { $ne: false },
+    $or: [
+      { code: exact },
+      { slug: exact },
+      { aliases: exact },
+      ...(text.length >= 4 ? [{ name: new RegExp(escaped(text), "i") }] : []),
+    ],
+  })
+    .select("name code slug")
+    .lean();
+}
 export const escaped = (text: string) =>
   text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 export async function catalogFilter(raw: unknown, publicOnly = true) {
@@ -83,8 +105,12 @@ export async function catalogFilter(raw: unknown, publicOnly = true) {
       .select("_id")
       .limit(50)
       .lean();
+    const branches = await matchingBranches(input.q);
     const offerings = await SubjectOffering.find({
-      subject: { $in: subjects.map((s) => s._id) },
+      $or: [
+        { subject: { $in: subjects.map((s) => s._id) } },
+        { branch: { $in: branches.map((b: any) => b._id) } },
+      ],
     })
       .select("_id")
       .lean();
@@ -251,6 +277,12 @@ const searchLimit = rateLimit({
 });
 catalogRouter.get("/search/suggestions", searchLimit, async (req, res) => {
   const query = z.string().min(2).max(120).parse(req.query.q);
+  const branchHits = (await matchingBranches(query)).map((b: any) => ({
+    _id: b._id,
+    name: `${b.name} — all papers`,
+    slug: b.slug,
+    code: b.code || b.name,
+  }));
   let subjects: any[];
   if (config.atlasSearch) {
     try {
@@ -302,7 +334,7 @@ catalogRouter.get("/search/suggestions", searchLimit, async (req, res) => {
         })),
     );
   }
-  ok(res, subjects);
+  ok(res, [...branchHits, ...subjects].slice(0, 8));
 });
 catalogRouter.get("/search", searchLimit, async (req, res) => {
   const query = { q: z.string().max(120).parse(req.query.q), limit: 10 };

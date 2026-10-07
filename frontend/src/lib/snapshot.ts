@@ -44,7 +44,7 @@ export function readSnapshot<T>(
       .filter(
         (p: any) =>
           !params.q ||
-          `${p.title} ${(p.tags || []).join(" ")} ${p.year || ""} ${p.offerings.map((o: any) => `${o.subject.name} ${o.subject.code}`).join(" ")}`
+          `${p.title} ${(p.tags || []).join(" ")} ${p.year || ""} ${p.offerings.map((o: any) => `${o.subject.name} ${o.subject.code} ${o.branch?.code || ""} ${o.branch?.name || ""}`).join(" ")}`
             .toLowerCase()
             .includes(String(params.q).toLowerCase()),
       )

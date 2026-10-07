@@ -841,3 +841,87 @@ test("contributors choose a public name and photo or stay anonymous", async () =
     .data;
   assert.equal(contributors[0].email, "contributor@example.test");
 });
+
+test("search finds papers by branch code or name without loose code matches", async () => {
+  const models = await import("../src/modules/models.js");
+  for (const m of [
+    "University",
+    "Program",
+    "Branch",
+    "Semester",
+    "Subject",
+    "SubjectOffering",
+  ])
+    await (models as any)[m].deleteMany({});
+  const { University, Program, Branch, Semester, Subject, SubjectOffering } =
+    models;
+  const uni = await University.create({ name: "BU", slug: "bu" });
+  const program = await Program.create({
+    name: "B.Tech",
+    slug: "btech",
+    university: uni._id,
+  });
+  const ece = await Branch.create({
+    name: "Electronics and Communications Engineering",
+    slug: "ece",
+    code: "ECE",
+    program: program._id,
+  });
+  const cse = await Branch.create({
+    name: "Computer Science and Engineering",
+    slug: "cse",
+    code: "CSE",
+    program: program._id,
+  });
+  const sem = await Semester.create({
+    name: "Semester 1",
+    slug: "sem-1",
+    number: 1,
+    program: program._id,
+  });
+  const subject = await Subject.create({
+    name: "Engineering Chemistry",
+    slug: "be-102",
+    code: "BE-102",
+  });
+  const [onEce, onCse] = await SubjectOffering.create([
+    {
+      subject: subject._id,
+      branch: ece._id,
+      semester: sem._id,
+      program: program._id,
+    },
+    {
+      subject: subject._id,
+      branch: cse._id,
+      semester: sem._id,
+      program: program._id,
+    },
+  ]);
+  await Paper.create([
+    {
+      title: "Chemistry 2024",
+      slug: "chem-ece",
+      status: "published",
+      offerings: [onEce._id],
+    },
+    {
+      title: "Chemistry 2023",
+      slug: "chem-cse",
+      status: "published",
+      offerings: [onCse._id],
+    },
+  ]);
+  const total = async (q: string) =>
+    (await request(app).get(`/api/papers?q=${encodeURIComponent(q)}`)).body.meta
+      .total;
+  assert.equal(await total("ECE"), 1);
+  assert.equal(await total("ece"), 1);
+  assert.equal(await total("electronics"), 1);
+  assert.equal(await total("CE"), 0, "short codes match exactly");
+  assert.equal(await total("chemistry"), 2);
+  const suggestions = (await request(app).get("/api/search/suggestions?q=ECE"))
+    .body.data;
+  assert.equal(suggestions[0].code, "ECE");
+  assert.match(suggestions[0].name, /Electronics/);
+});
