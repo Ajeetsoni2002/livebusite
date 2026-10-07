@@ -1735,3 +1735,148 @@ th[aria-sort="descending"] .sort-header {
   background: var(--primary);
   border-color: var(--primary);
 }
+
+/* 14 — Become a contributor (features/community/BecomeContributor.tsx). */
+.become-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0 0 40px;
+  padding: 0;
+  list-style: none;
+}
+.become-steps li {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  padding: 20px;
+}
+.become-steps svg {
+  color: var(--primary);
+}
+.become-step-no {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  color: var(--muted);
+  font: 600 13px var(--font-display);
+}
+.become-copy ul {
+  padding-left: 18px;
+  line-height: 1.8;
+}
+.become-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.become-row label {
+  display: grid;
+  gap: 8px;
+}
+.become-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.become-done {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 28px;
+}
+.become-done svg {
+  color: var(--success);
+}
+.become-done h2,
+.become-done p {
+  margin: 0;
+}
+.login-help {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+@media (max-width: 900px) {
+  .become-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 480px) {
+  .become-steps,
+  .become-row {
+    grid-template-columns: 1fr;
+  }
+}
+.requests {
+  margin-bottom: 32px;
+}
+.requests h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+.count-badge {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  color: var(--on-primary);
+  background: var(--primary);
+  font-size: 12px;
+  text-align: center;
+}
+.request-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr));
+  gap: 14px;
+}
+.request-card {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+}
+.request-card header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.request-meta {
+  margin: 0;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+.request-message {
+  margin: 0;
+  white-space: pre-line;
+}
+.credentials {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+  border-color: color-mix(in srgb, var(--success) 45%, transparent);
+}
+.credentials strong {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--success);
+}
+.credentials p {
+  margin: 0;
+}
+.credentials-box {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--raised);
+  font-size: 14px;
+  user-select: all;
+}
+.request-notice {
+  display: block;
+  margin-bottom: 16px;
+  color: var(--text);
+}

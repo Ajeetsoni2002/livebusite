@@ -46,6 +46,12 @@ routes.set("/contributors", {
     "The students who shared Barkatullah University papers and notes with the next batch.",
   body: `<main class="page community-page"><div class="page-heading"><div class="eyebrow">BUIT / COMMUNITY</div><h1>The people behind the papers.</h1><p>Every paper and note here was shared by a student who wanted the next batch to have it easier.</p></div><p><a href="/contact">Contribute a paper</a></p></main>`,
 });
+routes.set("/contribute", {
+  title: "Become a contributor · BUIT Papers",
+  description:
+    "Have Barkatullah University question papers or notes? Request a contributor account and share them with the next batch.",
+  body: `<main class="page info-page"><div class="page-heading"><div class="eyebrow">BUIT / CONTRIBUTE</div><h1>Have papers? Share them.</h1><p>Contributors upload question papers and notes for everyone. Ask for an account and we will set you up.</p></div></main>`,
+});
 routes.set("/about", {
   title: "Our story · Ajeet Kumar Soni · BUIT Papers",
   description:

@@ -21,7 +21,8 @@ import {
 } from "./models.js";
 import { dayKey } from "./analytics.js";
 import { randomUUID } from "node:crypto";
-import { Setting, ProcessingJob } from "./models.js";
+import { Setting, ProcessingJob, ContributorRequest } from "./models.js";
+import { randomBytes } from "node:crypto";
 import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
 import { storage } from "../storage/index.js";
 import { FileAsset } from "./models.js";
@@ -315,7 +316,7 @@ adminRouter.get("/jobs/summary", async (req, res) => {
   });
 });
 adminRouter.get("/dashboard", async (_req, res) => {
-  const [papers, notes, downloads, contributors, pending, today] =
+  const [papers, notes, downloads, contributors, pending, today, requests] =
     await Promise.all([
       Paper.countDocuments({ deletedAt: null }),
       Note.countDocuments({ deletedAt: null }),
@@ -332,6 +333,7 @@ adminRouter.get("/dashboard", async (_req, res) => {
         Note.countDocuments({ status: "pending", deletedAt: null }),
       ]).then((a) => a.reduce((n, v) => n + v, 0)),
       DailyStats.findOne({ day: dayKey() }).lean(),
+      ContributorRequest.countDocuments({ status: "open" }),
     ]);
   ok(res, {
     papers,
@@ -340,6 +342,7 @@ adminRouter.get("/dashboard", async (_req, res) => {
     contributors,
     pending,
     visitors: today?.visitors || 0,
+    requests,
   });
 });
 adminRouter.get("/moderation", async (_req, res) => {
@@ -489,6 +492,86 @@ adminRouter.post("/contributors", async (req: AuthRequest, res) => {
   res.status(201);
   ok(res, { _id: user._id, name: user.name, email: user.email });
 });
+adminRouter.get("/contributor-requests", async (req, res) => {
+  const status = z
+    .enum(["open", "approved", "rejected", "all"])
+    .default("open")
+    .parse(req.query.status);
+  ok(
+    res,
+    await ContributorRequest.find(status === "all" ? {} : { status })
+      .sort({ createdAt: -1 })
+      .limit(200)
+      .lean(),
+  );
+});
+// Approving creates the contributor with a one-time temporary password, shown once to the admin.
+adminRouter.post(
+  "/contributor-requests/:id/approve",
+  async (req: AuthRequest, res) => {
+    const { trusted } = z
+      .object({ trusted: z.boolean().default(false) })
+      .strict()
+      .parse(req.body);
+    const request: any = await ContributorRequest.findOne({
+      _id: identifier(req.params.id),
+      status: "open",
+    });
+    if (!request) throw new HttpError(404, "Open request not found");
+    if (await User.exists({ email: request.email }))
+      throw new HttpError(
+        409,
+        "An account with this email already exists. Reject the request or reset that account's password.",
+      );
+    const temporaryPassword = randomBytes(12).toString("base64url");
+    const user = await User.create({
+      name: request.name,
+      email: request.email,
+      passwordHash: await bcrypt.hash(temporaryPassword, 12),
+      role: "contributor",
+      mustChangePassword: true,
+      trusted,
+    });
+    Object.assign(request, {
+      status: "approved",
+      user: user._id,
+      handledBy: req.user._id,
+      handledAt: new Date(),
+    });
+    await request.save();
+    await audit(req, "contributor-request-approved", String(request._id), {
+      user: String(user._id),
+    });
+    ok(res, {
+      user: { _id: user._id, name: user.name, email: user.email },
+      temporaryPassword,
+    });
+  },
+);
+adminRouter.post(
+  "/contributor-requests/:id/reject",
+  async (req: AuthRequest, res) => {
+    const { note } = z
+      .object({ note: z.string().trim().max(500).optional() })
+      .strict()
+      .parse(req.body);
+    const request = await ContributorRequest.findOneAndUpdate(
+      { _id: identifier(req.params.id), status: "open" },
+      {
+        $set: {
+          status: "rejected",
+          note,
+          handledBy: req.user._id,
+          handledAt: new Date(),
+        },
+      },
+      { returnDocument: "after" },
+    );
+    if (!request) throw new HttpError(404, "Open request not found");
+    await audit(req, "contributor-request-rejected", String(request._id));
+    ok(res, request);
+  },
+);
 adminRouter.patch("/contributors/:id", async (req: AuthRequest, res) => {
   const data = z
     .object({

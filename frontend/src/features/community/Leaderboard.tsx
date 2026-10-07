@@ -248,6 +248,9 @@ export default function Leaderboard() {
           <Link className="button" to="/contact">
             Contribute a paper <ArrowUpRight size={16} />
           </Link>
+          <Link className="button secondary" to="/contribute">
+            Become a contributor
+          </Link>
           <Link className="button secondary" to="/contributor/login">
             Contributor sign in
           </Link>

@@ -13,6 +13,7 @@ import {
   Paper,
   Note,
   User,
+  ContributorRequest,
   Report,
   PaperRequest,
 } from "./models.js";
@@ -380,6 +381,53 @@ catalogRouter.get("/contributors", async (req, res) => {
     .slice(0, 50)
     .map((row, index) => ({ rank: index + 1, ...row }));
   cached(req, res, board);
+});
+// Students on one college network share an address; keep room for a few of them.
+const requestLimit = rateLimit({
+  windowMs: 3600_000,
+  limit: 10,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
+const contributorRequestInput = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    email: z.email().max(254),
+    phone: z
+      .string()
+      .trim()
+      .regex(/^\+?[0-9 -]{7,18}$/, "Enter a valid phone number.")
+      .optional()
+      .or(z.literal("")),
+    branch: z.string().trim().max(80).optional(),
+    semester: z.coerce.number().int().min(1).max(12).optional(),
+    institution: z.string().trim().max(160).optional(),
+    message: z.string().trim().min(20).max(1500),
+    consent: z.literal(true, "Please confirm you may share these files."),
+    // Bot trap: humans never see or fill this field.
+    website: z.string().max(200).optional(),
+  })
+  .strict();
+catalogRouter.post("/contributor-requests", requestLimit, async (req, res) => {
+  const {
+    website,
+    consent: _consent,
+    ...data
+  } = contributorRequestInput.parse(req.body);
+  // Same answer in every case, so the form cannot reveal who already has an account.
+  const received = () => {
+    res.status(201);
+    ok(res, { received: true });
+  };
+  if (website) return received();
+  const email = data.email.toLowerCase();
+  const existingAccount = Boolean(await User.exists({ email }));
+  const open = await ContributorRequest.findOne({ email, status: "open" });
+  if (open) {
+    Object.assign(open, data, { email, existingAccount });
+    await open.save();
+  } else await ContributorRequest.create({ ...data, email, existingAccount });
+  received();
 });
 catalogRouter.get("/stats", async (req, res) => {
   const [papers, notes, downloads] = await Promise.all([

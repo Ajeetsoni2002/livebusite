@@ -41,13 +41,15 @@ export default function Info({ page }: { page: string }) {
       {page === "about" && (
         <>
           <p>
-            This unofficial resource was created by Ajeet Kumar Soni and team to help
-            Barkatullah University students find previous year question papers.
-            We preserve the existing student archive and the contributions that
-            made it possible.
+            This unofficial resource was created by Ajeet Kumar Soni and team to
+            help Barkatullah University students find previous year question
+            papers. We preserve the existing student archive and the
+            contributions that made it possible.
           </p>
           <section className="card prose story-creator">
-            <div className="eyebrow">OUR STORY / THE STUDENT BEHIND THE ARCHIVE</div>
+            <div className="eyebrow">
+              OUR STORY / THE STUDENT BEHIND THE ARCHIVE
+            </div>
             <h2>A little help for the next batch.</h2>
             <p>
               Finding the right paper should be the easy part of preparing for
@@ -142,8 +144,8 @@ export default function Info({ page }: { page: string }) {
               </a>
             )}
             <p className="muted">
-              Contributors receive accounts from the administrator. There is no
-              public registration.
+              Have papers to share regularly?{" "}
+              <Link to="/contribute">Request a contributor account</Link>.
             </p>
           </div>
           <form

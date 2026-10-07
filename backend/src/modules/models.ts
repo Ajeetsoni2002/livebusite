@@ -340,3 +340,33 @@ jobSchema.index(
   },
 );
 export const ProcessingJob = model("ProcessingJob", jobSchema);
+
+// Students asking for a contributor account; an admin approves (creating the account) or rejects.
+const contributorRequestSchema = new Schema(
+  {
+    name: { type: String, required: true, maxlength: 120 },
+    email: { type: String, required: true, lowercase: true, trim: true },
+    phone: String,
+    branch: String,
+    semester: Number,
+    institution: String,
+    message: { type: String, required: true, maxlength: 1500 },
+    existingAccount: { type: Boolean, default: false },
+    status: {
+      type: String,
+      enum: ["open", "approved", "rejected"],
+      default: "open",
+    },
+    note: String,
+    handledBy: ref("User"),
+    handledAt: Date,
+    user: ref("User"),
+  },
+  options,
+);
+contributorRequestSchema.index({ status: 1, createdAt: -1 });
+contributorRequestSchema.index({ email: 1, status: 1 });
+export const ContributorRequest = model(
+  "ContributorRequest",
+  contributorRequestSchema,
+);

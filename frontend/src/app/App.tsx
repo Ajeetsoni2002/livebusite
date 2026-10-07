@@ -7,7 +7,10 @@ import { PageAnalytics } from "../lib/analytics";
 const Browse = lazy(() => import("../features/catalog/Browse")),
   Detail = lazy(() => import("../features/catalog/Detail")),
   Info = lazy(() => import("../features/Info")),
-  Leaderboard = lazy(() => import("../features/community/Leaderboard"));
+  Leaderboard = lazy(() => import("../features/community/Leaderboard")),
+  BecomeContributor = lazy(
+    () => import("../features/community/BecomeContributor"),
+  );
 const Login = lazy(() =>
     import("../features/staff/Auth").then((m) => ({ default: m.Login })),
   ),
@@ -56,6 +59,7 @@ export default function App() {
               <Route path="/paper/:slug" element={<Detail />} />
               <Route path="/notes/:slug" element={<Detail kind="notes" />} />
               <Route path="/contributors" element={<Leaderboard />} />
+              <Route path="/contribute" element={<BecomeContributor />} />
               <Route path="/papers/:filename.pdf" element={<Legacy />} />
               <Route path="/New papers/*" element={<Legacy />} />
               <Route path="/images/:filename.pdf" element={<Legacy />} />

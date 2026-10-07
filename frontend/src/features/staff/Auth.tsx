@@ -1,5 +1,11 @@
 import { useState, createContext, useContext } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, errorMessage } from "../../lib/api";
 import { ShieldCheck, ArrowRight } from "lucide-react";
@@ -40,6 +46,7 @@ export function Guard({ role }: { role: "admin" | "contributor" }) {
   );
 }
 export function Login() {
+  const contributor = useLocation().pathname.startsWith("/contributor");
   const navigate = useNavigate(),
     client = useQueryClient(),
     [error, setError] = useState(""),
@@ -94,6 +101,12 @@ export function Login() {
             <ArrowRight size={16} />
           </button>
         </form>
+        {contributor && (
+          <p className="login-help">
+            No account yet?{" "}
+            <Link to="/contribute">Request contributor access</Link>
+          </p>
+        )}
       </div>
     </main>
   );

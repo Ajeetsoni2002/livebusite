@@ -31,6 +31,7 @@ type Overview = {
   contributors: number;
   pending: number;
   visitors: number;
+  requests?: number;
 };
 type Day = {
   day: string;
@@ -79,6 +80,12 @@ export default function Dashboard() {
           <Upload size={16} /> Upload a resource
         </Link>
       </div>
+      {!!data.requests && (
+        <Link className="notice request-notice" to="/admin/contributors">
+          {data.requests} student{data.requests === 1 ? "" : "s"} asked to
+          become a contributor. Review account requests →
+        </Link>
+      )}
       <div className="bento">
         <Link
           to="/admin/moderation"
@@ -98,7 +105,7 @@ export default function Dashboard() {
           const body = (
             <>
               <Icon size={20} aria-hidden />
-              <CountUp value={data[key]} />
+              <CountUp value={data[key] ?? 0} />
               <span>{label}</span>
             </>
           );

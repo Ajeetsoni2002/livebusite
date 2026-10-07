@@ -47,6 +47,7 @@ export default function Footer() {
           <nav aria-label="Footer community">
             <span>THE COMMUNITY</span>
             <Link to="/about">Our story</Link>
+            <Link to="/contribute">Become a contributor</Link>
             <Link to="/contact">Contribute & contact</Link>
             <Link to="/copyright">Copyright & takedown</Link>
           </nav>

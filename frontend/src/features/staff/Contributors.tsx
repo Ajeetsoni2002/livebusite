@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { api, errorMessage } from "../../lib/api";
+import ContributorRequests from "./ContributorRequests";
 import { confirmDialog, promptDialog } from "../../components/Feedback";
 type Contributor = {
   _id: string;
@@ -31,6 +32,7 @@ export default function Contributors() {
   return (
     <>
       <h2>The people behind the papers.</h2>
+      <ContributorRequests onApproved={() => query.refetch()} />
       {message && (
         <p className="notice" role="status">
           {message}

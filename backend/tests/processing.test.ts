@@ -502,3 +502,94 @@ test("missing thumbnail objects return 404 and the repair job recreates them", a
   );
   assert.equal((await repair(true)).body.data.count, 0);
 });
+
+test("students can request a contributor account; admins approve or reject it", async () => {
+  const { ContributorRequest } = await import("../src/modules/models.js");
+  await ContributorRequest.deleteMany({});
+  await account("admin");
+  await account("contributor");
+  const admin = await login("admin");
+  const contributor = await login("contributor");
+  const form = {
+    name: "Riya Sharma",
+    email: "Riya@Example.test",
+    phone: "+91 98765 43210",
+    branch: "CSE",
+    semester: 3,
+    message: "I have 2023 and 2024 end-semester papers for CSE semester 3.",
+    consent: true,
+  };
+  const send = (body: object) =>
+    request(app).post("/api/contributor-requests").send(body);
+  assert.equal((await send({ ...form, consent: false })).status, 400);
+  assert.equal((await send({ ...form, message: "too short" })).status, 400);
+  assert.equal((await send(form)).status, 201);
+  // A second request from the same email updates the open one.
+  assert.equal((await send({ ...form, semester: 4 })).status, 201);
+  // Bots filling the hidden field get the same answer but nothing is stored.
+  assert.equal(
+    (await send({ ...form, email: "bot@example.test", website: "x" })).status,
+    201,
+  );
+  // An existing account gets the same public answer (no account probing).
+  const existing = await send({ ...form, email: "contributor@example.test" });
+  assert.equal(existing.status, 201);
+  assert.deepEqual(existing.body.data, { received: true });
+
+  assert.equal(
+    (await contributor.agent.get("/api/admin/contributor-requests")).status,
+    403,
+  );
+  assert.equal(
+    (await request(app).get("/api/admin/contributor-requests")).status,
+    401,
+  );
+  const list = (await admin.agent.get("/api/admin/contributor-requests")).body
+    .data;
+  assert.equal(list.length, 2);
+  const riya = list.find((r: any) => r.email === "riya@example.test");
+  assert.equal(riya.semester, 4);
+  const taken = list.find((r: any) => r.email === "contributor@example.test");
+  assert.equal(taken.existingAccount, true);
+
+  const approved = await admin.agent
+    .post(`/api/admin/contributor-requests/${riya._id}/approve`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({});
+  assert.equal(approved.status, 200);
+  const password = approved.body.data.temporaryPassword;
+  assert.ok(password.length >= 12);
+  const user: any = await User.findOne({ email: "riya@example.test" }).lean();
+  assert.equal(user.role, "contributor");
+  assert.equal(user.mustChangePassword, true);
+  const fresh = request.agent(app);
+  const csrf = (await fresh.get("/api/auth/csrf")).body.data.token;
+  const signIn = await fresh
+    .post("/api/auth/login")
+    .set("X-CSRF-Token", csrf)
+    .send({ email: "riya@example.test", password });
+  assert.equal(signIn.status, 200);
+  assert.equal(
+    (
+      await admin.agent
+        .post(`/api/admin/contributor-requests/${riya._id}/approve`)
+        .set("X-CSRF-Token", admin.csrf)
+        .send({})
+    ).status,
+    404,
+  );
+  const conflict = await admin.agent
+    .post(`/api/admin/contributor-requests/${taken._id}/approve`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({});
+  assert.equal(conflict.status, 409);
+  const rejected = await admin.agent
+    .post(`/api/admin/contributor-requests/${taken._id}/reject`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({ note: "Already has an account" });
+  assert.equal(rejected.body.data.status, "rejected");
+  assert.equal(
+    (await admin.agent.get("/api/admin/contributor-requests")).body.data.length,
+    0,
+  );
+});
