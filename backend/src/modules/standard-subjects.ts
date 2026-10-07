@@ -1,5 +1,7 @@
 import {
   Branch,
+  Note,
+  Paper,
   Program,
   Semester,
   Subject,
@@ -43,7 +45,32 @@ type Plan = {
   renamed: { from: string; to: string }[];
   merged: { from: string; to: string }[];
   offerings: number;
+  /** Papers/notes of first-year subjects that become visible in every branch. */
+  shared: number;
 };
+
+// First-year subjects are common to every branch.
+export const isCommonCode = (code?: string) => /^BE-[12]0\d$/i.test(code || "");
+
+/**
+ * A paper filed under one branch's BE-xxx offering also belongs to the same subject and
+ * semester in every other branch, so all students find it.
+ */
+export async function withSharedOfferings(ids: unknown[]) {
+  const chosen: any[] = await SubjectOffering.find({ _id: { $in: ids } })
+    .populate("subject", "code")
+    .lean();
+  const common = chosen.filter((o) => isCommonCode(o.subject?.code));
+  if (!common.length) return ids.map(String);
+  const siblings = await SubjectOffering.find({
+    $or: common.map((o) => ({ subject: o.subject._id, semester: o.semester })),
+  })
+    .select("_id")
+    .lean();
+  return [
+    ...new Set([...ids.map(String), ...siblings.map((s) => String(s._id))]),
+  ];
+}
 
 const norm = (code: string) => code.toUpperCase().replace(/\s+/g, "");
 
@@ -63,6 +90,7 @@ export async function standardSubjects(
     renamed: [],
     merged: [],
     offerings: 0,
+    shared: 0,
   };
   const branchCodes = STANDARD_BRANCHES.map(([code]) => code);
 
@@ -221,5 +249,46 @@ export async function standardSubjects(
   }
   if (apply && offerings.length)
     await SubjectOffering.insertMany(offerings, { ordered: false });
+  // Existing first-year papers/notes: link them to every branch's offering.
+  const commonIds = [...byCode.entries()]
+    .filter(([code, subject]) => isCommonCode(code) && subject?._id)
+    .map(([, subject]) => subject._id);
+  const commonOfferings: any[] = await SubjectOffering.find({
+    subject: { $in: commonIds },
+    program: program._id,
+  }).lean();
+  const groups = new Map<string, string[]>();
+  const keyOf = new Map<string, string>();
+  for (const o of commonOfferings) {
+    const key = `${o.subject}|${o.semester}`;
+    keyOf.set(String(o._id), key);
+    groups.set(key, [...(groups.get(key) || []), String(o._id)]);
+  }
+  for (const model of [Paper, Note] as any[]) {
+    const items: any[] = await model
+      .find({ offerings: { $in: commonOfferings.map((o) => o._id) } })
+      .select("offerings")
+      .lean();
+    for (const item of items) {
+      const have = new Set(item.offerings.map(String));
+      const missing = new Set<string>();
+      for (const id of have) {
+        const key = keyOf.get(id as string);
+        if (!key) continue;
+        for (const sibling of groups.get(key) || [])
+          if (!have.has(sibling)) missing.add(sibling);
+        // In a dry run, links still to be created also count.
+        if (!apply && (groups.get(key)?.length || 0) < branches.size)
+          missing.add(`planned:${key}`);
+      }
+      if (!missing.size) continue;
+      plan.shared++;
+      if (apply)
+        await model.updateOne(
+          { _id: item._id },
+          { $addToSet: { offerings: { $each: [...missing] } } },
+        );
+    }
+  }
   return plan;
 }

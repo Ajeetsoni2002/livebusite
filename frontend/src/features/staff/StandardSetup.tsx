@@ -12,6 +12,7 @@ type Plan = {
   renamed: { from: string; to: string }[];
   merged: { from: string; to: string }[];
   offerings: number;
+  shared: number;
 };
 
 const sample = (list: string[]) =>
@@ -54,7 +55,7 @@ export default function StandardSetup({ onDone }: { onDone: () => void }) {
     try {
       const done: Plan = (await run(false)).data.data;
       toast(
-        `Added ${done.subjects.length} subjects and ${done.offerings} branch/semester links.`,
+        `Added ${done.subjects.length} subjects and ${done.offerings} links; ${done.shared} first-year item(s) now show in every branch.`,
         "success",
       );
       setPlan(null);
@@ -73,7 +74,8 @@ export default function StandardSetup({ onDone }: { onDone: () => void }) {
     !plan.subjects.length &&
     !plan.renamed.length &&
     !plan.merged.length &&
-    !plan.offerings;
+    !plan.offerings &&
+    !plan.shared;
   return (
     <section className="card staff-card settings-card standard-setup">
       <h3>
@@ -82,8 +84,9 @@ export default function StandardSetup({ onDone }: { onDone: () => void }) {
       <p className="muted">
         Semesters 1–2 use BE-101…105 and BE-201…205 for every branch. Semesters
         3–8 use each branch’s own codes (CSE-301…305 up to CE-801…805) for CSE,
-        IT, ECE, ME, EE and CE. New subjects are named by their code; rename
-        them below whenever you like.
+        IT, ECE, ME, EE and CE. First-year papers and notes show in every
+        branch. New subjects are named by their code; rename them below whenever
+        you like.
       </p>
       {plan && (
         <ul className="plan-list">
@@ -114,9 +117,18 @@ export default function StandardSetup({ onDone }: { onDone: () => void }) {
                   {plan.subjects.length} new subjects: {sample(plan.subjects)}
                 </li>
               )}
-              <li>
-                {plan.offerings} new branch/semester links for the upload picker
-              </li>
+              {plan.offerings > 0 && (
+                <li>
+                  {plan.offerings} new branch/semester links for the upload
+                  picker
+                </li>
+              )}
+              {plan.shared > 0 && (
+                <li>
+                  {plan.shared} first-year paper(s)/note(s) will show in every
+                  branch
+                </li>
+              )}
             </>
           )}
         </ul>

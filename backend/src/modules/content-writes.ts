@@ -12,6 +12,7 @@ import { contentModels, FileAsset, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
 import { enqueueWatermark } from "../processing/jobs.js";
+import { withSharedOfferings } from "./standard-subjects.js";
 // The same PDF may sit in any version slot; it must not be uploaded twice.
 const usesAsset = (id: unknown) => ({
   $or: [{ asset: id }, { "files.original": id }, { "files.processed": id }],
@@ -319,6 +320,7 @@ export function contentWriteRouter(admin: boolean) {
         const { status: _discarded, ...fields } = raw;
         const input: any = schema.parse(fields);
         await validateOfferings(input.offerings);
+        input.offerings = await withSharedOfferings(input.offerings);
         if (
           kind === "notes" &&
           input.format === "markdown" &&
@@ -397,6 +399,8 @@ export function contentWriteRouter(admin: boolean) {
             const { status: _ignored, ...row } = rows[i],
               input: any = schema.parse(row);
             await validateOfferings(input.offerings);
+            input.offerings = await withSharedOfferings(input.offerings);
+            input.offerings = await withSharedOfferings(input.offerings);
             const asset = await savePdf(files[i]);
             if (await model.exists(usesAsset(asset._id)))
               throw new HttpError(409, "Duplicate PDF");
@@ -453,7 +457,10 @@ export function contentWriteRouter(admin: boolean) {
       if (!admin && status)
         throw new HttpError(403, "Only an admin can publish");
       const input: any = parsePatch(schema, fields);
-      if (input.offerings) await validateOfferings(input.offerings);
+      if (input.offerings) {
+        await validateOfferings(input.offerings);
+        input.offerings = await withSharedOfferings(input.offerings);
+      }
       Object.assign(item, input);
       if (admin && status)
         item.status = z
