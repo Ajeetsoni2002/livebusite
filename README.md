@@ -173,6 +173,71 @@ regenerate secrets and invalidate sessions. Results: [docs/VERIFICATION.md](docs
 No external service, domain, deployment or paid subscription was created by this
 implementation. Actual dashboard configuration and credentials remain owner steps.
 
+## Upload processing: watermark, clean-up and page split
+
+The free Render instance (0.1 CPU, sleeps when idle) cannot do image work, so the
+pipeline is split:
+
+| Where | What |
+| --- | --- |
+| Browser (`frontend/src/lib/processing`) | Page classification, two-page spread detection and split, phone-photo clean-up, deskew, PDF assembly (pdf.js + pdf-lib, lazy-loaded) |
+| API job queue (`backend/src/processing`) | Watermark on every page (pdf-lib in a child process), cover thumbnails |
+
+**Versions are never overwritten.** Each paper/note keeps `files.original` (the
+upload), an optional `files.processed`, cached watermarked copies and
+`activeVersion`. `asset` is always the watermarked file the public receives, so
+preview, download, counters and analytics are unchanged. Originals are only
+readable by the owner and admins (`GET /api/{admin|contributor}/{kind}/:id/source/:version`).
+
+**Flow.** A single PDF upload opens the Process Studio first: original vs
+processed slider, zoom, per-page split (auto/on/off and position), clean-up
+(auto/on/off), rotate, remove and reorder, global style (grayscale, black & white,
+colour). Nothing is sent until “Upload processed version” or “Upload original
+file”. Both choices are watermarked. New uploads stay off public routes
+(`409 PREPARING`) until their watermarked copy exists. Admins (and owners while
+an item is editable) can run **Process & preview**, revert/use processed,
+re-apply the watermark, or bulk **Process** / **Watermark** from the tables.
+
+**Settings → Watermark** (admin): template (only `{subjectCode}` of the first
+subject is substituted; default `{subjectCode} | Ajeet Soni`), opacity, angle,
+size, tiling, footer line, and “skip PDFs that already contain” (default
+`Ajeet Soni`). Saving bumps a revision; “Apply watermark to all outdated items”
+does a dry-run count, then re-marks items in the background while each keeps
+serving its previous copy. “Find and rebuild missing covers” repairs thumbnails
+whose storage objects are missing.
+
+**Existing data.** No migration is required: the job treats an item without
+`files` as having its current asset as the original. `npm run files:migrate -w
+backend` (dry run; `-- --apply` to write) records originals explicitly. Then use
+Settings → Apply watermark.
+
+**Previews without the API (optional, recommended).** In Cloudflare → Workers &
+Pages → the Pages project → Settings → Bindings → add an **R2 bucket** binding
+named `FILES` → bucket `buitpapers`, then redeploy. `/files/*` (Pages Function)
+then serves public watermarked PDFs and covers straight from R2 with immutable
+caching; originals are never served (only objects stored with public metadata or
+under `thumbnails/`). Without the binding the route returns 404 and the app uses
+the API. The PDF viewer never embeds API pages in an iframe; the Pages proxy turns
+any HTML answer from a sleeping API into JSON `503 WAKING_UP`, and the viewer
+retries behind its own loading state.
+
+**Checks.** `node --import tsx --test frontend/tests/processing.test.ts`
+(synthetic fixtures), `node --import tsx scripts/process-samples.mts samples/*.pdf`
+(before/after images in `docs/processing`), `node scripts/process-studio.mjs a.pdf
+b.pdf` and `node scripts/preview-wakeup.mjs` (frontend dev server; API simulated).
+Backend tests in `backend/tests/processing.test.ts` cover holding, every-page
+watermark text, skip, settings permissions, re-apply, versions and thumbnails.
+
+**Limits.** Detection is heuristic: a spread needs an empty, full-height gutter
+near the middle (fold lines are tolerated; ruled tables and text crossing the
+middle are not split); 45–70% confidence is flagged for manual review. Clean-up
+crops dark surroundings and corrects skew up to ±4° but does not undo strong
+perspective (a sheet photographed at a steep angle). Pages with real text are
+treated as digital and never re-rendered; scanned PDFs with an OCR layer are
+therefore not cleaned. Browser processing handles up to 60 pages; larger PDFs
+should be uploaded as original. The watermark font is Helvetica, so templates are
+limited to printable ASCII. PDFs are not linearised.
+
 ## Operational limits
 
 Snapshots allow browsing during outages; downloads, authentication and submissions
