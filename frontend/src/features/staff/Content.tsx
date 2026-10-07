@@ -8,6 +8,8 @@ import {
   Check,
   Eye,
   MoreHorizontal,
+  Stamp,
+  Wand2,
   Pencil,
   X,
 } from "lucide-react";
@@ -15,9 +17,24 @@ import type { ContentItem } from "../../lib/types";
 import { api, errorMessage } from "../../lib/api";
 import { useUser } from "./Auth";
 import ReviewPreview from "./ReviewPreview";
+import { lazy, Suspense } from "react";
+import type { StudioResult } from "./ProcessStudio";
+const ProcessStudio = lazy(() => import("./ProcessStudio"));
 import { confirmDialog, promptDialog, toast } from "../../components/Feedback";
 
-type Row = ContentItem & { _kind?: string };
+type Row = ContentItem & {
+  _kind?: string;
+  activeVersion?: "original" | "processed";
+  watermark?: { status?: string; reason?: string; error?: string };
+  files?: { processed?: string };
+};
+const watermarkLabel: Record<string, string> = {
+  done: "Watermarked",
+  queued: "Watermark queued",
+  running: "Watermarking…",
+  failed: "Watermark failed",
+  skipped: "Already marked",
+};
 type SortKey = "title" | "status" | "contributor" | "year";
 const statusOrder = ["pending", "draft", "rejected", "published"];
 
@@ -41,6 +58,133 @@ export default function Content({
     [busy, setBusy] = useState(false),
     [reviewing, setReviewing] = useState<Row | null>(null);
   const admin = user.role === "admin";
+  const [studio, setStudio] = useState<{ item: Row; bytes: Uint8Array } | null>(
+    null,
+  );
+  const [bulkStatus, setBulkStatus] = useState("");
+  const editableByMe = (item: Row) =>
+    admin || ["draft", "pending", "rejected"].includes(item.status || "");
+  const base = (item: Row) => `/${user.role}/${item._kind || kind}/${item._id}`;
+  async function fetchOriginal(item: Row) {
+    const response = await api.get(`${base(item)}/source/original`, {
+      responseType: "arraybuffer",
+      timeout: 120_000,
+    });
+    return new Uint8Array(response.data);
+  }
+  async function openStudio(item: Row) {
+    try {
+      toast("Loading the original PDF…");
+      setStudio({ item, bytes: await fetchOriginal(item) });
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    }
+  }
+  async function saveProcessed(item: Row, blob: Blob, meta: object) {
+    const data = new FormData();
+    data.append(
+      "metadata",
+      JSON.stringify({ processedMeta: meta, activate: true }),
+    );
+    data.append(
+      "processed",
+      new File([blob], "processed.pdf", { type: "application/pdf" }),
+    );
+    await api.post(`${base(item)}/processed`, data, { timeout: 120_000 });
+  }
+  async function switchVersion(item: Row, version: "original" | "processed") {
+    try {
+      await api.post(`${base(item)}/activate`, { version });
+      await client.invalidateQueries({ queryKey: ["staff-content"] });
+      toast(
+        version === "original"
+          ? "Switched back to the original. The watermark is being re-applied."
+          : "Using the processed version. The watermark is being re-applied.",
+        "success",
+      );
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    }
+  }
+  async function finishStudio(result: StudioResult) {
+    if (!studio) return;
+    const { item } = studio;
+    try {
+      if (result.choice === "processed") {
+        await saveProcessed(item, result.blob, result.meta);
+        toast("Processed version saved. Watermarking now.", "success");
+      } else if (item.activeVersion === "processed")
+        await api.post(`${base(item)}/activate`, { version: "original" });
+      else toast("Kept the original file.");
+      setStudio(null);
+      await client.invalidateQueries({ queryKey: ["staff-content"] });
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    }
+  }
+  async function watermark(targets: Row[]) {
+    try {
+      const result = await api.post("/admin/watermark/apply", {
+        scope: "selected",
+        onlyOutdated: false,
+        items: targets.map((item) => ({
+          kind: item._kind || kind,
+          id: item._id,
+        })),
+      });
+      toast(
+        `Watermark queued for ${result.data.data.queued} item(s).`,
+        "success",
+      );
+      await client.invalidateQueries({ queryKey: ["staff-content"] });
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    }
+  }
+  // Runs the automatic clean-up/split in this browser, one item at a time.
+  async function processSelected() {
+    const targets = items.filter(
+      (item) => selected.has(item._id) && item.format !== "markdown",
+    );
+    if (
+      !targets.length ||
+      !(await confirmDialog({
+        title: `Process ${targets.length} item(s) automatically?`,
+        body: "Spreads are split and photo pages cleaned with automatic choices; items that are already clean are skipped. Keep this tab open.",
+        confirmLabel: "Process",
+      }))
+    )
+      return;
+    setBusy(true);
+    const summary = { done: 0, skipped: 0, failed: 0 };
+    for (const [i, item] of targets.entries()) {
+      const label = `${i + 1}/${targets.length} ${item.title}`;
+      try {
+        setBulkStatus(`${label}: downloading…`);
+        const { autoProcess } = await import("../../lib/processing/browser");
+        const result = await autoProcess(
+          await fetchOriginal(item),
+          { mode: "needed", preset: "grayscale" },
+          (step) => setBulkStatus(`${label}: ${step}`),
+        );
+        if ("skipped" in result) summary.skipped++;
+        else {
+          setBulkStatus(`${label}: saving…`);
+          await saveProcessed(item, result.blob!, result.meta!);
+          summary.done++;
+        }
+      } catch {
+        summary.failed++;
+      }
+    }
+    setBulkStatus("");
+    setBusy(false);
+    await client.invalidateQueries({ queryKey: ["staff-content"] });
+    toast(
+      `Processed ${summary.done}, already clean ${summary.skipped}, failed ${summary.failed}.`,
+      summary.failed ? "error" : "success",
+    );
+  }
   const [queryText, setQueryText] = useState(search);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -290,13 +434,24 @@ export default function Content({
       </div>
       {admin && selected.size > 0 && (
         <div className="bulk-bar card" role="region" aria-label="Bulk actions">
-          <strong>{selected.size} selected</strong>
+          <strong>{bulkStatus || `${selected.size} selected`}</strong>
           <div className="row-actions">
             <button disabled={busy} onClick={() => bulk("approve")}>
               <Check size={15} /> Approve
             </button>
             <button disabled={busy} onClick={() => bulk("reject")}>
               <X size={15} /> Reject
+            </button>
+            <button disabled={busy} onClick={processSelected}>
+              <Wand2 size={15} /> Process
+            </button>
+            <button
+              disabled={busy}
+              onClick={() =>
+                watermark(items.filter((item) => selected.has(item._id)))
+              }
+            >
+              <Stamp size={15} /> Watermark
             </button>
             <button
               disabled={busy}
@@ -391,6 +546,20 @@ export default function Content({
                 </td>
                 <td data-label="Status">
                   <span className={`status ${item.status}`}>{item.status}</span>
+                  {item.format !== "markdown" && (
+                    <span
+                      className={`process-badge wm-${item.watermark?.status || "none"}`}
+                      title={
+                        item.watermark?.error ||
+                        item.watermark?.reason ||
+                        undefined
+                      }
+                    >
+                      {watermarkLabel[item.watermark?.status || ""] ||
+                        "Not watermarked"}
+                      {item.activeVersion === "processed" && " · processed"}
+                    </span>
+                  )}
                 </td>
                 <td data-label="Contributor">
                   {item.author?.name || "Legacy archive"}
@@ -422,38 +591,68 @@ export default function Content({
                         <X size={15} /> Reject
                       </button>
                     )}
-                    {admin && (
+                    {(admin || editableByMe(item)) && (
                       <details className="row-more">
                         <summary aria-label={`More actions for ${item.title}`}>
                           <MoreHorizontal size={16} />
                         </summary>
                         <div className="row-more-menu card">
-                          {item.status === "published" && (
+                          {item.format !== "markdown" && editableByMe(item) && (
+                            <button onClick={() => openStudio(item)}>
+                              <Wand2 size={14} /> Process & preview
+                            </button>
+                          )}
+                          {item.files?.processed && editableByMe(item) && (
+                            <button
+                              onClick={() =>
+                                switchVersion(
+                                  item,
+                                  item.activeVersion === "processed"
+                                    ? "original"
+                                    : "processed",
+                                )
+                              }
+                            >
+                              {item.activeVersion === "processed"
+                                ? "Revert to original"
+                                : "Use processed version"}
+                            </button>
+                          )}
+                          {admin && item.format !== "markdown" && (
+                            <button onClick={() => watermark([item])}>
+                              <Stamp size={14} /> Re-apply watermark
+                            </button>
+                          )}
+                          {admin && item.status === "published" && (
                             <button onClick={() => action(item, "reject")}>
                               Unpublish (reject)
                             </button>
                           )}
-                          <button
-                            onClick={() =>
-                              action(
-                                item,
-                                item.featured ? "unfeature" : "feature",
-                              )
-                            }
-                          >
-                            {item.featured ? "Unfeature" : "Feature"}
-                          </button>
-                          <button
-                            className="danger-text"
-                            onClick={() =>
-                              action(
-                                item,
-                                item.deletedAt ? "restore" : "delete",
-                              )
-                            }
-                          >
-                            {item.deletedAt ? "Restore" : "Delete"}
-                          </button>
+                          {admin && (
+                            <button
+                              onClick={() =>
+                                action(
+                                  item,
+                                  item.featured ? "unfeature" : "feature",
+                                )
+                              }
+                            >
+                              {item.featured ? "Unfeature" : "Feature"}
+                            </button>
+                          )}
+                          {admin && (
+                            <button
+                              className="danger-text"
+                              onClick={() =>
+                                action(
+                                  item,
+                                  item.deletedAt ? "restore" : "delete",
+                                )
+                              }
+                            >
+                              {item.deletedAt ? "Restore" : "Delete"}
+                            </button>
+                          )}
                         </div>
                       </details>
                     )}
@@ -471,6 +670,22 @@ export default function Content({
           </p>
         )}
       </div>
+      {studio && (
+        <Suspense fallback={<p role="status">Opening the studio…</p>}>
+          <ProcessStudio
+            bytes={studio.bytes}
+            title={studio.item.title}
+            onCancel={() => setStudio(null)}
+            onDone={finishStudio}
+            originalLabel={
+              studio.item.activeVersion === "processed"
+                ? "Revert to original"
+                : "Keep original"
+            }
+            processedLabel="Apply processed version"
+          />
+        </Suspense>
+      )}
       {reviewing && (
         <ReviewPreview
           item={reviewing}

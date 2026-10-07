@@ -19,6 +19,7 @@ const Login = lazy(() =>
   Content = lazy(() => import("../features/staff/Content")),
   Upload = lazy(() => import("../features/staff/Upload")),
   Taxonomy = lazy(() => import("../features/staff/Taxonomy")),
+  StaffSettings = lazy(() => import("../features/staff/Settings")),
   Contributors = lazy(() => import("../features/staff/Contributors")),
   Inbox = lazy(() => import("../features/staff/Inbox"));
 const Analytics = lazy(() => import("../features/staff/Analytics"));
@@ -86,6 +87,7 @@ export default function App() {
                   <Route path="inbox" element={<Inbox />} />
                   <Route path="audit" element={<Inbox audit />} />
                   <Route path="analytics" element={<Analytics />} />
+                  <Route path="settings" element={<StaffSettings />} />
                 </Route>
               </Route>
               <Route element={<Guard role="contributor" />}>

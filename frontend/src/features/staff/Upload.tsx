@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import type { StudioResult } from "./ProcessStudio";
+const ProcessStudio = lazy(() => import("./ProcessStudio"));
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { UploadCloud } from "lucide-react";
@@ -26,7 +28,12 @@ export default function Upload() {
     [created, setCreated] = useState<Offering[]>([]),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false),
-    [progress, setProgress] = useState<number | null>(null);
+    [progress, setProgress] = useState<number | null>(null),
+    [studio, setStudio] = useState<{
+      bytes: Uint8Array;
+      metadata: Record<string, unknown>;
+      file: File;
+    } | null>(null);
   const upload = {
     timeout: 120_000,
     onUploadProgress: (event: { loaded: number; total?: number }) =>
@@ -153,6 +160,14 @@ export default function Upload() {
               upload,
             );
           }
+        } else if (files[0] && format === "pdf") {
+          // Preview the cleaned/split version first; the upload happens on the choice.
+          setStudio({
+            bytes: new Uint8Array(await files[0].arrayBuffer()),
+            metadata,
+            file: files[0],
+          });
+          return;
         } else {
           const data = new FormData();
           data.append("metadata", JSON.stringify(metadata));
@@ -164,6 +179,45 @@ export default function Upload() {
         navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
       }
     } catch (error) {
+      setMessage(errorMessage(error));
+    } finally {
+      setBusy(false);
+      setProgress(null);
+    }
+  }
+  async function sendWithChoice(result: StudioResult) {
+    if (!studio) return;
+    setBusy(true);
+    setMessage("");
+    try {
+      const data = new FormData();
+      data.append(
+        "metadata",
+        JSON.stringify({
+          ...studio.metadata,
+          ...(result.choice === "processed"
+            ? { useVersion: "processed", processedMeta: result.meta }
+            : {}),
+        }),
+      );
+      data.append("file", studio.file);
+      if (result.choice === "processed")
+        data.append(
+          "processed",
+          new File(
+            [result.blob],
+            studio.file.name.replace(/.pdf$/i, "") + "-processed.pdf",
+            {
+              type: "application/pdf",
+            },
+          ),
+        );
+      await api.post(`/${user.role}/${kind}`, data, upload);
+      setStudio(null);
+      await client.invalidateQueries({ queryKey: ["staff-content"] });
+      navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
+    } catch (error) {
+      setStudio(null);
       setMessage(errorMessage(error));
     } finally {
       setBusy(false);
@@ -519,6 +573,18 @@ export default function Upload() {
           </p>
         )}
       </form>
+      {studio && (
+        <Suspense fallback={<p role="status">Opening the preview…</p>}>
+          <ProcessStudio
+            bytes={studio.bytes}
+            title={String(studio.metadata.title || studio.file.name)}
+            onCancel={() => setStudio(null)}
+            onDone={sendWithChoice}
+            originalLabel="Upload original file"
+            processedLabel="Upload processed version"
+          />
+        </Suspense>
+      )}
     </>
   );
 }

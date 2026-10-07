@@ -14,6 +14,7 @@ import {
   ScrollText,
   Search,
   ShieldCheck,
+  SlidersHorizontal,
   Upload,
   Users,
   type LucideIcon,
@@ -50,6 +51,7 @@ export default function Workspace() {
           ["inbox", "Reports & requests", Inbox],
           ["audit", "Audit log", ScrollText],
           ["analytics", "Analytics", BarChart3],
+          ["settings", "Settings", SlidersHorizontal],
         ]
       : [
           ["", "My papers", FileText],
