@@ -21,6 +21,7 @@ const Login = lazy(() =>
   Dashboard = lazy(() => import("../features/staff/Dashboard")),
   Content = lazy(() => import("../features/staff/Content")),
   Upload = lazy(() => import("../features/staff/Upload")),
+  ContributorProfile = lazy(() => import("../features/staff/Profile")),
   Taxonomy = lazy(() => import("../features/staff/Taxonomy")),
   StaffSettings = lazy(() => import("../features/staff/Settings")),
   Contributors = lazy(() => import("../features/staff/Contributors")),
@@ -99,6 +100,7 @@ export default function App() {
                   <Route index element={<Content />} />
                   <Route path="notes" element={<Content kind="notes" />} />
                   <Route path="upload" element={<Upload />} />
+                  <Route path="profile" element={<ContributorProfile />} />
                 </Route>
               </Route>
               <Route path="*" element={<Info page="missing" />} />

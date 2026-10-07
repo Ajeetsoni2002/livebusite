@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api, errorMessage } from "../../lib/api";
 import { confirmDialog } from "../../components/Feedback";
+import StandardSetup from "./StandardSetup";
 type TaxRecord = {
   _id: string;
   name?: string;
@@ -64,6 +65,7 @@ export default function Taxonomy() {
         in Subjects, then link them in Offerings (subject + branch + semester).
         Only offerings appear in the upload subject picker.
       </p>
+      <StandardSetup onDone={() => data.refetch()} />
       <div className="tabs" style={{ flexWrap: "wrap" }}>
         {categories.map((c) => (
           <button

@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Upload,
+  UserRound,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -57,6 +58,7 @@ export default function Workspace() {
           ["", "My papers", FileText],
           ["notes", "My notes", NotebookPen],
           ["upload", "Upload papers / notes", Upload],
+          ["profile", "My profile", UserRound],
         ];
   useEffect(() => {
     try {

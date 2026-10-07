@@ -1880,3 +1880,110 @@ th[aria-sort="descending"] .sort-header {
   margin-bottom: 16px;
   color: var(--text);
 }
+.plan-list {
+  margin: 0 0 14px;
+  padding-left: 18px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+/* 15 — Contributor profile and avatars with photos. */
+.contributor-avatar {
+  overflow: hidden;
+}
+.contributor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.contributor-avatar.is-anonymous {
+  color: var(--muted);
+  background: var(--raised);
+  text-shadow: none;
+}
+.leader-bio {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+.profile-card {
+  display: grid;
+  gap: 18px;
+}
+.profile-card h3 {
+  margin: 0;
+}
+.visibility-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.visibility-choice button {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  text-align: left;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--control-border);
+  border-radius: 14px;
+}
+.visibility-choice button svg {
+  color: var(--primary);
+}
+.visibility-choice button.selected {
+  border-color: var(--primary);
+  box-shadow: var(--glow-focus);
+  background: color-mix(in srgb, var(--primary) 6%, var(--surface));
+}
+.profile-fields {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.profile-fields:disabled {
+  opacity: 0.5;
+}
+.profile-fields label {
+  display: grid;
+  gap: 6px;
+}
+.photo-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.photo-row p {
+  margin: 4px 0 8px;
+}
+.profile-preview {
+  display: grid;
+  gap: 12px;
+  position: sticky;
+  top: 190px;
+}
+.preview-card {
+  grid-template-columns: 36px auto minmax(0, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.small {
+  font-size: 13px;
+}
+@media (max-width: 900px) {
+  .profile-grid,
+  .visibility-choice {
+    grid-template-columns: 1fr;
+  }
+  .profile-preview {
+    position: static;
+  }
+}

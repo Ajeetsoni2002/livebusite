@@ -17,6 +17,7 @@ import { fileRouter } from "./modules/files.js";
 import { catalogRouter } from "./modules/catalog.js";
 import mongoSanitize from "express-mongo-sanitize";
 import { contentWriteRouter } from "./modules/content-writes.js";
+import { avatarRouter, profileRouter } from "./modules/profile.js";
 import { adminRouter } from "./modules/admin.js";
 import { analyticsRouter, analyticsAdminRouter } from "./modules/analytics.js";
 
@@ -84,7 +85,7 @@ export function createApp() {
       return next(new HttpError(400, "Invalid input keys"));
     next();
   });
-  app.use("/api", fileRouter, catalogRouter, analyticsRouter);
+  app.use("/api", fileRouter, catalogRouter, analyticsRouter, avatarRouter);
   app.use(
     "/api/admin",
     requireCsrf,
@@ -99,6 +100,7 @@ export function createApp() {
     requireCsrf,
     requireUser,
     requireRole("contributor"),
+    profileRouter,
     contentWriteRouter(false),
   );
   app.use((_req, _res, next) =>

@@ -25,7 +25,11 @@ const steps = [
     "Upload papers",
     "Upload PDFs; each one is checked before it goes live.",
   ],
-  [ShieldCheck, "Get credited", "Your name appears on the contributors board."],
+  [
+    ShieldCheck,
+    "Get credited",
+    "Show your name and photo on the board, or stay anonymous.",
+  ],
 ] as const;
 
 export default function BecomeContributor() {

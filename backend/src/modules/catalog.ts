@@ -3,6 +3,7 @@ import { z } from "zod";
 import { rateLimit } from "express-rate-limit";
 import { createHash } from "node:crypto";
 import { config } from "../config.js";
+import { publicName, publicPhoto } from "./profile.js";
 import { HttpError, identifier, ok } from "../lib/http.js";
 import {
   taxonomyModels,
@@ -117,7 +118,7 @@ export async function listContent(
           { path: "program" },
         ],
       })
-      .populate("author", "name")
+      .populate("author", "name profile")
       .populate("asset", "key thumbnailKey deletedAt")
       .sort(sortOrders[input.sort])
       .collation({ locale: "en", strength: 2 })
@@ -132,7 +133,8 @@ export async function listContent(
   };
 }
 function withThumbnail(item: any) {
-  const { asset, ...content } = item;
+  const { asset, author, ...content } = item;
+  if (author) content.author = { name: publicName(author) };
   const live = asset && !asset.deletedAt;
   return {
     ...content,
@@ -211,7 +213,7 @@ for (const kind of ["papers", "notes"]) {
           { path: "program" },
         ],
       })
-      .populate("author", "name")
+      .populate("author", "name profile")
       .populate("asset", "key thumbnailKey deletedAt")
       .lean();
     if (!item) throw new HttpError(404, "Content not found");
@@ -236,7 +238,7 @@ catalogRouter.get("/papers/:id/related", async (req, res) => {
       path: "offerings",
       populate: ["subject", "branch", "semester", "program"],
     })
-    .populate("author", "name")
+    .populate("author", "name profile")
     .populate("asset", "key thumbnailKey deletedAt")
     .lean();
   cached(req, res, related.map(withThumbnail));
@@ -349,7 +351,7 @@ catalogRouter.get("/contributors", async (req, res) => {
     role: "contributor",
     active: { $ne: false },
   })
-    .select("name createdAt")
+    .select("name createdAt profile")
     .lean();
   const count = (rows: any[], id: string) =>
     rows.find((row) => String(row._id) === id);
@@ -360,7 +362,13 @@ catalogRouter.get("/contributors", async (req, res) => {
         n = count(notes, id),
         firsts = [p?.first, n?.first].filter(Boolean) as Date[];
       return {
-        name: user.name as string,
+        name: publicName(user) as string,
+        photo: publicPhoto(user),
+        bio:
+          user.profile?.visibility === "anonymous"
+            ? null
+            : user.profile?.bio || null,
+        anonymous: user.profile?.visibility === "anonymous",
         papers: p?.total || 0,
         notes: n?.total || 0,
         total: (p?.total || 0) + (n?.total || 0),

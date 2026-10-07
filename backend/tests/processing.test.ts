@@ -593,3 +593,100 @@ test("students can request a contributor account; admins approve or reject it", 
     0,
   );
 });
+
+test("standard B.Tech setup adds every branch subject once, renaming and merging first-year duplicates", async () => {
+  const models = await import("../src/modules/models.js");
+  for (const m of ["University", "Program", "Branch", "Semester", "Subject", "SubjectOffering"])
+    await (models as any)[m].deleteMany({});
+  const { University, Program, Branch, Semester, Subject, SubjectOffering } = models;
+  await account("admin");
+  const admin = await login("admin");
+  const uni = await University.create({ name: "BU", slug: "bu" });
+  const program = await Program.create({ name: "B.Tech", slug: "btech", university: uni._id });
+  const cse = await Branch.create({ name: "Computer Science", slug: "cse", code: "CSE", program: program._id });
+  const it = await Branch.create({ name: "IT", slug: "it", code: "IT", program: program._id });
+  const sem1 = await Semester.create({ name: "Semester 1", slug: "sem-1", number: 1, program: program._id });
+  const cse101 = await Subject.create({ name: "Engineering Mathematics-I", slug: "cse-101", code: "CSE-101" });
+  const it101 = await Subject.create({ name: "Maths I", slug: "it-101", code: "IT-101" });
+  const cseOffering = await SubjectOffering.create({ subject: cse101._id, branch: cse._id, semester: sem1._id, program: program._id });
+  const itOffering = await SubjectOffering.create({ subject: it101._id, branch: it._id, semester: sem1._id, program: program._id });
+  const paper = await Paper.create({ title: "IT maths", slug: "it-maths", status: "published", offerings: [itOffering._id] });
+  const setup = (dryRun: boolean) =>
+    admin.agent.post("/api/admin/taxonomy/standard-setup").set("X-CSRF-Token", admin.csrf).send({ dryRun });
+  const preview = (await setup(true)).body.data;
+  assert.deepEqual(preview.branches, ["ECE", "ME", "EE", "CE"]);
+  assert.deepEqual(preview.semesters, [2, 3, 4, 5, 6, 7, 8]);
+  assert.deepEqual(preview.renamed, [{ from: "CSE-101", to: "BE-101" }]);
+  assert.deepEqual(preview.merged, [{ from: "IT-101", to: "BE-101" }]);
+  assert.equal(preview.subjects.length, 9 + 180);
+  assert.equal(await Subject.countDocuments(), 2, "dry run writes nothing");
+
+  const applied = (await setup(false)).body.data;
+  assert.equal(applied.offerings, preview.offerings);
+  const be101: any = await Subject.findOne({ code: "BE-101" }).lean();
+  assert.equal(be101.slug, "cse-101", "old URLs keep working");
+  assert.ok(be101.aliases.includes("CSE-101"));
+  assert.equal((await Subject.findById(it101._id).lean<any>()).active, false);
+  assert.equal(await SubjectOffering.countDocuments({ subject: be101._id }), 6);
+  assert.equal(await SubjectOffering.countDocuments(), 60 + 180);
+  const moved: any = await Paper.findById(paper._id).lean();
+  const target: any = await SubjectOffering.findById(moved.offerings[0]).lean();
+  assert.equal(String(target.subject), String(be101._id));
+  assert.equal(String(target.branch), String(it._id));
+  assert.ok(await SubjectOffering.exists({ _id: cseOffering._id }));
+  assert.ok(await Subject.exists({ code: "EE-805" }));
+  assert.equal((await Subject.findOne({ code: "BE-203" }).lean<any>()).name, "Fundamentals of Computer Programming");
+  const again = (await setup(true)).body.data;
+  assert.deepEqual(
+    [again.branches.length, again.semesters.length, again.subjects.length, again.renamed.length, again.merged.length, again.offerings],
+    [0, 0, 0, 0, 0, 0],
+  );
+});
+
+test("contributors choose a public name and photo or stay anonymous", async () => {
+  const sharp = (await import("sharp")).default;
+  await account("contributor");
+  await account("admin");
+  const contributor = await login("contributor");
+  const admin = await login("admin");
+  const me: any = await User.findOne({ email: "contributor@example.test" });
+  await Paper.create({ title: "Shared paper", slug: "shared-paper", status: "published", author: me._id, publishedAt: new Date() });
+  assert.equal((await admin.agent.get("/api/contributor/profile")).status, 403);
+  const profile = (await contributor.agent.get("/api/contributor/profile")).body.data;
+  assert.equal(profile.visibility, "public");
+  assert.equal(profile.published, 1);
+  const save = (body: object) =>
+    contributor.agent.patch("/api/contributor/profile").set("X-CSRF-Token", contributor.csrf).send(body);
+  assert.equal((await save({ visibility: "public", displayName: "R" })).status, 400);
+  assert.equal((await save({ visibility: "public", displayName: "Riya S.", bio: "CSE 3rd sem" })).status, 200);
+  const png = await sharp({ create: { width: 600, height: 400, channels: 3, background: "#3366cc" } }).png().toBuffer();
+  const uploaded = await contributor.agent
+    .post("/api/contributor/profile/photo")
+    .set("X-CSRF-Token", contributor.csrf)
+    .attach("photo", png, { filename: "me.png", contentType: "image/png" });
+  assert.equal(uploaded.status, 200);
+  const photo = uploaded.body.data.photo;
+  const avatar = await request(app).get(`/api${photo}`);
+  assert.equal(avatar.status, 200);
+  assert.equal(avatar.headers["content-type"], "image/webp");
+  const bad = await contributor.agent
+    .post("/api/contributor/profile/photo")
+    .set("X-CSRF-Token", contributor.csrf)
+    .attach("photo", Buffer.from("not an image"), { filename: "x.png", contentType: "image/png" });
+  assert.equal(bad.status, 400);
+  let board = (await request(app).get("/api/contributors")).body.data;
+  assert.equal(board[0].name, "Riya S.");
+  assert.equal(board[0].photo, photo);
+  assert.equal(board[0].bio, "CSE 3rd sem");
+  assert.equal((await request(app).get("/api/papers/shared-paper")).body.data.author.name, "Riya S.");
+
+  assert.equal((await save({ visibility: "anonymous" })).status, 200);
+  board = (await request(app).get("/api/contributors")).body.data;
+  assert.deepEqual([board[0].name, board[0].photo, board[0].bio, board[0].anonymous], ["Anonymous contributor", null, null, true]);
+  assert.equal((await request(app).get(`/api${photo}`)).status, 404);
+  assert.equal((await request(app).get("/api/papers/shared-paper")).body.data.author.name, "Anonymous contributor");
+  assert.equal(JSON.stringify(board).includes("contributor@example.test"), false);
+  // Admins still see the real account.
+  const contributors = (await admin.agent.get("/api/admin/contributors")).body.data;
+  assert.equal(contributors[0].email, "contributor@example.test");
+});

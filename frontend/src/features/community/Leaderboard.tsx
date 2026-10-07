@@ -4,13 +4,14 @@ import {
   ArrowUpRight,
   Crown,
   Download,
+  EyeOff,
   FileText,
   NotebookPen,
   Sparkles,
   Trophy,
 } from "lucide-react";
-import type { CSSProperties } from "react";
-import { api, errorMessage } from "../../lib/api";
+import { useState, type CSSProperties } from "react";
+import { api, apiUrl, errorMessage } from "../../lib/api";
 import { usePageMeta } from "../../lib/meta";
 import { ErrorState } from "../../components/ui";
 
@@ -23,6 +24,9 @@ type Contributor = {
   downloads: number;
   joinedAt: string;
   firstPublishedAt: string | null;
+  photo?: string | null;
+  bio?: string | null;
+  anonymous?: boolean;
 };
 
 const periods = [
@@ -45,20 +49,32 @@ const hue = (name: string) =>
   [...name].reduce((sum, ch) => (sum * 31 + ch.charCodeAt(0)) % 360, 7);
 
 /** Badges come only from real fields: rank, counts, downloads, first publication. */
-function badges(person: Contributor, earliest: Set<string>) {
+function badges(person: Contributor, earliest: Set<number>) {
   const list: string[] = [];
   if (person.rank === 1) list.push("Top Contributor");
-  if (earliest.has(person.name)) list.push("Early Contributor");
+  if (earliest.has(person.rank)) list.push("Early Contributor");
   if (person.papers >= 10) list.push("Archive Builder");
   if (person.notes > 0) list.push("Note Maker");
   if (person.downloads >= 100) list.push("Crowd Favourite");
   return list;
 }
 
-function Avatar({ name, size = 56 }: { name: string; size?: number }) {
+/** Photo when the contributor shared one, a mask for anonymous ones, initials otherwise. */
+export function ContributorAvatar({
+  name,
+  photo,
+  anonymous = false,
+  size = 56,
+}: {
+  name: string;
+  photo?: string | null;
+  anonymous?: boolean;
+  size?: number;
+}) {
+  const [broken, setBroken] = useState(false);
   return (
     <span
-      className="contributor-avatar"
+      className={`contributor-avatar ${anonymous ? "is-anonymous" : ""}`}
       style={
         {
           "--h": hue(name),
@@ -69,10 +85,25 @@ function Avatar({ name, size = 56 }: { name: string; size?: number }) {
       }
       aria-hidden="true"
     >
-      {initials(name)}
+      {anonymous ? (
+        <EyeOff size={Math.round(size * 0.42)} />
+      ) : photo && !broken ? (
+        <img
+          src={photo}
+          alt=""
+          width={size}
+          height={size}
+          loading="lazy"
+          onError={() => setBroken(true)}
+        />
+      ) : (
+        initials(name)
+      )}
     </span>
   );
 }
+const photoOf = (person: Contributor) =>
+  person.photo ? apiUrl(person.photo) : null;
 
 export default function Leaderboard() {
   usePageMeta("Top contributors");
@@ -95,7 +126,7 @@ export default function Leaderboard() {
           Date.parse(a.firstPublishedAt!) - Date.parse(b.firstPublishedAt!),
       )
       .slice(0, 3)
-      .map((p) => p.name),
+      .map((p) => p.rank),
   );
   const podium = [people[1], people[0], people[2]].filter(Boolean);
   return (
@@ -159,15 +190,17 @@ export default function Leaderboard() {
             <h2 className="sr-only">Top three contributors</h2>
             {podium.map((person) => (
               <div
-                key={person.name}
+                key={person.rank}
                 className={`podium-slot place-${person.rank}`}
               >
                 <div className="podium-person">
                   {person.rank === 1 && (
                     <Crown className="podium-crown" size={26} aria-hidden />
                   )}
-                  <Avatar
+                  <ContributorAvatar
                     name={person.name}
+                    photo={photoOf(person)}
+                    anonymous={person.anonymous}
                     size={person.rank === 1 ? 84 : 68}
                   />
                   <strong>{person.name}</strong>
@@ -188,16 +221,24 @@ export default function Leaderboard() {
               {people.map((person) => {
                 const earned = badges(person, earliest);
                 return (
-                  <li key={person.name} className="leader-card card" data-tilt>
+                  <li key={person.rank} className="leader-card card" data-tilt>
                     <span
                       className="leader-rank"
                       aria-label={`Rank ${person.rank}`}
                     >
                       {String(person.rank).padStart(2, "0")}
                     </span>
-                    <Avatar name={person.name} size={48} />
+                    <ContributorAvatar
+                      name={person.name}
+                      photo={photoOf(person)}
+                      anonymous={person.anonymous}
+                      size={48}
+                    />
                     <div className="leader-main">
                       <strong>{person.name}</strong>
+                      {person.bio && (
+                        <span className="leader-bio">{person.bio}</span>
+                      )}
                       {earned.length > 0 && (
                         <ul className="leader-badges" aria-label="Badges">
                           {earned.map((badge) => (

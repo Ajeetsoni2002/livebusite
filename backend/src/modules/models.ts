@@ -197,6 +197,17 @@ const userSchema = new Schema(
     mustChangePassword: { type: Boolean, default: true },
     failedLogins: { type: Number, default: 0 },
     lockedUntil: Date,
+    // How a contributor appears publicly (leaderboard, paper credits).
+    profile: {
+      visibility: {
+        type: String,
+        enum: ["public", "anonymous"],
+        default: "public",
+      },
+      displayName: { type: String, maxlength: 60 },
+      bio: { type: String, maxlength: 160 },
+      photoKey: String,
+    },
   },
   options,
 );

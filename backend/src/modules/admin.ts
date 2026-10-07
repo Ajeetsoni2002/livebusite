@@ -20,6 +20,7 @@ import {
   contentModels,
 } from "./models.js";
 import { dayKey } from "./analytics.js";
+import { standardSubjects } from "./standard-subjects.js";
 import { randomUUID } from "node:crypto";
 import { Setting, ProcessingJob, ContributorRequest } from "./models.js";
 import { randomBytes } from "node:crypto";
@@ -166,6 +167,24 @@ export async function mergeTaxonomy(name: string, from: string, to: string) {
   }
 }
 export const adminRouter = Router();
+// Adds the standard B.Tech branches, semesters, subjects and offerings (dry run first).
+adminRouter.post("/taxonomy/standard-setup", async (req: AuthRequest, res) => {
+  const { dryRun } = z
+    .object({ dryRun: z.boolean().default(true) })
+    .strict()
+    .parse(req.body);
+  const plan = await standardSubjects(!dryRun, (from, to) =>
+    mergeTaxonomy("subjects", from, to),
+  );
+  if (!dryRun)
+    await audit(req, "taxonomy-standard-setup", "taxonomy", {
+      subjects: plan.subjects.length,
+      offerings: plan.offerings,
+      renamed: plan.renamed.length,
+      merged: plan.merged.length,
+    });
+  ok(res, plan);
+});
 adminRouter.get("/settings/watermark", async (_req, res) => {
   const { settings, revision } = await getWatermarkSettings();
   ok(res, { settings, revision, defaults: defaultWatermark });
