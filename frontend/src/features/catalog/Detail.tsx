@@ -117,6 +117,7 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
                   kind={kind}
                   id={data._id}
                   title={data.title}
+                  publicFile={data.publicFile}
                   onDownload={download}
                 />
               </Suspense>
@@ -128,6 +129,7 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
                   id={data._id}
                   kind={kind}
                   available={data.hasThumbnail}
+                  thumbKey={data.thumbKey}
                   large
                 />
                 <h2>A page closer to prepared.</h2>

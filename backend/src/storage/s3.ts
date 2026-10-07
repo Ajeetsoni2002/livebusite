@@ -16,13 +16,20 @@ export class S3Storage {
       secretAccessKey: config.s3.secretAccessKey,
     },
   });
-  async put(key: string, bytes: Buffer, mime: string) {
+  /** `publicObject` marks files the Pages /files route may serve without the API. */
+  async put(key: string, bytes: Buffer, mime: string, publicObject = false) {
     await this.client.send(
       new PutObjectCommand({
         Bucket: config.s3.bucket,
         Key: key,
         Body: bytes,
         ContentType: mime,
+        ...(publicObject
+          ? {
+              Metadata: { visibility: "public" },
+              CacheControl: "public, max-age=31536000, immutable",
+            }
+          : {}),
       }),
     );
   }

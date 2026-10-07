@@ -15,7 +15,7 @@ export class LocalStorage {
       throw new Error("Invalid storage key");
     return target;
   }
-  async put(key: string, bytes: Buffer, _mime: string) {
+  async put(key: string, bytes: Buffer, _mime: string, _publicObject = false) {
     const file = this.path(key);
     await mkdir(dirname(file), { recursive: true });
     await writeFile(file, bytes);

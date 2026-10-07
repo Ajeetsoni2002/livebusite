@@ -7,8 +7,8 @@ import { z } from "zod";
 import { rateLimit } from "express-rate-limit";
 import { config } from "../config.js";
 import { HttpError, identifier, ok } from "../lib/http.js";
-import { savePdf } from "../storage/index.js";
-import { contentModels, SubjectOffering } from "./models.js";
+import { safeFilename, savePdf, storage } from "../storage/index.js";
+import { contentModels, FileAsset, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
 import { enqueueWatermark } from "../processing/jobs.js";
@@ -58,6 +58,22 @@ const upload = multer({
     else cb(null, true);
   },
 });
+// What the browser processing step reports; kept small and descriptive only.
+const processedMetaInput = z
+  .object({
+    pages: z.number().int().min(1).max(400),
+    sourcePages: z.number().int().min(1).max(400),
+    split: z.array(z.number().int().min(1)).max(400).default([]),
+    enhanced: z.array(z.number().int().min(1)).max(400).default([]),
+    preset: z.enum(["grayscale", "bw", "color"]),
+    mode: z.enum(["needed", "all", "none"]),
+  })
+  .strict();
+const versionChoice = z.enum(["original", "processed"]);
+const pdfFields = [
+  { name: "file", maxCount: 1 },
+  { name: "processed", maxCount: 1 },
+];
 const uploadLimit = rateLimit({
   windowMs: 3600_000,
   limit: 60,
@@ -142,6 +158,113 @@ export function contentWriteRouter(admin: boolean) {
       ]);
       ok(res, data, { total, page, pages: Math.ceil(total / 30) });
     });
+    // Owner/admin access for browser-side processing and comparison.
+    router.get(
+      `/${kind}/:id/source/:version`,
+      async (req: AuthRequest, res, next) => {
+        const version = versionChoice.parse(req.params.version);
+        const item: any = await model
+          .findOne({
+            _id: identifier(req.params.id),
+            ...(admin ? {} : { author: req.user._id }),
+          })
+          .select("asset files")
+          .lean();
+        const assetId =
+          item?.files?.[version] ??
+          (version === "original" ? item?.asset : null);
+        const asset: any =
+          assetId && (await FileAsset.findById(assetId).lean());
+        if (!asset || asset.deletedAt)
+          throw new HttpError(404, "This version is not available.");
+        const object = await storage.get(asset.key);
+        res.set({
+          "Content-Type": "application/pdf",
+          "Content-Length": String(object.size),
+          "Cache-Control": "private, no-store",
+          "Content-Disposition": `inline; filename="${safeFilename(asset.originalName || "paper.pdf")}"`,
+        });
+        object.body.on("error", next);
+        res.on("close", () => object.body.destroy());
+        object.body.pipe(res);
+      },
+    );
+    const editable = (req: AuthRequest) => ({
+      _id: identifier(req.params.id),
+      deletedAt: null,
+      ...(admin
+        ? {}
+        : {
+            author: req.user._id,
+            status: { $in: ["draft", "pending", "rejected"] },
+          }),
+    });
+    // A contributor change goes back to review; a published item keeps serving
+    // its current watermarked copy until the new one is ready.
+    async function switchTo(req: AuthRequest, item: any, version: string) {
+      item.activeVersion = version;
+      if (!admin) {
+        item.status = "pending";
+        item.rejectionReason = undefined;
+      }
+      await item.save();
+      await enqueueWatermark(kind as any, item._id, {
+        requestedBy: req.user._id,
+        hold: item.status !== "published",
+      });
+    }
+    router.post(
+      `/${kind}/:id/processed`,
+      uploadLimit,
+      upload.single("processed"),
+      async (req: AuthRequest, res) => {
+        const item: any = await model.findOne(editable(req));
+        if (!item?.asset) throw new HttpError(404, "Editable upload not found");
+        if (!req.file) throw new HttpError(400, "Upload the processed PDF.");
+        const raw = metadata(req);
+        const meta = processedMetaInput.parse(raw.processedMeta);
+        const activate = z.boolean().default(true).parse(raw.activate);
+        const asset = await savePdf(req.file);
+        if (!item.files) item.files = { original: item.asset };
+        if (!item.files.original) item.files.original = item.asset;
+        item.files.processed = asset._id;
+        item.files.processedMeta = meta;
+        if (item.files.watermarked) {
+          item.files.watermarked.processed = undefined;
+          item.files.watermarked.processedSignature = undefined;
+        }
+        await switchTo(
+          req,
+          item,
+          activate ? "processed" : item.activeVersion || "original",
+        );
+        await audit(req, "process-apply", `${kind}/${item._id}`, {
+          pages: meta.pages,
+          split: meta.split.length,
+          enhanced: meta.enhanced.length,
+          activate,
+        });
+        ok(res, { activeVersion: item.activeVersion });
+      },
+    );
+    router.post(`/${kind}/:id/activate`, async (req: AuthRequest, res) => {
+      const { version } = z
+        .object({ version: versionChoice })
+        .strict()
+        .parse(req.body);
+      const item: any = await model.findOne(editable(req));
+      if (!item?.asset) throw new HttpError(404, "Editable upload not found");
+      if (!item.files) item.files = { original: item.asset };
+      if (!item.files[version])
+        throw new HttpError(400, "That version does not exist yet.");
+      await switchTo(req, item, version);
+      await audit(
+        req,
+        version === "original" ? "process-revert" : "process-activate",
+        `${kind}/${item._id}`,
+      );
+      ok(res, { activeVersion: item.activeVersion });
+    });
     router.get(`/${kind}/:id/processing`, async (req: AuthRequest, res) => {
       const item: any = await model
         .findOne({
@@ -172,9 +295,19 @@ export function contentWriteRouter(admin: boolean) {
     router.post(
       `/${kind}`,
       uploadLimit,
-      upload.single("file"),
+      upload.fields(pdfFields),
       async (req: AuthRequest, res) => {
-        const raw = metadata(req),
+        const parts = (req.files || {}) as Record<
+          string,
+          Express.Multer.File[]
+        >;
+        req.file = parts.file?.[0];
+        const processedFile = parts.processed?.[0];
+        const {
+            useVersion: rawVersion,
+            processedMeta: rawMeta,
+            ...raw
+          } = metadata(req),
           status = admin
             ? z
                 .enum(["draft", "pending", "published"])
@@ -197,12 +330,28 @@ export function contentWriteRouter(admin: boolean) {
         const asset = req.file ? await savePdf(req.file) : null;
         if (asset && (await model.exists(usesAsset(asset._id))))
           throw new HttpError(409, "This PDF is already in the library.");
+        const processedMeta =
+          asset && processedFile
+            ? processedMetaInput.parse(rawMeta)
+            : undefined;
+        const processed = processedMeta ? await savePdf(processedFile!) : null;
+        const active =
+          processed &&
+          versionChoice.default("original").parse(rawVersion) === "processed"
+            ? "processed"
+            : "original";
         const data = {
           ...input,
-          asset: asset?._id,
+          asset: active === "processed" ? processed!._id : asset?._id,
           ...(asset
             ? {
-                files: { original: asset._id },
+                files: {
+                  original: asset._id,
+                  ...(processed
+                    ? { processed: processed._id, processedMeta }
+                    : {}),
+                },
+                activeVersion: active,
                 watermark: { status: "queued", hold: true },
               }
             : {}),

@@ -30,6 +30,26 @@ const backoff = [3, 5, 8, 12, 15, 20, 25];
 class Retryable extends Error {}
 class Preparing extends Retryable {}
 
+/** Published, watermarked files come straight from storage when the CDN route is set up. */
+async function fetchPublicCopy(key: string, signal: AbortSignal) {
+  try {
+    const response = await fetch(`/files/${key}`, { signal });
+    if (
+      !response.ok ||
+      !(response.headers.get("Content-Type") || "").includes("pdf")
+    ) {
+      await response.body?.cancel().catch(() => {});
+      return null;
+    }
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    return new TextDecoder().decode(bytes.subarray(0, 5)) === "%PDF-"
+      ? bytes
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 /** Only ever accepts real PDF bytes; anything else (HTML, JSON errors) never reaches the page. */
 async function fetchPdf(kind: string, id: string, signal: AbortSignal) {
   let response: Response;
@@ -130,11 +150,13 @@ export default function PdfViewer({
   id,
   title,
   onDownload,
+  publicFile,
 }: {
   kind: string;
   id: string;
   title: string;
   onDownload?: () => void;
+  publicFile?: string;
 }) {
   const [phase, setPhase] = useState<Phase>({ name: "loading" });
   const [run, setRun] = useState(0);
@@ -156,7 +178,10 @@ export default function PdfViewer({
       setPhase({ name: "loading" });
       for (let attempt = 0; ; attempt++) {
         try {
-          const bytes = await fetchPdf(kind, id, controller.signal);
+          const bytes =
+            (attempt === 0 && publicFile
+              ? await fetchPublicCopy(publicFile, controller.signal)
+              : null) || (await fetchPdf(kind, id, controller.signal));
           url = URL.createObjectURL(
             new Blob([bytes], { type: "application/pdf" }),
           );
@@ -206,7 +231,7 @@ export default function PdfViewer({
       doc?.loadingTask.destroy();
       if (url) URL.revokeObjectURL(url);
     };
-  }, [kind, id, run]);
+  }, [kind, id, run, publicFile]);
 
   useEffect(() => {
     const node = pages.current;

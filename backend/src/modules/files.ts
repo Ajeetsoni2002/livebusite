@@ -5,7 +5,13 @@ import { rateLimit } from "express-rate-limit";
 import { config } from "../config.js";
 import { storage, safeFilename } from "../storage/index.js";
 import { HttpError, identifier, ok } from "../lib/http.js";
-import { contentModels } from "./models.js";
+import { contentModels, FileAsset } from "./models.js";
+// Storage reports a missing object differently per driver.
+export const missingObject = (e: any) =>
+  e?.code === "ENOENT" ||
+  e?.name === "NoSuchKey" ||
+  e?.name === "NotFound" ||
+  e?.$metadata?.httpStatusCode === 404;
 import { optionalUser, AuthRequest } from "./auth.js";
 export const fileRouter = Router();
 const sign = (value: string) =>
@@ -56,7 +62,18 @@ fileRouter.get(
     const item = await visible(req);
     if (!item.asset.thumbnailKey)
       throw new HttpError(404, "Thumbnail is unavailable.");
-    const object = await storage.get(item.asset.thumbnailKey);
+    let object: Awaited<ReturnType<typeof storage.get>>;
+    try {
+      object = await storage.get(item.asset.thumbnailKey);
+    } catch (error) {
+      if (!missingObject(error)) throw error;
+      // Forget a key whose object is gone so cards stop asking; admins can repair it.
+      await FileAsset.updateMany(
+        { thumbnailKey: item.asset.thumbnailKey },
+        { $unset: { thumbnailKey: "" } },
+      );
+      throw new HttpError(404, "Thumbnail is unavailable.");
+    }
     res.set({
       "Content-Type": "image/webp",
       "Content-Length": String(object.size),

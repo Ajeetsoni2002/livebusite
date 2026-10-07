@@ -72,6 +72,7 @@ export default function QuickPreview({
             kind={kind}
             id={item._id}
             title={item.title}
+            publicFile={item.publicFile}
             onDownload={() =>
               downloadResource(item._id, kind).catch((error) =>
                 setMessage(errorMessage(error)),

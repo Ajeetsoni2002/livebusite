@@ -93,6 +93,7 @@ export default function Hero({ papers }: { papers: ContentItem[] }) {
               <PdfThumbnail
                 id={papers[0]._id}
                 available={papers[0].hasThumbnail}
+                thumbKey={papers[0].thumbKey}
                 large
               />
               <div className="hero-paper-bottom">

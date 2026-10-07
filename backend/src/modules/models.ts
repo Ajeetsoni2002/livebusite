@@ -310,7 +310,7 @@ export const Setting = model(
 );
 const jobSchema = new Schema(
   {
-    type: { type: String, enum: ["watermark"], required: true },
+    type: { type: String, enum: ["watermark", "thumbnail"], required: true },
     contentType: { type: String, enum: ["papers", "notes"], required: true },
     content: { type: Schema.Types.ObjectId, required: true },
     status: {

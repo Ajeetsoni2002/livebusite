@@ -117,7 +117,7 @@ export async function listContent(
         ],
       })
       .populate("author", "name")
-      .populate("asset", "thumbnailKey deletedAt")
+      .populate("asset", "key thumbnailKey deletedAt")
       .sort(sortOrders[input.sort])
       .collation({ locale: "en", strength: 2 })
       .skip((input.page - 1) * input.limit)
@@ -132,9 +132,17 @@ export async function listContent(
 }
 function withThumbnail(item: any) {
   const { asset, ...content } = item;
+  const live = asset && !asset.deletedAt;
   return {
     ...content,
-    hasThumbnail: Boolean(asset?.thumbnailKey && !asset.deletedAt),
+    hasThumbnail: Boolean(live && asset.thumbnailKey),
+    // Served straight from storage by the Pages /files route (no API round trip).
+    ...(live && asset.key?.startsWith("watermarked/")
+      ? { publicFile: asset.key }
+      : {}),
+    ...(live && asset.thumbnailKey?.startsWith("thumbnails/")
+      ? { thumbKey: asset.thumbnailKey }
+      : {}),
   };
 }
 export function cached(req: any, res: any, data: unknown, meta?: unknown) {
@@ -203,7 +211,7 @@ for (const kind of ["papers", "notes"]) {
         ],
       })
       .populate("author", "name")
-      .populate("asset", "thumbnailKey deletedAt")
+      .populate("asset", "key thumbnailKey deletedAt")
       .lean();
     if (!item) throw new HttpError(404, "Content not found");
     cached(req, res, withThumbnail(item));
@@ -228,7 +236,7 @@ catalogRouter.get("/papers/:id/related", async (req, res) => {
       populate: ["subject", "branch", "semester", "program"],
     })
     .populate("author", "name")
-    .populate("asset", "thumbnailKey deletedAt")
+    .populate("asset", "key thumbnailKey deletedAt")
     .lean();
   cached(req, res, related.map(withThumbnail));
 });

@@ -319,3 +319,186 @@ test("a job abandoned by a stopped instance is picked up again after its lease",
   assert.equal(item.watermark.status, "done");
   assert.equal(item.watermark.hold, false);
 });
+
+const meta = {
+  pages: 3,
+  sourcePages: 2,
+  split: [2],
+  enhanced: [1],
+  preset: "grayscale",
+  mode: "needed",
+};
+
+test("a contributor can upload a processed version and choose it; originals stay private", async () => {
+  const { runNextJob } = await import("../src/processing/jobs.js");
+  await account("contributor");
+  await account("admin");
+  const contributor = await login("contributor");
+  const admin = await login("admin");
+  const { offering: o, code } = await offering();
+  const original = await samplePdf("Original scan");
+  const processed = await samplePdf("Cleaned scan");
+  const created = await contributor.agent
+    .post("/api/contributor/papers")
+    .set("X-CSRF-Token", contributor.csrf)
+    .field(
+      "metadata",
+      JSON.stringify({
+        title: "Processed fixture",
+        offerings: [String(o._id)],
+        useVersion: "processed",
+        processedMeta: meta,
+      }),
+    )
+    .attach("file", original, {
+      filename: "o.pdf",
+      contentType: "application/pdf",
+    })
+    .attach("processed", processed, {
+      filename: "p.pdf",
+      contentType: "application/pdf",
+    });
+  assert.equal(created.status, 201, JSON.stringify(created.body));
+  const id = created.body.data._id;
+  assert.equal(created.body.data.activeVersion, "processed");
+  await runNextJob();
+  // The owner and admins can read both versions; the public and others cannot.
+  for (const version of ["original", "processed"]) {
+    const own = await contributor.agent
+      .get(`/api/contributor/papers/${id}/source/${version}`)
+      .buffer(true);
+    assert.equal(own.status, 200);
+    assert.equal(own.headers["content-type"], "application/pdf");
+  }
+  assert.equal(
+    (await request(app).get(`/api/contributor/papers/${id}/source/original`))
+      .status,
+    401,
+  );
+  assert.equal(
+    (await admin.agent.get(`/api/admin/papers/${id}/source/original`)).status,
+    200,
+  );
+  assert.equal(
+    (await admin.agent.get(`/api/admin/papers/${id}/source/other`)).status,
+    400,
+  );
+  // Approve, then the public file is the watermarked processed version.
+  await admin.agent
+    .post(`/api/admin/papers/${id}/approve`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({});
+  let pages = await pageTexts(await publicPdf(id));
+  assert.match(pages[0], /Cleaned scan/);
+  assert.match(pages[0], new RegExp(`${code} \| Ajeet Soni`));
+  // Admin reverts to the original: published stays public meanwhile, then swaps.
+  const revert = await admin.agent
+    .post(`/api/admin/papers/${id}/activate`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({ version: "original" });
+  assert.equal(revert.status, 200);
+  assert.equal(
+    (await request(app).get(`/api/papers/${id}/preview`)).status,
+    302,
+  );
+  await runNextJob();
+  pages = await pageTexts(await publicPdf(id));
+  assert.match(pages[0], /Original scan/);
+  // Switching back reuses the cached watermarked copy.
+  await admin.agent
+    .post(`/api/admin/papers/${id}/activate`)
+    .set("X-CSRF-Token", admin.csrf)
+    .send({ version: "processed" });
+  const before = await FileAsset.countDocuments();
+  await runNextJob();
+  assert.equal(await FileAsset.countDocuments(), before);
+  assert.match((await pageTexts(await publicPdf(id)))[0], /Cleaned scan/);
+});
+
+test("processed uploads are validated and limited to the owner's editable items", async () => {
+  await account("contributor");
+  await account("admin");
+  const contributor = await login("contributor");
+  const admin = await login("admin");
+  const { offering: o } = await offering();
+  const created = await upload(
+    admin,
+    "admin",
+    o._id,
+    await samplePdf("Admin item"),
+    "published",
+  );
+  const id = created.body.data._id;
+  const send = (who: any, role: string, body: object) =>
+    who.agent
+      .post(`/api/${role}/papers/${id}/processed`)
+      .set("X-CSRF-Token", who.csrf)
+      .field("metadata", JSON.stringify(body))
+      .attach("processed", Buffer.from("not a pdf"), {
+        filename: "p.pdf",
+        contentType: "application/pdf",
+      });
+  assert.equal(
+    (await send(contributor, "contributor", { processedMeta: meta })).status,
+    404,
+  );
+  assert.equal(
+    (await send(admin, "admin", { processedMeta: { pages: 0 } })).status,
+    400,
+  );
+  const good = await admin.agent
+    .post(`/api/admin/papers/${id}/processed`)
+    .set("X-CSRF-Token", admin.csrf)
+    .field("metadata", JSON.stringify({ processedMeta: meta, activate: false }))
+    .attach("processed", await samplePdf("Admin processed"), {
+      filename: "p.pdf",
+      contentType: "application/pdf",
+    });
+  assert.equal(good.status, 200);
+  assert.equal(good.body.data.activeVersion, "original");
+  const status = (await admin.agent.get(`/api/admin/papers/${id}/processing`))
+    .body.data;
+  assert.equal(status.hasProcessed, true);
+  assert.equal(status.processedMeta.split[0], 2);
+});
+
+test("missing thumbnail objects return 404 and the repair job recreates them", async () => {
+  const { runNextJob } = await import("../src/processing/jobs.js");
+  const { savePdf, storage } = await import("../src/storage/index.js");
+  await account("admin");
+  const admin = await login("admin");
+  const asset: any = await savePdf({
+    buffer: await samplePdf("Thumb fixture"),
+    mimetype: "application/pdf",
+    originalname: "t.pdf",
+  });
+  assert.ok(asset.thumbnailKey);
+  const paper = await Paper.create({
+    title: "Thumb",
+    slug: "thumb",
+    status: "published",
+    asset: asset._id,
+  });
+  await storage.delete(asset.thumbnailKey);
+  assert.equal(
+    (await request(app).get(`/api/papers/${paper._id}/thumbnail`)).status,
+    404,
+  );
+  assert.equal(
+    (await FileAsset.findById(asset._id).lean<any>()).thumbnailKey,
+    undefined,
+  );
+  const repair = (dryRun: boolean) =>
+    admin.agent
+      .post("/api/admin/thumbnails/repair")
+      .set("X-CSRF-Token", admin.csrf)
+      .send({ dryRun });
+  assert.equal((await repair(true)).body.data.count, 1);
+  assert.equal((await repair(false)).body.data.queued, 1);
+  await runNextJob();
+  assert.equal(
+    (await request(app).get(`/api/papers/${paper._id}/thumbnail`)).status,
+    200,
+  );
+  assert.equal((await repair(true)).body.data.count, 0);
+});

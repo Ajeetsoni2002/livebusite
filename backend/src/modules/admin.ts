@@ -22,7 +22,9 @@ import {
 import { dayKey } from "./analytics.js";
 import { randomUUID } from "node:crypto";
 import { Setting, ProcessingJob } from "./models.js";
-import { enqueueWatermark } from "../processing/jobs.js";
+import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
+import { storage } from "../storage/index.js";
+import { FileAsset } from "./models.js";
 import {
   defaultWatermark,
   getWatermarkSettings,
@@ -235,6 +237,59 @@ adminRouter.post("/watermark/apply", async (req: AuthRequest, res) => {
     scope: input.scope,
   });
   ok(res, { batch, queued: targets.length, revision });
+});
+// Finds published PDFs whose cover thumbnail is missing (no key, or the object is gone).
+adminRouter.post("/thumbnails/repair", async (req: AuthRequest, res) => {
+  const { dryRun } = z
+    .object({ dryRun: z.boolean().default(false) })
+    .strict()
+    .parse(req.body);
+  const targets: { kind: "papers" | "notes"; id: unknown }[] = [];
+  for (const [kind, model] of Object.entries(contentModels) as [
+    "papers" | "notes",
+    any,
+  ][]) {
+    const rows = await model
+      .find({
+        deletedAt: null,
+        asset: { $ne: null },
+        format: { $ne: "markdown" },
+      })
+      .select("_id asset")
+      .lean();
+    const assets = new Map(
+      (
+        await FileAsset.find({ _id: { $in: rows.map((r: any) => r.asset) } })
+          .select("thumbnailKey")
+          .lean()
+      ).map((a: any) => [String(a._id), a.thumbnailKey]),
+    );
+    const checks = rows.map((row: any) => async () => {
+      const key = assets.get(String(row.asset));
+      if (key)
+        try {
+          await storage.head(key);
+          return;
+        } catch {
+          /* missing object: repair */
+        }
+      targets.push({ kind, id: row._id });
+    });
+    for (let i = 0; i < checks.length; i += 8)
+      await Promise.all(checks.slice(i, i + 8).map((check) => check()));
+  }
+  if (dryRun) return ok(res, { count: targets.length });
+  const batch = randomUUID();
+  for (const target of targets)
+    await enqueueJob("thumbnail", target.kind, target.id, {
+      requestedBy: req.user._id,
+      batch,
+    });
+  await audit(req, "thumbnails-repair", "thumbnails", {
+    batch,
+    count: targets.length,
+  });
+  ok(res, { batch, queued: targets.length });
 });
 adminRouter.get("/jobs/summary", async (req, res) => {
   const batch = req.query.batch

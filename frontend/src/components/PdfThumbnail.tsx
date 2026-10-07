@@ -9,6 +9,7 @@ export function PdfThumbnail({
   large = false,
   cover = false,
   fallback,
+  thumbKey,
 }: {
   id: string;
   kind?: string;
@@ -17,8 +18,15 @@ export function PdfThumbnail({
   /** Fill the parent (cards): first page cropped from the top, fallback art underneath. */
   cover?: boolean;
   fallback?: ReactNode;
+  /** Storage key: served from the CDN first, the API is the fallback. */
+  thumbKey?: string;
 }) {
   const [failed, setFailed] = useState(false);
+  const [viaApi, setViaApi] = useState(!thumbKey);
+  const src = viaApi
+    ? apiUrl(`/${kind}/${id}/thumbnail`)
+    : `/files/${thumbKey}`;
+  const onError = () => (viaApi ? setFailed(true) : setViaApi(true));
   const [loaded, setLoaded] = useState(false);
   if (cover)
     return (
@@ -28,14 +36,14 @@ export function PdfThumbnail({
         {available && !failed && (
           <img
             className={loaded ? "loaded" : ""}
-            src={apiUrl(`/${kind}/${id}/thumbnail`)}
+            src={src}
             alt=""
             width={480}
             height={300}
             loading="lazy"
             decoding="async"
-            crossOrigin="use-credentials"
-            onError={() => setFailed(true)}
+            crossOrigin={viaApi ? "use-credentials" : undefined}
+            onError={onError}
             onLoad={() => setLoaded(true)}
           />
         )}
@@ -57,14 +65,14 @@ export function PdfThumbnail({
     >
       <img
         className={loaded ? "loaded" : ""}
-        src={apiUrl(`/${kind}/${id}/thumbnail`)}
+        src={src}
         alt=""
         width={480}
         height={480}
         loading="lazy"
         decoding="async"
-        crossOrigin="use-credentials"
-        onError={() => setFailed(true)}
+        crossOrigin={viaApi ? "use-credentials" : undefined}
+        onError={onError}
         onLoad={() => setLoaded(true)}
       />
     </span>

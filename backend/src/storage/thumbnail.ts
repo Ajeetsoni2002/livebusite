@@ -63,21 +63,27 @@ export async function renderPdfThumbnail(
 }
 
 interface ThumbnailStorage {
-  put(key: string, bytes: Buffer, mime: string): Promise<unknown>;
+  put(
+    key: string,
+    bytes: Buffer,
+    mime: string,
+    publicObject?: boolean,
+  ): Promise<unknown>;
   delete(key: string): Promise<unknown>;
 }
 export async function ensureThumbnail(
   asset: any,
   bytes: Buffer,
   store: ThumbnailStorage,
+  timeoutMs = 10_000,
 ) {
   if (asset.thumbnailKey) return true;
   let key: string;
   try {
-    const image = await renderPdfThumbnail(bytes);
+    const image = await renderPdfThumbnail(bytes, timeoutMs);
     if (!image) return false;
     key = `thumbnails/${randomUUID()}.webp`;
-    await store.put(key, image, "image/webp");
+    await store.put(key, image, "image/webp", true);
     const updated = await FileAsset.findOneAndUpdate(
       { _id: asset._id, deletedAt: null, thumbnailKey: { $in: [null, ""] } },
       { $set: { thumbnailKey: key } },

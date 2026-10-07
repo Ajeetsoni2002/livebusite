@@ -113,6 +113,7 @@ export function ContentCard({
             id={item._id}
             kind={kind}
             available={item.hasThumbnail}
+            thumbKey={item.thumbKey}
             cover
             fallback={
               <span className="cover-art">

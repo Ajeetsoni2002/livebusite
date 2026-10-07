@@ -38,6 +38,9 @@ export interface ContentItem {
   metadataNeedsReview?: boolean;
   featured?: boolean;
   hasThumbnail?: boolean;
+  /** Storage keys served by the Pages /files route without the API. */
+  publicFile?: string;
+  thumbKey?: string;
   provenance?: { conflicts: string[] };
   deletedAt?: string;
 }

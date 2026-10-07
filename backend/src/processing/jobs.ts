@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { contentModels, FileAsset, ProcessingJob } from "../modules/models.js";
 import { storage } from "../storage/index.js";
+import { ensureThumbnail, thumbnailMaxBytes } from "../storage/thumbnail.js";
 import {
   AlreadyWatermarked,
   getWatermarkSettings,
@@ -129,7 +130,7 @@ async function watermarkJob(job: any) {
   let asset: any = await FileAsset.findOne({ hash });
   if (!asset) {
     const key = `watermarked/${randomUUID()}.pdf`;
-    await storage.put(key, output, "application/pdf");
+    await storage.put(key, output, "application/pdf", true);
     try {
       asset = await FileAsset.create({
         key,
@@ -157,8 +158,46 @@ async function watermarkJob(job: any) {
   );
 }
 
+async function thumbnailJob(job: any) {
+  const item: any = await contentModels[job.contentType as Kind].findById(
+    job.content,
+  );
+  if (!item?.asset) return;
+  const asset: any = await FileAsset.findById(item.asset);
+  if (!asset || asset.deletedAt) return;
+  if (asset.thumbnailKey) {
+    try {
+      await storage.head(asset.thumbnailKey);
+      return;
+    } catch {
+      await FileAsset.updateMany(
+        { thumbnailKey: asset.thumbnailKey },
+        { $unset: { thumbnailKey: "" } },
+      );
+      asset.thumbnailKey = undefined;
+    }
+  }
+  const bytes = await readAll(asset.key);
+  if (bytes.length > thumbnailMaxBytes)
+    throw new Error("PDF is too large for a thumbnail");
+  if (!(await ensureThumbnail(asset, bytes, storage, 60_000)))
+    throw new Error("Thumbnail rendering failed");
+}
+
+export async function enqueueJob(
+  type: "thumbnail",
+  contentType: Kind,
+  content: unknown,
+  options: { requestedBy?: unknown; batch?: string } = {},
+) {
+  if (!(await ProcessingJob.exists({ type, content, status: "queued" })))
+    await ProcessingJob.create({ type, contentType, content, ...options });
+  kickJobs();
+}
+
 const handlers: Record<string, (job: any) => Promise<void>> = {
   watermark: watermarkJob,
+  thumbnail: thumbnailJob,
 };
 
 /** Claims and runs one due job. Returns false when the queue is empty. */
@@ -208,15 +247,16 @@ export async function runNextJob() {
       ...(failed ? { finishedAt: new Date() } : {}),
     });
     // A failed first watermark keeps the hold: the public never gets an unmarked file.
-    await contentModels[job.contentType as Kind].updateOne(
-      { _id: job.content },
-      {
-        $set: {
-          "watermark.status": failed ? "failed" : "queued",
-          "watermark.error": message,
+    if (job.type === "watermark")
+      await contentModels[job.contentType as Kind].updateOne(
+        { _id: job.content },
+        {
+          $set: {
+            "watermark.status": failed ? "failed" : "queued",
+            "watermark.error": message,
+          },
         },
-      },
-    );
+      );
   } finally {
     clearInterval(heartbeat);
     console.info(
