@@ -181,6 +181,11 @@ export default function HeroScene() {
       visible = true,
       last = performance.now(),
       time = 0;
+    // Also idle while the opening intro covers the page.
+    const running = () =>
+      visible &&
+      !document.hidden &&
+      document.documentElement.dataset.pqIntro !== "cover";
     const tick = (now: number) => {
       frame = 0;
       const delta = Math.min((now - last) / 1000, 0.05);
@@ -200,10 +205,10 @@ export default function HeroScene() {
       camera.position.y += (-targetY * 0.5 - camera.position.y) * 0.04;
       camera.lookAt(0, 0, -1);
       renderer.render(scene, camera);
-      if (visible && !document.hidden) frame = requestAnimationFrame(tick);
+      if (running()) frame = requestAnimationFrame(tick);
     };
     const resume = () => {
-      if (!frame && visible && !document.hidden) {
+      if (!frame && running()) {
         last = performance.now();
         frame = requestAnimationFrame(tick);
       }
@@ -214,6 +219,8 @@ export default function HeroScene() {
     });
     viewWatch.observe(node);
     document.addEventListener("visibilitychange", resume);
+    window.addEventListener("pq-intro", resume);
+    renderer.render(scene, camera);
     resume();
     requestAnimationFrame(() => node.classList.add("ready"));
 
@@ -221,6 +228,7 @@ export default function HeroScene() {
       cancelAnimationFrame(frame);
       window.removeEventListener("pointermove", pointer);
       document.removeEventListener("visibilitychange", resume);
+      window.removeEventListener("pq-intro", resume);
       viewWatch.disconnect();
       resizeWatch.disconnect();
       themeWatch.disconnect();
