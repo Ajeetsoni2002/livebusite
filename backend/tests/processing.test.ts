@@ -926,3 +926,39 @@ test("search finds papers by branch code or name without loose code matches", as
   assert.equal(suggestions[0].code, "ECE");
   assert.match(suggestions[0].name, /Electronics/);
 });
+test("the sweep queues covers for imported PDFs that never got one, once", async () => {
+  const { queueMissingThumbnails, runNextJob } =
+    await import("../src/processing/jobs.js");
+  const { savePdf } = await import("../src/storage/index.js");
+  const asset: any = await savePdf(
+    {
+      buffer: await samplePdf("Imported without a cover"),
+      mimetype: "application/pdf",
+      originalname: "imported.pdf",
+    },
+    { thumbnail: false },
+  );
+  assert.equal(asset.thumbnailKey, undefined);
+  const paper = await Paper.create({
+    title: "Imported",
+    slug: "imported",
+    status: "published",
+    asset: asset._id,
+  });
+  await Note.create({
+    title: "Typed note",
+    slug: "typed-note",
+    status: "published",
+    format: "markdown",
+    markdown: "# Hi",
+  });
+  assert.equal(await queueMissingThumbnails(), 1);
+  assert.equal(await queueMissingThumbnails(), 0);
+  while (await runNextJob());
+  assert.ok((await FileAsset.findById(asset._id).lean<any>()).thumbnailKey);
+  assert.equal(
+    (await request(app).get(`/api/papers/${paper._id}/thumbnail`)).status,
+    200,
+  );
+  assert.equal(await queueMissingThumbnails(), 0);
+});

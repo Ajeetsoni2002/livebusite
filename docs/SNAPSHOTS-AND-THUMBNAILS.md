@@ -25,6 +25,26 @@ and builds the frontend HTML, sitemap and saved library. `snapshot:package`
 validates the built snapshot and prepares `.vercel/output` for a prebuilt deploy.
 Packaging is a local operation and does not publish anything.
 
+The API also heals missing covers by itself: 30 seconds after it starts, and every
+six hours after that, it queues a thumbnail job for every live PDF that has none
+(imported papers never get one at import time). Items whose job failed in the last
+week are skipped. The admin **Repair thumbnails** button in Settings remains for
+covers whose stored object has gone missing.
+
+### Serve covers without waking the API
+
+Covers are requested from `/files/thumbnails/<key>.webp` on the Pages site first;
+`functions/files/[[path]].ts` reads them straight from R2, so they appear even while
+the free API sleeps. This needs an R2 binding on the Pages project, otherwise every
+request returns 404 and the browser falls back to the API:
+
+1. Cloudflare dashboard → Workers & Pages → the Pages project → Settings → Bindings.
+2. Add → R2 bucket. Variable name `FILES`; bucket: the same bucket as `S3_BUCKET`.
+3. Add it for Production (and Preview if you use it), then redeploy.
+
+Check: `https://YOUR_SITE/files/thumbnails/<a thumbKey from /api/papers>` should
+return an image instead of a JSON 404.
+
 For a separate export path, use:
 
 ```powershell

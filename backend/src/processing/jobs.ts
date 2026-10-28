@@ -195,6 +195,84 @@ export async function enqueueJob(
   kickJobs();
 }
 
+/**
+ * Queues a thumbnail job for every live PDF whose asset has no cover yet, so imported
+ * and older items heal without an admin pressing "repair". Items with a pending job,
+ * or whose job failed in the last week, are left alone.
+ */
+export async function queueMissingThumbnails(limit = 500) {
+  let queued = 0;
+  for (const [kind, model] of Object.entries(contentModels) as [Kind, any][]) {
+    const rows = await model
+      .find({
+        deletedAt: null,
+        asset: { $ne: null },
+        format: { $ne: "markdown" },
+      })
+      .select("_id asset")
+      .lean();
+    if (!rows.length) continue;
+    const missing = new Set(
+      (
+        await FileAsset.find({
+          _id: { $in: rows.map((r: any) => r.asset) },
+          deletedAt: null,
+          thumbnailKey: { $in: [null, ""] },
+        })
+          .select("_id")
+          .lean()
+      ).map((a: any) => String(a._id)),
+    );
+    const candidates = rows.filter((r: any) => missing.has(String(r.asset)));
+    if (!candidates.length) continue;
+    const busy = new Set(
+      (
+        await ProcessingJob.find({
+          type: "thumbnail",
+          content: { $in: candidates.map((r: any) => r._id) },
+          $or: [
+            { status: { $in: ["queued", "running"] } },
+            {
+              status: "failed",
+              finishedAt: { $gte: new Date(Date.now() - 7 * 86_400_000) },
+            },
+          ],
+        })
+          .select("content")
+          .lean()
+      ).map((j: any) => String(j.content)),
+    );
+    for (const row of candidates) {
+      if (queued >= limit) break;
+      if (busy.has(String(row._id))) continue;
+      await ProcessingJob.create({
+        type: "thumbnail",
+        contentType: kind,
+        content: row._id,
+      });
+      queued++;
+    }
+  }
+  if (queued) kickJobs();
+  return queued;
+}
+
+/** Runs the sweep shortly after start and then every few hours. */
+export function startThumbnailSweep(everyMs = 6 * 3600_000, firstMs = 30_000) {
+  const sweep = () =>
+    queueMissingThumbnails()
+      .then((n) => n && console.info(`Queued ${n} missing thumbnails`))
+      .catch(() => console.warn("Thumbnail sweep failed; will retry later."));
+  const first = setTimeout(sweep, firstMs);
+  const timer = setInterval(sweep, everyMs);
+  first.unref();
+  timer.unref();
+  return () => {
+    clearTimeout(first);
+    clearInterval(timer);
+  };
+}
+
 const handlers: Record<string, (job: any) => Promise<void>> = {
   watermark: watermarkJob,
   thumbnail: thumbnailJob,

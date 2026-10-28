@@ -1,6 +1,10 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { FileText } from "lucide-react";
 import { apiUrl } from "../lib/api";
+
+// Without the Pages R2 binding every /files request 404s. After the first miss, go
+// straight to the API for the rest of the visit instead of failing once per image.
+let cdnMissing = false;
 
 export function PdfThumbnail({
   id,
@@ -22,11 +26,31 @@ export function PdfThumbnail({
   thumbKey?: string;
 }) {
   const [failed, setFailed] = useState(false);
-  const [viaApi, setViaApi] = useState(!thumbKey);
+  const [viaApi, setViaApi] = useState(!thumbKey || cdnMissing);
+  // The free API may still be waking up: retry it once before showing the fallback.
+  const [retry, setRetry] = useState(0);
   const src = viaApi
-    ? apiUrl(`/${kind}/${id}/thumbnail`)
+    ? apiUrl(`/${kind}/${id}/thumbnail${retry ? `?retry=${retry}` : ""}`)
     : `/files/${thumbKey}`;
-  const onError = () => (viaApi ? setFailed(true) : setViaApi(true));
+  const [waiting, setWaiting] = useState(false);
+  useEffect(() => {
+    if (!waiting) return;
+    const timer = setTimeout(() => {
+      setWaiting(false);
+      setFailed(false);
+      setRetry(1);
+    }, 15_000);
+    return () => clearTimeout(timer);
+  }, [waiting]);
+  const onError = () => {
+    if (!viaApi) {
+      cdnMissing = true;
+      setViaApi(true);
+    } else {
+      setFailed(true);
+      if (!retry) setWaiting(true);
+    }
+  };
   const [loaded, setLoaded] = useState(false);
   if (cover)
     return (

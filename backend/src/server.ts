@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { createApp } from "./app.js";
 import { config } from "./config.js";
-import { startJobRunner } from "./processing/jobs.js";
+import { startJobRunner, startThumbnailSweep } from "./processing/jobs.js";
 import { startKeepAlive } from "./keepalive.js";
 
 let server: ReturnType<ReturnType<typeof createApp>["listen"]>;
@@ -34,6 +34,7 @@ try {
     console.info(`BUIT API listening on ${config.port}`),
   );
   startJobRunner();
+  startThumbnailSweep();
   startKeepAlive();
 } catch {
   console.error(
