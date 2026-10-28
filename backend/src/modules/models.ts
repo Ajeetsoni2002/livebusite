@@ -281,12 +281,45 @@ export const DailyStats = model(
     visitors: { type: Number, default: 0 },
     pageViews: { type: Number, default: 0 },
     downloads: { type: Number, default: 0 },
+    contentViews: { type: Number, default: 0 },
+    searches: { type: Number, default: 0 },
     devices: { type: Map, of: Number },
     browsers: { type: Map, of: Number },
+    os: { type: Map, of: Number },
     referrers: { type: Map, of: Number },
     countries: { type: Map, of: Number },
   }),
 );
+// One row per download action so staff can see who took what. Visitors stay
+// anonymous (daily rotating hash); signed-in staff are named and flagged.
+const downloadLogSchema = new Schema({
+  eventId: { type: String, unique: true },
+  at: { type: Date, default: Date.now },
+  day: String,
+  hour: Number,
+  kind: String,
+  content: Schema.Types.ObjectId,
+  title: String,
+  slug: String,
+  subjects: [String],
+  branches: [String],
+  semesters: [String],
+  year: Number,
+  examType: String,
+  visitor: String,
+  staff: { type: Boolean, default: false },
+  userName: String,
+  userRole: String,
+  device: String,
+  browser: String,
+  os: String,
+  country: String,
+  page: String,
+  expiresAt: Date,
+});
+downloadLogSchema.index({ at: -1 });
+downloadLogSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+export const DownloadLog = model("DownloadLog", downloadLogSchema);
 const metricSchema = new Schema({
   day: String,
   kind: String,

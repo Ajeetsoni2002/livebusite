@@ -3,7 +3,7 @@ import { api, apiUrl } from "./api";
 export async function downloadResource(id: string, kind: string) {
   const response = await api.post(
     `/${kind}/${id}/download`,
-    {},
+    { page: window.location.pathname.slice(0, 240) },
     {
       headers: { "Idempotency-Key": crypto.randomUUID() },
     },

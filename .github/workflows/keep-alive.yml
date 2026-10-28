@@ -1,0 +1,33 @@
+name: Keep the Render API awake
+
+# Backup for the API's own 5-minute self-ping (backend/src/keepalive.ts): this
+# one runs outside Render, so it also wakes the service if it ever falls asleep.
+# GitHub may delay scheduled runs by a few minutes under load.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions: {}
+
+concurrency:
+  group: keep-alive
+  cancel-in-progress: true
+
+jobs:
+  ping:
+    if: vars.KEEP_ALIVE_DISABLED != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping the API
+        env:
+          PING_URL: ${{ vars.KEEP_ALIVE_URL || 'https://buit-papers-api.onrender.com/api/ping' }}
+        run: |
+          for attempt in 1 2 3; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 -A buit-keepalive "$PING_URL" || true)
+            echo "Attempt $attempt: HTTP $code"
+            [ "$code" = "200" ] && exit 0
+            sleep 15
+          done
+          echo "::warning::API did not answer 200 after 3 attempts"

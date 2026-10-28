@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { createApp } from "./app.js";
 import { config } from "./config.js";
 import { startJobRunner } from "./processing/jobs.js";
+import { startKeepAlive } from "./keepalive.js";
 
 let server: ReturnType<ReturnType<typeof createApp>["listen"]>;
 let shuttingDown = false;
@@ -33,6 +34,7 @@ try {
     console.info(`BUIT API listening on ${config.port}`),
   );
   startJobRunner();
+  startKeepAlive();
 } catch {
   console.error(
     "API startup failed: check MongoDB connectivity and environment settings.",

@@ -879,11 +879,12 @@ test("admin password reset revokes contributor sessions; bcrypt truncation is re
 });
 
 test("PDF note downloads respect visitor exclusions, deduplicate, and appear by title in aggregate reports", async () => {
-  const { DailyStats, DailyMetric, AnalyticsEvent } =
+  const { DailyStats, DailyMetric, AnalyticsEvent, DownloadLog } =
     await import("../src/modules/models.js");
   await DailyStats.deleteMany({});
   await DailyMetric.deleteMany({});
   await AnalyticsEvent.deleteMany({});
+  await DownloadLog.deleteMany({});
   await account("admin");
   const { agent } = await login("admin");
   const { offering } = await offeringFixture();
@@ -938,4 +939,44 @@ test("PDF note downloads respect visitor exclusions, deduplicate, and appear by 
     (await agent.get("/api/admin/dashboard")).body.data.downloads,
     1,
   );
+  // The dashboard asks for a 14-day trend; any whole range up to 90 days is valid.
+  const trend = await agent.get("/api/admin/analytics?days=14");
+  assert.equal(trend.status, 200);
+  assert.equal(trend.body.data.timeseries.length, 14);
+  assert.equal(trend.body.data.lists.downloads[0].title, note.title);
+  assert.equal(trend.body.data.downloads.uniqueDownloaders, 1);
+  assert.equal((await agent.get("/api/admin/analytics?days=91")).status, 400);
+  // The log names staff but keeps students anonymous; DNT and bots never appear.
+  const log = (await agent.get("/api/admin/analytics/downloads?days=7")).body
+    .data;
+  assert.equal(log.total, 2);
+  const staffRow = log.rows.find((r: any) => r.staff);
+  assert.equal(staffRow.userRole, "admin");
+  assert.ok(staffRow.userName);
+  const studentRow = log.rows.find((r: any) => !r.staff);
+  assert.equal(studentRow.title, note.title);
+  assert.equal(studentRow.browser, "Chrome");
+  assert.equal(studentRow.userName, undefined);
+  assert.equal(
+    (await agent.get("/api/admin/analytics/downloads?audience=students")).body
+      .data.total,
+    1,
+  );
+  const csv = await agent.get("/api/admin/analytics/downloads.csv");
+  assert.match(csv.text, /Note analytics fixture/);
+});
+test("keep-alive pings Render's public URL unless disabled", async () => {
+  const { keepAliveTarget } = await import("../src/keepalive.js");
+  assert.equal(
+    keepAliveTarget({ RENDER_EXTERNAL_URL: "https://api.onrender.com" }),
+    "https://api.onrender.com/api/ping",
+  );
+  assert.equal(
+    keepAliveTarget({
+      RENDER_EXTERNAL_URL: "https://api.onrender.com",
+      KEEP_ALIVE: "false",
+    }),
+    null,
+  );
+  assert.equal(keepAliveTarget({}), null);
 });

@@ -1991,3 +1991,157 @@ th[aria-sort="descending"] .sort-header {
   color: var(--danger);
   font-weight: 600;
 }
+
+/* Analytics */
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 6px;
+}
+.legend span i {
+  display: inline-block;
+}
+.kpi-cards {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+.kpi-cards .card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.kpi-cards small {
+  font-size: 11px;
+}
+.delta {
+  color: var(--muted);
+  font-weight: 600;
+}
+.delta.up {
+  color: var(--success);
+}
+.delta.down {
+  color: var(--danger);
+}
+.analytics-section {
+  margin-bottom: 24px;
+}
+.analytics-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.analytics-card-head h3 {
+  margin: 0;
+}
+.analytics-card-head p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.analytics-grid.three {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.analytics-grid .staff-card {
+  margin: 0;
+}
+.analytics-grid h4 {
+  margin: 14px 0 8px;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.analytics-grid p.muted {
+  font-size: 12px;
+  margin-top: -4px;
+}
+.chart-short {
+  height: 220px;
+}
+.split-lists {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.bar-list,
+.rank-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bar-list-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.bar-list-label span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bar-list-label small {
+  color: var(--muted);
+}
+.bar-list-track {
+  height: 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  overflow: hidden;
+  margin-top: 4px;
+}
+.bar-list-track i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--primary);
+}
+.rank-list li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
+  font-size: 13px;
+}
+.rank-list .rank {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.rank-list .pill {
+  margin-left: 6px;
+  font-size: 10px;
+}
+.rank-list strong {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.rank-list strong small {
+  color: var(--muted);
+  font-weight: 400;
+}
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+@media (max-width: 760px) {
+  .analytics-grid,
+  .split-lists {
+    grid-template-columns: 1fr;
+  }
+}

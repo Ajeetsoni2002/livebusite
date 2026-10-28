@@ -56,7 +56,7 @@ export default function Dashboard() {
       (await api.get("/admin/dashboard")).data.data as Overview,
   });
   const trend = useQuery({
-    queryKey: ["analytics", 14],
+    queryKey: ["analytics-trend", 14],
     queryFn: async () =>
       (await api.get("/admin/analytics", { params: { days: 14 } })).data.data
         .timeseries as Day[],

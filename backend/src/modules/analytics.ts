@@ -12,6 +12,8 @@ import {
   DailyStats,
   DailyVisitor,
   DailyMetric,
+  DownloadLog,
+  Subject,
   SubjectOffering,
   contentModels,
   publicationFilter,
@@ -23,20 +25,68 @@ export const dayKey = (date = new Date()) =>
     month: "2-digit",
     day: "2-digit",
   }).format(date);
+const hourKey = (date = new Date()) =>
+  Number(
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      hourCycle: "h23",
+    }).format(date),
+  );
 export function visitorKey(req: AuthRequest, day = dayKey()) {
   return createHmac("sha256", config.analyticsSecret)
     .update(`${day}|${req.ip || ""}|${req.get("User-Agent") || ""}`)
     .digest("hex");
 }
-export function excluded(req: AuthRequest) {
-  return (
-    !!req.user ||
-    !!req.cookies?.refresh ||
-    req.get("DNT") === "1" ||
-    /bot|crawler|spider|headless|preview|slurp|curl|wget|python-requests/i.test(
-      req.get("User-Agent") || "",
-    )
+const untracked = (req: AuthRequest) =>
+  req.get("DNT") === "1" ||
+  /bot|crawler|spider|headless|preview|slurp|curl|wget|python-requests/i.test(
+    req.get("User-Agent") || "",
   );
+const staffRequest = (req: AuthRequest) => !!req.user || !!req.cookies?.refresh;
+export function excluded(req: AuthRequest) {
+  return staffRequest(req) || untracked(req);
+}
+export function clientInfo(req: AuthRequest) {
+  const ua = req.get("User-Agent") || "";
+  const device = /mobile|android|iphone/i.test(ua)
+    ? "mobile"
+    : /ipad|tablet/i.test(ua)
+      ? "tablet"
+      : "desktop";
+  const browser = /edg\//i.test(ua)
+    ? "Edge"
+    : /opr\/|opera/i.test(ua)
+      ? "Opera"
+      : /samsungbrowser/i.test(ua)
+        ? "Samsung Internet"
+        : /firefox|fxios/i.test(ua)
+          ? "Firefox"
+          : /chrome|crios/i.test(ua)
+            ? "Chrome"
+            : /safari/i.test(ua)
+              ? "Safari"
+              : "Other";
+  const os = /android/i.test(ua)
+    ? "Android"
+    : /iphone|ipad|ipod/i.test(ua)
+      ? "iOS"
+      : /windows/i.test(ua)
+        ? "Windows"
+        : /cros/i.test(ua)
+          ? "ChromeOS"
+          : /mac os x|macintosh/i.test(ua)
+            ? "macOS"
+            : /linux/i.test(ua)
+              ? "Linux"
+              : "Other";
+  const country =
+    config.cfOriginSecret &&
+    req.get("X-Origin-Verify") === config.cfOriginSecret &&
+    /^[A-Z]{2}$/.test(req.get("CF-IPCountry") || "")
+      ? (req.get("CF-IPCountry") as string)
+      : "Unknown";
+  return { device, browser, os, country };
 }
 export function normalizeQuery(query: string) {
   return query
@@ -81,27 +131,7 @@ export async function recordBatch(
   if (excluded(req)) return;
   const day = dayKey(),
     visitor = visitorKey(req, day),
-    ua = req.get("User-Agent") || "";
-  const device = /mobile|android|iphone/i.test(ua)
-    ? "mobile"
-    : /ipad|tablet/i.test(ua)
-      ? "tablet"
-      : "desktop";
-  const browser = /edg\//i.test(ua)
-    ? "Edge"
-    : /firefox/i.test(ua)
-      ? "Firefox"
-      : /chrome|crios/i.test(ua)
-        ? "Chrome"
-        : /safari/i.test(ua)
-          ? "Safari"
-          : "Other";
-  const country =
-    config.cfOriginSecret &&
-    req.get("X-Origin-Verify") === config.cfOriginSecret &&
-    /^[A-Z]{2}$/.test(req.get("CF-IPCountry") || "")
-      ? req.get("CF-IPCountry")
-      : "Unknown";
+    { device, browser, os, country } = clientInfo(req);
   for (const event of events) {
     if (event.path && /^\/(?:admin|contributor|auth)(?:\/|$)/.test(event.path))
       continue;
@@ -159,9 +189,12 @@ export async function recordBatch(
           increment.pageViews = 1;
           increment[`devices.${device}`] = 1;
           increment[`browsers.${browser}`] = 1;
+          increment[`os.${os}`] = 1;
           increment[`countries.${country}`] = 1;
           increment[`referrers.${referrer}`] = 1;
         }
+        if (event.kind === "contentview") increment.contentViews = 1;
+        if (query) increment.searches = 1;
         await DailyStats.updateOne(
           { day },
           { $inc: increment },
@@ -191,22 +224,75 @@ export async function recordBatch(
     }
   }
 }
+/** Subject, branch and semester names for a resource, for the download log. */
+async function placement(item: any) {
+  const offerings: any[] = await SubjectOffering.find({
+    _id: { $in: item.offerings || [] },
+  })
+    .populate("subject", "name")
+    .populate("branch", "name code")
+    .populate("semester", "name number")
+    .lean();
+  const names = (values: (string | undefined)[]) => [
+    ...new Set(values.filter(Boolean) as string[]),
+  ];
+  return {
+    subjects: names(offerings.map((o) => o.subject?.name)),
+    branches: names(offerings.map((o) => o.branch?.code || o.branch?.name)),
+    semesters: names(
+      offerings.map((o) =>
+        o.semester?.number ? `Sem ${o.semester.number}` : o.semester?.name,
+      ),
+    ),
+  };
+}
+const pagePath = z
+  .string()
+  .max(240)
+  .regex(/^\/[^\s]*$/);
 export async function recordDownload(
   req: AuthRequest,
   item: any,
   kind: string,
   eventId: string,
 ) {
-  if (excluded(req)) return;
+  if (untracked(req)) return;
+  // Staff downloads are logged by name for the audit trail but never counted.
+  const staff = staffRequest(req);
+  const now = new Date(),
+    day = dayKey(now),
+    page = pagePath.safeParse(req.body?.page);
+  const entry = {
+    eventId,
+    at: now,
+    day,
+    hour: hourKey(now),
+    kind,
+    content: item._id,
+    title: item.title,
+    slug: item.slug,
+    ...(await placement(item)),
+    year: item.year,
+    examType: item.examType,
+    visitor: visitorKey(req, day).slice(0, 10),
+    staff,
+    userName: req.user?.name,
+    userRole: req.user?.role,
+    ...clientInfo(req),
+    page: page.success ? page.data : undefined,
+    expiresAt: new Date(now.getTime() + 180 * 86400_000),
+  };
   const session = await mongoose.startSession();
-  const day = dayKey();
   try {
     await session.withTransaction(async () => {
+      await DownloadLog.create([entry], { session });
+      if (staff) return;
       await AnalyticsEvent.create(
         [
           {
             eventId,
             day,
+            visitor: visitorKey(req, day),
             kind: "download",
             content: String(item._id),
             expiresAt: new Date(Date.now() + 7 * 86400_000),
@@ -219,14 +305,12 @@ export async function recordDownload(
         { $inc: { downloads: 1 } },
         { session },
       );
-      if (!excluded(req)) {
-        await DailyStats.updateOne(
-          { day },
-          { $inc: { downloads: 1 } },
-          { upsert: true, session },
-        );
-        await metric(day, "download", String(item._id), session);
-      }
+      await DailyStats.updateOne(
+        { day },
+        { $inc: { downloads: 1 } },
+        { upsert: true, session },
+      );
+      await metric(day, "download", String(item._id), session);
     });
   } catch (e: any) {
     if (e.code !== 11000) throw e;
@@ -254,106 +338,334 @@ analyticsRouter.post(
     ok(res, { accepted: true });
   },
 );
-async function report(days: number) {
-  const keys = Array.from({ length: days }, (_, i) =>
-      dayKey(new Date(Date.now() - (days - 1 - i) * 86400_000)),
-    ),
-    start = keys[0];
-  const [stats, top] = await Promise.all([
-    DailyStats.find({ day: { $gte: start } })
-      .sort({ day: 1 })
-      .lean(),
-    DailyMetric.aggregate([
-      { $match: { day: { $gte: start } } },
-      {
-        $group: {
-          _id: { kind: "$kind", key: "$key" },
-          count: { $sum: "$count" },
-          zeroResults: { $sum: "$zeroResults" },
-        },
-      },
-      { $sort: { count: -1 } },
-      { $limit: 100 },
-    ]),
-  ]);
-  const timeseries = keys.map(
-    (day) =>
-      stats.find((s) => s.day === day) || {
-        day,
-        visitors: 0,
-        pageViews: 0,
-        downloads: 0,
-      },
+const counters = [
+  "visitors",
+  "pageViews",
+  "downloads",
+  "contentViews",
+  "searches",
+] as const;
+const dayRange = (days: number, endOffset = 0) =>
+  Array.from({ length: days }, (_, i) =>
+    dayKey(new Date(Date.now() - (days - 1 - i + endOffset) * 86400_000)),
   );
+const objectId = (key: string) => /^[a-f0-9]{24}$/i.test(key);
+/** Resolves metric keys to titles with one query per collection. */
+async function titles(rows: { kind: string; key: string }[]) {
+  const ids = (kinds: string[]) => [
+    ...new Set(
+      rows
+        .filter((r) => kinds.includes(r.kind) && objectId(r.key))
+        .map((r) => r.key),
+    ),
+  ];
+  const [papers, notes, subjects] = await Promise.all([
+    contentModels.papers
+      .find({ _id: { $in: ids(["papers", "download"]) } })
+      .select("title slug")
+      .lean(),
+    contentModels.notes
+      .find({ _id: { $in: ids(["notes", "download"]) } })
+      .select("title slug")
+      .lean(),
+    Subject.find({ _id: { $in: ids(["subject"]) } })
+      .select("name")
+      .lean(),
+  ]);
+  const map = new Map<
+    string,
+    { title: string; type?: string; slug?: string }
+  >();
+  for (const p of papers as any[])
+    map.set(String(p._id), { title: p.title, type: "papers", slug: p.slug });
+  for (const n of notes as any[])
+    map.set(String(n._id), { title: n.title, type: "notes", slug: n.slug });
+  for (const s of subjects as any[]) map.set(String(s._id), { title: s.name });
+  return map;
+}
+async function report(days: number) {
+  const keys = dayRange(days),
+    start = keys[0],
+    previousKeys = dayRange(days, days);
+  const recent = { day: { $gte: start }, staff: { $ne: true } };
+  const [stats, previousStats, grouped, gaps, downloadFacets] =
+    await Promise.all([
+      DailyStats.find({ day: { $gte: start } })
+        .sort({ day: 1 })
+        .lean(),
+      DailyStats.find({
+        day: { $gte: previousKeys[0], $lte: previousKeys.at(-1) },
+      }).lean(),
+      DailyMetric.aggregate([
+        { $match: { day: { $gte: start } } },
+        {
+          $group: {
+            _id: { kind: "$kind", key: "$key" },
+            count: { $sum: "$count" },
+            zeroResults: { $sum: "$zeroResults" },
+          },
+        },
+        { $sort: { count: -1 } },
+        {
+          $group: {
+            _id: "$_id.kind",
+            rows: {
+              $push: {
+                key: "$_id.key",
+                count: "$count",
+                zeroResults: "$zeroResults",
+              },
+            },
+          },
+        },
+        { $project: { rows: { $slice: ["$rows", 20] } } },
+      ]),
+      DailyMetric.aggregate([
+        {
+          $match: {
+            day: { $gte: start },
+            kind: "search",
+            zeroResults: { $gt: 0 },
+          },
+        },
+        {
+          $group: {
+            _id: "$key",
+            count: { $sum: "$count" },
+            zeroResults: { $sum: "$zeroResults" },
+          },
+        },
+        { $sort: { zeroResults: -1 } },
+        { $limit: 15 },
+      ]),
+      DownloadLog.aggregate([
+        { $match: recent },
+        {
+          $facet: {
+            hours: [{ $group: { _id: "$hour", count: { $sum: 1 } } }],
+            types: [{ $group: { _id: "$kind", count: { $sum: 1 } } }],
+            branches: [
+              { $unwind: "$branches" },
+              { $group: { _id: "$branches", count: { $sum: 1 } } },
+              { $sort: { count: -1 } },
+              { $limit: 10 },
+            ],
+            semesters: [
+              { $unwind: "$semesters" },
+              { $group: { _id: "$semesters", count: { $sum: 1 } } },
+              { $sort: { count: -1 } },
+              { $limit: 10 },
+            ],
+            downloaders: [
+              { $group: { _id: { day: "$day", visitor: "$visitor" } } },
+              { $count: "n" },
+            ],
+          },
+        },
+      ]),
+    ]);
+  const timeseries = keys.map((day) => {
+    const row: any = stats.find((s) => s.day === day) || {};
+    return {
+      day,
+      ...Object.fromEntries(counters.map((c) => [c, row[c] || 0])),
+    } as Record<(typeof counters)[number], number> & { day: string };
+  });
+  const sum = (rows: any[]) =>
+    Object.fromEntries(
+      counters.map((c) => [c, rows.reduce((n, r) => n + (r[c] || 0), 0)]),
+    );
   const today = timeseries.at(-1),
     yesterday = timeseries.at(-2);
   const breakdown: Record<string, Record<string, number>> = {
     devices: {},
     browsers: {},
+    os: {},
     referrers: {},
     countries: {},
   };
-  for (const row of stats)
+  for (const row of stats as any[])
     for (const category of Object.keys(breakdown))
       for (const [key, value] of Object.entries(row[category] || {}))
         breakdown[category][key] =
           (breakdown[category][key] || 0) + Number(value);
-  const labeled = await Promise.all(
-    top.map(async (row) => {
-      const kind = row._id.kind,
-        key = row._id.key;
-      let title = key;
-      if (["papers", "notes", "download"].includes(kind)) {
-        title =
-          (
-            await (
-              kind === "notes" ? contentModels.notes : contentModels.papers
-            )
-              .findById(key)
-              .select("title")
-              .lean()
-          )?.title || key;
-        if (kind === "download" && title === key)
-          title =
-            (await contentModels.notes.findById(key).select("title").lean())
-              ?.title || key;
-      }
-      if (kind === "subject") {
-        const { Subject } = await import("./models.js");
-        title =
-          (await Subject.findById(key).select("name").lean())?.name || key;
-      }
+  const flat = grouped.flatMap((g) =>
+    g.rows.map((r: any) => ({ kind: g._id as string, ...r })),
+  );
+  const names = await titles(flat);
+  const labeled = flat
+    .map((row) => {
+      const meta = names.get(row.key);
       return {
-        kind,
-        key,
-        title,
+        kind: row.kind,
+        key: row.key,
+        title: meta?.title || row.key,
+        type: meta?.type,
+        slug: meta?.slug,
         count: row.count,
         zeroResults: row.zeroResults,
       };
-    }),
-  );
-  return { timeseries, today, yesterday, top: labeled, breakdown };
+    })
+    .sort((a, b) => b.count - a.count);
+  const pick = (kind: string) => labeled.filter((r) => r.kind === kind);
+  const facets = downloadFacets[0] || {};
+  const hours = Array.from({ length: 24 }, (_, hour) => ({
+    hour,
+    downloads: facets.hours?.find((h: any) => h._id === hour)?.count || 0,
+  }));
+  const counted = (rows: any[] = []) =>
+    Object.fromEntries(rows.map((r) => [r._id ?? "Unknown", r.count]));
+  return {
+    days,
+    timeseries,
+    today,
+    yesterday,
+    totals: sum(timeseries),
+    previous: sum(previousStats),
+    top: labeled,
+    lists: {
+      downloads: pick("download"),
+      viewed: [...pick("papers"), ...pick("notes")]
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 20),
+      subjects: pick("subject"),
+      searches: pick("search"),
+      gaps: gaps.map((g) => ({
+        title: g._id,
+        count: g.count,
+        zeroResults: g.zeroResults,
+      })),
+    },
+    downloads: {
+      hours,
+      types: counted(facets.types),
+      branches: counted(facets.branches),
+      semesters: counted(facets.semesters),
+      uniqueDownloaders: facets.downloaders?.[0]?.n || 0,
+    },
+    breakdown,
+  };
 }
+const daysParam = z.coerce.number().int().min(1).max(90).default(30);
+const escapeRegex = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const logQuery = z.object({
+  days: daysParam,
+  page: z.coerce.number().int().min(1).max(10_000).default(1),
+  limit: z.coerce.number().int().min(5).max(100).default(25),
+  q: z.string().trim().max(120).optional(),
+  kind: z.enum(["papers", "notes"]).optional(),
+  audience: z.enum(["all", "students", "staff"]).default("all"),
+});
+function logFilter(input: z.infer<typeof logQuery>) {
+  const filter: any = { day: { $gte: dayRange(input.days)[0] } };
+  if (input.kind) filter.kind = input.kind;
+  if (input.audience === "students") filter.staff = { $ne: true };
+  if (input.audience === "staff") filter.staff = true;
+  if (input.q) {
+    const pattern = new RegExp(escapeRegex(input.q), "i");
+    filter.$or = [
+      { title: pattern },
+      { subjects: pattern },
+      { visitor: pattern },
+      { userName: pattern },
+    ];
+  }
+  return filter;
+}
+const csvCell = (value: unknown) => {
+  const text = Array.isArray(value) ? value.join("; ") : String(value ?? "");
+  // Neutralise spreadsheet formulas as well as quoting.
+  const safe = /^[=+\-@]/.test(text) ? `'${text}` : text;
+  return /[",\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
+};
 export const analyticsAdminRouter = Router();
 analyticsAdminRouter.get("/analytics", async (req, res) => {
-  const days = z.coerce
-    .number()
-    .pipe(z.union([z.literal(7), z.literal(30), z.literal(90)]))
-    .default(30)
-    .parse(req.query.days);
-  ok(res, await report(days));
+  ok(res, await report(daysParam.parse(req.query.days)));
+});
+analyticsAdminRouter.get("/analytics/downloads", async (req, res) => {
+  const input = logQuery.parse(req.query),
+    filter = logFilter(input);
+  const [rows, total] = await Promise.all([
+    DownloadLog.find(filter)
+      .sort({ at: -1 })
+      .skip((input.page - 1) * input.limit)
+      .limit(input.limit)
+      .select("-expiresAt -__v")
+      .lean(),
+    DownloadLog.countDocuments(filter),
+  ]);
+  ok(res, {
+    rows,
+    total,
+    page: input.page,
+    pages: Math.max(1, Math.ceil(total / input.limit)),
+  });
+});
+analyticsAdminRouter.get("/analytics/downloads.csv", async (req, res) => {
+  const input = logQuery.parse(req.query);
+  const rows: any[] = await DownloadLog.find(logFilter(input))
+    .sort({ at: -1 })
+    .limit(10_000)
+    .lean();
+  const columns = [
+    "time_ist",
+    "type",
+    "title",
+    "subjects",
+    "branches",
+    "semesters",
+    "year",
+    "downloaded_by",
+    "device",
+    "os",
+    "browser",
+    "country",
+    "page",
+  ];
+  const time = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Kolkata",
+    dateStyle: "short",
+    timeStyle: "medium",
+    hourCycle: "h23",
+  });
+  const lines = [
+    columns.join(","),
+    ...rows.map((r) =>
+      [
+        time.format(r.at),
+        r.kind,
+        r.title,
+        r.subjects,
+        r.branches,
+        r.semesters,
+        r.year,
+        r.staff
+          ? `${r.userName || "Staff"} (${r.userRole || "staff"})`
+          : `Visitor ${r.visitor}`,
+        r.device,
+        r.os,
+        r.browser,
+        r.country,
+        r.page,
+      ]
+        .map(csvCell)
+        .join(","),
+    ),
+  ];
+  res
+    .set({
+      "Content-Type": "text/csv",
+      "Content-Disposition": 'attachment; filename="buit-downloads.csv"',
+    })
+    .send(lines.join("\n"));
 });
 analyticsAdminRouter.get("/analytics/export.csv", async (req, res) => {
-  const days = z.coerce
-      .number()
-      .pipe(z.union([z.literal(7), z.literal(30), z.literal(90)]))
-      .default(30)
-      .parse(req.query.days),
-    data = await report(days);
+  const data = await report(daysParam.parse(req.query.days));
   const rows = [
-    "day,visitors,page_views,downloads",
+    "day,visitors,page_views,resource_views,searches,downloads",
     ...data.timeseries.map(
-      (row) => `${row.day},${row.visitors},${row.pageViews},${row.downloads}`,
+      (row) =>
+        `${row.day},${row.visitors},${row.pageViews},${row.contentViews},${row.searches},${row.downloads}`,
     ),
   ];
   res
