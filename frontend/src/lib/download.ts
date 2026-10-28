@@ -1,4 +1,6 @@
 import { api, apiUrl } from "./api";
+import { toast } from "../components/Feedback";
+import { RATE } from "./earn";
 /** One explicit user action, one idempotency key; same contract as the detail page. */
 export async function downloadResource(id: string, kind: string) {
   const response = await api.post(
@@ -9,4 +11,8 @@ export async function downloadResource(id: string, kind: string) {
     },
   );
   window.location.assign(apiUrl(response.data.data.url));
+  toast(
+    `Download started. Got old papers or notes? Upload them and earn ₹${RATE} for each approved one.`,
+    "success",
+  );
 }

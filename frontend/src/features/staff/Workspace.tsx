@@ -7,6 +7,7 @@ import {
   ChevronsRight,
   FileText,
   FolderTree,
+  IndianRupee,
   Inbox,
   LayoutDashboard,
   LogOut,
@@ -49,6 +50,7 @@ export default function Workspace() {
           ["moderation", "Moderation", ShieldCheck],
           ["taxonomy", "Branches & subjects", FolderTree],
           ["contributors", "Contributors", Users],
+          ["payouts", "Payouts", IndianRupee],
           ["inbox", "Reports & requests", Inbox],
           ["audit", "Audit log", ScrollText],
           ["analytics", "Analytics", BarChart3],
@@ -58,6 +60,7 @@ export default function Workspace() {
           ["", "My papers", FileText],
           ["notes", "My notes", NotebookPen],
           ["upload", "Upload papers / notes", Upload],
+          ["earnings", "My earnings", IndianRupee],
           ["profile", "My profile", UserRound],
         ];
   useEffect(() => {

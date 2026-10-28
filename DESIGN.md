@@ -1,38 +1,37 @@
-# BUIT Papers — Nebula
+# BUIT Papers — Exam Hall
 
-Nebula (October 2026) re-themes the Solar Archive layout: a deep-navy dark mode with neon cyan/violet accents and glass chrome, and a cool frosted light mode where glows become soft colored shadows. Both themes share typography, layout, component structure, and interaction rules. On a first visit the theme follows the operating system (`prefers-color-scheme`); the navbar button saves an explicit choice locally (storage wrapped in try/catch), synchronizes it across tabs, and `public/theme.js` applies it before CSS paints.
+Exam Hall (October 2026) replaces the Nebula glass/neon theme with the objects of an exam hall. Light mode is an **answer sheet**: cream paper, faint ruled lines, a red margin, blue-ballpoint primary, red-pen marks and yellow highlighter. Dark mode is a **blackboard**: green-black slate with chalk white, chalk yellow and red chalk. Physical objects — question papers, sticky notes, the pay-order cheque, the notes notebook — keep their real colours in both themes, so their text colours are fixed rather than themed. On a first visit the theme follows the operating system (`prefers-color-scheme`); the navbar button saves an explicit choice locally, synchronizes it across tabs, and `public/theme.js` applies it before CSS paints.
 
 ## Foundations
 
-Semantic tokens live in `frontend/src/styles/tokens.css`; light overrides live in `frontend/src/styles/light.css`. Component styling lives in `frontend/src/styles/solar.css`; the site-wide futuristic layer (aurora canvas, glass chrome, focus glow, micro-interactions, tilt, toasts, confirm dialog) lives in `frontend/src/styles/nebula.css`, loaded last. The original `styles.css` retains shared layout and staff form/table rules. Component CSS uses tokens (or `color-mix()` of tokens) instead of brand hex values.
+Semantic tokens live in `frontend/src/styles/tokens.css` (dark) and `frontend/src/styles/light.css` (light). `frontend/src/styles/examhall.css` is loaded last and holds the theme: ruled canvas, typography, controls, masthead, hero, sticky notes, question headings, statement of marks, cheque, paper cards, notebook band, footer and responsive rules. The older `styles.css`, `solar.css` and `nebula.css` still provide layout and staff rules underneath it.
 
-| Role | Dark | Light |
+| Role | Dark (blackboard) | Light (answer sheet) |
 | --- | --- | --- |
-| Canvas `--ink` | `#070B16` | `#EEF2F8` |
-| Surface | `#0E1424` | `#FFFFFF` |
-| Surface elevated `--raised` | `#172036` | `#E2E8F2` |
-| Glass | `#111A2ECC` | `#FFFFFFB8` |
-| Text | `#E8EEFB` | `#0E1628` |
-| Secondary text | `#9BA8C4` | `#475369` |
-| Primary (cyan) | `#5EE1FF` | `#0B6E8C` |
-| Accent (violet) | `#B39DFF` | `#6A3FD1` |
-| Control boundary | `#66749A` | `#6F7B92` |
-| Success / Warning / Error | `#6EE7B7` / `#FFCF70` / `#FF8FA3` | `#0B6B4A` / `#8A5A00` / `#B4232F` |
+| Canvas `--ink` | `#17211C` | `#F3EEE2` |
+| Surface | `#1E2B25` | `#FFFDF8` |
+| Raised | `#283830` | `#EBE4D2` |
+| Text | `#EEF1E8` | `#1A1D26` |
+| Secondary text | `#B3BDB0` | `#57534A` |
+| Primary | `#F3DC6B` chalk yellow | `#1F3EA8` ballpoint blue |
+| Accent | `#FF958A` red chalk | `#B82424` red pen |
+| Highlight | `#F3DC6B` | `#FFE766` |
+| Success / Warning / Error | `#8FE0A8` / `#F3C96B` / `#FF958A` | `#1B6B3A` / `#8A5A00` / `#B4232F` |
 
-All text tokens meet WCAG AA (4.5:1) against canvas, surface and raised surfaces in both themes; control borders meet 3:1.
+Every text token meets WCAG AA (4.5:1) on canvas, surface and raised in its theme; control borders meet 3:1. Branch colours are unchanged from Nebula.
 
-Branch colors use stable codes, never array position. CSE is lime/olive, ECE lilac/purple, IT mint/teal, EE amber/ochre, ME coral/rust, and CE blue. Each has a distinct Lucide icon and darker daylight token for contrast. Text and icons accompany color everywhere.
+- **Type:** Instrument Serif (regular + italic) for headings, like a printed paper; Manrope for body and controls; IBM Plex Mono 500 for codes, roll numbers and labels; Caveat for red-pen marks and sticky notes. All are local Latin WOFF2 files with OFL licences in `frontend/public/fonts`; only Instrument Serif and Manrope are preloaded. `font-synthesis: none` stops faux bold on the single-weight serif.
+- **Shape:** 4 px controls, 6 px cards, 3 px paper cards; paper shadows instead of glows. No glass blur, aurora, 3D tilt or cursor glow.
+- **Signature pieces:** the hero answer sheet (exam header, hand-filled roll number, `Note:` line, red-pen underline that draws in, OMR bubbles that link to branches, a red `100/100` score), the desk with a stapled real paper, an EXAM READY stamp and a pencil; sections numbered as questions (`Q.1`…); a "Statement of marks" stats row; and "END OF QUESTION PAPER" in the footer.
 
-- **Type:** Space Grotesk for display; Manrope for body and controls. Locally hosted Latin variable WOFF2 files total 47.12 KB. Both are preloaded, use `font-display: swap`, and retain their OFL licenses in `frontend/public/fonts`. System fallbacks are declared.
-- **Scale:** display approximately 40–78 px; section 28–42 px; resource heading 21–22 px; body 14–16 px; compact metadata 10–13 px. Numbers use tabular figures. Mobile form inputs are 16 px.
-- **Spacing:** 4, 8, 12, 16, 24, 32, 48, 64, and 96 px tokens. Public content has a maximum 1280 px inner width, with 20 px mobile gutters.
-- **Radius:** 10 px controls, 18 px shared cards, 20 px branch cards, 24 px finder/dialog, 28 px feature panels.
-- **Elevation:** `--shadow-1/2/3` (card uses 2, floating panels 3); light mode uses soft navy-tinted shadows. Focus = 2 px primary outline plus `--glow-focus` ring.
+## Contributor earnings promotion
+
+Contributors earn ₹10 (`RATE` in `frontend/src/lib/earn.ts`, `RATE_PER_UPLOAD` in `backend/src/modules/earnings.ts`) for every approved paper or note. The offer appears in the ribbon above the masthead, the "Earn ₹10" nav item, the hero sticky note, the home pay-order cheque with its earnings calculator, a sticky note in each catalog results page and in empty states, the paper detail sidebar, the notes band, the leaderboard, About/Contact, the footer, a floating note after scrolling (closing it hides it for three days) and the toast after a download. Contributor and staff areas never show the ribbon or floating note. Contributors see their earnings at `/contributor/earnings`; admins record payments at `/admin/payouts`.
 
 ## Components
 
 - `Layout`, `Footer`, and `ThemeToggle`: navigation, route entry, modal focus handling, theme persistence, credits, and archive/community/takedown links.
-- `Hero`: real archive paper thumbnail and metadata, actual search examples, CSS paper stack, nonzero stats. `PaperParallax` is idle-loaded only for suitable desktop devices.
+- `Hero`: the answer sheet and desk described above, with the latest real paper thumbnail, actual search examples and branch links.
 - `Explore`: branch identities, exact published-paper totals, semester shortcuts, and the Branch → Semester → Subject finder. Changing upstream selections clears dependent values.
 - `SearchBox` and `CommandPalette`: debounced suggestions and grouped Papers / Notes / Branches; keyboard navigation, stale-result guards, and stable selected identity.
 - `ContentCard`, `PdfThumbnail`, `QuickPreview`: a prominent first-page thumbnail, semantic detail link, separate action buttons, lazy PDF dialog, image fade, and failure fallback. Touch users always see the actions; desktop hover/focus reveals them.

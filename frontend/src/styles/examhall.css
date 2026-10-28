@@ -1,0 +1,1189 @@
+/* Exam Hall — the site-wide theme, loaded last.
+   Light is an answer sheet (ballpoint blue, red pen, highlighter); dark is a blackboard (chalk).
+   Physical objects — question papers, sticky notes, the pay-order cheque — keep their real
+   colours in both themes, so their text colours are fixed rather than themed.
+   Motion is transform/opacity only and is removed under prefers-reduced-motion. */
+
+/* 01 — Canvas: faint ruled lines instead of the aurora and glass. */
+html {
+  font-synthesis: none;
+}
+body {
+  background-color: var(--ink);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 34px;
+}
+body::before,
+.perspective-grid,
+.cursor-glow,
+[data-tilt]::after {
+  display: none;
+}
+.glass,
+.navbar,
+.command-modal,
+.quick-preview,
+.semester-popover {
+  background: var(--glass);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+[data-tilt] {
+  transform: none;
+}
+
+/* 02 — Type: serif headings like a printed paper, mono for codes, handwriting for marks. */
+h1,
+h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+h1 {
+  line-height: 1.02;
+}
+h3 {
+  font-family: var(--font-body);
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.gradient-text {
+  background: none;
+  color: var(--accent);
+  -webkit-text-fill-color: currentColor;
+  font-style: italic;
+}
+.eh-hand {
+  font-family: var(--font-hand);
+  font-style: normal;
+  font-weight: 600;
+  color: var(--accent);
+}
+mark.eh-mark {
+  background: none;
+  color: var(--highlight);
+  font-style: italic;
+  text-decoration: underline wavy var(--accent) 2px;
+  text-underline-offset: 0.18em;
+}
+[data-theme="light"] mark.eh-mark {
+  color: inherit;
+  text-decoration: none;
+  background: linear-gradient(
+    176deg,
+    transparent 48%,
+    var(--highlight) 48%,
+    var(--highlight) 90%,
+    transparent 90%
+  );
+  padding: 0 0.12em;
+  margin: 0 -0.06em;
+}
+::selection {
+  background: var(--highlight);
+  color: var(--on-highlight);
+}
+
+/* 03 — Controls: square-cornered, ink-filled, pressed like a stamp. */
+.button {
+  border-radius: var(--radius-control);
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+.button:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--text) 70%, transparent);
+}
+.button:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+.card {
+  border-radius: var(--radius-card);
+}
+.pill {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+}
+kbd {
+  font-family: var(--font-mono);
+}
+
+/* 04 — Header: the exam-sheet masthead. */
+.navbar {
+  border-bottom: 3px double color-mix(in srgb, var(--text) 40%, transparent);
+}
+.brand strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 27px;
+  letter-spacing: 0;
+}
+.brand strong .accent {
+  color: var(--accent);
+  font-style: italic;
+}
+.brand small {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.navbar nav a.active::after {
+  height: 3px;
+  bottom: 6px;
+  border-radius: 3px;
+  background: var(--accent);
+  transform: rotate(-1.5deg);
+}
+.navbar nav a.nav-earn {
+  color: var(--on-highlight);
+  background: var(--highlight);
+  padding: 6px 11px;
+  font-weight: 800;
+  transform: rotate(-2deg);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--text) 35%, transparent);
+  transition: transform var(--duration-fast) var(--ease);
+}
+.navbar nav a.nav-earn:hover {
+  transform: rotate(0);
+}
+.navbar nav a.nav-earn.active::after {
+  display: none;
+}
+.palette-trigger {
+  border-radius: var(--radius-control);
+  border: 1px solid var(--control-border);
+}
+
+/* 05 — The offer ribbon above the header. */
+.eh-ribbon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding: 8px 16px;
+  background: var(--text);
+  color: var(--ink);
+  font-size: 13px;
+  text-align: center;
+  text-decoration: none;
+}
+.eh-ribbon strong {
+  font-weight: 800;
+}
+.eh-ribbon-badge {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.12em;
+  padding: 2px 7px;
+  background: var(--highlight);
+  color: var(--on-highlight);
+}
+.eh-ribbon-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 06 — Hero: an answer sheet beside a desk with a real paper on it. */
+.eh-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  gap: 56px;
+  align-items: center;
+  padding: 44px 0 40px;
+}
+.eh-sheet {
+  position: relative;
+  padding: 30px 40px 34px 76px;
+  background-color: var(--surface);
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 54px,
+      var(--margin-line) 54px,
+      var(--margin-line) 56px,
+      transparent 56px
+    ),
+    linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size:
+    100% 100%,
+    100% 34px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-2);
+}
+.eh-sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--text);
+  font: 500 12px/1.4 var(--font-mono);
+  letter-spacing: 0.06em;
+}
+.eh-roll {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.eh-roll i {
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 24px;
+  margin-left: 2px;
+  border: 1px solid var(--control-border);
+  font: 600 18px/1 var(--font-hand);
+  font-style: normal;
+  color: var(--pen);
+}
+.eh-sheet-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 22px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font: 500 11px/1.6 var(--font-mono);
+  color: var(--muted);
+}
+.eh-instructions {
+  margin: 14px 0 0;
+  font-size: 13px;
+  font-style: italic;
+}
+.eh-hero h1 {
+  font-size: clamp(50px, 7.4vw, 104px);
+  margin: 16px 0 20px;
+}
+.eh-underlined {
+  position: relative;
+  display: inline-block;
+  font-style: italic;
+  color: var(--primary);
+}
+.eh-underlined svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.16em;
+  width: 104%;
+  height: 0.3em;
+  overflow: visible;
+}
+.eh-underlined path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: eh-draw 1.1s 0.5s var(--ease) forwards;
+}
+@keyframes eh-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.eh-lead {
+  max-width: 540px;
+  font-size: 17px;
+  margin-bottom: 26px;
+}
+.eh-sheet .search-box {
+  border-radius: var(--radius-control);
+  border: 1.5px solid var(--text);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--text) 18%, transparent);
+}
+.eh-sheet .hero-hints {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+}
+.eh-omr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+.eh-omr-label {
+  font-weight: 750;
+  font-size: 14px;
+}
+.eh-omr-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+.eh-omr-options a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  font: 500 13px var(--font-mono);
+  color: var(--text);
+  text-decoration: none;
+}
+.eh-bubble {
+  width: 19px;
+  height: 19px;
+  border: 1.5px solid var(--text);
+  border-radius: 50%;
+  transition:
+    background var(--duration-fast),
+    box-shadow var(--duration-fast);
+}
+.eh-omr-options a:hover .eh-bubble,
+.eh-omr-options a:focus-visible .eh-bubble {
+  background: var(--text);
+  box-shadow: inset 0 0 0 3px var(--surface);
+}
+.eh-setter {
+  margin: 22px 0 0;
+  font-size: 13px;
+}
+.eh-score {
+  position: absolute;
+  top: 92px;
+  right: 30px;
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  padding-bottom: 22px;
+  border: 3px solid var(--accent);
+  border-radius: 50% 46% 52% 48%;
+  color: var(--accent);
+  font: 700 34px/1 var(--font-hand);
+  transform: rotate(-12deg);
+}
+.eh-score small {
+  position: absolute;
+  bottom: 16px;
+  padding: 0 8px;
+  border-top: 2px solid var(--accent);
+  font-size: 22px;
+}
+.eh-desk {
+  position: relative;
+  min-height: 540px;
+}
+.eh-desk-stack {
+  position: relative;
+  width: min(100%, 390px);
+  margin: 34px auto 0;
+}
+.eh-desk-paper,
+.eh-desk-under {
+  background: var(--sheet);
+  box-shadow: var(--shadow-3);
+}
+.eh-desk-under {
+  position: absolute;
+  inset: 0;
+}
+.eh-desk-under.under-1 {
+  transform: rotate(-5deg) translate(-16px, 10px);
+}
+.eh-desk-under.under-2 {
+  transform: rotate(7deg) translate(20px, 16px);
+}
+.eh-desk-paper {
+  position: relative;
+  z-index: 2;
+  display: block;
+  padding: 10px;
+  color: var(--sheet-text);
+  text-decoration: none;
+  transform: rotate(2.5deg);
+  transition: transform 400ms var(--ease);
+}
+.eh-desk-paper:hover {
+  transform: rotate(0.5deg) translateY(-6px);
+}
+.eh-desk-paper .file-icon-large,
+.eh-desk-paper .pdf-thumbnail.large {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1.25;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+}
+.eh-desk-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 12px 6px 4px;
+  font: 500 12px var(--font-mono);
+  color: #4a4740;
+}
+.eh-desk-caption strong {
+  font: 400 21px/1.15 var(--font-display);
+  color: var(--sheet-text);
+}
+.eh-desk-caption span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.eh-desk-blank {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1 / 1.3;
+}
+.eh-desk-blank .eh-hand {
+  font-size: 30px;
+  color: #b3261e;
+}
+.eh-staple {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: 16px;
+  width: 30px;
+  height: 5px;
+  border-radius: 2px;
+  background: linear-gradient(#e2e5ea, #8b9099);
+  box-shadow: 0 1px 1px #0006;
+  transform: rotate(-32deg);
+}
+.eh-stamp {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 2%;
+  padding: 8px 12px;
+  border: 4px double currentColor;
+  color: var(--success);
+  font: 500 21px/1.05 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-align: center;
+  transform: rotate(-14deg);
+  opacity: 0.85;
+}
+.eh-desk-sticky {
+  position: absolute;
+  z-index: 5;
+  left: -8%;
+  bottom: 0;
+  width: 240px;
+  transform: rotate(-4deg);
+}
+.eh-pencil {
+  position: absolute;
+  z-index: 1;
+  right: -2%;
+  bottom: 12%;
+  width: 200px;
+  height: 14px;
+  background: linear-gradient(
+    90deg,
+    #e98fa0 0 9%,
+    #b9bdc4 9% 13%,
+    #f2c94c 13% 82%,
+    #e9c9a1 82% 94%,
+    #3a3a3a 94%
+  );
+  clip-path: polygon(0 0, 82% 0, 100% 50%, 82% 100%, 0 100%);
+  transform: rotate(-28deg);
+  filter: drop-shadow(0 6px 4px #0005);
+}
+
+/* 07 — Sticky notes: the offer, wherever there is room for one. */
+.eh-sticky {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 360px;
+  padding: 24px 18px 16px;
+  background: #ffe98a;
+  color: #2a2414;
+  font-size: 14px;
+  line-height: 1.45;
+  text-decoration: none;
+  box-shadow:
+    0 16px 22px -14px #3a2f1a99,
+    0 2px 3px #3a2f1a26;
+  transform: rotate(-1.5deg);
+  transition: transform 300ms var(--ease);
+}
+.eh-sticky:hover {
+  transform: rotate(0) translateY(-3px);
+}
+.eh-sticky .eh-hand {
+  font-size: 29px;
+  line-height: 1;
+  color: #b3261e;
+}
+.eh-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 86px;
+  height: 22px;
+  background: #ffffff8f;
+  border: 1px solid #0000000d;
+  transform: translateX(-50%) rotate(-3deg);
+}
+.eh-sticky-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: #1f3ea8;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.content-grid .eh-grid-sticky {
+  max-width: none;
+  align-self: start;
+  margin: 14px 8px;
+}
+.list-view .eh-grid-sticky {
+  transform: none;
+}
+.detail-sidebar .eh-sticky {
+  margin-top: 28px;
+  transform: rotate(1deg);
+}
+.eh-floater {
+  position: fixed;
+  z-index: 60;
+  right: 22px;
+  bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 250px;
+  padding: 20px 18px 14px;
+  background: #ffe98a;
+  color: #2a2414;
+  font-size: 14px;
+  box-shadow: var(--shadow-3);
+  transform: rotate(-2deg);
+  animation: eh-drop 500ms var(--ease);
+}
+.eh-floater .eh-hand {
+  font-size: 26px;
+  line-height: 1;
+  color: #b3261e;
+}
+.eh-floater-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: none;
+  color: #2a2414;
+  cursor: pointer;
+}
+@keyframes eh-drop {
+  from {
+    opacity: 0;
+    transform: translateY(30px) rotate(5deg);
+  }
+}
+
+/* 08 — Sections are questions: "Q.2  Recently added  [link]". */
+.section-head.eh-q-head,
+.eh-q-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 4px 18px;
+  padding-bottom: 14px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.eh-q-num {
+  font: italic 400 clamp(36px, 4.4vw, 56px) / 1 var(--font-display);
+  color: var(--accent);
+}
+.eh-q-head h2 {
+  margin: 0;
+  font-size: clamp(34px, 4.4vw, 56px);
+  line-height: 1.05;
+}
+.eh-q-note {
+  margin: 6px 0 0;
+  font-size: 14px;
+}
+.eh-marks {
+  font: 500 12px var(--font-mono);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.popular-rank {
+  font: 700 40px/1 var(--font-hand);
+  color: var(--accent);
+}
+
+/* 09 — Statement of marks (library stats). */
+.eh-marksheet {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  margin: 12px 0 80px;
+  background: var(--surface);
+  border: 2px solid var(--text);
+}
+.eh-marksheet-title {
+  position: absolute;
+  top: -10px;
+  left: 18px;
+  padding: 0 8px;
+  background: var(--ink);
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.14em;
+}
+.eh-marksheet > div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px 16px;
+  border-right: 1px solid var(--border);
+}
+.eh-marksheet > div:last-child {
+  border-right: 0;
+}
+.eh-marksheet span {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eh-marksheet strong {
+  font: 400 46px/1 var(--font-display);
+}
+.eh-result strong {
+  font: 700 42px/1 var(--font-hand);
+  color: var(--success);
+  transform: rotate(-6deg);
+  transform-origin: left;
+}
+
+/* 10 — The pay-order cheque. A physical object: fixed colours in both themes. */
+.eh-cheque {
+  margin: 96px 0;
+}
+.eh-cheque-body {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 32px 28px;
+  color: #18301f;
+  background: linear-gradient(135deg, #e3f0e7, #f6fbf5 45%, #e2ede5);
+  border: 1px solid #9bb8a4;
+  border-radius: 4px;
+  box-shadow: var(--shadow-3);
+}
+.eh-cheque-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-radial-gradient(
+    circle at 85% 20%,
+    transparent 0 12px,
+    #2c6a4214 12px 13px
+  );
+}
+.eh-cheque-body > * {
+  position: relative;
+}
+.eh-cheque-top {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #18301f66;
+  font: 500 12px var(--font-mono);
+  letter-spacing: 0.08em;
+}
+.eh-cheque-top .eh-hand {
+  font-size: 20px;
+  color: #1f3ea8;
+}
+.eh-cheque-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 22px 0 0;
+  font: 500 13px var(--font-mono);
+  color: #18301f;
+}
+.eh-cheque-line .eh-hand {
+  flex: 1;
+  min-width: 220px;
+  padding: 0 8px 2px;
+  border-bottom: 1.5px solid #18301f80;
+  font-size: clamp(23px, 3vw, 34px);
+  line-height: 1.1;
+  color: #1f3ea8;
+}
+.eh-cheque-amount {
+  padding: 6px 14px;
+  background: #fff;
+  border: 2px solid #18301f;
+  font: 500 26px var(--font-mono);
+}
+.eh-calc {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 28px;
+  margin-top: 28px;
+  padding: 16px 18px;
+  background: #ffffffb3;
+  border: 1px solid #18301f26;
+}
+.eh-calc label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 700;
+}
+.eh-calc output {
+  font-family: var(--font-mono);
+}
+.eh-calc input[type="range"] {
+  width: 100%;
+  accent-color: #1f3ea8;
+}
+.eh-calc label:nth-of-type(1) {
+  grid-area: 1 / 1;
+}
+.eh-calc input:nth-of-type(1) {
+  grid-area: 2 / 1;
+}
+.eh-calc label:nth-of-type(2) {
+  grid-area: 1 / 2;
+}
+.eh-calc input:nth-of-type(2) {
+  grid-area: 2 / 2;
+}
+.eh-calc-total {
+  grid-column: 1 / -1;
+  margin: 6px 0 0;
+  font-size: 17px;
+  color: #18301f;
+}
+.eh-calc-total strong {
+  font: 700 34px/1 var(--font-hand);
+  color: #b3261e;
+}
+.eh-cheque-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 24px;
+}
+.eh-cheque-foot .button {
+  color: #fff;
+  background: #1f3ea8;
+  border-color: #1f3ea8;
+}
+.eh-signature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.eh-signature .eh-hand {
+  padding: 0 18px;
+  border-bottom: 1px solid #18301f80;
+  font-size: 34px;
+  color: #1f3ea8;
+}
+.eh-signature small {
+  margin-top: 4px;
+  font: 500 10px var(--font-mono);
+  letter-spacing: 0.12em;
+}
+
+/* 11 — Resource cards are question papers: white sheet, staple, red-pen year. */
+.resource.card {
+  border-radius: 3px;
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  transition:
+    transform 300ms var(--ease),
+    box-shadow 300ms var(--ease);
+}
+.resource.card:hover {
+  background: var(--surface);
+  transform: translateY(-4px) rotate(-0.4deg);
+  box-shadow: var(--shadow-3);
+}
+.resource .card-top {
+  position: relative;
+  background: var(--sheet);
+  border-bottom: 1px solid var(--border);
+}
+.resource .card-top::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  left: 14px;
+  width: 26px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(#e2e5ea, #8b9099);
+  box-shadow: 0 1px 1px #0006;
+  transform: rotate(-32deg);
+}
+.resource .card-top .pill {
+  padding: 1px 11px;
+  border: 2px solid #b3261e;
+  border-radius: 50% 46% 52% 48%;
+  background: #fffdf8e6;
+  color: #b3261e;
+  font: 700 20px/1.2 var(--font-hand);
+  letter-spacing: 0;
+  transform: rotate(-6deg);
+}
+.resource .eyebrow {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.resource h3 {
+  font-family: var(--font-body);
+}
+.cover-art {
+  color: var(--sheet-text);
+  background: var(--sheet);
+  background-image: linear-gradient(#8fb0d64d 1px, transparent 1px);
+  background-size: 100% 22px;
+}
+.cover-art::before {
+  display: none;
+}
+.cover-art strong {
+  font: 400 clamp(30px, 4vw, 40px) / 1 var(--font-display);
+}
+.cover-art small {
+  color: #57534a;
+  font-family: var(--font-mono);
+}
+.card-tags li {
+  font-family: var(--font-mono);
+  border-radius: 2px;
+}
+
+/* 12 — Notes, FAQ, pages. */
+.eh-margin-note {
+  display: inline-block;
+  margin-top: 18px;
+  font: 600 22px/1.2 var(--font-hand);
+  color: var(--accent);
+  text-decoration: none;
+  transform: rotate(-2deg);
+}
+.eh-margin-note:hover {
+  text-decoration: underline;
+}
+/* The notes band is a hole-punched notebook page: a physical object, fixed colours. */
+.notes-showcase,
+[data-theme="light"] .notes-showcase {
+  color: #1a1d26;
+  border-radius: 4px;
+  background-color: #fffdf8;
+  background-image:
+    radial-gradient(circle at 22px 50%, #3a2f1a2e 7px, transparent 8px),
+    linear-gradient(
+      90deg,
+      transparent 52px,
+      #d9737380 52px,
+      #d9737380 54px,
+      transparent 54px
+    ),
+    linear-gradient(#8fb0d64d 1px, transparent 1px);
+  background-size:
+    44px 64px,
+    100% 100%,
+    100% 32px;
+  background-repeat: repeat-y, no-repeat, repeat;
+  box-shadow: var(--shadow-2);
+}
+.notes-showcase {
+  padding-left: 84px;
+}
+.notes-welcome,
+[data-theme="light"] .notes-welcome {
+  color: #1a1d26;
+  border-radius: 4px;
+  background: #fffdf8 linear-gradient(#8fb0d64d 1px, transparent 1px) 0 0 / 100%
+    30px;
+  box-shadow: var(--shadow-2);
+}
+.notes-welcome p {
+  color: #57534a;
+}
+.notes-welcome a,
+.notes-welcome svg {
+  color: #1f3ea8;
+}
+.notes-showcase-copy p {
+  color: #57534a;
+}
+.notes-showcase .eh-q-num,
+.notes-showcase .eh-margin-note {
+  color: #b3261e;
+}
+.notes-showcase-copy > .button,
+[data-theme="light"] .notes-showcase-copy > .button {
+  color: #fff;
+  background: #1f3ea8;
+  border-color: #1f3ea8;
+}
+.notes-showcase .eh-q-num {
+  display: block;
+  margin-bottom: 8px;
+}
+.detail-sidebar,
+[data-theme="light"] .detail-sidebar {
+  background: var(--surface);
+  border-top: 3px solid var(--text);
+}
+.page-heading h1 {
+  font-size: clamp(46px, 6.4vw, 88px);
+}
+.become-page .page-heading .button {
+  margin-top: 8px;
+}
+.become-page .eh-cheque-body {
+  margin: 0 0 56px;
+}
+.eh-faq {
+  max-width: 820px;
+  margin: 72px 0 24px;
+}
+.eh-faq h2 {
+  font-size: clamp(32px, 4vw, 44px);
+}
+.eh-faq details {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.eh-faq summary {
+  cursor: pointer;
+  font-weight: 750;
+  font-size: 17px;
+}
+.eh-faq summary::marker {
+  color: var(--accent);
+}
+.eh-faq p {
+  margin: 10px 0 0;
+}
+
+/* 13 — Footer: the end of the paper. */
+.site-footer.eh-footer,
+[data-theme="light"] .site-footer.eh-footer {
+  background: var(--surface);
+}
+.eh-footer {
+  border-top: 3px double color-mix(in srgb, var(--text) 40%, transparent);
+}
+.eh-end {
+  margin: 0 0 44px;
+  text-align: center;
+  font: 500 13px var(--font-mono);
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+.eh-footer .footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+}
+.eh-footer .footer-top h2 {
+  margin: 0;
+  font-size: clamp(42px, 5.4vw, 76px);
+}
+.eh-footer .footer-top h2 em {
+  color: var(--accent);
+}
+.eh-footer-note {
+  margin: 8px 0 0;
+  font-size: 24px;
+}
+.footer-columns nav span {
+  font-family: var(--font-mono);
+}
+
+/* 14 — Staff workspace: serif greeting, square chrome. */
+.staff-topbar h1 {
+  font-size: clamp(30px, 3.4vw, 44px);
+}
+.eh-earn-total {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.eh-earn-total .card {
+  padding: 20px 22px;
+}
+.eh-earn-total strong {
+  display: block;
+  font: 400 44px/1.05 var(--font-display);
+}
+.eh-earn-total span {
+  font: 500 11px var(--font-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.eh-earn-total .is-due strong {
+  color: var(--accent);
+}
+
+/* 15 — Small screens. */
+@media (max-width: 980px) {
+  .eh-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+    padding-top: 24px;
+  }
+  .eh-desk {
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+  }
+  .eh-desk-stack {
+    margin: 20px 0 0;
+  }
+  .eh-desk-sticky {
+    position: static;
+    width: auto;
+  }
+  .eh-pencil,
+  .eh-stamp {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .eh-sheet {
+    padding: 22px 18px 26px 38px;
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 24px,
+        var(--margin-line) 24px,
+        var(--margin-line) 26px,
+        transparent 26px
+      ),
+      linear-gradient(var(--rule) 1px, transparent 1px);
+  }
+  .eh-roll i {
+    width: 15px;
+    height: 20px;
+    font-size: 15px;
+  }
+  .eh-score {
+    top: auto;
+    bottom: 18px;
+    right: 12px;
+    width: 70px;
+    height: 70px;
+    padding-bottom: 16px;
+    font-size: 24px;
+  }
+  .eh-score small {
+    bottom: 10px;
+    font-size: 16px;
+  }
+  .eh-desk {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .eh-desk-stack {
+    width: 82%;
+  }
+  .section-head.eh-q-head,
+  .eh-q-head {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .eh-q-head > .text-link,
+  .eh-q-head > .eh-marks {
+    grid-column: 1 / -1;
+  }
+  .notes-showcase {
+    padding: 32px 20px 32px 52px;
+    background-position:
+      -8px 0,
+      -28px 0,
+      0 0;
+  }
+  .eh-marksheet > div {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .eh-cheque-body {
+    padding: 20px 18px 22px;
+  }
+  .eh-calc {
+    grid-template-columns: 1fr;
+  }
+  .eh-calc label:nth-of-type(2) {
+    grid-area: 3 / 1;
+  }
+  .eh-calc input:nth-of-type(2) {
+    grid-area: 4 / 1;
+  }
+  .eh-ribbon-cta {
+    display: none;
+  }
+  .eh-floater {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    transform: none;
+  }
+}
+@media (max-width: 480px) {
+  .brand strong {
+    font-size: 23px;
+  }
+  .brand small {
+    font-size: 8px;
+    letter-spacing: 0.02em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eh-underlined path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .eh-floater {
+    animation: none;
+  }
+}

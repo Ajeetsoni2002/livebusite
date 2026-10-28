@@ -1,21 +1,21 @@
 /*
  * "The Exam Archive Opens" intro. Fully namespaced with `pq-`; phase classes on the root use `pq-is-*`
- * and are never used as element classes. The intro is always dark, so it pins the dark Nebula values
+ * and are never used as element classes. The intro is always dark, so it pins the blackboard values
  * from styles/tokens.css instead of reading the (theme-dependent) site variables.
  * Motion uses transform/opacity only; filters and shadows below are static.
  */
 .pq-root {
-  --pq-ink: #070b16;
-  --pq-surface: #0e1424;
-  --pq-raised: #172036;
-  --pq-text: #e8eefb;
-  --pq-muted: #9ba8c4;
-  --pq-line: #9fb4ff1f;
-  --pq-primary: #5ee1ff;
-  --pq-accent: #b39dff;
-  --pq-stamp: #ff8fa3;
-  --pq-gradient: linear-gradient(115deg, #5ee1ff, #8fa8ff 45%, #c39dff);
-  --pq-display: "Space Grotesk", "Arial", sans-serif;
+  --pq-ink: #17211c;
+  --pq-surface: #1e2b25;
+  --pq-raised: #283830;
+  --pq-text: #eef1e8;
+  --pq-muted: #b3bdb0;
+  --pq-line: #eef1e81f;
+  --pq-primary: #f3dc6b;
+  --pq-accent: #a8d1ff;
+  --pq-stamp: #ff958a;
+  --pq-gradient: linear-gradient(115deg, #f3dc6b, #f3dc6b);
+  --pq-display: "Instrument Serif", Georgia, serif;
   --pq-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
   --pq-mono: ui-monospace, "SFMono-Regular", "Cascadia Mono", "Consolas", "Roboto Mono",
     "Liberation Mono", "Menlo", "Courier New", monospace;
@@ -45,8 +45,8 @@
   inset: 0;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 70% 55% at 50% 45%, #111a33 0%, transparent 70%),
-    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, #02040a 100%),
+    radial-gradient(ellipse 70% 55% at 50% 45%, #22342b 0%, transparent 70%),
+    radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, #0a100d 100%),
     var(--pq-ink);
 }
 .pq-sheet::before {
@@ -66,8 +66,8 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, transparent calc(clamp(18px, 6vw, 72px) - 1px), #ff8fa31a 0, #ff8fa31a calc(clamp(18px, 6vw, 72px) + 1px), transparent 0),
-    repeating-linear-gradient(180deg, transparent 0 31px, #9fb4ff0a 31px 32px);
+    linear-gradient(90deg, transparent calc(clamp(18px, 6vw, 72px) - 1px), #ff958a1a 0, #ff958a1a calc(clamp(18px, 6vw, 72px) + 1px), transparent 0),
+    repeating-linear-gradient(180deg, transparent 0 31px, #eef1e80a 31px 32px);
   z-index: 0;
 }
 
@@ -156,7 +156,7 @@
   place-items: center;
   width: 1.7em;
   height: 2em;
-  border: 1px solid #9fb4ff33;
+  border: 1px solid #eef1e833;
   border-radius: 2px;
   color: var(--pq-text);
   letter-spacing: 0;
@@ -184,10 +184,10 @@
   gap: clamp(10px, 2vh, 18px);
   padding: clamp(14px, 2.6vw, 28px) clamp(12px, 2.6vw, 30px);
   border-radius: 14px;
-  background: linear-gradient(180deg, #0f1629f2, #0a1020f2);
-  border: 1px solid #9fb4ff24;
+  background: linear-gradient(180deg, #1e2b25f2, #17211cf2);
+  border: 1px solid #eef1e824;
   box-shadow:
-    0 30px 80px #02040acc,
+    0 30px 80px #0a100dcc,
     inset 0 1px 0 #ffffff0d;
   opacity: 0;
   transform: translateY(18px) scale(0.94);
@@ -231,7 +231,7 @@
   font-family: var(--pq-mono);
   font-size: clamp(8.5px, 0.9vw, 10px);
   letter-spacing: 0.22em;
-  color: #9ba8c4b3;
+  color: #b3bdb0b3;
 }
 .pq-cells {
   display: flex;
@@ -259,7 +259,7 @@
   font-size: var(--pq-fs);
   color: var(--pq-text);
   border-radius: calc(var(--pq-h) * 0.06);
-  box-shadow: 0 2px 4px #02040a99;
+  box-shadow: 0 2px 4px #0a100d99;
   contain: layout style;
 }
 .pq-row-year .pq-cell {
@@ -289,7 +289,7 @@
   border-radius: inherit;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  background: linear-gradient(180deg, #1e2843, #18213a);
+  background: linear-gradient(180deg, #2c3e34, #24342b);
   transform-origin: 50% 100%;
 }
 .pq-top span { top: 0; }
@@ -298,7 +298,7 @@
   border-radius: inherit;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background: linear-gradient(180deg, #141c32, #10172b);
+  background: linear-gradient(180deg, #1e2b25, #18231e);
   transform-origin: 50% 0;
 }
 .pq-bot span { bottom: 0; }
@@ -312,7 +312,7 @@
   right: 0;
   top: calc(50% - 1px);
   height: 2px;
-  background: #04070fe6;
+  background: #0c120fe6;
   z-index: 3;
 }
 .pq-row-year .pq-cell::before {
@@ -320,7 +320,7 @@
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  border: 1px solid #5ee1ff40;
+  border: 1px solid #f3dc6b40;
   opacity: 0;
   transition: opacity 0.4s var(--pq-ease);
 }
@@ -366,7 +366,7 @@
   position: relative;
   margin-top: 8px;
   height: 2px;
-  background: #9fb4ff1f;
+  background: #eef1e81f;
   overflow: hidden;
   border-radius: 2px;
 }
@@ -439,7 +439,7 @@
 .pq-name-glow {
   position: absolute;
   inset: 0;
-  color: #5ee1ff;
+  color: #f3dc6b;
   opacity: 0.4;
   filter: blur(22px);
 }
@@ -527,8 +527,8 @@
   opacity: 0;
   background: linear-gradient(90deg, transparent, var(--pq-primary) 18%, #f2fdff 50%, var(--pq-primary) 82%, transparent);
   box-shadow:
-    0 0 14px 2px #5ee1ffb3,
-    0 0 48px 6px #5ee1ff4d;
+    0 0 14px 2px #f3dc6bb3,
+    0 0 48px 6px #f3dc6b4d;
   will-change: transform;
 }
 .pq-beam::before {
@@ -538,7 +538,7 @@
   right: 0;
   bottom: 3px;
   height: clamp(70px, 14vh, 150px);
-  background: linear-gradient(180deg, transparent, #5ee1ff1f);
+  background: linear-gradient(180deg, transparent, #f3dc6b1f);
 }
 
 /* ---------- Chrome (does not tear) ---------- */
@@ -563,7 +563,7 @@
   gap: 8px;
   min-height: 34px;
   padding: 0 14px;
-  border: 1px solid #5ee1ff59;
+  border: 1px solid #f3dc6b59;
   border-radius: 999px;
   background: #0e1424d9;
   color: var(--pq-text);

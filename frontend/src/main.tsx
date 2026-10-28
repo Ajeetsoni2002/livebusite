@@ -4,6 +4,7 @@ import "./styles.css";
 import "./styles/solar.css";
 import "./styles/light.css";
 import "./styles/nebula.css";
+import "./styles/examhall.css";
 import App from "./app/App";
 import { wake } from "./lib/wake";
 import { playIntro } from "./intro/intro";

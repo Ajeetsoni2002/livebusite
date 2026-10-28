@@ -7,37 +7,41 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  /* Nebula — light: cool frosted base; accents toned down, glows become soft colored shadows. */
-  --ink: #eef2f8;
-  --surface: #ffffff;
-  --raised: #e2e8f2;
-  --glass: #ffffffb8;
-  --glass-border: #1e2a5014;
-  --text: #0e1628;
-  --muted: #475369;
-  --primary: #0b6e8c;
-  --accent: #6a3fd1;
+  /* Exam Hall — light: an answer sheet. Blue ballpoint primary, red-pen marks, yellow highlighter. */
+  --ink: #f3eee2;
+  --surface: #fffdf8;
+  --raised: #ebe4d2;
+  --glass: #fffdf8f2;
+  --glass-border: #1a1d261a;
+  --text: #1a1d26;
+  --muted: #57534a;
+  --primary: #1f3ea8;
+  --accent: #b82424;
   --on-primary: #ffffff;
-  --border: #1e2a501a;
-  --control-border: #6f7b92;
-  --success: #0b6b4a;
+  --border: #1a1d2621;
+  --control-border: #77705f;
+  --success: #1b6b3a;
   --warning: #8a5a00;
   --danger: #b4232f;
-  --glow: 0 10px 30px #0b6e8c1f, 0 4px 14px #6a3fd114;
-  --hero-gradient: linear-gradient(115deg, #0b6e8c, #3b5bdb 50%, #6a3fd1);
-  --aurora-1: #3b82f61f;
-  --aurora-2: #8b5cf61a;
-  --aurora-3: #06b6d41a;
+  --pen: #1f3ea8;
+  --highlight: #ffe766;
+  --on-highlight: #1a1d26;
+  --rule: #8fb0d64d;
+  --margin-line: #d9737380;
+  --glow: 0 12px 24px -14px #3a2f1a59;
+  --aurora-1: transparent;
+  --aurora-2: transparent;
+  --aurora-3: transparent;
   --branch-cse: #3f6b12;
   --branch-ece: #6c43a9;
   --branch-it: #0f6b62;
   --branch-ee: #7c5800;
   --branch-me: #a13f25;
   --branch-ce: #2f5bb0;
-  --shadow-1: 0 1px 2px #1e2a5014;
-  --shadow-2: 0 8px 24px #1e2a5014, 0 2px 6px #1e2a500d;
-  --shadow-3: 0 24px 64px #1e2a5029;
-  --glow-focus: 0 0 0 4px #0b6e8c26;
+  --shadow-1: 0 1px 2px #3a2f1a1a;
+  --shadow-2: 0 1px 0 #3a2f1a0f, 0 12px 26px -14px #3a2f1a59;
+  --shadow-3: 0 28px 56px -22px #3a2f1a66;
+  --glow-focus: 0 0 0 4px #1f3ea826;
 }
 [data-theme="light"] .navbar {
   background: color-mix(in srgb, var(--ink) 88%, transparent);

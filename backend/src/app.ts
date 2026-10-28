@@ -20,6 +20,7 @@ import { contentWriteRouter } from "./modules/content-writes.js";
 import { avatarRouter, profileRouter } from "./modules/profile.js";
 import { adminRouter } from "./modules/admin.js";
 import { analyticsRouter, analyticsAdminRouter } from "./modules/analytics.js";
+import { earningsRouter, earningsAdminRouter } from "./modules/earnings.js";
 
 export function createApp() {
   const app = express();
@@ -94,6 +95,7 @@ export function createApp() {
     contentWriteRouter(true),
     adminRouter,
     analyticsAdminRouter,
+    earningsAdminRouter,
   );
   app.use(
     "/api/contributor",
@@ -101,6 +103,7 @@ export function createApp() {
     requireUser,
     requireRole("contributor"),
     profileRouter,
+    earningsRouter,
     contentWriteRouter(false),
   );
   app.use((_req, _res, next) =>

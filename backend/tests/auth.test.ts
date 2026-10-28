@@ -980,3 +980,55 @@ test("keep-alive pings Render's public URL unless disabled", async () => {
   );
   assert.equal(keepAliveTarget({}), null);
 });
+test("contributors earn ₹10 per approved upload and admins record payouts", async () => {
+  const { Payout } = await import("../src/modules/models.js");
+  await Payout.deleteMany({});
+  const contributor = await account("contributor");
+  await account("admin");
+  const base = { author: contributor._id, deletedAt: null };
+  await Paper.create([
+    { ...base, title: "Approved one", slug: "earn-1", status: "published" },
+    { ...base, title: "Approved two", slug: "earn-2", status: "published" },
+    { ...base, title: "Rejected", slug: "earn-3", status: "rejected" },
+    {
+      ...base,
+      title: "Deleted",
+      slug: "earn-4",
+      status: "published",
+      deletedAt: new Date(),
+    },
+  ]);
+  await Note.create({
+    ...base,
+    title: "Waiting note",
+    slug: "earn-note",
+    status: "pending",
+  });
+  const mine = (
+    await (await login("contributor")).agent.get("/api/contributor/earnings")
+  ).body.data;
+  assert.equal(mine.rate, 10);
+  assert.equal(mine.approved, 2);
+  assert.equal(mine.earned, 20);
+  assert.equal(mine.pendingValue, 10);
+  assert.equal(mine.due, 20);
+  const admin = await login("admin");
+  const pay = (body: object) =>
+    admin.agent
+      .post(`/api/admin/earnings/${contributor._id}/payouts`)
+      .set("X-CSRF-Token", admin.csrf)
+      .send(body);
+  assert.equal((await pay({ amount: 25 })).status, 400);
+  const partial = await pay({ amount: 15, note: "UPI ref 123" });
+  assert.equal(partial.status, 201);
+  assert.equal(partial.body.data.due, 5);
+  assert.equal((await pay({})).body.data.due, 0);
+  assert.equal((await pay({})).status, 400);
+  const list = (await admin.agent.get("/api/admin/earnings")).body.data;
+  assert.equal(list.totals.paid, 20);
+  assert.equal(list.rows[0].due, 0);
+  assert.equal(
+    (await request(app).get("/api/contributor/earnings")).status,
+    401,
+  );
+});

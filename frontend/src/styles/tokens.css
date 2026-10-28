@@ -12,40 +12,78 @@
   font-display: swap;
   src: url("/fonts/manrope-latin.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/instrument-serif-italic-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 500 700;
+  font-display: swap;
+  src: url("/fonts/caveat-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/plex-mono-500-latin.woff2") format("woff2");
+}
 :root {
   color-scheme: dark;
-  /* Nebula — dark: deep navy base, neon cyan/violet accents, glass surfaces. */
-  --ink: #070b16;
-  --surface: #0e1424;
-  --raised: #172036;
+  /* Exam Hall — dark: a blackboard. Chalk text, chalk-yellow primary, red-chalk marks. */
+  --ink: #17211c;
+  --surface: #1e2b25;
+  --raised: #283830;
   --surface-elevated: var(--raised);
-  --glass: #111a2ecc;
-  --glass-border: #9fb4ff1f;
-  --text: #e8eefb;
-  --muted: #9ba8c4;
-  --primary: #5ee1ff;
-  --accent: #b39dff;
+  --glass: #1e2b25f2;
+  --glass-border: #eef1e81a;
+  --text: #eef1e8;
+  --muted: #b3bdb0;
+  --primary: #f3dc6b;
+  --accent: #ff958a;
   --accent-primary: var(--primary);
   --accent-secondary: var(--accent);
-  --on-primary: #04121c;
-  --border: #9fb4ff1a;
-  --control-border: #66749a;
-  --success: #6ee7b7;
-  --warning: #ffcf70;
-  --danger: #ff8fa3;
-  --glow: 0 0 32px #5ee1ff33, 0 0 64px #b39dff1f;
-  --hero-gradient: linear-gradient(115deg, #5ee1ff, #8fa8ff 45%, #c39dff);
-  --aurora-1: #2c6bff33;
-  --aurora-2: #8b5cf62e;
-  --aurora-3: #22d3ee24;
+  --on-primary: #1b1a10;
+  --border: #eef1e824;
+  --control-border: #87958a;
+  --success: #8fe0a8;
+  --warning: #f3c96b;
+  --danger: #ff958a;
+  --pen: #a8d1ff;
+  --highlight: #f3dc6b;
+  --on-highlight: #1b1a10;
+  --rule: #eef1e80f;
+  --margin-line: #ff958a59;
+  --sheet: #fffdf8;
+  --sheet-text: #1a1d26;
+  --glow: 0 10px 26px -14px #000c;
+  --hero-gradient: linear-gradient(var(--primary), var(--primary));
+  --aurora-1: transparent;
+  --aurora-2: transparent;
+  --aurora-3: transparent;
   --branch-cse: #9dff7a;
   --branch-ece: #c3a8ff;
   --branch-it: #5ee1d6;
   --branch-ee: #ffd166;
   --branch-me: #ff9d80;
   --branch-ce: #8fb8ff;
-  --font-display: "Space Grotesk", "Arial", sans-serif;
+  --font-display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -55,15 +93,15 @@
   --space-12: 48px;
   --space-16: 64px;
   --space-24: 96px;
-  --radius-control: 10px;
-  --radius-card: 18px;
-  --radius-feature: 28px;
-  --shadow-1: 0 1px 2px #02040a66;
-  --shadow-2: 0 8px 24px #02040a73;
-  --shadow-3: 0 24px 64px #02040a99;
+  --radius-control: 4px;
+  --radius-card: 6px;
+  --radius-feature: 10px;
+  --shadow-1: 0 1px 2px #0006;
+  --shadow-2: 0 14px 30px -16px #000d, 0 2px 4px #0005;
+  --shadow-3: 0 28px 60px -20px #000e;
   --shadow-card: var(--shadow-2);
   --shadow-float: var(--shadow-3);
-  --glow-focus: 0 0 0 4px #5ee1ff33, 0 0 24px #5ee1ff26;
+  --glow-focus: 0 0 0 4px #f3dc6b33;
   --duration-fast: 150ms;
   --duration-hover: 240ms;
   --duration-reveal: 360ms;

@@ -1,23 +1,28 @@
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Heart } from "lucide-react";
 import CreatorLink from "./CreatorLink";
+import { EarnSticky } from "./Earn";
+
 export default function Footer() {
   return (
-    <footer className="site-footer">
-      <div className="perspective-grid" aria-hidden="true" />
+    <footer className="site-footer eh-footer">
       <div className="footer-inner">
+        <p className="eh-end" aria-hidden="true">
+          ✱ ✱ ✱ END OF QUESTION PAPER ✱ ✱ ✱
+        </p>
         <div className="footer-top">
           <div>
-            <span className="eyebrow">A LITTLE HELP. A BETTER SEMESTER.</span>
             <h2>
-              Built for the
-              <br />
-              <span>next batch.</span>
+              Built for the <em>next batch.</em>
             </h2>
+            <p className="eh-hand eh-footer-note">
+              Check that you have attempted all questions. Best of luck!
+            </p>
           </div>
-          <Link to="/contact" className="button secondary">
-            Pass something forward <ArrowUpRight size={17} />
-          </Link>
+          <EarnSticky
+            title="Pass it forward, get ₹10"
+            text="Every approved paper or note you upload earns you ₹10."
+          />
         </div>
         <div className="footer-columns">
           <div className="footer-about">
@@ -25,15 +30,14 @@ export default function Footer() {
               <img src="/branding/crest.webp" alt="" width="42" height="42" />
               <span>
                 <strong>
-                  BUIT<span className="accent">PAPERS</span>
+                  BUIT <span className="accent">Papers</span>
                 </strong>
-                <small>BARKATULLAH UNIVERSITY</small>
+                <small>BARKATULLAH UNIVERSITY · BHOPAL</small>
               </span>
             </Link>
             <p>
-              A student-built collection of past papers
-              <br />
-              and shared understanding. Open to everyone.
+              A student-built collection of past papers and shared
+              understanding. Open to everyone.
             </p>
           </div>
           <nav aria-label="Footer library">
@@ -46,14 +50,12 @@ export default function Footer() {
           </nav>
           <nav aria-label="Footer community">
             <span>THE COMMUNITY</span>
+            <Link to="/contribute">Become a contributor · earn ₹10</Link>
+            <Link to="/contributors">Top contributors</Link>
             <Link to="/about">Our story</Link>
-            <Link to="/contribute">Become a contributor</Link>
-            <Link to="/contact">Contribute & contact</Link>
+            <Link to="/contact">Contact</Link>
             <Link to="/copyright">Copyright & takedown</Link>
           </nav>
-        </div>
-        <div className="footer-wordmark" aria-hidden="true">
-          BUIT / PAPERS
         </div>
         <div className="footer-bottom">
           <span>

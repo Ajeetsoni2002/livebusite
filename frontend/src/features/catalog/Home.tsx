@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, ArrowUpRight, Clock3 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import NotesShowcase from "../../components/NotesShowcase";
 import Explore from "../../components/Explore";
 import SubjectTicker from "../../components/SubjectTicker";
 import Hero, { CountUp } from "../../components/Hero";
-import CreatorLink from "../../components/CreatorLink";
+import { EarnCheque } from "../../components/Earn";
 import {
   ContentCard,
   Empty,
@@ -14,8 +14,40 @@ import {
 } from "../../components/ui";
 import { usePublic } from "../../lib/queries";
 import type { Entity, ContentItem } from "../../lib/types";
+
+/** A question heading: "Q.2  Recently added  [link]". */
+function Question({
+  n,
+  title,
+  note,
+  to,
+  link,
+}: {
+  n: number;
+  title: string;
+  note?: string;
+  to?: string;
+  link?: string;
+}) {
+  return (
+    <div className="section-head eh-q-head">
+      <span className="eh-q-num">Q.{n}</span>
+      <div>
+        <h2>{title}</h2>
+        {note && <p className="eh-q-note">{note}</p>}
+      </div>
+      {to && (
+        <Link to={to} className="text-link">
+          {link} <ArrowRight size={17} />
+        </Link>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const branches = usePublic<Entity[]>("/branches"),
+    programs = usePublic<Entity[]>("/programs"),
     recent = usePublic<ContentItem[]>("/papers", { limit: 6 }),
     popular = usePublic<ContentItem[]>("/papers", {
       limit: 3,
@@ -25,53 +57,45 @@ export default function Home() {
     stats = usePublic<{ papers: number; notes: number; downloads: number }>(
       "/stats",
     );
+  const marks = [
+    ["Question papers", stats.data?.data.papers],
+    ["Short notes", stats.data?.data.notes],
+    ["Branches", branches.data?.data.length],
+    ["Downloads", stats.data?.data.downloads],
+  ].filter((row): row is [string, number] => !!row[1]);
   return (
     <main className="page home-page">
-      <Hero papers={recent.data?.data || []} />
-      <div className="stats-strip" aria-label="Library at a glance">
-        {(stats.data?.data.papers || 0) > 0 && (
-          <div>
-            <CountUp value={stats.data!.data.papers} />
-            <span>papers. ready for you.</span>
+      <Hero
+        papers={recent.data?.data || []}
+        branches={branches.data?.data || []}
+        programs={programs.data?.data || []}
+      />
+      {!!marks.length && (
+        <div className="eh-marksheet" aria-label="Library at a glance">
+          <span className="eh-marksheet-title">STATEMENT OF MARKS</span>
+          {marks.map(([label, value]) => (
+            <div key={label}>
+              <span>{label}</span>
+              <CountUp value={value} />
+            </div>
+          ))}
+          <div className="eh-result">
+            <span>Result</span>
+            <strong>PASS</strong>
           </div>
-        )}
-        {!!branches.data?.data.length && (
-          <div>
-            <CountUp value={branches.data.data.length} />
-            <span>branches. one community.</span>
-          </div>
-        )}
-        {(stats.data?.data.notes || 0) > 0 && (
-          <div>
-            <CountUp value={stats.data!.data.notes} />
-            <span>notes to connect the dots.</span>
-          </div>
-        )}
-        {(stats.data?.data.downloads || 0) > 0 && (
-          <div>
-            <CountUp value={stats.data!.data.downloads} />
-            <span>download actions.</span>
-          </div>
-        )}
-        <div className="stats-caption">
-          <span className="status-dot" /> A little help goes a long way.
         </div>
-      </div>
+      )}
       {recent.data?.saved && <SavedNotice />}
       <Explore />
       <SubjectTicker papers={recent.data?.data || []} />
       <section className="library-section">
-        <div className="section-head">
-          <div>
-            <div className="eyebrow">
-              <Clock3 size={13} /> 02 / FRESH FROM THE ARCHIVE
-            </div>
-            <h2>Recently added</h2>
-          </div>
-          <Link to="/papers" className="text-link">
-            View all papers <ArrowRight size={17} />
-          </Link>
-        </div>
+        <Question
+          n={2}
+          title="Recently added"
+          note="Fresh from the archive."
+          to="/papers"
+          link="View all papers"
+        />
         {recent.isPending ? (
           <Skeleton />
         ) : recent.isError ? (
@@ -94,23 +118,22 @@ export default function Home() {
           <Empty />
         )}
       </section>
+      <EarnCheque n={3} />
       {!!popular.data?.data.some((item) => item.downloads > 0) && (
         <section className="library-section popular-section">
-          <div className="section-head">
-            <div>
-              <div className="eyebrow">03 / OPENED. SAVED. STUDIED.</div>
-              <h2>On everyone’s desk.</h2>
-            </div>
-            <Link to="/papers?sort=downloads" className="text-link">
-              Most downloaded <ArrowRight size={17} />
-            </Link>
-          </div>
+          <Question
+            n={4}
+            title="On everyone’s desk"
+            note="The most downloaded papers right now."
+            to="/papers?sort=downloads"
+            link="Most downloaded"
+          />
           <div className="popular-rail">
             {popular.data.data
               .filter((item) => item.downloads > 0)
               .map((item, index) => (
                 <div key={item._id}>
-                  <span className="popular-rank">0{index + 1}</span>
+                  <span className="popular-rank">#{index + 1}</span>
                   <ContentCard item={item} saved={popular.data?.saved} />
                 </div>
               ))}
@@ -122,19 +145,6 @@ export default function Home() {
         saved={notes.data?.saved}
         loading={notes.isPending}
       />
-      <section className="contribute-banner">
-        <div>
-          <div className="eyebrow">GOT A PAPER WE’RE MISSING?</div>
-          <h2>Help the next batch get ahead.</h2>
-          <p>Every contribution makes the library a little better.</p>
-          <p className="contribution-credit">
-            Built by <CreatorLink />. Grown by our community.
-          </p>
-        </div>
-        <Link to="/contact" className="button" data-magnetic>
-          Get in touch <ArrowUpRight size={18} />
-        </Link>
-      </section>
     </main>
   );
 }

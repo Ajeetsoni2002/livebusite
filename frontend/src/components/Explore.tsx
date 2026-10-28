@@ -31,18 +31,13 @@ export default function Explore() {
       id="explore"
       ref={section}
     >
-      <div className="section-head">
+      <div className="section-head eh-q-head">
+        <span className="eh-q-num">Q.1</span>
         <div>
-          <div className="eyebrow">01 / FIND YOUR STARTING POINT</div>
-          <h2>
-            Your course.
-            <br className="mobile-only" /> Your corner.
-          </h2>
+          <h2>Find your course.</h2>
+          <p className="eh-q-note">Pick a branch, then a semester.</p>
         </div>
-        <span className="section-note">
-          Six branches.
-          <br />A world of possibilities.
-        </span>
+        <span className="eh-marks">[6 branches]</span>
       </div>
       <div className="explore-bento">
         <PaperFinder

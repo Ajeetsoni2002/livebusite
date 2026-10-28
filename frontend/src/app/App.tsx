@@ -27,6 +27,12 @@ const Login = lazy(() =>
   Contributors = lazy(() => import("../features/staff/Contributors")),
   Inbox = lazy(() => import("../features/staff/Inbox"));
 const Analytics = lazy(() => import("../features/staff/Analytics"));
+const MyEarnings = lazy(() =>
+  import("../features/staff/Earnings").then((m) => ({ default: m.MyEarnings })),
+);
+const Payouts = lazy(() =>
+  import("../features/staff/Earnings").then((m) => ({ default: m.Payouts })),
+);
 const Legacy = lazy(() => import("../features/Legacy"));
 const client = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
@@ -92,6 +98,7 @@ export default function App() {
                   <Route path="inbox" element={<Inbox />} />
                   <Route path="audit" element={<Inbox audit />} />
                   <Route path="analytics" element={<Analytics />} />
+                  <Route path="payouts" element={<Payouts />} />
                   <Route path="settings" element={<StaffSettings />} />
                 </Route>
               </Route>
@@ -100,6 +107,7 @@ export default function App() {
                   <Route index element={<Content />} />
                   <Route path="notes" element={<Content kind="notes" />} />
                   <Route path="upload" element={<Upload />} />
+                  <Route path="earnings" element={<MyEarnings />} />
                   <Route path="profile" element={<ContributorProfile />} />
                 </Route>
               </Route>

@@ -329,6 +329,18 @@ const metricSchema = new Schema({
 });
 metricSchema.index({ day: 1, kind: 1, key: 1 }, { unique: true });
 export const DailyMetric = model("DailyMetric", metricSchema);
+// A payment made to a contributor; earnings minus the sum of these is what is due.
+const payoutSchema = new Schema(
+  {
+    contributor: ref("User", true),
+    amount: { type: Number, required: true, min: 1 },
+    note: { type: String, maxlength: 200 },
+    paidBy: ref("User"),
+  },
+  options,
+);
+payoutSchema.index({ contributor: 1, createdAt: -1 });
+export const Payout = model("Payout", payoutSchema);
 export const publicationFilter = { status: "published", deletedAt: null };
 export const taxonomyModels = {
   universities: University,

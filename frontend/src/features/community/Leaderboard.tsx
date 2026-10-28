@@ -13,6 +13,7 @@ import {
 import { useState, type CSSProperties } from "react";
 import { api, apiUrl, errorMessage } from "../../lib/api";
 import { usePageMeta } from "../../lib/meta";
+import { RATE, rupees } from "../../lib/earn";
 import { ErrorState } from "../../components/ui";
 
 type Contributor = {
@@ -179,9 +180,12 @@ export default function Leaderboard() {
               ? "The podium is waiting for its first name."
               : "No new contributions in this period yet."}
           </h2>
-          <p>Share a paper or a note and you could be first.</p>
-          <Link className="button" to="/contact">
-            Contribute a paper <ArrowUpRight size={16} />
+          <p>
+            Share a paper or a note and you could be first, and earn{" "}
+            {rupees(RATE)} for each approved one.
+          </p>
+          <Link className="button" to="/contribute">
+            Become a contributor <ArrowUpRight size={16} />
           </Link>
         </div>
       ) : (
@@ -279,18 +283,18 @@ export default function Leaderboard() {
       <section className="contribute-cta card">
         <div>
           <span className="eyebrow">YOUR NAME HERE</span>
-          <h2>Have a paper the next batch needs?</h2>
+          <h2>
+            Get on this board, and get paid{" "}
+            <mark className="eh-mark">{rupees(RATE)} per upload.</mark>
+          </h2>
           <p>
-            Send it our way. We review every upload, credit you on it, and your
-            name joins this board.
+            Every approved paper or note earns you {rupees(RATE)} and a spot on
+            this board.
           </p>
         </div>
         <div className="cta-actions">
-          <Link className="button" to="/contact">
-            Contribute a paper <ArrowUpRight size={16} />
-          </Link>
-          <Link className="button secondary" to="/contribute">
-            Become a contributor
+          <Link className="button" to="/contribute">
+            Become a contributor <ArrowUpRight size={16} />
           </Link>
           <Link className="button secondary" to="/contributor/login">
             Contributor sign in

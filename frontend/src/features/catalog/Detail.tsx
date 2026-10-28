@@ -13,6 +13,8 @@ import { track } from "../../lib/analytics";
 import { PdfThumbnail } from "../../components/PdfThumbnail";
 import { downloadResource } from "../../lib/download";
 import { wake } from "../../lib/wake";
+import { EarnSticky } from "../../components/Earn";
+import { RATE } from "../../lib/earn";
 const PdfViewer = lazy(() => import("../../components/PdfViewer"));
 export default function Detail({ kind = "papers" }: { kind?: string }) {
   const { slug } = useParams(),
@@ -233,6 +235,10 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
               <ExternalLink size={14} />
             </Link>
           )}
+          <EarnSticky
+            title="Have another year's paper?"
+            text={`Upload it and earn ₹${RATE} when it's approved. Notes count too.`}
+          />
         </aside>
       </div>
       {related.data?.data.length ? (

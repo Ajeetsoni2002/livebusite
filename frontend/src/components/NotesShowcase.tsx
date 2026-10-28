@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight, Sparkles, PenLine } from "lucide-react";
 import type { ContentItem } from "../lib/types";
 import { ContentCard } from "./ui";
+import { RATE, rupees } from "../lib/earn";
 
 export default function NotesShowcase({
   notes,
@@ -15,14 +16,11 @@ export default function NotesShowcase({
   return (
     <section className="notes-showcase" aria-labelledby="notes-showcase-title">
       <div className="notes-showcase-copy">
-        <span className="eyebrow">
-          <Sparkles size={14} /> THE OTHER HALF OF PREP
-        </span>
+        <span className="eh-q-num">Q.5</span>
         <h2 id="notes-showcase-title">
           Small notes.
           <br />
-          Big lightbulb
-          <br className="desktop-only" /> moments.
+          Big lightbulb moments.
         </h2>
         <p>
           A clearer explanation. A useful shortcut. The notes you wish you’d
@@ -31,9 +29,9 @@ export default function NotesShowcase({
         <Link to="/notes" className="button">
           Explore short notes <ArrowUpRight size={17} />
         </Link>
-        <span className="notes-footnote">
-          A LITTLE CLARITY GOES A LONG WAY.
-        </span>
+        <Link to="/contribute" className="eh-margin-note">
+          Wrote good notes? Each approved one earns you {rupees(RATE)} →
+        </Link>
       </div>
       {notes.length ? (
         <div className="notes-showcase-resource">
@@ -57,8 +55,9 @@ export default function NotesShowcase({
               ? "Opening the notebook…"
               : "The first page is yours to write."}
           </p>
-          <Link to="/contact" className="text-link">
-            Contribute your notes <ArrowUpRight size={16} />
+          <Link to="/contribute" className="text-link">
+            Upload your notes, earn {rupees(RATE)} each{" "}
+            <ArrowUpRight size={16} />
           </Link>
           <span className="notebook-bottom">
             STUDENT KNOWLEDGE. SHARED FORWARD.

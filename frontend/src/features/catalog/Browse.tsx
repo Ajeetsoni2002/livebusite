@@ -18,6 +18,8 @@ import { usePageMeta } from "../../lib/meta";
 import { useEffect, useState, type CSSProperties } from "react";
 import { branchIdentity } from "../../lib/branches";
 import { track } from "../../lib/analytics";
+import { EarnSticky } from "../../components/Earn";
+import { RATE } from "../../lib/earn";
 const sortOptions = [
   ["newest", "Newest added"],
   ["oldest", "Oldest added"],
@@ -162,8 +164,8 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
               community.
             </p>
           </div>
-          <Link className="text-link" to="/contact">
-            Share your notes <ArrowUpRight size={16} />
+          <Link className="text-link" to="/contribute">
+            Share your notes, earn ₹{RATE} each <ArrowUpRight size={16} />
           </Link>
         </div>
       )}
@@ -468,14 +470,23 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
         </div>
       ) : items.data?.data.length ? (
         <div className={`content-grid ${view === "list" ? "list-view" : ""}`}>
-          {items.data.data.map((item) => (
+          {items.data.data.flatMap((item, index) => [
             <ContentCard
               key={item._id}
               item={item}
               kind={currentKind}
               saved={items.data?.saved}
-            />
-          ))}
+            />,
+            // One offer card per page, after the fifth result (or last, on short pages).
+            index === Math.min(4, items.data!.data.length - 1) && (
+              <EarnSticky
+                key="earn"
+                className="eh-grid-sticky"
+                title={`Missing a paper? Earn ₹${RATE}`}
+                text={`If you have a ${currentKind === "notes" ? "note" : "paper"} that is not here, upload it. Every approved paper or note pays ₹${RATE}.`}
+              />
+            ),
+          ])}
         </div>
       ) : currentKind === "notes" ? (
         <Empty
@@ -489,11 +500,15 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
               ? "Try a different subject, or help fill this gap with your notes."
               : "Have an explanation that made things click? Help the next student find that moment."
           }
-          actionLabel="Contribute your notes"
-          actionTo="/contact"
+          actionLabel={`Upload notes, earn ₹${RATE} each`}
+          actionTo="/contribute"
         />
       ) : (
-        <Empty />
+        <Empty
+          message={`No published papers for these filters yet. Have one? Upload it and earn ₹${RATE} when it's approved.`}
+          actionLabel={`Upload & earn ₹${RATE}`}
+          actionTo="/contribute"
+        />
       )}
       {(items.data?.meta?.pages || 0) > 1 && (
         <div className="pagination">

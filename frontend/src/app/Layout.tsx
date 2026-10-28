@@ -4,7 +4,8 @@ import { Command, Menu, X } from "lucide-react";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
 import { FeedbackHost } from "../components/Feedback";
-import { startTilt } from "../lib/tilt";
+import { EarnFloater, EarnRibbon } from "../components/Earn";
+import { RATE } from "../lib/earn";
 const CommandPalette = lazy(() => import("../components/CommandPalette"));
 const AmbientEffects = lazy(() => import("../components/AmbientEffects"));
 export default function Layout() {
@@ -31,7 +32,6 @@ export default function Layout() {
     const timer = setTimeout(() => setEffects(true), 1600);
     return () => clearTimeout(timer);
   }, []);
-  useEffect(() => (effects ? startTilt() : undefined), [effects]);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -90,15 +90,16 @@ export default function Layout() {
         <a className="skip-link" href="#main">
           Skip to content
         </a>
+        <EarnRibbon />
         <header className="navbar">
           <div className="nav-inner">
             <Link className="brand" to="/">
               <img src="/branding/crest.webp" alt="" width="42" height="42" />
               <span>
                 <strong>
-                  BUIT<span className="accent">PAPERS</span>
+                  BUIT <span className="accent">Papers</span>
                 </strong>
-                <small>BARKATULLAH UNIVERSITY</small>
+                <small>BARKATULLAH UNIVERSITY · BHOPAL</small>
               </span>
             </Link>
             <nav
@@ -117,6 +118,13 @@ export default function Layout() {
               </NavLink>
               <NavLink to="/about" onClick={() => setMenu(false)}>
                 Our community
+              </NavLink>
+              <NavLink
+                to="/contribute"
+                className="nav-earn"
+                onClick={() => setMenu(false)}
+              >
+                Earn ₹{RATE}
               </NavLink>
             </nav>
             <button
@@ -154,6 +162,7 @@ export default function Layout() {
         <Footer />
       </div>
       <FeedbackHost />
+      <EarnFloater />
       {effects && (
         <Suspense fallback={null}>
           <AmbientEffects route={pathname} />

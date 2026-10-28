@@ -17,7 +17,7 @@
   if (location.pathname === "/") {
     root.setAttribute("data-pq-boot", "");
     root.style.visibility = "hidden";
-    root.style.backgroundColor = "#070b16";
+    root.style.backgroundColor = "#17211c";
     setTimeout(function () {
       if (!root.hasAttribute("data-pq-boot")) return;
       root.removeAttribute("data-pq-boot");
