@@ -4,6 +4,7 @@ import { FileAsset } from "../src/modules/models.js";
 import { storage } from "../src/storage/index.js";
 import {
   ensureThumbnail,
+  THUMBNAIL_VERSION,
   thumbnailMaxBytes,
 } from "../src/storage/thumbnail.js";
 
@@ -12,7 +13,10 @@ const counts = { generated: 0, skipped: 0, failed: 0 };
 try {
   const cursor = FileAsset.find({
     deletedAt: null,
-    thumbnailKey: { $in: [null, ""] },
+    $or: [
+      { thumbnailKey: { $in: [null, ""] } },
+      { thumbnailVersion: { $ne: THUMBNAIL_VERSION } },
+    ],
   })
     .sort({ _id: 1 })
     .cursor();

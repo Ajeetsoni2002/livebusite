@@ -205,7 +205,8 @@ test("uploads generate first-page thumbnails with the same visibility as the PDF
     .removeAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true });
-  assert.ok(info.width <= 480 && info.height <= 480);
+  // HD covers: 1200 px on the long side so cards stay sharp on 2x screens.
+  assert.equal(Math.max(info.width, info.height), 1200);
   const middle =
     (Math.floor(info.height / 2) * info.width + Math.floor(info.width / 2)) *
     info.channels;

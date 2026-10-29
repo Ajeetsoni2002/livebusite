@@ -962,3 +962,50 @@ test("the sweep queues covers for imported PDFs that never got one, once", async
   );
   assert.equal(await queueMissingThumbnails(), 0);
 });
+test("the sweep re-renders covers made by an older renderer", async () => {
+  const { queueMissingThumbnails, runNextJob } =
+    await import("../src/processing/jobs.js");
+  const { THUMBNAIL_VERSION } = await import("../src/storage/thumbnail.js");
+  const { savePdf, storage } = await import("../src/storage/index.js");
+  const asset: any = await savePdf(
+    {
+      buffer: await samplePdf("Old low-resolution cover"),
+      mimetype: "application/pdf",
+      originalname: "old-cover.pdf",
+    },
+    { thumbnail: false },
+  );
+  // A cover from before versioning: a key but no version.
+  await storage.put(
+    "thumbnails/old-cover.webp",
+    Buffer.from("old"),
+    "image/webp",
+    true,
+  );
+  await FileAsset.updateOne(
+    { _id: asset._id },
+    { $set: { thumbnailKey: "thumbnails/old-cover.webp" } },
+  );
+  const copy = await FileAsset.create({
+    key: "watermarked/old-cover-copy.pdf",
+    hash: "old-cover-copy",
+    thumbnailKey: "thumbnails/old-cover.webp",
+  });
+  await Paper.create({
+    title: "Old cover",
+    slug: "old-cover",
+    status: "published",
+    asset: asset._id,
+  });
+  assert.equal(await queueMissingThumbnails(), 1);
+  while (await runNextJob());
+  const updated = await FileAsset.findById(asset._id).lean<any>();
+  assert.equal(updated.thumbnailVersion, THUMBNAIL_VERSION);
+  assert.notEqual(updated.thumbnailKey, "thumbnails/old-cover.webp");
+  // Copies that shared the old cover follow it to the new one.
+  assert.equal(
+    (await FileAsset.findById(copy._id).lean<any>()).thumbnailKey,
+    updated.thumbnailKey,
+  );
+  assert.equal(await queueMissingThumbnails(), 0);
+});

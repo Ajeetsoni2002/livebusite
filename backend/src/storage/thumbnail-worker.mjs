@@ -39,8 +39,9 @@ try {
       )
     )
       throw new Error("Invalid page size");
+    // 1200 px on the long side: a card is ~380 CSS px wide, so this stays sharp at 2x.
     const viewport = page.getViewport({
-      scale: Math.min(1, 480 / Math.max(original.width, original.height)),
+      scale: 1200 / Math.max(original.width, original.height),
     });
     const surface = document.canvasFactory.create(
       Math.max(1, Math.ceil(viewport.width)),
@@ -52,10 +53,14 @@ try {
         viewport,
         background: "white",
       }).promise;
-      const image = await sharp(surface.canvas.toBuffer("image/png"))
-        .webp({ quality: 78 })
-        .toBuffer();
-      if (image.length > 512 * 1024) throw new Error("Thumbnail exceeds limit");
+      const png = surface.canvas.toBuffer("image/png");
+      // Photographed scans compress poorly: step quality down before giving up.
+      let image;
+      for (const quality of [84, 72, 60]) {
+        image = await sharp(png).webp({ quality }).toBuffer();
+        if (image.length <= 900 * 1024) break;
+      }
+      if (image.length > 900 * 1024) throw new Error("Thumbnail exceeds limit");
       process.stdout.write(image);
     } finally {
       document.canvasFactory.destroy(surface);

@@ -77,6 +77,7 @@ const assetSchema = new Schema(
     originalName: String,
     sources: [String],
     thumbnailKey: String,
+    thumbnailVersion: Number,
     deletedAt: Date,
   },
   options,

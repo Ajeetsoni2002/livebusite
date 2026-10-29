@@ -26,6 +26,7 @@ import { Setting, ProcessingJob, ContributorRequest } from "./models.js";
 import { randomBytes } from "node:crypto";
 import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
 import { storage } from "../storage/index.js";
+import { THUMBNAIL_VERSION } from "../storage/thumbnail.js";
 import { FileAsset } from "./models.js";
 import {
   defaultWatermark,
@@ -258,7 +259,8 @@ adminRouter.post("/watermark/apply", async (req: AuthRequest, res) => {
   });
   ok(res, { batch, queued: targets.length, revision });
 });
-// Finds published PDFs whose cover thumbnail is missing (no key, or the object is gone).
+// Finds published PDFs whose cover thumbnail is missing (no key, or the object is gone)
+// or was made by an older renderer.
 adminRouter.post("/thumbnails/repair", async (req: AuthRequest, res) => {
   const { dryRun } = z
     .object({ dryRun: z.boolean().default(false) })
@@ -280,12 +282,14 @@ adminRouter.post("/thumbnails/repair", async (req: AuthRequest, res) => {
     const assets = new Map(
       (
         await FileAsset.find({ _id: { $in: rows.map((r: any) => r.asset) } })
-          .select("thumbnailKey")
+          .select("thumbnailKey thumbnailVersion")
           .lean()
-      ).map((a: any) => [String(a._id), a.thumbnailKey]),
+      ).map((a: any) => [String(a._id), a]),
     );
     const checks = rows.map((row: any) => async () => {
-      const key = assets.get(String(row.asset));
+      const asset: any = assets.get(String(row.asset));
+      const key =
+        asset?.thumbnailVersion === THUMBNAIL_VERSION && asset.thumbnailKey;
       if (key)
         try {
           await storage.head(key);

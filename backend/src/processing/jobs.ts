@@ -1,7 +1,11 @@
 import { createHash, randomUUID } from "node:crypto";
 import { contentModels, FileAsset, ProcessingJob } from "../modules/models.js";
 import { storage } from "../storage/index.js";
-import { ensureThumbnail, thumbnailMaxBytes } from "../storage/thumbnail.js";
+import {
+  ensureThumbnail,
+  THUMBNAIL_VERSION,
+  thumbnailMaxBytes,
+} from "../storage/thumbnail.js";
 import {
   AlreadyWatermarked,
   getWatermarkSettings,
@@ -140,6 +144,7 @@ async function watermarkJob(job: any) {
         originalName: source.originalName,
         // The watermark is faint; the source's cover thumbnail stays representative.
         thumbnailKey: source.thumbnailKey,
+        thumbnailVersion: source.thumbnailVersion,
       });
     } catch (error: any) {
       await storage.delete(key).catch(() => {});
@@ -168,11 +173,11 @@ async function thumbnailJob(job: any) {
   if (asset.thumbnailKey) {
     try {
       await storage.head(asset.thumbnailKey);
-      return;
+      if (asset.thumbnailVersion === THUMBNAIL_VERSION) return;
     } catch {
       await FileAsset.updateMany(
         { thumbnailKey: asset.thumbnailKey },
-        { $unset: { thumbnailKey: "" } },
+        { $unset: { thumbnailKey: "", thumbnailVersion: "" } },
       );
       asset.thumbnailKey = undefined;
     }
@@ -196,9 +201,9 @@ export async function enqueueJob(
 }
 
 /**
- * Queues a thumbnail job for every live PDF whose asset has no cover yet, so imported
- * and older items heal without an admin pressing "repair". Items with a pending job,
- * or whose job failed in the last week, are left alone.
+ * Queues a thumbnail job for every live PDF whose asset has no cover yet, or a cover
+ * from an older renderer, so imported and older items heal without an admin pressing
+ * "repair". Items with a pending job, or whose job failed in the last week, are left alone.
  */
 export async function queueMissingThumbnails(limit = 500) {
   let queued = 0;
@@ -217,7 +222,10 @@ export async function queueMissingThumbnails(limit = 500) {
         await FileAsset.find({
           _id: { $in: rows.map((r: any) => r.asset) },
           deletedAt: null,
-          thumbnailKey: { $in: [null, ""] },
+          $or: [
+            { thumbnailKey: { $in: [null, ""] } },
+            { thumbnailVersion: { $ne: THUMBNAIL_VERSION } },
+          ],
         })
           .select("_id")
           .lean()
