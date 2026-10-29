@@ -2,42 +2,27 @@ import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
 type Theme = "light" | "dark";
 const KEY = "buit-theme";
-const saved = (): Theme | null => {
-  try {
-    const value = localStorage.getItem(KEY);
-    return value === "light" || value === "dark" ? value : null;
-  } catch {
-    return null;
-  }
-};
+// Light is the default; only an explicit choice of dark is remembered.
 const apply = (theme: Theme) => {
   document.documentElement.dataset.theme = theme;
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute("content", theme === "dark" ? "#17211c" : "#f3eee2");
 };
+const current = (): Theme =>
+  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(() =>
-    document.documentElement.dataset.theme === "light" ? "light" : "dark",
-  );
+  const [theme, setTheme] = useState<Theme>(current);
   useEffect(() => {
+    apply(current());
     const sync = (event: StorageEvent) => {
       if (event.key !== KEY) return;
-      const next = event.newValue === "light" ? "light" : "dark";
-      apply(next);
-      setTheme(next);
-    };
-    // Until the visitor picks a theme, keep following the operating system.
-    const media = window.matchMedia?.("(prefers-color-scheme: light)");
-    const follow = (event: MediaQueryListEvent) => {
-      if (saved()) return;
-      const next = event.matches ? "light" : "dark";
+      const next = event.newValue === "dark" ? "dark" : "light";
       apply(next);
       setTheme(next);
     };
     window.addEventListener("storage", sync);
-    media?.addEventListener("change", follow);
-    return () => {
-      window.removeEventListener("storage", sync);
-      media?.removeEventListener("change", follow);
-    };
+    return () => window.removeEventListener("storage", sync);
   }, []);
   return (
     <button

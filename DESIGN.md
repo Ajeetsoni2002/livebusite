@@ -1,6 +1,6 @@
 # BUIT Papers — Exam Hall
 
-Exam Hall (October 2026) replaces the Nebula glass/neon theme with the objects of an exam hall. Light mode is an **answer sheet**: cream paper, faint ruled lines, a red margin, blue-ballpoint primary, red-pen marks and yellow highlighter. Dark mode is a **blackboard**: green-black slate with chalk white, chalk yellow and red chalk. Physical objects — question papers, sticky notes, the pay-order cheque, the notes notebook — keep their real colours in both themes, so their text colours are fixed rather than themed. On a first visit the theme follows the operating system (`prefers-color-scheme`); the navbar button saves an explicit choice locally, synchronizes it across tabs, and `public/theme.js` applies it before CSS paints.
+Exam Hall (October 2026) replaces the Nebula glass/neon theme with the objects of an exam hall. Light mode is an **answer sheet**: cream paper, faint ruled lines, a red margin, blue-ballpoint primary, red-pen marks and yellow highlighter. Dark mode is a **blackboard**: green-black slate with chalk white, chalk yellow and red chalk. Physical objects — question papers, sticky notes, the pay-order cheque, the notes notebook — keep their real colours in both themes, so their text colours are fixed rather than themed. A first visit always opens in light mode, whatever the operating system prefers; the navbar button saves an explicit choice locally, synchronizes it across tabs, and `public/theme.js` applies it before CSS paints.
 
 ## Foundations
 

@@ -1,15 +1,9 @@
-// Apply the theme before CSS paints: a saved choice wins, otherwise follow the OS. Storage may be unavailable.
+// Apply the theme before CSS paints: a saved choice wins, otherwise light. Storage may be unavailable.
 (function () {
-  var theme;
+  var theme = "light";
   try {
-    var saved = localStorage.getItem("buit-theme");
-    if (saved === "light" || saved === "dark") theme = saved;
+    if (localStorage.getItem("buit-theme") === "dark") theme = "dark";
   } catch (e) {}
-  if (!theme)
-    theme =
-      window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches
-        ? "light"
-        : "dark";
   var root = document.documentElement;
   root.dataset.theme = theme;
   // The home page opens with the intro (src/intro): keep the prerendered page hidden until it mounts.

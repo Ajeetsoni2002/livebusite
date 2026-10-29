@@ -154,22 +154,22 @@ try {
     assert.equal(new URL(page.url()).searchParams.has("semester"), false);
   }
   if (check === "theme") {
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    await page.getByRole("button", { name: "Switch to light mode" }).click();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-    await page.reload();
-    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
-    await page.goto(base + "/admin/login");
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.getByRole("button", { name: "Switch to dark mode" }).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await page.reload();
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-    // With no saved choice, the first visit follows the operating system.
-    const light = await browser.newContext({ colorScheme: "light" });
-    const fresh = await light.newPage();
+    await page.goto(base + "/admin/login");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await page.getByRole("button", { name: "Switch to light mode" }).click();
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    // With no saved choice, the first visit is light even when the OS prefers dark.
+    const dark = await browser.newContext({ colorScheme: "dark" });
+    const fresh = await dark.newPage();
     await fresh.goto(base);
     await expect(fresh.locator("html")).toHaveAttribute("data-theme", "light");
-    await light.close();
+    await dark.close();
   }
   if (check === "palette-focus") {
     await page.locator(".palette-trigger").click();
