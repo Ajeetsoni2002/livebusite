@@ -6,7 +6,7 @@ import { audit, AuthRequest } from "./auth.js";
 import { Note, Paper, Payout, User } from "./models.js";
 
 /** Rupees paid for every approved (published) paper or note a contributor uploads. */
-export const RATE_PER_UPLOAD = 10;
+export const RATE_PER_UPLOAD = 15;
 
 type Tally = { approved: number; pending: number };
 const blank = (): { papers: Tally; notes: Tally; paid: number } => ({

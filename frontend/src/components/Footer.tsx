@@ -20,8 +20,8 @@ export default function Footer() {
             </p>
           </div>
           <EarnSticky
-            title="Pass it forward, get ₹10"
-            text="Every approved paper or note you upload earns you ₹10."
+            title="Pass it forward, get ₹15"
+            text="Every approved paper or note you upload earns you ₹15."
           />
         </div>
         <div className="footer-columns">
@@ -50,7 +50,7 @@ export default function Footer() {
           </nav>
           <nav aria-label="Footer community">
             <span>THE COMMUNITY</span>
-            <Link to="/contribute">Become a contributor · earn ₹10</Link>
+            <Link to="/contribute">Become a contributor · earn ₹15</Link>
             <Link to="/contributors">Top contributors</Link>
             <Link to="/about">Our story</Link>
             <Link to="/contact">Contact</Link>

@@ -26,7 +26,7 @@ Every text token meets WCAG AA (4.5:1) on canvas, surface and raised in its them
 
 ## Contributor earnings promotion
 
-Contributors earn ₹10 (`RATE` in `frontend/src/lib/earn.ts`, `RATE_PER_UPLOAD` in `backend/src/modules/earnings.ts`) for every approved paper or note. The offer appears in the ribbon above the masthead, the "Earn ₹10" nav item, the hero sticky note, the home pay-order cheque with its earnings calculator, a sticky note in each catalog results page and in empty states, the paper detail sidebar, the notes band, the leaderboard, About/Contact, the footer, a floating note after scrolling (closing it hides it for three days) and the toast after a download. Contributor and staff areas never show the ribbon or floating note. Contributors see their earnings at `/contributor/earnings`; admins record payments at `/admin/payouts`.
+Contributors earn ₹15 (`RATE` in `frontend/src/lib/earn.ts`, `RATE_PER_UPLOAD` in `backend/src/modules/earnings.ts`) for every approved paper or note. The offer appears in the ribbon above the masthead, the "Earn ₹15" nav item, the hero sticky note, the home pay-order cheque with its earnings calculator, a sticky note in each catalog results page and in empty states, the paper detail sidebar, the notes band, the leaderboard, About/Contact, the footer, a floating note after scrolling (closing it hides it for three days) and the toast after a download. Contributor and staff areas never show the ribbon or floating note. Contributors see their earnings at `/contributor/earnings`; admins record payments at `/admin/payouts`.
 
 ## Components
 

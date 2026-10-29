@@ -65,7 +65,7 @@ export default function Info({ page }: { page: string }) {
             <div className="story-links">
               <CreatorLink />
               <Link to="/contribute" className="text-link">
-                Contribute and earn ₹10 per upload <ArrowUpRight size={15} />
+                Contribute and earn ₹15 per upload <ArrowUpRight size={15} />
               </Link>
             </div>
           </section>
@@ -144,7 +144,7 @@ export default function Info({ page }: { page: string }) {
               </a>
             )}
             <p className="muted">
-              Have papers to share? Contributors earn ₹10 for every approved
+              Have papers to share? Contributors earn ₹15 for every approved
               paper or note.{" "}
               <Link to="/contribute">Request a contributor account</Link>.
             </p>

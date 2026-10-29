@@ -1,5 +1,5 @@
 /** Rupees a contributor earns for each approved paper or note. Mirrors backend RATE_PER_UPLOAD. */
-export const RATE = 10;
+export const RATE = 15;
 export const rupees = (amount: number) => `₹${amount.toLocaleString("en-IN")}`;
 
 const KEY = "buit-earn-dismissed";

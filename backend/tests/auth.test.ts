@@ -980,7 +980,7 @@ test("keep-alive pings Render's public URL unless disabled", async () => {
   );
   assert.equal(keepAliveTarget({}), null);
 });
-test("contributors earn ₹10 per approved upload and admins record payouts", async () => {
+test("contributors earn ₹15 per approved upload and admins record payouts", async () => {
   const { Payout } = await import("../src/modules/models.js");
   await Payout.deleteMany({});
   const contributor = await account("contributor");
@@ -1007,25 +1007,25 @@ test("contributors earn ₹10 per approved upload and admins record payouts", as
   const mine = (
     await (await login("contributor")).agent.get("/api/contributor/earnings")
   ).body.data;
-  assert.equal(mine.rate, 10);
+  assert.equal(mine.rate, 15);
   assert.equal(mine.approved, 2);
-  assert.equal(mine.earned, 20);
-  assert.equal(mine.pendingValue, 10);
-  assert.equal(mine.due, 20);
+  assert.equal(mine.earned, 30);
+  assert.equal(mine.pendingValue, 15);
+  assert.equal(mine.due, 30);
   const admin = await login("admin");
   const pay = (body: object) =>
     admin.agent
       .post(`/api/admin/earnings/${contributor._id}/payouts`)
       .set("X-CSRF-Token", admin.csrf)
       .send(body);
-  assert.equal((await pay({ amount: 25 })).status, 400);
+  assert.equal((await pay({ amount: 35 })).status, 400);
   const partial = await pay({ amount: 15, note: "UPI ref 123" });
   assert.equal(partial.status, 201);
-  assert.equal(partial.body.data.due, 5);
+  assert.equal(partial.body.data.due, 15);
   assert.equal((await pay({})).body.data.due, 0);
   assert.equal((await pay({})).status, 400);
   const list = (await admin.agent.get("/api/admin/earnings")).body.data;
-  assert.equal(list.totals.paid, 20);
+  assert.equal(list.totals.paid, 30);
   assert.equal(list.rows[0].due, 0);
   assert.equal(
     (await request(app).get("/api/contributor/earnings")).status,
