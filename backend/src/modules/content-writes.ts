@@ -72,6 +72,8 @@ const processedMetaInput = z
     sourcePages: z.number().int().min(1).max(400),
     split: z.array(z.number().int().min(1)).max(400).default([]),
     enhanced: z.array(z.number().int().min(1)).max(400).default([]),
+    // Pages where a handwritten roll number was painted over.
+    redacted: z.array(z.number().int().min(1)).max(400).default([]),
     preset: z.enum(["grayscale", "bw", "color"]),
     mode: z.enum(["needed", "all", "none"]),
   })

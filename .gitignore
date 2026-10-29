@@ -34,3 +34,6 @@ samples/
 /docs/design/
 /docs/processing/
 /docs/lighthouse-mobile.json
+
+# tesseract.js language data cached by the roll-number script
+*.traineddata

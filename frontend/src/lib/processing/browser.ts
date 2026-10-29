@@ -6,6 +6,7 @@ import {
 import workerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import { PDFDocument, degrees } from "pdf-lib";
 import type { Img, Preset } from "./core";
+import { eraseRollNumber, type RollMatch } from "./rollnumber";
 import {
   analyzeRaster,
   analyzeTextLayout,
@@ -39,6 +40,10 @@ export type PageInfo = {
   raster?: RasterAnalysis;
   /** For born-digital pages: spread found from text positions. */
   textSpread?: RasterAnalysis["spread"];
+  /** Page 1 of a scan: a handwritten roll number to paint over. */
+  roll?: RollMatch;
+  /** The roll number check could not run (OCR failed to load or crashed). */
+  rollUnchecked?: boolean;
   originalUrl: string;
 };
 export type OutputPart = {
@@ -51,6 +56,8 @@ export type OutputPart = {
   height: number;
   enhanced: boolean;
   split: boolean;
+  /** A roll number was painted over on this part's page. */
+  redacted?: boolean;
   /** Where this part sits on the original page (fractions), for the comparison view. */
   region: { x: number; y: number; w: number; h: number };
   /** Born-digital: crop box in PDF units (left, bottom, right, top) of the source page. */
@@ -177,11 +184,16 @@ export async function analyzeDocument(
     else {
       const ctx = canvas.getContext("2d")!;
       const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      info.raster = analyzeRaster({
-        width: data.width,
-        height: data.height,
-        data: data.data,
-      });
+      const img = { width: data.width, height: data.height, data: data.data };
+      info.raster = analyzeRaster(img);
+      // Students write their roll number on page 1; it must not reach the public copy.
+      if (i === 0)
+        try {
+          const { detectRollNumber } = await import("./ocr");
+          info.roll = (await detectRollNumber(canvas, img)) ?? undefined;
+        } catch {
+          info.rollUnchecked = true;
+        }
     }
     pages.push(info);
     await yieldToUi();
@@ -244,7 +256,9 @@ export async function buildPage(
   const { canvas } = await renderPage(doc, info.index);
   const ctx = canvas.getContext("2d")!;
   const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const img: Img = { width: data.width, height: data.height, data: data.data };
+  let img: Img = { width: data.width, height: data.height, data: data.data };
+  // Same render size as the analysis, so the erase boxes line up.
+  if (info.roll) img = eraseRollNumber(img, info.roll);
   const analysis = info.raster!;
   const split = wantsSplit(analysis, decision);
   const parts = processRaster(
@@ -274,6 +288,7 @@ export async function buildPage(
       height: result.img.height,
       enhanced: result.enhanced,
       split,
+      redacted: !!info.roll,
       region: regions[part],
     });
     await yieldToUi();
@@ -354,11 +369,15 @@ export function reportOf(
   const enhanced = [
     ...new Set(parts.filter((p) => p.enhanced).map((p) => p.page + 1)),
   ];
+  const redacted = [
+    ...new Set(parts.filter((p) => p.redacted).map((p) => p.page + 1)),
+  ];
   return {
     pages: parts.length,
     sourcePages: pages.length,
     split,
     enhanced,
+    redacted,
     preset: settings.preset,
     mode: settings.mode,
   };
@@ -370,7 +389,8 @@ export function wouldChange(pages: PageInfo[], settings: Settings) {
     p.bornDigital
       ? p.textSpread?.split
       : p.raster &&
-        (p.raster.spread.split ||
+        (!!p.roll ||
+          p.raster.spread.split ||
           wantsEnhance(p.raster, defaultDecision, settings.mode)),
   );
 }

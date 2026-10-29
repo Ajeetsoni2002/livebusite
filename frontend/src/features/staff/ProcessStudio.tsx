@@ -8,6 +8,7 @@ import {
   Loader2,
   RotateCw,
   Scissors,
+  ShieldCheck,
   Sparkles,
   TriangleAlert,
   X,
@@ -399,6 +400,12 @@ export default function ProcessStudio({
                         {part.enhanced && (
                           <Sparkles size={12} aria-label="Cleaned" />
                         )}
+                        {part.redacted && (
+                          <ShieldCheck
+                            size={12}
+                            aria-label="Roll number erased"
+                          />
+                        )}
                         {flags?.review && !part.split && (
                           <TriangleAlert
                             size={12}
@@ -621,7 +628,13 @@ export default function ProcessStudio({
                       .filter((p) => p.enhanced)
                       .map((p) => p.page),
                   ).size
-                } cleaned`
+                } cleaned${
+                  pages[0]?.roll
+                    ? " · roll number erased"
+                    : pages[0]?.rollUnchecked
+                      ? " · roll number check failed, look at page 1"
+                      : ""
+                }`
               : " "}
             {phase.name === "assembling" &&
               ` · building PDF ${phase.done}/${phase.total}`}
