@@ -1,0 +1,503 @@
+<div class="unit">
+<h2 class="unit-title"><span>UNIT I</span> Statics &amp; Friction</h2>
+
+<h3>1. Coplanar Forces &amp; Resultant</h3>
+<p><b>Force</b> ek vector quantity hai (magnitude, direction, point of application, line of action). Jab saari forces ek hi plane mein ho to unhe <b>coplanar forces</b> kehte hain.</p>
+<table>
+<tr><th>Type</th><th>Meaning</th><th>Equilibrium conditions</th></tr>
+<tr><td>Collinear</td><td>Sab forces ek hi line of action par</td><td>ΣF = 0</td></tr>
+<tr><td>Concurrent</td><td>Sab forces ek point se pass hoti hain</td><td>ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0</td></tr>
+<tr><td>Parallel (like / unlike)</td><td>Lines of action parallel</td><td>ΣF<sub>y</sub> = 0, ΣM = 0</td></tr>
+<tr><td>Non-concurrent, non-parallel (general)</td><td>Na ek point, na parallel</td><td>ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0</td></tr>
+</table>
+<div class="box formula"><span class="lbl">Formula</span> Resultant (resolution method):
+<span class="eq">R = √[(ΣF<sub>x</sub>)<sup>2</sup> + (ΣF<sub>y</sub>)<sup>2</sup>], &nbsp; tan α = ΣF<sub>y</sub> / ΣF<sub>x</sub></span>
+Two forces P, Q at angle θ (parallelogram law): <span class="m">R = √(P<sup>2</sup> + Q<sup>2</sup> + 2PQ cos θ), tan α = Q sin θ / (P + Q cos θ)</span>.<br>
+<b>Lami's theorem</b> (3 concurrent forces in equilibrium): <span class="m">P/sin α = Q/sin β = R/sin γ</span> (α = Q aur R ke beech ka angle, yaani P ke opposite wala angle; isi tarah β, γ).</div>
+
+<h3>2. Free Body Diagram (FBD)</h3>
+<p>FBD mein body ko surroundings se <b>alag (isolate)</b> karke uspar lagne wali saari forces dikhate hain: weight W (downward, CG par), applied loads, support reactions, friction, tension. Steps: (1) body isolate karo, (2) weight lagao, (3) har contact/support ko uske reaction se replace karo, (4) unknown directions assume karo (answer negative aaye to direction ulti).</p>
+<p class="small"><b>Supports in FBD:</b> smooth surface / roller → 1 reaction (surface ke normal); hinge / pin → 2 (R<sub>x</sub>, R<sub>y</sub>); fixed → 3 (R<sub>x</sub>, R<sub>y</sub>, M); string / cable → tension (body se door, pull).</p>
+
+<h3>3. Moment &amp; Varignon's Theorem</h3>
+<p><b>Moment</b> = Force × perpendicular distance (M = F·d), unit N·m. Clockwise / anticlockwise sign convention fix rakho. <b>Couple</b> = do equal, opposite, parallel forces → sirf rotation, moment = F × arm, kisi bhi point ke about same.</p>
+<div class="box def"><span class="lbl">Varignon's Theorem</span> Kisi point ke about forces ke system ke <b>resultant ka moment</b> = usi point ke about saari <b>individual forces ke moments ka algebraic sum</b>. <span class="m">R·d = ΣF·x</span>. Use: resultant ki <b>line of action</b> (position) nikalne mein: <span class="m">d = ΣM / R</span>.</div>
+
+<p><b>Equilibrium conditions:</b> Body equilibrium mein hai jab resultant force bhi zero aur resultant moment bhi zero: <b>ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0</b> (coplanar mein max 3 unknowns solve ho sakte hain). Two-force member: dono forces equal, opposite, collinear. Three-force member: forces concurrent ya parallel honi chahiye.</p>
+
+<h3>4. Polygon Law of Forces &amp; Funicular Polygon (Graphical)</h3>
+<ul>
+<li><b>Polygon law:</b> Agar kai concurrent forces ko magnitude + direction mein ek order mein (tip to tail) draw karein, to <b>closing side ulti order mein</b> resultant deti hai. Polygon close ho jaye → resultant zero → equilibrium (triangle law iska special case hai).</li>
+<li><b>Bow's notation:</b> Forces ke beech ke spaces ko A, B, C… se naam do; force ko do letters (AB) se denote karo — graphical work easy.</li>
+<li><b>Funicular (link/string) polygon:</b> Non-concurrent forces ke liye. Force polygon banao → ek <b>pole O</b> choose karo → rays (Oa, Ob…) draw karo → space diagram mein rays ke parallel links draw karo. Pehle aur last link ka intersection = resultant ki <b>line of action</b>.</li>
+<li><b>Graphical equilibrium:</b> Force polygon close → no resultant force; funicular polygon close → no resultant couple. Dono close → body in equilibrium. Beam ke support reactions isi se nikalte hain.</li>
+</ul>
+
+<h3>5. Analysis of Perfect Truss</h3>
+<p><b>Truss</b> = straight members ka framework jo ends par pin-joint hote hain; load sirf joints par; members sirf axial force (Tension T ya Compression C) lete hain (self-weight neglect).</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">Perfect truss: m = 2j − 3 &nbsp;|&nbsp; m &lt; 2j − 3 → deficient &nbsp;|&nbsp; m &gt; 2j − 3 → redundant</span> (m = members, j = joints)</div>
+<div class="grid2">
+<div>
+<h4>Method of Joints</h4>
+<ol>
+<li>Pehle poore truss ke support reactions (ΣM, ΣF<sub>y</sub>, ΣF<sub>x</sub>).</li>
+<li>Aisa joint chuno jahan <b>≤ 2 unknown</b> members ho.</li>
+<li>ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0 lagao. Force joint se door → Tension; joint ki taraf → Compression.</li>
+<li>Joint-by-joint aage badho.</li>
+</ol>
+<h4>Method of Sections</h4>
+<ol>
+<li>Reactions nikalo.</li>
+<li>Section line se truss ko kaato — <b>max 3 unknown</b> members cut hon (sab ek joint par na milte ho).</li>
+<li>Ek part ka FBD lo; ΣM about intersection of 2 unknowns → teesra directly.</li>
+</ol>
+<p class="small">Use: beech ke kuch members ki force jaldi chahiye ho to sections best.</p>
+</div>
+<div>
+<figure><svg viewBox="0 0 200 150" width="200">
+<polygon points="40,126 160,126 100,22" fill="none" stroke="#1c2230" stroke-width="2"/>
+<circle cx="40" cy="126" r="3" fill="#1c2230"/><circle cx="160" cy="126" r="3" fill="#1c2230"/><circle cx="100" cy="22" r="3" fill="#1c2230"/>
+<line x1="100" y1="0" x2="100" y2="17" stroke="#1f4e8c" stroke-width="2"/><polygon points="96,12 104,12 100,19" fill="#1f4e8c"/>
+<text x="106" y="10" font-size="10" fill="#1f4e8c">W = 10 kN</text>
+<polygon points="40,126 32,140 48,140" fill="none" stroke="#1c2230"/>
+<circle cx="160" cy="134" r="5" fill="none" stroke="#1c2230"/><line x1="148" y1="140" x2="172" y2="140" stroke="#1c2230"/>
+<text x="24" y="124" font-size="10">A</text><text x="168" y="124" font-size="10">B</text><text x="108" y="30" font-size="10">C</text>
+<text x="44" y="70" font-size="10">60°</text><text x="88" y="140" font-size="10">4 m</text>
+<text x="56" y="148" font-size="9" fill="#1f4e8c">R<tspan font-size="7" dy="2">A</tspan></text><text x="132" y="148" font-size="9" fill="#1f4e8c">R<tspan font-size="7" dy="2">B</tspan></text>
+</svg><figcaption>Equilateral truss, load W at apex C</figcaption></figure>
+<div class="box tip"><span class="lbl">Solved</span> Symmetry se R<sub>A</sub> = R<sub>B</sub> = 5 kN.<br>Joint A: ΣF<sub>y</sub>: F<sub>AC</sub> sin60° = 5 → <b>F<sub>AC</sub> = 5.77 kN (C)</b>.<br>ΣF<sub>x</sub>: F<sub>AB</sub> = F<sub>AC</sub> cos60° = <b>2.89 kN (T)</b>. Symmetry: F<sub>BC</sub> = 5.77 kN (C). Check m = 3, j = 3: 2(3)−3 = 3 → perfect.</div>
+</div>
+</div>
+<div class="box trick"><span class="lbl">Yaad Rakho</span> Joint par sirf 2 non-collinear members aur koi load nahi → dono members ki force zero (<b>zero-force members</b>). 3 members, 2 collinear, no load → teesra zero.</div>
+
+<h3>6. Friction</h3>
+<p><b>Friction</b> = contact surfaces ke beech relative motion ko oppose karne wali force. Static (limiting) &gt; Dynamic (kinetic). <b>Laws of Coulomb friction:</b> F ∝ N; F direction motion ke opposite; F contact area par depend nahi karta; kinetic friction velocity se (lagbhag) independent.</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">F = μN, &nbsp; μ = tan φ (φ = angle of friction), &nbsp; angle of repose α = φ</span>
+Resultant reaction S = √(N<sup>2</sup> + F<sup>2</sup>), N ke saath angle φ banata hai.</div>
+
+<h4>(a) Friction on Inclined Plane (weight W, angle θ)</h4>
+<table>
+<tr><th>Effort P direction</th><th>Moving UP the plane</th><th>Moving DOWN the plane</th></tr>
+<tr><td>Parallel to plane</td><td>P = W(sin θ + μ cos θ)</td><td>P = W(μ cos θ − sin θ) &nbsp;(θ &lt; φ)</td></tr>
+<tr><td>Horizontal</td><td>P = W tan(θ + φ)</td><td>P = W tan(φ − θ)</td></tr>
+<tr><td>At angle α to plane</td><td>P = W sin(θ + φ) / cos(α − φ)</td><td>P = W sin(φ − θ) / cos(α + φ)</td></tr>
+</table>
+<p class="small">Least effort to drag up: jab α = φ, tab P<sub>min</sub> = W sin(θ + φ). <b>Example:</b> W = 500 N, θ = 30°, μ = 0.2, P parallel up: P = 500(0.5 + 0.2×0.866) = <b>336.6 N</b>.</p>
+
+<h4>(b) Screw Jack</h4>
+<p>Screw jack ek inclined plane hai jo cylinder par lipta hua hai. Thread ko unroll karo: base = πd, height = pitch p. Load W ko effort P (mean radius par) ghuma ke uthate hain.</p>
+<div class="box formula"><span class="lbl">Formula</span>
+<span class="eq">tan α = p / (πd); &nbsp; P = W tan(α + φ); &nbsp; Handle effort P<sub>1</sub> = P·(d/2)/L</span>
+<span class="eq">η = tan α / tan(α + φ), &nbsp; η<sub>max</sub> = (1 − sin φ)/(1 + sin φ); &nbsp; Lowering torque = W tan(φ − α)·d/2</span>
+Multi-start thread: lead = n × pitch, tan α = lead/(πd). <b>Self-locking</b> (load khud neeche nahi aata) jab φ &gt; α; tab η &lt; 50%.</div>
+<p class="small"><b>Example:</b> d = 50 mm, p = 10 mm, μ = 0.1, W = 20 kN, handle L = 500 mm. tan α = 10/(π×50) = 0.0637 (α = 3.64°), φ = 5.71°. P = 20000 × tan 9.35° = <b>3294 N</b>; handle effort = 3294×25/500 = <b>164.7 N</b>; η = 0.0637/0.1647 = <b>38.6%</b> → self-locking.</p>
+
+<div class="grid2">
+<div>
+<h4>(c) Ladder Friction</h4>
+<p>Ladder (length l, weight W at middle) floor aur wall par tika hai. Ladder ka foot wall se <b>door</b> slip karta hai, isliye floor friction F<sub>f</sub> wall ki <b>taraf</b>; top neeche slip karta hai, isliye wall friction F<sub>w</sub> <b>upar</b>.</p>
+<p>Equations: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM<sub>foot</sub> = 0, with F<sub>f</sub> = μ<sub>f</sub>N<sub>f</sub>, F<sub>w</sub> = μ<sub>w</sub>N<sub>w</sub> (limiting).</p>
+<p class="small"><b>Example:</b> Smooth wall, floor μ = 0.25, ladder ka angle θ (floor se) on point of slipping? N<sub>f</sub> = W, N<sub>w</sub> = F<sub>f</sub> = 0.25W. ΣM about foot: N<sub>w</sub>·l sin θ = W·(l/2)cos θ → tan θ = 1/(2μ) = 2 → <b>θ = 63.4°</b>.</p>
+</div>
+<div>
+<figure><svg viewBox="0 0 200 140" width="190">
+<line x1="10" y1="120" x2="170" y2="120" stroke="#1c2230" stroke-width="2"/>
+<line x1="160" y1="10" x2="160" y2="120" stroke="#1c2230" stroke-width="2"/>
+<line x1="70" y1="120" x2="160" y2="30" stroke="#1f4e8c" stroke-width="4"/>
+<line x1="115" y1="75" x2="115" y2="105" stroke="#c0392b" stroke-width="1.5"/><polygon points="111,100 119,100 115,107" fill="#c0392b"/><text x="119" y="104" font-size="10">W</text>
+<line x1="70" y1="120" x2="70" y2="92" stroke="#1c2230" stroke-width="1.5"/><polygon points="66,96 74,96 70,89" fill="#1c2230"/><text x="56" y="92" font-size="10">N<tspan font-size="7" dy="2">f</tspan></text>
+<line x1="70" y1="126" x2="100" y2="126" stroke="#1c2230" stroke-width="1.5"/><polygon points="96,122 96,130 103,126" fill="#1c2230"/><text x="104" y="134" font-size="10">F<tspan font-size="7" dy="2">f</tspan></text>
+<line x1="160" y1="30" x2="132" y2="30" stroke="#1c2230" stroke-width="1.5"/><polygon points="136,26 136,34 129,30" fill="#1c2230"/><text x="116" y="26" font-size="10">N<tspan font-size="7" dy="2">w</tspan></text>
+<line x1="166" y1="50" x2="166" y2="24" stroke="#1c2230" stroke-width="1.5"/><polygon points="162,28 170,28 166,21" fill="#1c2230"/><text x="171" y="40" font-size="10">F<tspan font-size="7" dy="2">w</tspan></text>
+<text x="84" y="116" font-size="10">θ</text>
+</svg><figcaption>Ladder FBD (foot slips away from wall)</figcaption></figure>
+</div>
+</div>
+
+<h4>(d) Wedge Friction</h4>
+<p><b>Wedge</b> ek chhota tapered block hai jo heavy load ko thoda uthane / adjust karne ke liye use hota hai. Effort P wedge par lagta hai; har contact surface par friction motion ke opposite. Method: wedge aur block ka <b>alag-alag FBD</b> banao; har surface par reaction R normal se φ angle par (Lami's theorem ya ΣF<sub>x</sub>, ΣF<sub>y</sub>). Pehle block ki equilibrium se unknown reaction, phir wedge se P.</p>
+<div class="box tip"><span class="lbl">Exam Tip</span> Friction numericals mein sabse common galti friction ki direction hai — pehle socho body kis taraf move "karna chahti" hai, friction uske ulta lagao. Ladder, block-on-incline aur screw jack (η, self-locking) har saal aate hain.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT II</span> Centroid, Moment of Inertia &amp; Power Transmission</h2>
+
+<h3>1. Centre of Gravity &amp; Centroid of Plane Areas</h3>
+<p><b>Centre of gravity (CG)</b> = woh point jahan body ka poora weight act karta hua maana jaata hai. Plane area (no weight) ke liye isi point ko <b>centroid</b> kehte hain. Symmetric figure mein centroid axis of symmetry par hota hai.</p>
+<div class="box formula"><span class="lbl">Formula</span> Composite area:
+<span class="eq">x̄ = ΣA<sub>i</sub>x<sub>i</sub> / ΣA<sub>i</sub>, &nbsp; ȳ = ΣA<sub>i</sub>y<sub>i</sub> / ΣA<sub>i</sub> &nbsp; (hole/cut-out ka area negative lo)</span></div>
+<table>
+<tr><th>Shape</th><th>Area</th><th>Centroid</th><th>I about centroidal axis (I<sub>xx</sub>)</th><th>I about base/diameter</th></tr>
+<tr><td>Rectangle b × d</td><td>bd</td><td>d/2 from base</td><td>bd<sup>3</sup>/12</td><td>bd<sup>3</sup>/3</td></tr>
+<tr><td>Triangle (base b, height h)</td><td>bh/2</td><td>h/3 from base</td><td>bh<sup>3</sup>/36</td><td>bh<sup>3</sup>/12 (apex se parallel axis: bh<sup>3</sup>/4)</td></tr>
+<tr><td>Circle (dia d)</td><td>πd<sup>2</sup>/4</td><td>centre</td><td>πd<sup>4</sup>/64</td><td>I<sub>polar</sub> = πd<sup>4</sup>/32</td></tr>
+<tr><td>Semicircle (radius r)</td><td>πr<sup>2</sup>/2</td><td>4r/(3π) from diameter</td><td>0.11 r<sup>4</sup></td><td>πr<sup>4</sup>/8 = πd<sup>4</sup>/128</td></tr>
+<tr><td>Quarter circle</td><td>πr<sup>2</sup>/4</td><td>4r/(3π) from both edges</td><td>0.055 r<sup>4</sup></td><td>πr<sup>4</sup>/16</td></tr>
+</table>
+
+<h3>2. Moment of Inertia (Area) &amp; Theorems</h3>
+<p><b>Area MOI</b> (second moment of area) <span class="m">I = Σ(dA)·y<sup>2</sup> = ∫y<sup>2</sup>dA</span>, unit mm<sup>4</sup>/m<sup>4</sup>. Bending strength ka measure. <b>Radius of gyration</b> k = √(I/A).</p>
+<div class="grid2">
+<div class="box formula"><span class="lbl">Parallel Axis Theorem</span><span class="eq">I<sub>AB</sub> = I<sub>G</sub> + A h<sup>2</sup></span>h = centroidal axis aur parallel axis AB ke beech distance. (Centroidal I hamesha minimum.)</div>
+<div class="box formula"><span class="lbl">Perpendicular Axis Theorem</span><span class="eq">I<sub>zz</sub> = I<sub>xx</sub> + I<sub>yy</sub></span>Plane lamina ke liye; z-axis plane ke perpendicular, x, y ke intersection se. Example: circle I<sub>polar</sub> = 2 × πd<sup>4</sup>/64.</div>
+</div>
+<div class="box tip"><span class="lbl">Solved (T-section)</span> Flange 100×20 mm (top), web 20×80 mm. Base se: A<sub>1</sub> = 2000, y<sub>1</sub> = 90; A<sub>2</sub> = 1600, y<sub>2</sub> = 40.
+ȳ = (2000×90 + 1600×40)/3600 = <b>67.78 mm</b> (base se).<br>
+I<sub>xx</sub> = [100×20<sup>3</sup>/12 + 2000×22.22<sup>2</sup>] + [20×80<sup>3</sup>/12 + 1600×27.78<sup>2</sup>] = (66,667 + 9,87,654) + (8,53,333 + 12,34,568) = <b>3.14 × 10<sup>6</sup> mm<sup>4</sup></b>.</div>
+
+<h3>3. Mass Moment of Inertia</h3>
+<p>Rotation ke against resistance (rotational inertia): <span class="m">I = Σm r<sup>2</sup> = ∫r<sup>2</sup>dm = Mk<sup>2</sup></span>, unit kg·m<sup>2</sup>. Parallel axis theorem yahan bhi: I = I<sub>G</sub> + Mh<sup>2</sup>. KE<sub>rot</sub> = ½Iω<sup>2</sup>, Torque T = Iα.</p>
+<table>
+<tr><th>Body</th><th>Axis</th><th>I</th><th>Body</th><th>Axis</th><th>I</th></tr>
+<tr><td>Thin rod (L)</td><td>centre, ⊥ rod</td><td>ML<sup>2</sup>/12</td><td>Thin rod</td><td>end, ⊥ rod</td><td>ML<sup>2</sup>/3</td></tr>
+<tr><td>Thin ring (R)</td><td>polar (⊥ plane)</td><td>MR<sup>2</sup></td><td>Solid disc / cylinder</td><td>own axis</td><td>MR<sup>2</sup>/2</td></tr>
+<tr><td>Solid sphere</td><td>diameter</td><td>2MR<sup>2</sup>/5</td><td>Hollow sphere (thin)</td><td>diameter</td><td>2MR<sup>2</sup>/3</td></tr>
+<tr><td>Rect. plate b×d</td><td>centroidal, ∥ b</td><td>Md<sup>2</sup>/12</td><td>Solid cylinder</td><td>centroidal, ⊥ axis</td><td>M(3R<sup>2</sup> + L<sup>2</sup>)/12</td></tr>
+</table>
+
+<h3>4. Power Transmission — Belts &amp; Ropes</h3>
+<p>Belts/ropes power ko ek shaft se doosre shaft tak <b>friction</b> ke through pahunchate hain. Types: flat belt (moderate distance, ~10 m tak), V-belt (chhoti distance, zyada grip, slip kam), circular rope (lambi distance, jaise cranes/mills). Drives: <b>open belt</b> (same direction rotation) aur <b>cross belt</b> (opposite direction).</p>
+<div class="box formula"><span class="lbl">Formula</span>
+<span class="eq">Velocity ratio: N<sub>2</sub>/N<sub>1</sub> = d<sub>1</sub>/d<sub>2</sub> &nbsp; [thickness t ke saath: (d<sub>1</sub>+t)/(d<sub>2</sub>+t); slip s% ke saath × (1 − s/100)]</span>
+<span class="eq">Length: Open L = π(r<sub>1</sub>+r<sub>2</sub>) + 2x + (r<sub>1</sub>−r<sub>2</sub>)<sup>2</sup>/x; &nbsp; Cross L = π(r<sub>1</sub>+r<sub>2</sub>) + 2x + (r<sub>1</sub>+r<sub>2</sub>)<sup>2</sup>/x</span>
+<span class="eq">Angle of contact: Open θ = 180° − 2α, sin α = (r<sub>1</sub>−r<sub>2</sub>)/x; &nbsp; Cross θ = 180° + 2α, sin α = (r<sub>1</sub>+r<sub>2</sub>)/x</span>
+<span class="eq">Ratio of tensions (flat): T<sub>1</sub>/T<sub>2</sub> = e<sup>μθ</sup>; &nbsp; V-belt/rope (groove angle 2β): T<sub>1</sub>/T<sub>2</sub> = e<sup>μθ cosec β</sup></span>
+<span class="eq">Power P = (T<sub>1</sub> − T<sub>2</sub>)·v watt, &nbsp; v = πdN/60 m/s</span>
+<span class="eq">Centrifugal tension T<sub>c</sub> = mv<sup>2</sup>; &nbsp; Max tension T = T<sub>1</sub> + T<sub>c</sub> = σ·b·t; &nbsp; Max power when T<sub>c</sub> = T/3, v = √(T/3m)</span></div>
+<p class="small">θ hamesha <b>radian</b> mein, aur smaller pulley ka angle of contact lo (open belt). T<sub>1</sub> = tight side, T<sub>2</sub> = slack side, m = mass per metre length. Initial tension T<sub>0</sub> = (T<sub>1</sub> + T<sub>2</sub>)/2 (+ T<sub>c</sub> if considered).</p>
+<div class="box tip"><span class="lbl">Example</span> Flat belt, μ = 0.3, θ = 180° = π rad, T<sub>1</sub> = 1000 N, v = 10 m/s. T<sub>1</sub>/T<sub>2</sub> = e<sup>0.3π</sup> = 2.566 → T<sub>2</sub> = 389.7 N. P = (1000 − 389.7)×10 = <b>6.10 kW</b>.</div>
+
+<h3>5. Gears &amp; Gear Trains</h3>
+<p><b>Gears</b> = toothed wheels; positive drive (no slip), exact velocity ratio, short centre distance, high power. <b>Module</b> m = d/T (mm), circular pitch p<sub>c</sub> = πd/T = πm.</p>
+<table>
+<tr><th>Gear type</th><th>Shafts</th><th>Use / remark</th></tr>
+<tr><td>Spur</td><td>Parallel, straight teeth</td><td>Simple, noisy at high speed — lathe, gearbox</td></tr>
+<tr><td>Helical</td><td>Parallel, inclined teeth</td><td>Smooth, quiet; axial thrust (double helical/herringbone se cancel)</td></tr>
+<tr><td>Bevel</td><td>Intersecting (usually 90°)</td><td>Differential of automobile; mitre gears (equal size)</td></tr>
+<tr><td>Worm &amp; worm wheel</td><td>Non-intersecting, ⊥</td><td>Very high speed reduction, self-locking possible</td></tr>
+<tr><td>Rack &amp; pinion</td><td>Rotary ↔ linear</td><td>Lathe carriage, steering</td></tr>
+</table>
+<div class="box formula"><span class="lbl">Formula</span>
+<span class="eq">Two gears: N<sub>1</sub>/N<sub>2</sub> = T<sub>2</sub>/T<sub>1</sub> = d<sub>2</sub>/d<sub>1</sub> &nbsp; (external mesh → opposite direction)</span>
+<span class="eq">Simple train: N<sub>1</sub>/N<sub>n</sub> = T<sub>n</sub>/T<sub>1</sub> (idlers ratio change nahi karte, sirf direction; odd no. of idlers → same direction)</span>
+<span class="eq">Compound train: N<sub>last</sub>/N<sub>first</sub> = (Product of teeth on drivers)/(Product of teeth on driven) = Train value</span></div>
+<ul class="small">
+<li><b>Simple gear train:</b> har shaft par ek gear. <b>Compound:</b> ek shaft par do gears (badi reduction compact space mein). <b>Reverted:</b> compound train jismein first aur last gear co-axial (clock, lathe back gear); condition r<sub>1</sub> + r<sub>2</sub> = r<sub>3</sub> + r<sub>4</sub>. <b>Epicyclic:</b> ek gear ka axis doosre ke around ghoomta hai (differential, hoist) — tabular method se solve.</li>
+<li><b>Example (compound):</b> A (20 T, driver, 1500 rpm) meshes B (60 T); C (25 T) B ke shaft par, meshes D (75 T). N<sub>D</sub> = 1500 × (20×25)/(60×75) = <b>166.7 rpm</b>.</li>
+</ul>
+<p class="small"><b>Belt vs Gear:</b> belt mein slip → VR exact nahi, large centre distance, shock absorb, cheap; gear mein no slip → exact VR, small centre distance, high power, compact, par costly aur lubrication chahiye.</p>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT III</span> Shear Force &amp; Bending Moment</h2>
+
+<h3>1. Types of Beams &amp; Loading</h3>
+<p><b>Beam</b> = structural member jo apni length ke perpendicular (transverse) load leta hai aur bending se resist karta hai.</p>
+<p><b>Types of beams:</b> <b>cantilever</b> (ek end fixed, doosra free), <b>simply supported</b> (dono ends par hinge/roller), <b>overhanging</b> (ek/dono end support ke bahar nikle) — ye teeno <b>statically determinate</b> (3 equations se reactions); <b>fixed</b> (dono ends fixed), <b>propped cantilever</b> (cantilever + free end par prop), <b>continuous</b> (2 se zyada supports) — indeterminate.</p>
+<p><b>Types of loading:</b> <b>point/concentrated load</b> W (kN) ek point par; <b>UDL</b> w (kN/m) — total wL, centre par act; <b>UVL</b> (triangular/trapezoidal) — triangle total wL/2, bade end se L/3 par act; <b>applied couple/moment</b> M (kN·m).</p>
+<div class="box def"><span class="lbl">Definitions</span> <b>Shear Force (SF)</b> at a section = section ke ek side (left ya right) ki saari vertical forces ka algebraic sum. <b>Bending Moment (BM)</b> at a section = section ke ek side ki saari forces ke moments ka algebraic sum (section ke about). <b>Sign convention:</b> Left side upward force → +SF; <b>sagging</b> (concave upward, beam "smile") → +BM, <b>hogging</b> → −BM.</div>
+
+<h3>2. Relationship between Load, SF and BM</h3>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">dF/dx = −w &nbsp; (load intensity) &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; dM/dx = F &nbsp; (shear force)</span></div>
+<ul>
+<li>BM <b>maximum</b> wahan hota hai jahan SF = 0 (ya sign change karta hai).</li>
+<li>No load portion → SF constant (horizontal line), BM linear (inclined line).</li>
+<li>UDL → SF linear, BM parabolic (2nd degree). UVL → SF parabolic, BM cubic.</li>
+<li>Point load par SF mein sudden jump (load ke barabar); applied couple par BM mein sudden jump.</li>
+<li>Do sections ke beech BM ka change = SF diagram ka area: M<sub>2</sub> − M<sub>1</sub> = ∫F dx.</li>
+</ul>
+
+<h3>3. Standard SFD &amp; BMD Results</h3>
+<div class="grid2">
+<figure><svg viewBox="0 0 220 132" width="220">
+<line x1="30" y1="6" x2="30" y2="34" stroke="#1c2230" stroke-width="2"/>
+<line x1="22" y1="10" x2="30" y2="6" stroke="#1c2230"/><line x1="22" y1="18" x2="30" y2="14" stroke="#1c2230"/><line x1="22" y1="26" x2="30" y2="22" stroke="#1c2230"/><line x1="22" y1="34" x2="30" y2="30" stroke="#1c2230"/>
+<rect x="30" y="17" width="160" height="6" fill="#c9d7ea" stroke="#1c2230"/>
+<line x1="190" y1="0" x2="190" y2="13" stroke="#c0392b" stroke-width="1.5"/><polygon points="186,10 194,10 190,16" fill="#c0392b"/><text x="196" y="10" font-size="10">W</text>
+<text x="100" y="38" font-size="9">L</text>
+<line x1="30" y1="62" x2="190" y2="62" stroke="#1c2230"/><rect x="30" y="49" width="160" height="13" fill="#d6e4f5" stroke="#1f4e8c"/><text x="95" y="58" font-size="10">+W</text><text x="2" y="65" font-size="9">SFD</text>
+<line x1="30" y1="96" x2="190" y2="96" stroke="#1c2230"/><polygon points="30,96 30,122 190,96" fill="#fbe3d4" stroke="#8a3b12"/><text x="36" y="118" font-size="10">−WL</text><text x="2" y="99" font-size="9">BMD</text>
+</svg><figcaption>Cantilever, point load W at free end</figcaption></figure>
+
+<figure><svg viewBox="0 0 220 132" width="220">
+<line x1="30" y1="6" x2="30" y2="34" stroke="#1c2230" stroke-width="2"/>
+<line x1="22" y1="10" x2="30" y2="6" stroke="#1c2230"/><line x1="22" y1="18" x2="30" y2="14" stroke="#1c2230"/><line x1="22" y1="26" x2="30" y2="22" stroke="#1c2230"/><line x1="22" y1="34" x2="30" y2="30" stroke="#1c2230"/>
+<rect x="30" y="17" width="160" height="6" fill="#c9d7ea" stroke="#1c2230"/>
+<rect x="30" y="7" width="160" height="10" fill="#fff1c2" stroke="#c0392b"/><text x="196" y="15" font-size="10">w/m</text>
+<line x1="30" y1="62" x2="190" y2="62" stroke="#1c2230"/><polygon points="30,62 30,46 190,62" fill="#d6e4f5" stroke="#1f4e8c"/><text x="36" y="58" font-size="10">+wL</text><text x="2" y="65" font-size="9">SFD</text>
+<line x1="30" y1="96" x2="190" y2="96" stroke="#1c2230"/><path d="M190,96 Q110,96 30,124 L30,96 Z" fill="#fbe3d4" stroke="#8a3b12"/><text x="36" y="110" font-size="10">−wL²/2</text><text x="2" y="99" font-size="9">BMD</text>
+</svg><figcaption>Cantilever, UDL w over full span (SF linear, BM parabola)</figcaption></figure>
+
+<figure><svg viewBox="0 0 220 132" width="220">
+<rect x="30" y="17" width="160" height="6" fill="#c9d7ea" stroke="#1c2230"/>
+<polygon points="30,23 24,33 36,33" fill="none" stroke="#1c2230"/><circle cx="190" cy="28" r="5" fill="none" stroke="#1c2230"/>
+<line x1="110" y1="0" x2="110" y2="13" stroke="#c0392b" stroke-width="1.5"/><polygon points="106,10 114,10 110,16" fill="#c0392b"/><text x="116" y="10" font-size="10">W</text>
+<text x="60" y="38" font-size="9">L/2</text><text x="146" y="38" font-size="9">L/2</text>
+<line x1="30" y1="62" x2="190" y2="62" stroke="#1c2230"/><rect x="30" y="52" width="80" height="10" fill="#d6e4f5" stroke="#1f4e8c"/><rect x="110" y="62" width="80" height="10" fill="#d6e4f5" stroke="#1f4e8c"/><text x="52" y="60" font-size="10">+W/2</text><text x="134" y="71" font-size="10">−W/2</text><text x="2" y="65" font-size="9">SFD</text>
+<line x1="30" y1="122" x2="190" y2="122" stroke="#1c2230"/><polygon points="30,122 110,94 190,122" fill="#fbe3d4" stroke="#8a3b12"/><text x="92" y="90" font-size="10">WL/4</text><text x="2" y="125" font-size="9">BMD</text>
+</svg><figcaption>Simply supported, central point load W</figcaption></figure>
+
+<figure><svg viewBox="0 0 220 132" width="220">
+<rect x="30" y="17" width="160" height="6" fill="#c9d7ea" stroke="#1c2230"/>
+<rect x="30" y="7" width="160" height="10" fill="#fff1c2" stroke="#c0392b"/><text x="196" y="15" font-size="10">w/m</text>
+<polygon points="30,23 24,33 36,33" fill="none" stroke="#1c2230"/><circle cx="190" cy="28" r="5" fill="none" stroke="#1c2230"/>
+<line x1="30" y1="62" x2="190" y2="62" stroke="#1c2230"/><polygon points="30,62 30,50 110,62" fill="#d6e4f5" stroke="#1f4e8c"/><polygon points="110,62 190,74 190,62" fill="#d6e4f5" stroke="#1f4e8c"/><text x="36" y="58" font-size="10">+wL/2</text><text x="146" y="72" font-size="10">−wL/2</text><text x="2" y="65" font-size="9">SFD</text>
+<line x1="30" y1="122" x2="190" y2="122" stroke="#1c2230"/><path d="M30,122 Q110,70 190,122 Z" fill="#fbe3d4" stroke="#8a3b12"/><text x="90" y="92" font-size="10">wL²/8</text><text x="2" y="125" font-size="9">BMD</text>
+</svg><figcaption>Simply supported, UDL w over full span</figcaption></figure>
+</div>
+
+<table>
+<tr><th>Beam &amp; load</th><th>Reactions</th><th>SF<sub>max</sub></th><th>BM<sub>max</sub> (location)</th></tr>
+<tr><td>Cantilever, point load W at free end</td><td>R = W, M<sub>fix</sub> = WL</td><td>W (constant)</td><td>−WL (fixed end)</td></tr>
+<tr><td>Cantilever, UDL w full span</td><td>R = wL</td><td>wL (fixed end)</td><td>−wL<sup>2</sup>/2 (fixed end)</td></tr>
+<tr><td>Cantilever, UVL 0 (free) → w (fixed)</td><td>R = wL/2</td><td>wL/2</td><td>−wL<sup>2</sup>/6 (fixed end)</td></tr>
+<tr><td>SS, central point load W</td><td>W/2 each</td><td>W/2</td><td>WL/4 (centre)</td></tr>
+<tr><td>SS, eccentric W at a from A (b from B)</td><td>R<sub>A</sub> = Wb/L, R<sub>B</sub> = Wa/L</td><td>larger reaction</td><td>Wab/L (under load)</td></tr>
+<tr><td>SS, UDL w full span</td><td>wL/2 each</td><td>wL/2</td><td>wL<sup>2</sup>/8 (centre)</td></tr>
+<tr><td>SS, UVL 0 (A) → w (B)</td><td>R<sub>A</sub> = wL/6, R<sub>B</sub> = wL/3</td><td>wL/3</td><td>wL<sup>2</sup>/(9√3) at x = L/√3 from A</td></tr>
+</table>
+
+<h3>4. Overhanging Beam &amp; Point of Contraflexure</h3>
+<div class="box def"><span class="lbl">Point of Contraflexure</span> Woh point jahan BM <b>sign change</b> karta hai (sagging ↔ hogging), yaani BM = 0 (free/simple end ke alawa). Ye overhanging (aur fixed/continuous) beams mein milta hai, cantilever ya simple SS beam mein nahi. Wahan curvature ulti hoti hai — RCC mein reinforcement yahan bend/cut karte hain.</div>
+<div class="grid2">
+<div class="small">
+<p><b>Example:</b> Beam ABC, AB = 4 m (supports A, B), overhang BC = 1 m, UDL 2 kN/m over full 5 m.</p>
+<p><b>Reactions:</b> total load 10 kN at 2.5 m from A. ΣM<sub>A</sub>: R<sub>B</sub>×4 = 10×2.5 → <b>R<sub>B</sub> = 6.25 kN</b>, R<sub>A</sub> = <b>3.75 kN</b>.</p>
+<p><b>SF:</b> A = +3.75; B (left) = 3.75 − 8 = −4.25; B (right) = −4.25 + 6.25 = +2.0; C = 0.</p>
+<p><b>BM</b> (0 ≤ x ≤ 4): M = 3.75x − x<sup>2</sup>. SF = 0 at x = 1.875 m → <b>M<sub>max</sub> = +3.52 kN·m</b>. M<sub>B</sub> = −2×1<sup>2</sup>/2 = <b>−1 kN·m</b>.</p>
+<p><b>Contraflexure:</b> 3.75x − x<sup>2</sup> = 0 → <b>x = 3.75 m</b> from A.</p>
+</div>
+<figure><svg viewBox="0 0 250 130" width="250">
+<rect x="30" y="17" width="200" height="6" fill="#c9d7ea" stroke="#1c2230"/>
+<rect x="30" y="8" width="200" height="9" fill="#fff1c2" stroke="#c0392b"/><text x="110" y="16" font-size="8">2 kN/m</text>
+<polygon points="30,23 24,33 36,33" fill="none" stroke="#1c2230"/><circle cx="190" cy="28" r="5" fill="none" stroke="#1c2230"/>
+<text x="20" y="44" font-size="9">A</text><text x="186" y="44" font-size="9">B</text><text x="230" y="33" font-size="9">C</text>
+<line x1="30" y1="62" x2="230" y2="62" stroke="#1c2230"/>
+<polygon points="30,62 30,50.75 105,62" fill="#d6e4f5" stroke="#1f4e8c"/><polygon points="105,62 190,74.75 190,62" fill="#d6e4f5" stroke="#1f4e8c"/><polygon points="190,62 190,56 230,62" fill="#d6e4f5" stroke="#1f4e8c"/>
+<text x="34" y="49" font-size="9">3.75</text><text x="150" y="82" font-size="9">−4.25</text><text x="196" y="54" font-size="9">2.0</text>
+<line x1="30" y1="105" x2="230" y2="105" stroke="#1c2230"/>
+<polyline points="30,105 50,96.9 70,91.25 90,88.1 105,87.4 130,89.4 150,93.75 170,100.6 180,105 190,110 210,106.25 230,105" fill="#fbe3d4" stroke="#8a3b12"/>
+<text x="92" y="84" font-size="9">3.52</text><text x="192" y="122" font-size="9">−1.0</text><circle cx="180" cy="105" r="2.5" fill="#c0392b"/><text x="140" y="118" font-size="9" fill="#c0392b">POC 3.75 m</text>
+</svg><figcaption>SFD (kN) and BMD (kN·m) of overhanging beam</figcaption></figure>
+</div>
+<div class="box tip"><span class="lbl">Exam Tip</span> SFD/BMD steps: (1) reactions (ΣM = 0, ΣF<sub>y</sub> = 0) aur check, (2) har load point par SF, (3) SF = 0 wala point dhoondo → M<sub>max</sub>, (4) supports aur load points par BM, (5) curves ka shape (constant/linear/parabola) relationship se, (6) contraflexure M = 0 equation se. Values diagram par zaroor likho.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT IV</span> Building Materials &amp; Construction</h2>
+
+<h3>1. Stones</h3>
+<table>
+<tr><th>Geological class</th><th>Formation</th><th>Examples</th></tr>
+<tr><td>Igneous</td><td>Molten magma ke cool hone se; hard, durable</td><td>Granite, basalt, trap</td></tr>
+<tr><td>Sedimentary</td><td>Sediments ki layers jamne se; stratified</td><td>Sandstone, limestone, laterite</td></tr>
+<tr><td>Metamorphic</td><td>Heat + pressure se purane rock ka badalna</td><td>Marble (limestone se), slate (shale se), quartzite</td></tr>
+</table>
+<p class="small">Physical classification: stratified, unstratified, foliated. Chemical: siliceous, argillaceous, calcareous.</p>
+<p><b>Properties of good stone:</b> high crushing strength (&gt;100 N/mm<sup>2</sup> for building), water absorption &lt; 5%, hardness, toughness, durability, fire resistance, uniform texture, easy dressing, specific gravity &gt; 2.7.</p>
+<p><b>Tests:</b> crushing strength test, water absorption test, attrition (Deval) test (wear), hardness (Mohs scale / Dorry's), impact (toughness) test, acid test (weathering), freezing-thawing test, microscopic test.</p>
+<p><b>Uses:</b> granite — bridge piers, steps, monuments; marble — flooring, facing; slate — roofing, DPC; sandstone — walls; basalt/trap — road metal, aggregates; limestone — cement and lime manufacture.</p>
+
+<h3>2. Bricks</h3>
+<p><b>Composition</b> of good brick earth: silica 50–60% (shape), alumina 20–30% (plasticity), lime 5–10% (silica ko melt hone mein help, shrinkage kam), iron oxide 5–6% (red colour, strength), magnesia &lt; 1%. Harmful: excess lime, alkalis (efflorescence), pebbles, iron pyrites, organic matter.</p>
+<p><b>Manufacturing:</b> preparation of clay → moulding (hand/machine) → drying → burning (clamp ya kiln — Bull's trench, Hoffman's) at ~1000 °C. <b>Size:</b> standard modular brick 190×90×90 mm (nominal with mortar 200×100×100 mm); traditional 9" × 4½" × 3".</p>
+<table>
+<tr><th>Class</th><th>Quality</th><th>Min. compressive strength</th><th>Water absorption (24 h)</th><th>Use</th></tr>
+<tr><td>First class</td><td>Kiln burnt, uniform red, sharp edges, metallic ring</td><td>10.5 N/mm<sup>2</sup></td><td>≤ 20%</td><td>Exposed, load-bearing walls</td></tr>
+<tr><td>Second class</td><td>Slightly irregular, hair cracks</td><td>7.0 N/mm<sup>2</sup></td><td>≤ 22%</td><td>Plastered walls</td></tr>
+<tr><td>Third class</td><td>Under-burnt, soft</td><td>3.5 N/mm<sup>2</sup></td><td>≤ 25%</td><td>Temporary structures</td></tr>
+<tr><td>Fourth class</td><td>Over-burnt, distorted</td><td>—</td><td>—</td><td>Broken as aggregate</td></tr>
+</table>
+<p><b>Tests:</b> compressive strength, water absorption, efflorescence (white salt patches — nil/slight acceptable), hardness (scratch by nail), soundness (do bricks takrane par clear ringing sound), shape &amp; size (20 bricks ek line mein: 3800 ± 80 mm for modular), structure (broken face uniform, no voids).</p>
+
+<h3>3. Cement</h3>
+<p><b>OPC raw composition:</b> lime CaO 60–67%, silica SiO<sub>2</sub> 17–25%, alumina Al<sub>2</sub>O<sub>3</sub> 3–8%, iron oxide 0.5–6%, MgO 0.1–4%, SO<sub>3</sub> 1–3%. <b>Gypsum</b> (~3%) setting <b>retarder</b> ke roop mein clinker grinding ke time add. <b>Bogue compounds:</b> C<sub>3</sub>S (early strength, 7 days), C<sub>2</sub>S (later strength), C<sub>3</sub>A (flash set, max heat), C<sub>4</sub>AF (little role). Manufacture: dry/wet process, rotary kiln ~1450 °C.</p>
+<p><b>Types:</b> OPC 33/43/53 grade (28-day strength in N/mm<sup>2</sup>), Rapid hardening (high C<sub>3</sub>S, early strength), Low heat (mass concrete — dams), Sulphate resisting (sea/sulphate soil), Portland Pozzolana Cement PPC (fly ash, durable), Portland slag cement, White cement (decoration), Quick setting (under-water), Hydrophobic, Coloured.</p>
+<table>
+<tr><th>Test</th><th>Apparatus / method</th><th>IS requirement (OPC)</th></tr>
+<tr><td>Fineness</td><td>90 μm IS sieve / Blaine air permeability</td><td>Residue ≤ 10%; specific surface ≥ 225 m<sup>2</sup>/kg</td></tr>
+<tr><td>Standard (normal) consistency</td><td>Vicat apparatus, 10 mm plunger penetrates to 5–7 mm from bottom</td><td>Usually 26–33% water</td></tr>
+<tr><td>Initial / final setting time</td><td>Vicat needle (1 mm needle; annular collar for final)</td><td>Initial ≥ 30 min, Final ≤ 600 min</td></tr>
+<tr><td>Soundness</td><td>Le Chatelier apparatus (autoclave for MgO)</td><td>Expansion ≤ 10 mm (autoclave ≤ 0.8%)</td></tr>
+<tr><td>Compressive strength</td><td>70.6 mm mortar cubes (1:3 standard sand), 3/7/28 days</td><td>43 grade: 23, 33, 43 N/mm<sup>2</sup></td></tr>
+</table>
+<p class="small"><b>Field tests:</b> thanda feel, paani mein float nahi, no lumps, uniform grey colour. <b>Uses:</b> mortar, concrete, plaster, pipes, tiles.</p>
+
+<div class="grid2">
+<div>
+<h3>4. Lime</h3>
+<p>Limestone (CaCO<sub>3</sub>) ko jalane se <b>quick lime</b> CaO; paani milane (slaking) se <b>hydrated / slaked lime</b> Ca(OH)<sub>2</sub>. Hardening: CO<sub>2</sub> absorb karke wapas CaCO<sub>3</sub> (carbonation).</p>
+<ul class="small">
+<li><b>Fat (high calcium) lime:</b> CaO &gt; 95%, slaking vigorous, volume 2–2.5 times, sets slowly in air only — whitewash, plaster.</li>
+<li><b>Hydraulic lime:</b> clay 5–30%, paani mein bhi set — masonry mortar in damp places.</li>
+<li><b>Poor (lean) lime:</b> impurities &gt; 30%, poor quality — inferior mortar.</li>
+</ul>
+<p class="small">Tests: visual, heat test, acid test (hydraulicity), ball test, workability. Uses: mortar, plaster, whitewash, soil stabilisation, sand-lime bricks.</p>
+</div>
+<div>
+<h3>5. Timber</h3>
+<p><b>Types:</b> <b>Softwood</b> (conifers — pine, deodar, chir; light, straight grain) vs <b>Hardwood</b> (teak, sal, sheesham, oak; strong, durable). Structure: pith, heartwood (dark, strong), sapwood, cambium, bark, medullary rays.</p>
+<p class="small"><b>Properties of good timber:</b> uniform colour, straight fibres, sweet smell, high strength, durability, no knots/defects, moisture content ~10–12% (seasoned), sonorous.</p>
+<p class="small"><b>Seasoning</b> (moisture kam karna): natural air seasoning, water seasoning, artificial — kiln, chemical, boiling, electrical. <b>Defects:</b> knots, shakes (heart/cup/star), rot (dry/wet), twist, warp, cup, bow. <b>Preservation:</b> creosote, ASCU, coal tar, paint. <b>Tests:</b> moisture content, compression/tension/bending strength. <b>Uses:</b> doors, windows, frames, formwork, furniture, plywood.</p>
+</div>
+</div>
+
+<h3>6. Concrete &amp; Mortar</h3>
+<p><b>Concrete</b> = cement + fine aggregate (sand, &lt; 4.75 mm) + coarse aggregate (&gt; 4.75 mm, usually 10–20 mm) + water (+ admixtures). <b>Mortar</b> = binder (cement/lime) + sand + water — bricks/stones jodne aur plaster ke liye. Cement mortar 1:3 to 1:6 (masonry), 1:4–1:6 (plaster); lime mortar 1:2 / 1:3.</p>
+<div class="grid2">
+<div>
+<h4>Workability</h4>
+<p class="small">Fresh concrete ki ease of mixing, placing, compacting aur finishing <b>without segregation</b>. Depends on water content, w/c ratio, aggregate size/shape/grading, admixtures.</p>
+<ul class="small">
+<li><b>Slump test:</b> frustum mould 300 mm high, 200 mm bottom, 100 mm top dia; 4 layers × 25 tamping; slump = height drop (25–75 mm normal RCC). Types: true, shear, collapse slump.</li>
+<li><b>Compaction factor:</b> CF = wt. partially compacted / wt. fully compacted (0.75–0.95); low workability ke liye accurate.</li>
+<li><b>Vee-Bee consistometer</b> (very stiff concrete, time in sec); <b>flow table</b> (high workability).</li>
+</ul>
+</div>
+<div>
+<h4>Strength Properties</h4>
+<ul class="small">
+<li><b>Compressive strength:</b> 150 mm cubes, 28-day curing; characteristic strength f<sub>ck</sub> (5% results neeche gir sakte). Grade <b>M20</b> = 20 N/mm<sup>2</sup>.</li>
+<li><b>Abram's law:</b> strength ∝ 1/(w/c ratio) — w/c badhao to strength ghatti. Usual w/c 0.4–0.6.</li>
+<li><b>Tensile strength</b> ~ 10–15% of compressive; flexural strength f<sub>cr</sub> = 0.7√f<sub>ck</sub> (IS 456).</li>
+<li>Other: durability, impermeability, shrinkage, creep, modulus E<sub>c</sub> = 5000√f<sub>ck</sub>.</li>
+</ul>
+</div>
+</div>
+<table>
+<tr><th>Grade (nominal mix)</th><th>M5</th><th>M7.5</th><th>M10</th><th>M15</th><th>M20</th><th>M25</th></tr>
+<tr><td>Cement : Sand : Coarse agg.</td><td>1 : 5 : 10</td><td>1 : 4 : 8</td><td>1 : 3 : 6</td><td>1 : 2 : 4</td><td>1 : 1.5 : 3</td><td>1 : 1 : 2</td></tr>
+</table>
+<p class="small">Nominal mix (fixed volume proportions) ordinary work ke liye; design mix (IS 10262) M20 aur upar important work ke liye. Dry volume ≈ 1.54 × wet volume. Use: M5–M10 PCC/levelling, M15 mild RCC, M20+ RCC (IS 456 min M20 for RCC).</p>
+<div class="box def"><span class="lbl">Preparation of Concrete</span>
+<b>Batching</b> (volume ya weight — weight batching accurate) → <b>Mixing</b> (hand mixing +10% extra cement; machine mixer ≥ 2 min) → <b>Transporting</b> (pan, wheel barrow, pump, transit mixer — segregation se bachao) → <b>Placing</b> (within initial setting, free fall ≤ 1.5 m, layers 150–300 mm) → <b>Compaction</b> → <b>Finishing</b> → <b>Curing</b>.</div>
+<div class="grid2">
+<div><b>Compaction</b> (entrapped air nikalna; 1% voids ~ 5–6% strength loss): hand rodding/tamping, <b>needle (immersion) vibrator</b> (most common), surface/screed vibrator (slabs), form (shutter) vibrator, table vibrator (precast).</div>
+<div><b>Curing</b> (cement hydration ke liye moisture + temperature maintain): ponding (slabs), wet gunny bags/hessian, sprinkling, curing compounds (membrane), steam curing (precast). Min <b>7 days</b> for OPC, <b>10 days</b> for PPC/blended (IS 456).</div>
+</div>
+
+<h3>7. Elements of Building Construction</h3>
+<h4>(a) Foundations</h4>
+<p>Foundation (substructure) structure ka load safely soil tak pahunchata hai, settlement uniform rakhta hai. <b>Shallow</b> (depth ≤ width): spread, combined, strap, raft. <b>Deep</b>: pile, well, caisson.</p>
+<ul class="small">
+<li><b>Conventional spread footing:</b> wall ya column ka base steps mein chauda karke load bade area par spread. Brick/stone masonry footing on lean concrete (PCC 1:4:8) bed; offset of each step ~ 50–60 mm. <b>Wall footing</b> (strip) aur <b>isolated column footing</b> (stepped/sloped).</li>
+<li><b>RCC footings:</b> isolated (single column), <b>combined</b> (2 columns paas-paas ya property line ke paas), <b>strap</b> (do footings beam se jude), <b>raft/mat</b> (poora area slab — weak soil, heavy loads). Steel tension zone (bottom) mein.</li>
+<li><b>Minimum depth (Rankine):</b> <span class="m">h = (p/γ)·[(1 − sin φ)/(1 + sin φ)]<sup>2</sup></span>; practically ≥ 0.9 m.</li>
+</ul>
+<h4>(b) Brick Masonry Walls</h4>
+<p class="small"><b>Bond</b> = bricks ka arrangement jisse vertical joints continuous na ho. <b>Stretcher</b> = lambi face dikhe, <b>header</b> = chhoti face. Types: <b>English bond</b> (alternate courses of headers &amp; stretchers; strongest, queen closer after first header), <b>Flemish bond</b> (har course mein header-stretcher alternate; better look; single/double Flemish), stretcher bond (half-brick partition walls), header bond (curved walls). Rules: bricks soak karke, joints ≤ 10 mm, lift ≤ 1.5 m/day, curing 7–10 days, plumb &amp; level check.</p>
+<div class="grid2">
+<div>
+<h4>(c) Plastering &amp; Pointing</h4>
+<p class="small"><b>Plastering</b> = wall/ceiling par mortar ki thin layer — smooth surface, protection from weather, appearance. Cement plaster 1:4 (external) / 1:6 (internal), thickness 12–20 mm (one/two coat). Types: lime, cement, mud, stucco, sand-faced, rough cast, pebble-dash. Defects: cracks, blistering, efflorescence, peeling.<br>
+<b>Pointing</b> = exposed masonry joints ko 10–20 mm rake karke rich mortar (1:2/1:3) se bharna — weather resistance + look. Types: flush, recessed, struck, V-grooved, weathered, tuck, beaded, rubbed.</p>
+</div>
+<div>
+<h4>(d) Floors</h4>
+<p class="small">Floor ke parts: <b>sub-grade</b> (compacted soil), <b>base course</b> (PCC/brick bat), <b>flooring/topping</b>. Types: mud, brick, flagstone, cement concrete (IPS), terrazzo/mosaic, tiles (ceramic/vitrified), marble/granite/Kota stone, timber, PVC/linoleum. Selection: durability, cleanliness, cost, damp/sound/fire resistance, appearance.</p>
+<h4>(e) Roofs</h4>
+<p class="small"><b>Flat roofs</b> (RCC slab, madras terrace, jack arch) — slope 1:100 drainage. <b>Pitched roofs:</b> lean-to/single (up to 2.5 m), couple (3.5 m), collar (4.5 m), <b>king post truss</b> (5–8 m), <b>queen post truss</b> (8–12 m), steel trusses (larger). <b>Shell</b> roofs (large spans). Covering: AC/GI sheets, tiles.</p>
+</div>
+</div>
+<div class="grid2">
+<div>
+<h4>(f) Doors &amp; Windows</h4>
+<p class="small"><b>Doors</b> (min 2.0–2.1 m high, 0.9–1.0 m wide main): ledged, ledged-braced, ledged-braced-battened, framed &amp; panelled, glazed, <b>flush</b> (most common), louvered, collapsible (steel, shops), rolling shutter (godowns), sliding, revolving (malls), swing.<br>
+<b>Windows</b> (glass area ~10–20% floor area): casement (side-hinged), double-hung/sash, pivoted, sliding, louvered, fixed, <b>bay</b> (projecting), <b>dormer</b> (sloping roof), clerestory, skylight, lantern, corner. Ventilator above for air.</p>
+</div>
+<div>
+<h4>(g) Lintels</h4>
+<p class="small">Opening (door/window) ke upar horizontal member jo upar ki masonry ka load support karta hai. Types: timber, stone, brick (small span &lt; 1 m), <b>RCC</b> (most common, precast/cast-in-situ), steel (I-section). Bearing = max(150 mm, lintel depth); depth ≈ span/12 (min 150 mm). Chhajja (weather shade) lintel ke saath cast. Arch = curved alternative.</p>
+</div>
+</div>
+<h4>(h) Staircases</h4>
+<p class="small">Terms: tread (going), rise, nosing, flight (max 12–15 steps), landing, baluster, handrail, newel post, headroom (≥ 2.1 m). Good stair: <b>rise 150–190 mm</b>, <b>tread 250–300 mm</b>, <b>2R + T = 550–700 mm</b>, width 0.9–1.0 m (residential), 1.5–2 m (public), pitch 25°–40°.</p>
+<table class="small">
+<tr><th>Type</th><th>Description</th><th>Suitability</th></tr>
+<tr><td>Straight</td><td>Ek direction mein, no turn</td><td>Narrow long hall, porch</td></tr>
+<tr><td>Quarter-turn (L) / Half-turn</td><td>90° / 180° turn at landing</td><td>Residences</td></tr>
+<tr><td>Dog-legged</td><td>Half-turn, flights adjacent, no gap</td><td>Limited space, houses (most common)</td></tr>
+<tr><td>Open-newel (open well)</td><td>Half/quarter turn, well (gap) between flights</td><td>Public buildings, lift in well</td></tr>
+<tr><td>Bifurcated</td><td>Wide flight splits into two</td><td>Large public buildings, theatres</td></tr>
+<tr><td>Spiral / circular / geometrical</td><td>Winders around a post / curve</td><td>Very less space, emergency exit, architecture</td></tr>
+</table>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT V</span> Surveying &amp; Positioning</h2>
+<p><b>Surveying</b> = earth surface par points ki relative position (horizontal distance, direction, elevation) determine karke map/plan banana. <b>Principles:</b> (1) <b>Whole to part</b> — pehle main control framework, phir details (errors accumulate nahi hote), (2) naya point kam se kam <b>do independent measurements</b> se locate karo. Classification: plane vs geodetic (earth curvature ignore / consider); instrument wise — chain, compass, plane table, theodolite, levelling, tacheometric, total station.</p>
+
+<h3>1. Surveying Instruments</h3>
+<h4>(a) Chains &amp; Tapes (linear measurement)</h4>
+<table>
+<tr><th>Chain</th><th>Length</th><th>Links</th><th>Remark</th></tr>
+<tr><td>Metric chain</td><td>20 m / 30 m</td><td>100 / 150 (each 0.2 m)</td><td>Tallies every 5 m (20 m chain); brass handles</td></tr>
+<tr><td>Gunter's chain</td><td>66 ft</td><td>100</td><td>Land measurement (10 sq chains = 1 acre)</td></tr>
+<tr><td>Engineer's chain</td><td>100 ft</td><td>100</td><td>Each link 1 ft</td></tr>
+<tr><td>Revenue chain</td><td>33 ft</td><td>16</td><td>Cadastral (revenue) surveys</td></tr>
+</table>
+<p class="small"><b>Tapes:</b> cloth/linen (stretch, rough work), metallic (cloth + brass wires, offsets), <b>steel</b> (accurate), <b>invar</b> (36% Ni-steel, very low thermal expansion — base lines, most accurate). <b>Accessories:</b> arrows (10 nos., mark chain lengths), ranging rods (2–3 m, red-white bands of 0.2 m), offset rods, pegs, plumb bob, line ranger, <b>cross staff / optical square</b> (right-angle offsets). <b>Ranging</b> = intermediate points ko line mein lana — direct (ends intervisible) / indirect (reciprocal, ends not visible). Chain survey: <b>triangulation</b> into well-conditioned triangles (angles 30°–120°); offsets (perpendicular/oblique). Errors: wrong chain length correction — <span class="m">True length = (L'/L) × measured length</span> (L' = actual chain length, L = nominal).</p>
+
+<h4>(b) Levels</h4>
+<p class="small">Horizontal line of sight dene wala instrument, elevations nikalne ke liye. Types: <b>dumpy level</b> (telescope fixed to vertical spindle — robust), tilting level, Wye (Y) level, <b>automatic (auto) level</b> (compensator), digital level. Parts: telescope, bubble tube, levelling head with foot screws, tripod. With <b>levelling staff</b> (self-reading — telescopic/folding 4 m; target staff). <b>Temporary adjustments:</b> (1) setting up, (2) levelling up (bubble centre — two foot screws parallel, phir third), (3) focusing eyepiece &amp; object (elimination of <b>parallax</b>).</p>
+
+<h4>(c) Theodolite</h4>
+<p class="small">Sabse precise angle-measuring instrument — <b>horizontal &amp; vertical angles</b>, also prolonging lines, levelling, traversing. Parts: telescope, vertical circle, horizontal (upper &amp; lower) plates, vernier (least count usually 20″), upper/lower clamps &amp; tangent screws, plate levels, tribrach, trivet, plumb bob. <b>Transit</b> theodolite: telescope vertical plane mein 180° ghoom sakta hai. Terms: face left/face right, swinging, transiting, line of collimation. Temporary adjustments: setting up, centering, levelling, focusing. <b>Methods:</b> repetition (accurate single angle, vernier error kam), reiteration (several angles at a station). Face left + face right ka average instrumental errors cancel karta hai.</p>
+
+<h4>(d) Plane Table &amp; Related Devices</h4>
+<p class="small"><b>Plane table survey:</b> field mein hi plotting (graphical) — small scale maps, quick. Accessories: drawing board on tripod, <b>alidade</b> (plain/telescopic, sighting), spirit level, trough compass (orientation), plumbing fork + plumb bob (centering), drawing sheet. Setting: levelling, centering, <b>orientation</b> (by trough compass or back-sighting — most accurate). <b>Methods:</b> radiation (ek station se rays + distance), intersection (do stations se rays ka intersection — inaccessible points), traversing, <b>resection</b> (table ki khud ki position — two-point / three-point problem). Pros: no field book, fast; cons: wet weather mein mushkil, less accurate.<br>
+<b>Related modern devices:</b> EDM (electronic distance measurement), <b>Total Station</b> (electronic theodolite + EDM + microprocessor/data storage), GPS/GNSS (satellite positioning), digital levels, drones/LiDAR.</p>
+
+<h3>2. Measurement of Directions — Bearings &amp; Compass</h3>
+<p><b>Bearing</b> = kisi line ka horizontal angle ek reference (meridian) direction se. Meridians: <b>true</b> (geographical N-S, fixed), <b>magnetic</b> (compass needle direction), arbitrary. <b>Magnetic declination</b> = true &amp; magnetic meridian ke beech angle: <span class="m">True bearing = Magnetic bearing ± declination</span> (+ if E, − if W). <b>Dip</b> = needle ka horizontal se inclination.</p>
+<div class="grid2">
+<div>
+<ul class="small">
+<li><b>WCB (Whole Circle Bearing):</b> North se clockwise 0°–360° (prismatic compass).</li>
+<li><b>QB / Reduced Bearing:</b> N ya S se E ya W ki taraf 0°–90°, e.g. N 30° E (surveyor's compass).</li>
+<li><b>Fore bearing (FB)</b> = line ki direction of progress mein; <b>Back bearing BB = FB ± 180°</b> (FB &lt; 180° → +, &gt; 180° → −). QB mein: N↔S aur E↔W swap, angle same.</li>
+<li><b>Included angle</b> = difference of bearings of two lines meeting at a point.</li>
+</ul>
+</div>
+<table class="small">
+<tr><th>WCB range</th><th>Quadrant</th><th>QB</th></tr>
+<tr><td>0°–90°</td><td>NE</td><td>N θ E</td></tr>
+<tr><td>90°–180°</td><td>SE</td><td>S (180° − θ) E</td></tr>
+<tr><td>180°–270°</td><td>SW</td><td>S (θ − 180°) W</td></tr>
+<tr><td>270°–360°</td><td>NW</td><td>N (360° − θ) W</td></tr>
+</table>
+</div>
+<p class="small"><b>Example:</b> WCB 135° → S 45° E; 210° → S 30° W; 290° → N 70° W. FB of AB = 52° → BB = 232°.</p>
+<p class="small"><b>Prismatic vs Surveyor's compass:</b> prismatic mein graduated ring needle ke saath ghoomta hai, WCB, 0° at S end (inverted figures), prism se sighting + reading ek saath, tripod optional; surveyor's mein ring box ke saath fixed, needle ghoomti hai, QB, 0° at N &amp; S (E-W interchanged), sighting aur reading alag, tripod essential.</p>
+<p class="small"><b>Local attraction:</b> nearby iron/electric cables needle ko deflect karte hain. Detection: kisi line ka FB − BB ≠ 180°. Correction: jis line ka FB − BB = 180° exactly ho, uske stations free maan kar baaki bearings correct karo (ya included-angle method). <b>Other methods of measuring directions:</b> theodolite se included angles / deflection angles (traverse), azimuth by astronomical observation, total station / GPS.</p>
+
+<h3>3. Measurement of Elevations — Levelling</h3>
+<div class="box def"><span class="lbl">Terms</span> <b>Datum</b> = reference surface (MSL); <b>Reduced Level (RL)</b> = datum se point ki height; <b>Bench Mark (BM)</b> = known RL wala fixed point (GTS, permanent, arbitrary, temporary); <b>Back Sight (BS)</b> = known RL point par pehli reading after setting instrument; <b>Fore Sight (FS)</b> = instrument shift karne se pehle last reading; <b>Intermediate Sight (IS)</b> = beech ki readings; <b>Change Point (CP)</b> = jahan FS aur BS dono li jaati hain; <b>Height of Instrument (HI)</b> = line of collimation ka RL.</div>
+<div class="grid2">
+<div class="box formula"><span class="lbl">HI (Collimation) Method</span>
+HI = RL of BM + BS; &nbsp; RL = HI − (IS or FS)<br>
+<b>Check:</b> ΣBS − ΣFS = Last RL − First RL<br>
+<span class="small">Fast; IS ka check nahi — profile levelling ke liye.</span></div>
+<div class="box formula"><span class="lbl">Rise &amp; Fall Method</span>
+Prev. reading − current reading: +ve = Rise, −ve = Fall; RL = prev. RL + rise − fall<br>
+<b>Check:</b> ΣBS − ΣFS = ΣRise − ΣFall = Last RL − First RL<br>
+<span class="small">IS ka bhi check — accurate.</span></div>
+</div>
+<p class="small"><b>Example:</b> BM RL = 100.000 m. Readings: 1.500 (BS on BM), 2.300 (IS), 1.800 (FS) &amp; 1.200 (BS) at CP, 0.650 (FS).</p>
+<table class="small">
+<tr><th>Point</th><th>BS</th><th>IS</th><th>FS</th><th>HI</th><th>Rise</th><th>Fall</th><th>RL</th></tr>
+<tr><td>BM</td><td>1.500</td><td></td><td></td><td>101.500</td><td></td><td></td><td>100.000</td></tr>
+<tr><td>P</td><td></td><td>2.300</td><td></td><td></td><td></td><td>0.800</td><td>99.200</td></tr>
+<tr><td>CP</td><td>1.200</td><td></td><td>1.800</td><td>100.900</td><td>0.500</td><td></td><td>99.700</td></tr>
+<tr><td>Q</td><td></td><td></td><td>0.650</td><td></td><td>0.550</td><td></td><td>100.250</td></tr>
+<tr><th>Σ</th><th>2.700</th><th></th><th>2.450</th><th></th><th>1.050</th><th>0.800</th><th>Check: 0.250 = 0.250 = 0.250 ✔</th></tr>
+</table>
+
+<h3>4. Reciprocal Levelling</h3>
+<p>Jab do points A, B ke beech <b>river, valley ya pond</b> ho (beech mein instrument nahi lag sakta), tab reciprocal levelling. Instrument pehle A ke paas lagao → readings a<sub>1</sub> (A par), b<sub>1</sub> (B par); phir B ke paas lagao → a<sub>2</sub>, b<sub>2</sub>.</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">True difference H = [(b<sub>1</sub> − a<sub>1</sub>) + (b<sub>2</sub> − a<sub>2</sub>)] / 2 &nbsp; (B, A se H neeche)</span><span class="eq">Combined error e = [(b<sub>1</sub> − a<sub>1</sub>) − (b<sub>2</sub> − a<sub>2</sub>)] / 2</span>
+Ye method <b>collimation error, curvature aur refraction</b> (average) errors ko eliminate karta hai. </div>
+<p class="small"><b>Example:</b> a<sub>1</sub> = 1.625, b<sub>1</sub> = 2.545, a<sub>2</sub> = 0.725, b<sub>2</sub> = 1.405; RL<sub>A</sub> = 100.000. H = (0.920 + 0.680)/2 = <b>0.800 m</b> → RL<sub>B</sub> = <b>99.200 m</b>; error e = (0.920 − 0.680)/2 = 0.120 m.</p>
+<p class="small"><b>Other levelling types:</b> simple, differential/fly (door ke points, change points ke saath), profile (L-section) &amp; cross-section, check levelling, trigonometric (vertical angles se), barometric. Curvature correction C<sub>c</sub> = −0.0785 d<sup>2</sup>, refraction C<sub>r</sub> = +0.0112 d<sup>2</sup>, combined = −0.0673 d<sup>2</sup> (d in km, result in m).</p>
+<div class="box tip"><span class="lbl">Exam Tip</span> Levelling table (HI + rise-fall, arithmetic check), WCB ↔ QB conversion aur compass comparison almost har saal aate hain.</div>
+</div>

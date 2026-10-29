@@ -1,0 +1,392 @@
+<!-- BE-201 Engineering Physics : Hinglish short notes -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT I</span> Quantum Physics</h2>
+
+<h3>1. Phase Velocity, Group Velocity aur unka Relation</h3>
+<p>de Broglie: har moving particle ke saath <b>matter wave</b>, <span class="m">λ = h/p = h/mv</span>. Particle ko represent karne ke liye kai waves superpose karke <b>wave packet</b> banate hain.</p>
+<div class="grid2">
+<div class="box def"><span class="lbl">Phase velocity</span> Constant phase point ki speed: <span class="m">v<sub>p</sub> = ω/k</span>. Matter wave: <span class="m">v<sub>p</sub> = E/p = c²/v</span> &gt; c (no energy carry, physically meaningless).</div>
+<div class="box def"><span class="lbl">Group velocity</span> Wave packet (envelope) ki speed: <span class="m">v<sub>g</sub> = dω/dk</span>. Matter wave: <span class="m">v<sub>g</sub> = v</span> (particle velocity) — energy isi se travel.</div>
+</div>
+<ul>
+<li>y₁ = A sin(ωt − kx), y₂ = A sin[(ω+Δω)t − (k+Δk)x] add karo ⇒ <span class="m">y = 2A cos(Δωt/2 − Δkx/2)·sin(ωt − kx)</span>; envelope speed = Δω/Δk → dω/dk.</li>
+<li>E = ħω, p = ħk ⇒ <span class="m">v<sub>g</sub> = dE/dp</span>; E = p²/2m ⇒ <span class="m">v<sub>g</sub> = p/m = v</span>. Relation: ω = kv<sub>p</sub> ⇒ <span class="m">v<sub>g</sub> = v<sub>p</sub> + k dv<sub>p</sub>/dk</span>.</li>
+</ul>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">v<sub>g</sub> = v<sub>p</sub> − λ (dv<sub>p</sub>/dλ) &nbsp;;&nbsp; v<sub>p</sub> · v<sub>g</sub> = c² (relativistic particle)</span>Non-dispersive medium (dv<sub>p</sub>/dλ = 0) ⇒ v<sub>g</sub> = v<sub>p</sub>; normal dispersion ⇒ v<sub>g</sub> &lt; v<sub>p</sub>.</div>
+
+<h3>2. Heisenberg Uncertainty Principle</h3>
+<div class="box def"><span class="lbl">Statement</span> Particle ki position aur momentum <b>ek saath exactly</b> measure karna impossible: <span class="m">Δx · Δp<sub>x</sub> ≥ ħ/2</span> (elementary form Δx·Δp ≈ h). Isi tarah <span class="m">ΔE·Δt ≥ ħ/2</span>, <span class="m">ΔL·Δθ ≥ ħ/2</span>.</div>
+<p><b>Elementary proof:</b> k aur k+Δk waves ke superposition se ek group ki length <span class="m">Δx = 2π/Δk</span>. p = ħk ⇒ Δp = ħΔk ⇒ <span class="m">Δx·Δp = 2πħ = h</span>. Packet chhota (Δx kam) ⇒ Δp zyada.</p>
+<div class="grid2">
+<div>
+<h4>(a) Gamma-ray microscope se electron ki position</h4>
+<ul>
+<li>Resolving limit: <span class="m">Δx = λ/(2 sin θ)</span> (θ = semi-vertical angle).</li>
+<li>Scattered photon (h/λ) cone 2θ mein kahin bhi ⇒ recoil <span class="m">Δp<sub>x</sub> = 2(h/λ) sin θ</span>.</li>
+<li>⇒ <span class="m">Δx·Δp<sub>x</sub> = h</span>. Chhota λ ⇒ Δx kam par Δp zyada.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 200 115" width="170"><g stroke="#1c2230" fill="none" stroke-width="1.2"><ellipse cx="100" cy="35" rx="45" ry="7"/><line x1="100" y1="100" x2="55" y2="35"/><line x1="100" y1="100" x2="145" y2="35"/><line x1="100" y1="100" x2="100" y2="20" stroke-dasharray="3 2"/><line x1="10" y1="100" x2="92" y2="100" stroke="#1f4e8c"/><polygon points="92,100 86,97 86,103" fill="#1f4e8c" stroke="#1f4e8c"/></g><circle cx="100" cy="100" r="4" fill="#1f4e8c"/><g font-size="10" fill="#1c2230"><text x="104" y="112">electron</text><text x="10" y="94">γ-photon</text><text x="150" y="38">lens</text><text x="104" y="70">θ</text></g></svg><figcaption>Heisenberg microscope</figcaption></figure>
+</div>
+<p><b>(b) Electron nucleus mein nahi:</b> Nucleus dia ~ 2×10<sup>−14</sup> m = Δx ⇒ Δp ≈ h/Δx ≈ 3.3×10<sup>−20</sup> kg m/s ⇒ E ≈ pc ≈ 10<sup>−11</sup> J ≈ <b>60 MeV</b>. Par β-decay electrons sirf <b>2–4 MeV</b> ke hote hain ⇒ electron nucleus mein exist nahi kar sakta.</p>
+<p><b>(c) Single slit se electron diffraction:</b> Slit width d = Δy. First minimum <span class="m">d sinθ = λ</span>. y-momentum −p sinθ se +p sinθ ⇒ <span class="m">Δp<sub>y</sub> = 2p sinθ = 2h/d</span> ⇒ <span class="m">Δy·Δp<sub>y</sub> = 2h ≥ ħ/2</span>. Narrow slit ⇒ zyada spread.</p>
+
+<h3>3. Compton Scattering</h3>
+<div class="grid2">
+<div>
+<p>X-ray (λ) free electron se scatter hone par wavelength <b>badh jaati</b> hai (λ′ &gt; λ) — light ke <b>photon (particle) nature</b> ka proof.</p>
+<p><b>Derivation:</b> Energy: <span class="m">hν + m₀c² = hν′ + mc²</span>. Momentum: <span class="m">h/λ = (h/λ′)cosφ + p cosθ</span>, <span class="m">0 = (h/λ′)sinφ − p sinθ</span>. θ eliminate karo + <span class="m">E² = p²c² + m₀²c⁴</span> ⇒</p>
+</div>
+<figure><svg viewBox="0 0 200 95" width="190"><g stroke="#1c2230" stroke-width="1.2" fill="none"><line x1="10" y1="50" x2="95" y2="50" stroke="#1f4e8c"/><line x1="100" y1="50" x2="180" y2="15" stroke="#1f4e8c"/><line x1="100" y1="50" x2="170" y2="85"/><line x1="100" y1="50" x2="190" y2="50" stroke-dasharray="3 2"/></g><circle cx="100" cy="50" r="4" fill="#1c2230"/><g font-size="10" fill="#1c2230"><text x="15" y="44">photon λ</text><text x="150" y="12">λ′</text><text x="140" y="44">φ</text><text x="140" y="64">θ</text><text x="120" y="93">recoil e⁻</text></g></svg><figcaption>Compton geometry</figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">Compton shift</span><span class="eq">Δλ = λ′ − λ = <span class="frac"><span>h</span><span>m₀c</span></span>(1 − cos φ)</span>h/m₀c = <b>0.02426 Å</b> (Compton wavelength). φ = 90° ⇒ 0.0243 Å; φ = 180° ⇒ Δλ<sub>max</sub> = 0.0485 Å. <b>Numerical:</b> λ = 1 Å, φ = 60° ⇒ Δλ = 0.0121 Å, λ′ = 1.0121 Å. Δλ λ pe depend nahi karta ⇒ visible light mein negligible.</div>
+
+<h3>4. Wave Function ψ, Properties &amp; Operators</h3>
+<p>ψ(x,t) matter wave ka amplitude (complex, khud physical nahi); <span class="m">|ψ|² = ψ*ψ</span> = <b>probability density</b> (Born).</p>
+<ul class="cols2 small">
+<li><b>Normalization:</b> <span class="m">∫ |ψ|² dV = 1</span>.</li>
+<li>ψ <b>finite, single-valued, continuous</b>.</li>
+<li>∂ψ/∂x continuous (finite V pe).</li>
+<li>ψ → 0 as x → ±∞ (bound states).</li>
+<li>Orthogonal: <span class="m">∫ψ<sub>m</sub>*ψ<sub>n</sub> dx = 0</span> (m ≠ n).</li>
+<li>Aisa ψ = <b>well-behaved</b> wave function.</li>
+</ul>
+<div class="box formula"><span class="lbl">Operators</span><span class="eq">p̂ = −iħ ∂/∂x &nbsp;|&nbsp; Ê = iħ ∂/∂t &nbsp;|&nbsp; Ĥ = −(ħ²/2m)∇² + V &nbsp;|&nbsp; ⟨A⟩ = ∫ψ*Âψ dx</span>Origin: ψ = A e<sup>i(kx−ωt)</sup> ⇒ ∂ψ/∂x = (ip/ħ)ψ ⇒ pψ = −iħ∂ψ/∂x; ∂ψ/∂t = −(iE/ħ)ψ ⇒ Eψ = iħ∂ψ/∂t.</div>
+
+<h3>5. Schrödinger Wave Equation</h3>
+<div class="grid2">
+<div class="box formula"><span class="lbl">TDSE</span> E = p²/2m + V; ψ se multiply karke operators daalo:<span class="eq">iħ <span class="frac"><span>∂ψ</span><span>∂t</span></span> = −<span class="frac"><span>ħ²</span><span>2m</span></span>∇²ψ + Vψ</span></div>
+<div class="box formula"><span class="lbl">TISE</span> V ≠ V(t) ⇒ ψ(x,t) = ψ(x)e<sup>−iEt/ħ</sup> TDSE mein daalo:<span class="eq">∇²ψ + <span class="frac"><span>2m</span><span>ħ²</span></span>(E − V)ψ = 0</span></div>
+</div>
+<p class="small">Alternate TISE: wave eq. ∇²ψ + (4π²/λ²)ψ = 0 mein λ = h/p, p² = 2m(E−V) substitute karo.</p>
+
+<h3>6. Particle in 1-D Infinite Square Potential Well</h3>
+<div class="grid2">
+<div>
+<p>V = 0 (0 &lt; x &lt; L), V = ∞ bahar ⇒ bahar ψ = 0. Andar: <span class="m">d²ψ/dx² + k²ψ = 0</span>, <span class="m">k² = 2mE/ħ²</span>.</p>
+<ul>
+<li><span class="m">ψ = A sin kx + B cos kx</span>; ψ(0) = 0 ⇒ B = 0.</li>
+<li>ψ(L) = 0 ⇒ sin kL = 0 ⇒ <span class="m">k = nπ/L</span>, n = 1,2,3…</li>
+<li><span class="m">E<sub>n</sub> = ħ²k²/2m = n²h²/8mL²</span>.</li>
+<li>Normalize: <span class="m">A²L/2 = 1 ⇒ A = √(2/L)</span>.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 200 130" width="185"><g stroke="#1c2230" stroke-width="1.4" fill="none"><line x1="40" y1="10" x2="40" y2="120"/><line x1="160" y1="10" x2="160" y2="120"/><line x1="40" y1="120" x2="160" y2="120"/><line x1="40" y1="105" x2="160" y2="105" stroke="#aaa" stroke-dasharray="2 2"/><line x1="40" y1="70" x2="160" y2="70" stroke="#aaa" stroke-dasharray="2 2"/><line x1="40" y1="25" x2="160" y2="25" stroke="#aaa" stroke-dasharray="2 2"/><path d="M40 105 Q100 85 160 105" stroke="#1f4e8c"/><path d="M40 70 Q70 52 100 70 Q130 88 160 70" stroke="#1f4e8c"/><path d="M40 25 Q60 9 80 25 Q100 41 120 25 Q140 9 160 25" stroke="#1f4e8c"/></g><g font-size="10" fill="#1c2230"><text x="163" y="108">E₁</text><text x="163" y="73">4E₁</text><text x="163" y="28">9E₁</text><text x="36" y="130">0</text><text x="156" y="130">L</text><text x="2" y="60">V=∞</text></g></svg><figcaption>ψ₁, ψ₂, ψ₃ in the well</figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">Result</span><span class="eq">E<sub>n</sub> = <span class="frac"><span>n²h²</span><span>8mL²</span></span> &nbsp;;&nbsp; ψ<sub>n</sub>(x) = √(2/L) sin(nπx/L)</span>n = 0 nahi (ψ ≡ 0) ⇒ <b>zero-point energy</b> E₁ ≠ 0. Energy quantized, E ∝ n², E ∝ 1/L². <b>Numerical:</b> electron, L = 1 Å ⇒ E₁ = (6.63×10<sup>−34</sup>)²/(8×9.1×10<sup>−31</sup>×10<sup>−20</sup>) = 6.03×10<sup>−18</sup> J = <b>37.7 eV</b>; E₂ = 150.8 eV.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT II</span> Wave Optics</h2>
+<p><b>Interference:</b> do <b>coherent</b> sources (same frequency, constant phase difference) ki waves ka superposition. Path diff. Δ = nλ ⇒ bright; Δ = (2n+1)λ/2 ⇒ dark; phase diff δ = (2π/λ)Δ.</p>
+
+<h3>1. Fresnel's Biprism</h3>
+<div class="grid2">
+<div>
+<p>Do thin prisms (angle ~0.5°) base-to-base. Slit S se do <b>virtual coherent sources</b> S₁, S₂ (separation d) — <b>division of wavefront</b>.</p>
+<ul>
+<li>Fringe width <span class="m">β = λD/d</span> ⇒ <span class="m">λ = βd/D</span>.</li>
+<li>d by displacement method: <span class="m">d = √(d₁d₂)</span>.</li>
+<li>Thin sheet (t, μ) ⇒ fringe shift <span class="m">x₀ = (μ−1)tβ/λ</span>.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 210 105" width="190"><g stroke="#1c2230" stroke-width="1.2" fill="none"><polygon points="80,12 80,92 92,52" fill="#eef4fc"/><line x1="195" y1="8" x2="195" y2="98"/><line x1="15" y1="52" x2="80" y2="32" stroke="#1f4e8c"/><line x1="15" y1="52" x2="80" y2="72" stroke="#1f4e8c"/><line x1="86" y1="35" x2="195" y2="77" stroke="#1f4e8c"/><line x1="86" y1="69" x2="195" y2="27" stroke="#1f4e8c"/><line x1="86" y1="35" x2="20" y2="42" stroke-dasharray="2 2"/><line x1="86" y1="69" x2="20" y2="62" stroke-dasharray="2 2"/></g><circle cx="15" cy="52" r="2.5" fill="#1c2230"/><g font-size="10" fill="#1c2230"><text x="3" y="56">S</text><text x="10" y="38">S₁</text><text x="10" y="74">S₂</text><text x="150" y="55">overlap</text><text x="165" y="105">screen</text></g></svg><figcaption>Fresnel biprism</figcaption></figure>
+</div>
+
+<h3>2. Thin Films (Reflected &amp; Transmitted Light)</h3>
+<p>Thickness t, index μ, refraction angle r: path diff. <span class="m">Δ = 2μt cos r</span>; denser medium se reflection pe extra <b>λ/2</b> (Stokes).</p>
+<table>
+<tr><th>Light</th><th>Bright</th><th>Dark</th></tr>
+<tr><td>Reflected (extra λ/2)</td><td>2μt cos r = (2n+1)λ/2</td><td>2μt cos r = nλ</td></tr>
+<tr><td>Transmitted (no λ/2)</td><td>2μt cos r = nλ</td><td>2μt cos r = (2n+1)λ/2</td></tr>
+</table>
+<p class="small">Dono patterns <b>complementary</b>. Very thin film (t → 0) reflected light mein dark. Soap/oil film white light mein coloured.</p>
+
+<h3>3. Wedge-shaped Film</h3>
+<p>Do plates ke beech chhota angle θ. Dark: <span class="m">2μt = nλ</span>, <span class="m">t = xθ</span> ⇒ straight, equidistant fringes, edge pe dark. <span class="m">β = λ/2μθ</span>; wire thickness <span class="m">d = θl = λl/2μβ</span>.</p>
+
+<h3>4. Newton's Rings</h3>
+<div class="grid2">
+<div>
+<p>Plano-convex lens (R) glass plate pe ⇒ air film; reflected light mein concentric rings, <b>centre dark</b>.</p>
+<ul>
+<li>Geometry: <span class="m">r² ≈ 2Rt</span>.</li>
+<li>Dark: <span class="m">2μt = nλ ⇒ D<sub>n</sub>² = 4nλR/μ</span>.</li>
+<li>Bright: <span class="m">D<sub>n</sub>² = 2(2n−1)λR/μ</span>. D<sub>n</sub> ∝ √n.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 200 100" width="180"><g stroke="#1c2230" stroke-width="1.2" fill="none"><line x1="10" y1="80" x2="190" y2="80"/><path d="M30 60 Q100 100 170 60"/><line x1="30" y1="60" x2="170" y2="60"/><line x1="100" y1="80" x2="100" y2="10" stroke-dasharray="3 2"/><line x1="100" y1="10" x2="150" y2="73" stroke="#1f4e8c"/><line x1="100" y1="90" x2="150" y2="90" stroke="#1f4e8c"/></g><g font-size="10" fill="#1c2230"><text x="128" y="40">R</text><text x="120" y="99">r</text><text x="12" y="95">plate</text><text x="150" y="55">lens</text></g></svg><figcaption>Newton's rings</figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">λ = <span class="frac"><span>D<sub>n+p</sub>² − D<sub>n</sub>²</span><span>4pR</span></span> &nbsp;;&nbsp; μ<sub>liq</sub> = <span class="frac"><span>(D<sub>n+p</sub>² − D<sub>n</sub>²)<sub>air</sub></span><span>(D<sub>n+p</sub>² − D<sub>n</sub>²)<sub>liq</sub></span></span></span><b>Numerical:</b> D₅ = 0.336 cm, D₁₅ = 0.590 cm, R = 100 cm ⇒ λ = (0.3481 − 0.1129)/(4×10×100) = <b>5880 Å</b>.</div>
+
+<h3>5. Michelson Interferometer</h3>
+<div class="grid2">
+<div>
+<p>Beam splitter G₁ (half-silvered, 45°) do perpendicular beams banata hai → M₁ (movable), M₂ (fixed) se reflect → recombine. G₂ = <b>compensating plate</b> (dono beams ka glass path equal). M₁ ko d move karo ⇒ <span class="m">2d = Nλ</span>.</p>
+<ul class="small">
+<li><b>λ:</b> λ = 2d/N.</li>
+<li><b>Δλ (Na D-lines):</b> successive concordance positions ke beech d ⇒ <span class="m">Δλ = λ²/2d</span>.</li>
+<li><b>Thin sheet:</b> <span class="m">2(μ−1)t = Nλ</span>. Also metre standardisation.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 190 120" width="175"><g stroke="#1c2230" stroke-width="1.3" fill="none"><line x1="10" y1="60" x2="80" y2="60" stroke="#1f4e8c"/><line x1="70" y1="45" x2="95" y2="75" stroke-width="2.4"/><line x1="105" y1="45" x2="130" y2="75"/><line x1="82" y1="60" x2="170" y2="60" stroke="#1f4e8c"/><line x1="170" y1="45" x2="170" y2="75" stroke-width="2.4"/><line x1="82" y1="60" x2="82" y2="10" stroke="#1f4e8c"/><line x1="67" y1="10" x2="97" y2="10" stroke-width="2.4"/><line x1="82" y1="60" x2="82" y2="105" stroke="#1f4e8c"/></g><g font-size="10" fill="#1c2230"><text x="5" y="54">S</text><text x="56" y="44">G₁</text><text x="120" y="44">G₂</text><text x="160" y="40">M₂</text><text x="100" y="14">M₁ (movable)</text><text x="88" y="114">Telescope</text></g></svg><figcaption>Michelson interferometer</figcaption></figure>
+</div>
+
+<h3>6. Diffraction (Fraunhofer)</h3>
+<table>
+<tr><th>Single slit (width a)</th><th>Double slit (d = a+b)</th></tr>
+<tr><td>Minima: <span class="m">a sinθ = nλ</span>. <span class="m">I = I₀(sinα/α)²</span>, α = πa sinθ/λ. Secondary maxima α ≈ 1.43π, 2.46π (4.5%, 1.6%). Central max width 2λf/a.</td><td><span class="m">I = 4I₀(sinα/α)² cos²β</span>, β = π(a+b)sinθ/λ. Interference max: (a+b)sinθ = nλ; diffraction min: a sinθ = mλ ⇒ <b>missing orders</b> n = m(a+b)/a (a = b ⇒ 2, 4, 6… missing).</td></tr>
+</table>
+<div class="box formula"><span class="lbl">N slits — Plane grating</span><span class="eq">I = I₀ <span class="frac"><span>sin²α</span><span>α²</span></span> · <span class="frac"><span>sin²Nβ</span><span>sin²β</span></span> &nbsp;;&nbsp; Principal maxima: (a+b) sin θ = nλ</span>(a+b) = 1/(lines per unit length); <span class="m">n<sub>max</sub> &lt; (a+b)/λ</span>. Principal maxima ke beech (N−1) minima, (N−2) secondary maxima; intensity ∝ N². <b>Numerical:</b> 5000 lines/cm, λ = 5890 Å ⇒ (a+b) = 2×10<sup>−4</sup> cm, sinθ₁ = 0.2945 ⇒ θ₁ ≈ 17.1°; n<sub>max</sub> &lt; 3.4 ⇒ 3rd order.</div>
+
+<h3>7. Resolving Power of Grating &amp; Prism</h3>
+<p><b>Rayleigh criterion:</b> ek wavelength ka principal max dusre ke first min pe pade to just resolved. RP = λ/dλ.</p>
+<table>
+<tr><th>Grating: <span class="m">λ/dλ = nN</span></th><th>Prism: <span class="m">λ/dλ = t (dμ/dλ)</span></th></tr>
+<tr><td>nth max of (λ+dλ): (a+b)sinθ = n(λ+dλ); first min after nth max of λ: (a+b)sinθ = nλ + λ/N. Equate ⇒ nN. Na D-lines (5890, 5896 Å), 1st order ⇒ N ≥ 5893/6 ≈ 982.</td><td>t = base length. Extreme rays ka path diff. t·dμ = λ (Rayleigh). Cauchy μ = A + B/λ² ⇒ dμ/dλ = −2B/λ³.</td></tr>
+</table>
+
+<h3>8. Polarized Light</h3>
+<p>Light <b>transverse</b> hai; plane polarized light mein E-vector ek hi plane mein. Malus: <span class="m">I = I₀cos²θ</span>. <b>Brewster's law:</b> polarizing angle i<sub>p</sub> pe reflected light completely plane polarized: <span class="m">μ = tan i<sub>p</sub></span>, aur <span class="m">i<sub>p</sub> + r = 90°</span> (reflected ⊥ refracted). Glass μ = 1.5 ⇒ i<sub>p</sub> ≈ 56.3°.</p>
+<p><b>Double refraction:</b> calcite/quartz mein ek ray do mein split: <b>O-ray</b> (Snell's law follow, μ<sub>o</sub> constant) aur <b>E-ray</b> (μ<sub>e</sub> direction-dependent); dono plane polarized, perpendicular planes. <b>Optic axis</b> ke along no double refraction. Calcite μ<sub>o</sub> = 1.658, μ<sub>e</sub> = 1.486 (negative crystal); quartz positive.</p>
+<div class="grid2">
+<div><p><b>Nicol prism:</b> calcite (end faces 71° → 68° cut) diagonally kaat kar <b>Canada balsam</b> (μ = 1.55) se joda. O-ray (1.658 &gt; 1.55) balsam pe <b>TIR</b> se side nikal jaati; E-ray (1.486 &lt; 1.55) transmit ⇒ plane polarized output. Use: polarizer &amp; analyser.</p></div>
+<figure><svg viewBox="0 0 200 85" width="185"><g stroke="#1c2230" stroke-width="1.2" fill="none"><polygon points="40,15 170,15 150,75 20,75" fill="#eef4fc"/><line x1="40" y1="75" x2="150" y2="15" stroke="#8a3b12" stroke-width="2"/><line x1="0" y1="50" x2="30" y2="50" stroke="#1f4e8c"/><line x1="30" y1="50" x2="90" y2="45" stroke="#c0392b"/><line x1="90" y1="45" x2="70" y2="10" stroke="#c0392b"/><line x1="30" y1="50" x2="100" y2="40" stroke="#1e8a4c" stroke-dasharray="3 2"/><line x1="100" y1="40" x2="190" y2="35" stroke="#1e8a4c"/></g><g font-size="10" fill="#1c2230"><text x="75" y="9">O-ray (TIR)</text><text x="160" y="30">E-ray</text><text x="95" y="70">Canada balsam</text></g></svg><figcaption>Nicol prism</figcaption></figure>
+</div>
+<table>
+<tr><th>Retarder (optic axis ∥ face)</th><th>Path diff.</th><th>Thickness</th><th>Use</th></tr>
+<tr><td>Quarter wave plate</td><td>λ/4 (π/2)</td><td>t = λ/4(μ<sub>o</sub> − μ<sub>e</sub>)</td><td>Plane pol. at 45° → circular; other angles → elliptical</td></tr>
+<tr><td>Half wave plate</td><td>λ/2 (π)</td><td>t = λ/2(μ<sub>o</sub> − μ<sub>e</sub>)</td><td>Plane of polarization 2θ rotate; circular ka sense reverse</td></tr>
+</table>
+<p class="small">Calcite, λ = 5890 Å ⇒ QWP t = 5890×10<sup>−10</sup>/(4×0.172) ≈ 0.856 μm. (Positive crystal: μ<sub>e</sub> − μ<sub>o</sub>.)</p>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT III</span> Nuclear Physics</h2>
+<p>Nucleus: Z protons + N neutrons, A = Z + N; <span class="m">R = R₀A<sup>1/3</sup></span> (R₀ ≈ 1.2 fm). Binding energy <span class="m">B = [Zm<sub>p</sub> + Nm<sub>n</sub> − M]c²</span>, 1 u = 931.5 MeV.</p>
+
+<h3>1. Liquid Drop Model &amp; Semi-empirical Mass Formula</h3>
+<p>Nucleus = charged incompressible liquid drop. Similarities: short-range saturated force (intermolecular jaisa), constant density, B/A ≈ constant (latent heat jaisa), particle emission ↔ evaporation, drop splitting ↔ <b>fission</b> (Bohr–Wheeler).</p>
+<div class="box formula"><span class="lbl">Weizsäcker formula</span><span class="eq">B = a<sub>v</sub>A − a<sub>s</sub>A<sup>2/3</sup> − a<sub>c</sub><span class="frac"><span>Z(Z−1)</span><span>A<sup>1/3</sup></span></span> − a<sub>a</sub><span class="frac"><span>(A−2Z)²</span><span>A</span></span> ± δ &nbsp;;&nbsp; M = Zm<sub>p</sub> + (A−Z)m<sub>n</sub> − B/c²</span></div>
+<table>
+<tr><th>Term</th><th>Reason</th><th>≈ MeV</th></tr>
+<tr><td>Volume a<sub>v</sub>A</td><td>Saturation — har nucleon sirf neighbours se bound ⇒ B ∝ A</td><td>15.5</td></tr>
+<tr><td>Surface −a<sub>s</sub>A<sup>2/3</sup></td><td>Surface nucleons ke kam neighbours; area ∝ A<sup>2/3</sup></td><td>16.8</td></tr>
+<tr><td>Coulomb −a<sub>c</sub>Z(Z−1)/A<sup>1/3</sup></td><td>Proton–proton repulsion ∝ Z²/R</td><td>0.72</td></tr>
+<tr><td>Asymmetry −a<sub>a</sub>(A−2Z)²/A</td><td>N ≠ Z ⇒ stability kam (Pauli)</td><td>23</td></tr>
+<tr><td>Pairing ±δ</td><td>+ even-even, 0 odd-A, − odd-odd; δ ≈ 34A<sup>−3/4</sup></td><td>~12/√A</td></tr>
+</table>
+<p class="small"><b>Success:</b> B/A curve, fission, stable isobar. <b>Failure:</b> magic numbers, spin, magnetic moment, excited states.</p>
+
+<h3>2. Nuclear Shell Model</h3>
+<p>Atomic shells ki tarah nucleons average central potential mein independently move karte hue discrete <b>shells</b> bharte hain (p aur n alag, Pauli principle). <b>Magic numbers</b> 2, 8, 20, 28, 50, 82, 126 pe nuclei extra stable (high B/A, zyada isotopes, low n-absorption) — e.g. ₂He⁴, ₈O¹⁶, ₂₀Ca⁴⁰, ₈₂Pb²⁰⁸ (doubly magic). Strong <b>spin–orbit coupling</b> (Mayer–Jensen) se j = l ± ½ splitting magic numbers deta hai. <b>Success:</b> magic numbers, ground state spin–parity, magnetic moments, isomerism. <b>Failure:</b> fission, large quadrupole moments.</p>
+
+<h3>3. Particle Accelerators</h3>
+<div class="grid2">
+<div><p><b>(a) Linear Accelerator:</b> Coaxial <b>drift tubes</b>, alternate tubes RF source ke opposite terminals pe. Tube ke andar field zero (drift), gaps mein acceleration. Har tube mein time T/2 rakhne ke liye length badhti: <span class="m">L<sub>n</sub> = (1/2f)√(2nqV/m) ∝ √n</span>; KE after n gaps = nqV.</p></div>
+<figure><svg viewBox="0 0 200 70" width="190"><g stroke="#1c2230" stroke-width="1.2" fill="#eef4fc"><rect x="20" y="25" width="18" height="20"/><rect x="45" y="25" width="26" height="20"/><rect x="78" y="25" width="34" height="20"/><rect x="119" y="25" width="42" height="20"/></g><g stroke="#1f4e8c" fill="none"><line x1="2" y1="35" x2="195" y2="35" stroke-dasharray="3 2"/><path d="M29 45 V60 H140 V45"/><path d="M58 25 V10 H95 V25"/></g><g font-size="10" fill="#1c2230"><text x="150" y="66">RF ~</text><text x="100" y="9">~</text><text x="2" y="20">ion</text></g></svg><figcaption>Linac drift tubes</figcaption></figure>
+</div>
+<div class="grid2">
+<div><p><b>(b) Cyclotron:</b> Do hollow <b>dees</b> strong uniform B mein, beech mein HF AC. Dee ke andar semicircle (field-free), gap mein acceleration; spiral path.</p>
+<ul>
+<li><span class="m">r = mv/qB</span>; semicircle time <span class="m">πm/qB</span> — v, r se independent.</li>
+<li><b>Resonance:</b> <span class="m">f = qB/2πm</span>; <span class="m">E<sub>max</sub> = q²B²R²/2m</span>.</li>
+<li><b>Limits:</b> relativistic mass increase ⇒ out of phase (p ~25 MeV max); electrons &amp; neutrals nahi.</li>
+</ul></div>
+<figure><svg viewBox="0 0 180 110" width="165"><g stroke="#1c2230" stroke-width="1.3" fill="#eef4fc"><path d="M85 10 A45 45 0 0 0 85 100 Z"/><path d="M95 10 A45 45 0 0 1 95 100 Z"/></g><path d="M90 55 a6 6 0 0 1 12 0 a12 12 0 0 1 -24 0 a18 18 0 0 1 36 0 a24 24 0 0 1 -48 0 a30 30 0 0 1 60 0" fill="none" stroke="#1f4e8c" stroke-width="1.1"/><g font-size="10" fill="#1c2230"><text x="48" y="22">D₁</text><text x="120" y="22">D₂</text><text x="146" y="58">→ beam</text><text x="70" y="108">B ⊥ page</text></g></svg><figcaption>Cyclotron (top view)</figcaption></figure>
+</div>
+<div class="box tip"><span class="lbl">Numerical</span> Proton, B = 1.5 T: f = (1.6×10<sup>−19</sup>×1.5)/(2π×1.67×10<sup>−27</sup>) ≈ <b>22.9 MHz</b>. R = 0.5 m ⇒ E<sub>max</sub> = (1.6×10<sup>−19</sup>×1.5×0.5)²/(2×1.67×10<sup>−27</sup>) = 4.31×10<sup>−12</sup> J ≈ <b>27 MeV</b>.</div>
+<ul>
+<li><b>(c) Synchrocyclotron (FM cyclotron):</b> B constant, oscillator <b>frequency time ke saath ghatate</b> hain (f = qB/2πm, m badhta) ⇒ relativistic problem solved. Beam <b>pulsed</b>; protons ~700 MeV.</li>
+<li><b>(d) Synchrotron:</b> Particles <b>fixed radius</b> ring (doughnut) mein; energy ke saath <b>B aur f dono</b> badhate hain (r = p/qB constant). Ring ke around bending magnets + RF cavities. Proton synchrotron (GeV–TeV, LHC); electron synchrotron mein synchrotron radiation loss limit.</li>
+<li><b>(e) Betatron (Kerst, electrons):</b> Doughnut chamber, fixed orbit r₀; acceleration <b>changing flux se induced E-field</b> (transformer, electron = secondary). Energy/rev = e dφ/dt. <b>Betatron (2:1) condition:</b> <span class="m">B<sub>orbit</sub> = ½ B<sub>avg inside</sub></span>, i.e. φ = 2πr₀²B<sub>0</sub>. AC ke first quarter cycle mein hi acceleration; ~100–300 MeV; X-rays, therapy.</li>
+</ul>
+
+<h3>4. Geiger–Müller Counter</h3>
+<div class="grid2">
+<div><p>Metal tube (cathode) + axial thin wire (anode, ~ +1000 V). Gas: argon + quenching agent (alcohol/halogen) at low pressure. Radiation gas ionize karti → electrons anode ki taraf accelerate → <b>avalanche (Townsend)</b> poore wire pe ⇒ large pulse (initial ionization se independent) → counter. Quencher continuous discharge rokta; <b>dead time</b> ~ 100–200 μs. Operating voltage = <b>plateau</b> region. β ~100% efficient, γ ~1%; particle type/energy nahi batata.</p></div>
+<figure><svg viewBox="0 0 190 90" width="175"><g stroke="#1c2230" stroke-width="1.3" fill="#eef4fc"><rect x="20" y="20" width="130" height="45" rx="5"/></g><g stroke="#1f4e8c" stroke-width="1.6"><line x1="10" y1="42" x2="160" y2="42"/></g><g stroke="#1c2230" fill="none"><path d="M160 42 H178 V80 H85 V65"/></g><g font-size="10" fill="#1c2230"><text x="30" y="14">cathode tube</text><text x="62" y="38">anode wire</text><text x="95" y="89">HV + R → counter</text><text x="25" y="58">Ar + alcohol</text></g></svg><figcaption>GM tube</figcaption></figure>
+</div>
+
+<h3>5. Motion in Crossed Electric &amp; Magnetic Fields</h3>
+<p><span class="m">F = q(E + v × B)</span>, E ⊥ B. <b>Velocity selector:</b> <span class="m">qE = qvB ⇒ v = E/B</span> wale particles undeflected (Wien filter, Thomson e/m). Rest se start ⇒ <b>cycloidal</b> path, drift velocity <span class="m">v<sub>d</sub> = E/B</span> along E × B (q, m se independent). Only B ⇒ circle (r = mv/qB); only E ⇒ parabola.</p>
+
+<h3>6. Mass Spectrographs</h3>
+<div class="grid2">
+<div><p><b>(a) Bainbridge:</b> Ions slits se → <b>velocity selector</b> (E ⊥ B₁), sirf v = E/B₁ pass → chamber mein B₂ ⇒ semicircle → photographic plate.</p>
+<p class="m">r = mv/qB₂ = mE/(qB₁B₂) ⇒ m = qB₁B₂r/E ∝ r</p>
+<p>⇒ <b>linear mass scale</b>; isotopes: Δm = qB₁B₂Δr/E.</p></div>
+<figure><svg viewBox="0 0 180 120" width="165"><g stroke="#1c2230" stroke-width="1.2" fill="none"><line x1="20" y1="5" x2="20" y2="35"/><line x1="40" y1="5" x2="40" y2="35"/><line x1="30" y1="0" x2="30" y2="45" stroke="#1f4e8c"/><line x1="10" y1="45" x2="175" y2="45" stroke-width="2"/><path d="M30 45 A35 35 0 0 0 100 45" stroke="#1f4e8c"/><path d="M30 45 A50 50 0 0 0 130 45" stroke="#1f4e8c" stroke-dasharray="3 2"/></g><g font-size="10" fill="#1c2230"><text x="44" y="22">E, B₁ (selector)</text><text x="70" y="75">B₂ ⊙</text><text x="140" y="40">plate</text><text x="85" y="108">m₁</text><text x="125" y="108">m₂</text></g></svg><figcaption>Bainbridge (schematic)</figcaption></figure>
+</div>
+<p><b>(b) Aston:</b> Ion beam pehle <b>electric field</b> se ek taraf deflect, phir <b>magnetic field</b> se opposite taraf. Same e/m (different v) wale ions plate pe <b>ek point pe focus</b> — <b>velocity focusing</b>; different masses ⇒ alag lines, approx. linear scale. Aston ne isotopes (Ne-20, Ne-22) aur <b>whole number rule</b> diya; accuracy ~1 in 10⁴. <i>Bainbridge = velocity selection (exactly linear scale); Aston = velocity focusing.</i></p>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT IV</span> Solid State Physics</h2>
+
+<h3>1. Kronig–Penney Model (Qualitative)</h3>
+<div class="grid2">
+<div><p>Crystal ka periodic potential = 1-D periodic <b>rectangular wells</b> (barrier V₀, width b, period a+b). Schrödinger eq. + Bloch theorem se:</p>
+<p class="m">P (sin αa)/(αa) + cos αa = cos ka , &nbsp;P = mV₀ba/ħ²</p>
+<ul>
+<li>cos ka sirf −1 se +1 ⇒ LHS jahan is range mein ho wahi E allowed ⇒ <b>allowed bands</b> + <b>forbidden gaps</b>.</li>
+<li>E badhe ⇒ band width badhe. P → ∞: discrete levels; P → 0: free electron.</li>
+<li>E–k mein gaps at k = nπ/a (Brillouin zone edges).</li>
+</ul></div>
+<figure><svg viewBox="0 0 200 100" width="180"><g stroke="#1c2230" stroke-width="1.2" fill="none"><path d="M5 80 H25 V30 H35 V80 H65 V30 H75 V80 H105 V30 H115 V80 H145 V30 H155 V80 H190"/><line x1="35" y1="90" x2="65" y2="90" stroke="#1f4e8c"/></g><g font-size="10" fill="#1c2230"><text x="38" y="26">V₀</text><text x="47" y="99">a</text><text x="25" y="25">b</text></g></svg><figcaption>K-P periodic potential</figcaption></figure>
+</div>
+
+<h3>2. Effective Mass</h3>
+<p>Crystal mein lattice ke internal force ka effect ek modified mass mein daalte hain taaki <span class="m">F<sub>ext</sub> = m*a</span>: <span class="m">m* = ħ² / (d²E/dk²)</span>. Band bottom pe m* &gt; 0; band top pe m* &lt; 0 ⇒ <b>hole</b> (positive charge, positive mass) concept; inflection pe m* → ∞. Narrow band ⇒ heavy m*.</p>
+
+<h3>3. Fermi–Dirac Distribution</h3>
+<div class="grid2">
+<div><div class="box formula"><span class="lbl">F-D function</span><span class="eq">f(E) = <span class="frac"><span>1</span><span>1 + e<sup>(E − E<sub>F</sub>)/kT</sup></span></span></span></div>
+<ul>
+<li>f(E) = level E ke occupied hone ki probability.</li>
+<li>T = 0: E &lt; E<sub>F</sub> ⇒ f = 1, E &gt; E<sub>F</sub> ⇒ f = 0.</li>
+<li>T &gt; 0: E = E<sub>F</sub> pe <b>f = ½</b>. <b>Fermi level</b> = ½ occupancy level (0 K pe highest filled).</li>
+<li>E − E<sub>F</sub> ≫ kT ⇒ Maxwell–Boltzmann.</li>
+</ul></div>
+<figure><svg viewBox="0 0 190 110" width="180"><g stroke="#1c2230" stroke-width="1.2" fill="none"><line x1="20" y1="95" x2="185" y2="95"/><line x1="20" y1="95" x2="20" y2="10"/><path d="M20 25 H95 V95" stroke="#1f4e8c" stroke-width="1.6"/><path d="M20 25 H65 C85 25 90 60 95 60 C100 60 105 95 130 95 H180" stroke="#c0392b" stroke-dasharray="4 2"/><line x1="15" y1="60" x2="95" y2="60" stroke="#aaa" stroke-dasharray="2 2"/></g><g font-size="10" fill="#1c2230"><text x="7" y="28">1</text><text x="5" y="63">½</text><text x="88" y="107">E<tspan font-size="8">F</tspan></text><text x="175" y="107">E</text><text x="110" y="35" fill="#1f4e8c">T = 0 K</text><text x="120" y="80" fill="#c0392b">T &gt; 0</text><text x="24" y="10">f(E)</text></g></svg><figcaption>f(E) vs E</figcaption></figure>
+</div>
+
+<h3>4. Fermi Level: Intrinsic &amp; Extrinsic Semiconductors</h3>
+<table>
+<tr><th>Type</th><th>Fermi level position</th></tr>
+<tr><td>Intrinsic</td><td><span class="m">E<sub>F</sub> = (E<sub>c</sub> + E<sub>v</sub>)/2 + (3kT/4) ln(m<sub>h</sub>*/m<sub>e</sub>*)</span> ⇒ m<sub>h</sub>* = m<sub>e</sub>* ho to exactly <b>band gap ke middle</b>.</td></tr>
+<tr><td>n-type (P, As)</td><td>0 K: E<sub>F</sub> = (E<sub>c</sub> + E<sub>d</sub>)/2. Doping ↑ ⇒ E<sub>c</sub> ki taraf; T ↑ ⇒ middle ki taraf girta. E<sub>c</sub> − E<sub>F</sub> = kT ln(N<sub>c</sub>/N<sub>D</sub>).</td></tr>
+<tr><td>p-type (B, Al)</td><td>0 K: E<sub>F</sub> = (E<sub>v</sub> + E<sub>a</sub>)/2. Doping ↑ ⇒ E<sub>v</sub> ki taraf; T ↑ ⇒ middle ki taraf uthta. E<sub>F</sub> − E<sub>v</sub> = kT ln(N<sub>v</sub>/N<sub>A</sub>).</td></tr>
+</table>
+
+<h3>5. Zener, Tunnel, Photodiode &amp; Solar Cell</h3>
+<table>
+<tr><th>Device</th><th>Principle</th><th>Characteristic / Use</th></tr>
+<tr><td><b>Zener diode</b></td><td>Heavily doped, reverse bias. <b>Zener breakdown</b> (V<sub>Z</sub> &lt; ~5 V, field tunnelling) ya <b>avalanche</b> (higher V).</td><td>Breakdown pe V nearly constant ⇒ <b>voltage regulator</b>, reference.</td></tr>
+<tr><td><b>Tunnel diode</b></td><td>Very heavy doping, depletion ~10 nm ⇒ quantum <b>tunnelling</b>.</td><td>I–V mein <b>negative resistance</b> (peak→valley). GHz oscillator, fast switch.</td></tr>
+<tr><td><b>Photodiode</b></td><td>Reverse biased p-n/PIN; hν ≥ E<sub>g</sub> ⇒ e–h pairs ⇒ reverse current ∝ intensity.</td><td>Very low dark current. Light detector, fiber receiver.</td></tr>
+<tr><td><b>Solar cell</b></td><td>Large-area p-n, <b>no bias</b>; photovoltaic effect, junction field e–h separate karta.</td><td>V<sub>oc</sub> ~0.5–0.6 V (Si); FF = V<sub>m</sub>I<sub>m</sub>/V<sub>oc</sub>I<sub>sc</sub>; η ~15–22%.</td></tr>
+</table>
+
+<h3>6. Hall Effect</h3>
+<div class="grid2">
+<div><p>Current-carrying slab ko transverse B mein rakho ⇒ I aur B dono ke ⊥ <b>Hall voltage V<sub>H</sub></b> (Lorentz force se charges ek side jama). Equilibrium: <span class="m">eE<sub>H</sub> = evB</span>, J = nev ⇒ <span class="m">E<sub>H</sub> = JB/ne</span>.</p></div>
+<figure><svg viewBox="0 0 190 95" width="170"><g stroke="#1c2230" stroke-width="1.2" fill="#eef4fc"><polygon points="30,40 130,40 160,20 60,20"/><polygon points="30,40 130,40 130,70 30,70"/><polygon points="130,40 160,20 160,50 130,70"/></g><g stroke="#1f4e8c" fill="none" stroke-width="1.4"><line x1="5" y1="55" x2="28" y2="55"/><line x1="95" y1="92" x2="95" y2="75"/></g><g font-size="10" fill="#1c2230"><text x="2" y="50">I →</text><text x="100" y="90">B ↑</text><text x="164" y="40">V<tspan font-size="8">H</tspan></text><text x="45" y="60">width w, thick t</text></g></svg><figcaption>Hall setup</figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">Hall relations</span><span class="eq">R<sub>H</sub> = <span class="frac"><span>1</span><span>ne</span></span> = <span class="frac"><span>V<sub>H</sub> t</span><span>I B</span></span> &nbsp;;&nbsp; μ = σR<sub>H</sub></span>R<sub>H</sub> −ve ⇒ n-type, +ve ⇒ p-type. Uses: carrier type, n, mobility, Hall probe (B measure). <b>Numerical:</b> I = 10 mA, B = 0.5 T, t = 1 mm, V<sub>H</sub> = 1 mV ⇒ R<sub>H</sub> = 2×10<sup>−4</sup> m³/C ⇒ n = 1/eR<sub>H</sub> = 3.1×10<sup>22</sup> m<sup>−3</sup>.</div>
+
+<h3>7. Superconductivity</h3>
+<p><b>T<sub>c</sub></b> se niche <b>zero resistance</b> (Onnes, Hg 4.2 K). <span class="m">H<sub>c</sub>(T) = H<sub>c</sub>(0)[1 − (T/T<sub>c</sub>)²]</span>; H &gt; H<sub>c</sub> ya I &gt; I<sub>c</sub> ⇒ normal. Isotope effect T<sub>c</sub> ∝ M<sup>−1/2</sup>. <b>Meissner effect:</b> T<sub>c</sub> se niche cool karne par flux <b>expel</b>: B = μ₀(H + M) = 0 ⇒ M = −H, <b>χ = −1</b> (perfect diamagnetism) — levitation.</p>
+<table>
+<tr><th>Type I (soft)</th><th>Type II (hard)</th></tr>
+<tr><td>Single H<sub>c</sub>, sharp transition, complete Meissner till H<sub>c</sub>; low H<sub>c</sub> (~0.1 T). Pure metals: Hg, Pb, Sn, Al.</td><td>H<sub>c1</sub>, H<sub>c2</sub>; between them <b>mixed/vortex state</b> (partial flux). High H<sub>c2</sub> (tens of T). Alloys: NbTi, Nb₃Sn, YBCO — MRI magnets.</td></tr>
+</table>
+
+<h3>8. Dielectrics: Polarization, Complex Permittivity, Losses</h3>
+<p>Field mein dipoles induce/align: <span class="m">P = ε₀(ε<sub>r</sub> − 1)E</span>, <span class="m">D = ε₀E + P</span>.</p>
+<ul class="cols2 small">
+<li><b>Electronic:</b> electron cloud shift; α<sub>e</sub> = 4πε₀R³; T-independent; ~10<sup>15</sup> Hz.</li>
+<li><b>Ionic:</b> ions opposite shift (NaCl); ~10<sup>13</sup> Hz.</li>
+<li><b>Orientational:</b> permanent dipoles (H₂O); α<sub>o</sub> = p²/3kT; ~10<sup>10</sup> Hz.</li>
+<li><b>Space charge:</b> interfaces pe charge; ~10³ Hz.</li>
+</ul>
+<div class="box formula"><span class="lbl">Complex permittivity</span><span class="eq">ε* = ε′ − iε″ &nbsp;;&nbsp; tan δ = ε″/ε′ &nbsp;;&nbsp; Power loss/volume = ωε₀ε″E²<sub>rms</sub></span>AC mein dipoles field ke peeche lag karte (relaxation) ⇒ D aur E mein phase lag δ. ε′ = stored energy; ε″ = <b>loss factor</b> (heat). <b>Dielectric loss:</b> electrical energy → heat (dipole relaxation, leakage conduction, ionization); max at ωτ = 1. Good insulator: low tan δ (mica ~10<sup>−4</sup>). Uses: capacitors, cables, microwave heating.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT V</span> Laser and Fiber Optics</h2>
+
+<h3>1. Spontaneous &amp; Stimulated Processes</h3>
+<table>
+<tr><th>Process</th><th>What happens</th><th>Rate</th></tr>
+<tr><td>Absorption</td><td>E₁ atom photon hν = E₂ − E₁ absorb karke E₂ jaata</td><td>B₁₂N₁ρ(ν)</td></tr>
+<tr><td>Spontaneous emission</td><td>Excited atom khud se random time/direction/phase pe photon — incoherent</td><td>A₂₁N₂</td></tr>
+<tr><td>Stimulated emission</td><td>Incident photon trigger ⇒ 2 identical photons (same ν, phase, direction, polarization) — coherent, amplification</td><td>B₂₁N₂ρ(ν)</td></tr>
+</table>
+
+<h3>2. Einstein's A &amp; B Coefficients, Transition Probabilities</h3>
+<p>Equilibrium: <span class="m">B₁₂N₁ρ = A₂₁N₂ + B₂₁N₂ρ</span> ⇒ <span class="m">ρ = A₂₁/(B₁₂(N₁/N₂) − B₂₁)</span>. Boltzmann <span class="m">N₁/N₂ = e<sup>hν/kT</sup></span> daal kar Planck <span class="m">ρ = (8πhν³/c³)/(e<sup>hν/kT</sup> − 1)</span> se compare:</p>
+<div class="box formula"><span class="lbl">Einstein relations</span><span class="eq">B₁₂ = B₂₁ &nbsp;;&nbsp; A₂₁/B₂₁ = 8πhν³/c³</span><b>Transition probabilities</b> (per sec): spontaneous = A₂₁ (= 1/τ), stimulated = B₂₁ρ, absorption = B₁₂ρ. Ratio A₂₁/B₂₁ρ = e<sup>hν/kT</sup> − 1 ≫ 1 at optical ν ⇒ normally spontaneous dominate; isliye population inversion + resonator chahiye.</div>
+
+<h3>3. Active Medium, Population Inversion, Pumping, Resonator</h3>
+<ul>
+<li><b>Active medium:</b> material jismein inversion aur lasing hoti (Cr³⁺ in ruby, Ne in He-Ne, CO₂).</li>
+<li><b>Population inversion:</b> N₂ &gt; N₁ (normally N₂ &lt; N₁). <b>Metastable state</b> (τ ~10<sup>−3</sup> s vs 10<sup>−8</sup> s) zaroori; 2-level mein impossible, 3/4-level scheme use (4-level easier).</li>
+<li><b>Pumping:</b> optical (flash lamp — ruby, Nd:YAG), electrical discharge (He-Ne, CO₂), chemical, current injection (diode laser).</li>
+<li><b>Optical resonator:</b> do mirrors (100% + partial ~99%) ⇒ feedback, amplification, sirf axial photons survive; <span class="m">L = nλ/2</span> (modes). Types: plane-parallel, confocal.</li>
+</ul>
+
+<h3>4. Characteristics of Laser Beam</h3>
+<ul class="cols2">
+<li><b>Coherence:</b> temporal (l<sub>c</sub> = cτ<sub>c</sub>, He-Ne ~ km tak) &amp; spatial.</li>
+<li><b>Directionality:</b> nearly parallel beam.</li>
+<li><b>Divergence:</b> <span class="m">θ = (r₂ − r₁)/(d₂ − d₁)</span> ≈ 1.22λ/D, ~mrad.</li>
+<li><b>Monochromatic</b> (Δλ ~10<sup>−3</sup> nm) &amp; <b>high intensity</b>.</li>
+</ul>
+
+<h3>5. Ruby, Nd:YAG, He-Ne &amp; CO₂ Lasers</h3>
+<table>
+<tr><th></th><th>Ruby</th><th>Nd:YAG</th><th>He-Ne</th><th>CO₂</th></tr>
+<tr><td>Type</td><td>Solid, 3-level</td><td>Solid, 4-level</td><td>Atomic gas, 4-level</td><td>Molecular gas, 4-level</td></tr>
+<tr><td>Active</td><td>Cr³⁺ (0.05%) in Al₂O₃</td><td>Nd³⁺ in Y₃Al₅O₁₂</td><td>Ne (He:Ne ≈ 10:1)</td><td>CO₂ + N₂ + He</td></tr>
+<tr><td>Pump</td><td>Xenon flash lamp</td><td>Kr/Xe lamp, diode</td><td>Electric discharge</td><td>Electric discharge</td></tr>
+<tr><td>λ</td><td>6943 Å</td><td>1.064 μm</td><td>6328 Å</td><td>10.6 μm (9.6 μm)</td></tr>
+<tr><td>Output</td><td>Pulsed, η ~1%</td><td>Pulsed/CW, high power</td><td>CW, mW</td><td>CW, kW, η ~30–40%</td></tr>
+</table>
+<div class="grid2">
+<figure><svg viewBox="0 0 200 115" width="195"><g stroke="#1c2230" stroke-width="1.3"><line x1="20" y1="105" x2="170" y2="105"/><line x1="20" y1="15" x2="80" y2="15"/><line x1="20" y1="25" x2="80" y2="25"/><line x1="110" y1="50" x2="170" y2="50"/></g><g stroke="#1f4e8c" stroke-width="1.4" fill="none"><line x1="35" y1="105" x2="35" y2="18"/><path d="M65 25 L130 50" stroke-dasharray="3 2"/><line x1="140" y1="50" x2="140" y2="105" stroke="#c0392b"/></g><g font-size="10" fill="#1c2230"><text x="20" y="10">E₃ pump bands</text><text x="40" y="70">pump</text><text x="88" y="32">fast</text><text x="108" y="62">E₂ metastable</text><text x="145" y="82" fill="#c0392b">6943 Å</text><text x="2" y="108">E₁</text></g></svg><figcaption>Ruby (3-level)</figcaption></figure>
+<figure><svg viewBox="0 0 200 115" width="195"><g stroke="#1c2230" stroke-width="1.3"><line x1="10" y1="105" x2="190" y2="105"/><line x1="10" y1="20" x2="70" y2="20"/><line x1="110" y1="25" x2="190" y2="25"/><line x1="110" y1="38" x2="190" y2="38"/><line x1="110" y1="68" x2="190" y2="68"/><line x1="110" y1="85" x2="190" y2="85"/></g><g stroke="#1f4e8c" stroke-width="1.3" fill="none"><line x1="25" y1="105" x2="25" y2="22"/><line x1="70" y1="20" x2="110" y2="25" stroke-dasharray="3 2"/><line x1="130" y1="25" x2="130" y2="85" stroke="#c0392b"/><line x1="150" y1="25" x2="150" y2="68" stroke="#c0392b"/><text x="138" y="80" font-size="8" fill="#c0392b" stroke="none">3.39</text><line x1="170" y1="38" x2="170" y2="85" stroke="#c0392b"/></g><g font-size="9" fill="#1c2230"><text x="5" y="14">He 2¹S/2³S</text><text x="30" y="70">e⁻ impact</text><text x="112" y="20">Ne 3s</text><text x="112" y="48">2s</text><text x="153" y="64">3p</text><text x="112" y="96">2p → 1s</text><text x="132" y="58" fill="#c0392b">6328</text><text x="173" y="62" fill="#c0392b">1.15</text></g></svg><figcaption>He-Ne energy levels</figcaption></figure>
+</div>
+<div class="grid2">
+<figure><svg viewBox="0 0 200 115" width="195"><g stroke="#1c2230" stroke-width="1.3"><line x1="20" y1="105" x2="150" y2="105"/><line x1="20" y1="12" x2="80" y2="12"/><line x1="20" y1="18" x2="80" y2="18"/><line x1="90" y1="40" x2="150" y2="40"/><line x1="90" y1="82" x2="150" y2="82"/></g><g stroke="#1f4e8c" stroke-width="1.4" fill="none"><line x1="35" y1="105" x2="35" y2="20"/><path d="M70 18 L100 40" stroke-dasharray="3 2"/><line x1="120" y1="40" x2="120" y2="82" stroke="#c0392b"/><path d="M135 82 L135 104" stroke-dasharray="3 2"/></g><g font-size="9.5" fill="#1c2230"><text x="84" y="10">pump bands</text><text x="40" y="65">pump</text><text x="152" y="43">⁴F<tspan font-size="7">3/2</tspan></text><text x="152" y="85">⁴I<tspan font-size="7">11/2</tspan></text><text x="152" y="108">⁴I<tspan font-size="7">9/2</tspan></text><text x="124" y="65" fill="#c0392b">1.064 μm</text><text x="112" y="97" font-size="8">fast</text><text x="60" y="36" font-size="8">fast</text></g></svg><figcaption>Nd:YAG (4-level): lower laser level ⁴I<sub>11/2</sub> ground se upar</figcaption></figure>
+<figure><svg viewBox="0 0 200 115" width="195"><g stroke="#1c2230" stroke-width="1.3"><line x1="10" y1="105" x2="55" y2="105"/><line x1="10" y1="26" x2="55" y2="26"/><line x1="85" y1="105" x2="190" y2="105"/><line x1="85" y1="28" x2="190" y2="28"/><line x1="120" y1="62" x2="160" y2="62"/><line x1="150" y1="70" x2="190" y2="70"/><line x1="85" y1="88" x2="125" y2="88"/></g><g stroke="#1f4e8c" stroke-width="1.3" fill="none"><line x1="25" y1="105" x2="25" y2="28"/><path d="M55 26 L85 28" stroke-dasharray="3 2"/><line x1="140" y1="28" x2="140" y2="62" stroke="#c0392b"/><line x1="170" y1="28" x2="170" y2="70" stroke="#c0392b"/><path d="M125 64 L110 88 L105 105" stroke-dasharray="2 2"/></g><g font-size="9" fill="#1c2230"><text x="8" y="20">N₂ v=1</text><text x="8" y="114">N₂ v=0</text><text x="28" y="70" font-size="8">discharge</text><text x="100" y="22">CO₂ (001)</text><text x="88" y="58">(100)</text><text x="170" y="80">(020)</text><text x="88" y="84">(010)</text><text x="88" y="114">(000)</text><text x="142" y="48" fill="#c0392b" font-size="8">10.6μm</text><text x="173" y="62" fill="#c0392b" font-size="8">9.6</text></g></svg><figcaption>CO₂: N₂ → CO₂(001) resonant transfer; (001)→(100) = 10.6 μm</figcaption></figure>
+</div>
+<ul>
+<li><b>Ruby:</b> Flash lamp Cr³⁺ ko E₁ → E₃ (green/blue absorb) → fast non-radiative E₂ (metastable, τ ~3 ms) → E₂→E₁ stimulated, 6943 Å. Lower level = ground ⇒ &gt;50% atoms excite karne padte ⇒ pulsed, low η.</li>
+<li><b>Nd:YAG:</b> ground ⁴I<sub>9/2</sub> → pump bands → fast to <b>⁴F<sub>3/2</sub></b> (metastable) → lasing to <b>⁴I<sub>11/2</sub></b> (1.064 μm) → fast to ground. Lower level ground se upar ⇒ easy inversion (4-level).</li>
+<li><b>He-Ne:</b> Discharge He ko 2¹S, 2³S (metastable) pe; collision se Ne 3s, 2s ko resonant transfer (He 20.61 eV ≈ Ne 20.66 eV). 3s→2p = 6328 Å, 2s→2p = 1.15 μm, 3s→3p = 3.39 μm; 2p→1s spontaneous, 1s→ground tube wall collision se.</li>
+<li><b>CO₂:</b> Vibrational modes: symmetric (100), bending (010), asymmetric (001). Discharge N₂ (v = 1) excite → resonant transfer to CO₂ (001). Lasing <b>(001)→(100) = 10.6 μm</b>, (001)→(020) = 9.6 μm. He lower level empty + cooling karta.</li>
+</ul>
+
+<h3>6. Optical Fiber Basics &amp; Types</h3>
+<p><b>Core</b> (μ₁) + <b>cladding</b> (μ₂ &lt; μ₁) + jacket. Principle: <b>TIR</b> at core-cladding, sin θ<sub>c</sub> = μ₂/μ₁.</p>
+<table>
+<tr><th>Type</th><th>Core dia.</th><th>Features</th></tr>
+<tr><td>Single-mode step index</td><td>~8–10 μm</td><td>Ek mode, no intermodal dispersion, laser source, long haul</td></tr>
+<tr><td>Multimode step index</td><td>50–200 μm</td><td>Zig-zag rays, high intermodal dispersion, LED, short links</td></tr>
+<tr><td>Multimode graded index</td><td>50–85 μm</td><td>μ centre pe max (parabolic); curved paths, low dispersion</td></tr>
+</table>
+
+<h3>7. Acceptance Angle, Cone, NA, V-number (Ray Theory)</h3>
+<div class="grid2">
+<div><p>Ray axis se θ₀ pe enter, core mein θ<sub>r</sub>, interface pe (90° − θ<sub>r</sub>) ≥ θ<sub>c</sub> chahiye (TIR, zig-zag propagation).</p>
+<ul>
+<li>μ₀ sin θ₀ = μ₁ sin θ<sub>r</sub> = μ₁ cos θ<sub>c</sub> (limit).</li>
+<li>cos θ<sub>c</sub> = √(1 − μ₂²/μ₁²) ⇒ <span class="m">μ₀ sin θ<sub>max</sub> = √(μ₁² − μ₂²)</span>.</li>
+<li><b>Acceptance angle</b> θ<sub>max</sub>; isse axis ke around ghumao ⇒ <b>acceptance cone</b> (full 2θ<sub>max</sub>).</li>
+</ul></div>
+<figure><svg viewBox="0 0 200 100" width="190"><g stroke="#1c2230" stroke-width="1.2" fill="none"><rect x="50" y="18" width="145" height="65" fill="#f8fafd"/><rect x="50" y="33" width="145" height="35" fill="#eef4fc"/><line x1="10" y1="50" x2="195" y2="50" stroke-dasharray="3 2" stroke="#aaa"/></g><g stroke="#1f4e8c" stroke-width="1.4" fill="none"><polyline points="10,23 50,50 85,33 120,68 155,33 190,68"/><line x1="10" y1="77" x2="50" y2="50" stroke-dasharray="2 2"/></g><g font-size="10" fill="#1c2230"><text x="18" y="46">θ₀</text><text x="110" y="14">cladding μ₂</text><text x="125" y="62">core μ₁</text><text x="2" y="96">acceptance cone</text></g></svg><figcaption>Step index: TIR zig-zag</figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">NA &amp; V-number</span><span class="eq">NA = μ₀ sin θ<sub>max</sub> = √(μ₁² − μ₂²) ≈ μ₁√(2Δ), &nbsp;Δ = (μ₁ − μ₂)/μ₁ &nbsp;;&nbsp; V = (2πa/λ)·NA</span>Modes ≈ V²/2 (step), V²/4 (graded). <b>V &lt; 2.405 ⇒ single mode.</b> <b>Numerical:</b> μ₁ = 1.50, μ₂ = 1.47 ⇒ NA = √0.0891 = <b>0.298</b>, θ<sub>max</sub> = <b>17.3°</b>, Δ = 0.02. a = 25 μm, λ = 1.3 μm ⇒ V ≈ 36, modes ≈ 648.</div>
+
+<h3>8. Pulse Dispersion, Attenuation &amp; Losses</h3>
+<p><b>Dispersion</b> = pulse ka broadening ⇒ overlap ⇒ bit rate limit. <b>Intermodal</b> (multimode, different path lengths): step index <span class="m">Δt ≈ Lμ₁Δ/c</span>; graded ≈ Lμ₁Δ²/8c. <b>Intramodal/chromatic:</b> material (μ depends on λ) + waveguide dispersion.</p>
+<p><b>Attenuation:</b> <span class="m">α (dB/km) = (10/L) log₁₀(P<sub>in</sub>/P<sub>out</sub>)</span>; silica min ~0.2 dB/km at 1.55 μm (windows 0.85, 1.3, 1.55 μm). <b>Losses:</b> absorption (intrinsic UV/IR, impurities OH⁻, Fe, Cu), <b>Rayleigh scattering</b> ∝ 1/λ⁴, macro/micro <b>bending</b>, splice/connector/coupling losses. <b>Numerical:</b> 1 mW, 10 km, 0.5 dB/km ⇒ 5 dB ⇒ P<sub>out</sub> = 10<sup>−0.5</sup> mW = <b>0.316 mW</b>.</p>
+
+<h3>9. Applications of Lasers &amp; Optical Fibers</h3>
+<div class="grid2 small">
+<div><b>Lasers:</b> cutting, welding, drilling (CO₂, Nd:YAG); eye surgery (LASIK, retina), bloodless surgery, cancer therapy; fiber communication source, holography, barcode, CD/DVD, printers; LIDAR, range finding, spectroscopy, isotope separation.</div>
+<div><b>Optical fibers:</b> telecom &amp; internet (high bandwidth, low loss, no EMI, secure, light); medical endoscopy, laser delivery; sensors (temperature, pressure, strain); LAN, cable TV, defence/aircraft, decorative lighting.</div>
+</div>
+<h3>Quick Revision — Must-know Formulas</h3>
+<table class="small">
+<tr><th>Unit</th><th>Formulas</th></tr>
+<tr><td>I</td><td>v<sub>g</sub> = v<sub>p</sub> − λdv<sub>p</sub>/dλ; v<sub>p</sub>v<sub>g</sub> = c² · Δx·Δp ≥ ħ/2 · Δλ = (h/m₀c)(1 − cosφ) · p̂ = −iħ∂/∂x, Ê = iħ∂/∂t · E<sub>n</sub> = n²h²/8mL², ψ<sub>n</sub> = √(2/L) sin(nπx/L)</td></tr>
+<tr><td>II</td><td>β = λD/d · 2μt cos r = nλ (dark, reflected) · β = λ/2μθ · D<sub>n</sub>² = 4nλR · 2d = Nλ, Δλ = λ²/2d · (a+b)sinθ = nλ · RP = nN, t dμ/dλ · μ = tan i<sub>p</sub> · t<sub>QWP</sub> = λ/4(μ<sub>o</sub> − μ<sub>e</sub>)</td></tr>
+<tr><td>III</td><td>SEMF (5 terms) · f = qB/2πm, E<sub>max</sub> = q²B²R²/2m · L<sub>n</sub> ∝ √n · B<sub>orbit</sub> = ½B<sub>avg</sub> · v = E/B · m = qB₁B₂r/E</td></tr>
+<tr><td>IV</td><td>m* = ħ²/(d²E/dk²) · f(E) = 1/(1 + e<sup>(E−E<sub>F</sub>)/kT</sup>) · R<sub>H</sub> = 1/ne = V<sub>H</sub>t/IB · H<sub>c</sub>(T) = H<sub>c</sub>(0)[1 − (T/T<sub>c</sub>)²] · ε* = ε′ − iε″, tan δ = ε″/ε′</td></tr>
+<tr><td>V</td><td>A/B = 8πhν³/c³, B₁₂ = B₂₁ · NA = √(μ₁² − μ₂²) · V = 2πa·NA/λ · Δt = Lμ₁Δ/c · α = (10/L) log(P<sub>in</sub>/P<sub>out</sub>)</td></tr>
+</table>
+<div class="box warn"><span class="lbl">Common Mistake</span> Newton's rings mein centre <b>dark</b> (reflected) — bright nahi. Ruby 3-level hai, baaki teen (Nd:YAG, He-Ne, CO₂) 4-level. He-Ne mein lasing <b>Ne</b> atoms deti hai, He sirf energy transfer karta. Compton shift incident λ pe depend nahi karta.</div>
+<div class="box trick"><span class="lbl">Yaad Rakho</span> Ruby 6943 Å | He-Ne 6328 Å | Nd:YAG 1.064 μm | CO₂ 10.6 μm &nbsp;·&nbsp; NA = √(μ₁²−μ₂²), single mode V &lt; 2.405 &nbsp;·&nbsp; A/B = 8πhν³/c³ &nbsp;·&nbsp; Compton h/m₀c = 0.0243 Å &nbsp;·&nbsp; E<sub>n</sub> = n²h²/8mL².</div>
+</div>

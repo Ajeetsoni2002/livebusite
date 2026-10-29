@@ -1,0 +1,593 @@
+<!-- ======================= UNIT I ======================= -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT I</span> Semiconductor Theory &amp; Diodes</h2>
+
+<h3>1. Energy Band Theory of Crystals</h3>
+<p>Isolated atom mein electrons ke <b>discrete energy levels</b> hote hain. Jab bahut saare atoms paas aakar <b>crystal</b> banate hain, to neighbouring atoms ke levels overlap karke <b>energy bands</b> ban jaate hain (Pauli exclusion principle ki wajah se ek level split ho jaata hai).</p>
+<ul>
+<li><b>Valence Band (VB):</b> outermost (valence) electrons wala band; 0 K par completely filled.</li>
+<li><b>Conduction Band (CB):</b> free electrons ka band; isme aaye electrons current carry karte hain.</li>
+<li><b>Forbidden Energy Gap (E<sub>g</sub>):</b> VB top aur CB bottom ke beech ka gap, jahan koi electron allowed nahi. Unit: eV (1 eV = 1.6×10<sup>−19</sup> J).</li>
+</ul>
+
+<h3>2. Insulators, Semiconductors &amp; Metals</h3>
+<div class="grid2">
+<figure><svg viewBox="0 0 270 110" width="270">
+<g font-size="10" fill="#1c2230" font-family="Segoe UI,Arial">
+<rect x="10" y="10" width="60" height="22" fill="#dce8f7" stroke="#1c2230"/><rect x="10" y="72" width="60" height="22" fill="#1f4e8c" stroke="#1c2230"/>
+<text x="20" y="25">CB</text><text x="20" y="87" fill="#fff">VB</text><text x="16" y="56">Eg&gt;5eV</text><text x="12" y="107">Insulator</text>
+<rect x="100" y="25" width="60" height="22" fill="#dce8f7" stroke="#1c2230"/><rect x="100" y="60" width="60" height="22" fill="#1f4e8c" stroke="#1c2230"/>
+<text x="110" y="40">CB</text><text x="110" y="75" fill="#fff">VB</text><text x="104" y="56">Eg≈1eV</text><text x="96" y="107">Semicond.</text>
+<rect x="190" y="25" width="60" height="30" fill="#dce8f7" stroke="#1c2230"/><rect x="190" y="45" width="60" height="30" fill="#1f4e8c" fill-opacity=".8" stroke="#1c2230"/>
+<text x="196" y="40">CB</text><text x="196" y="68" fill="#fff">VB overlap</text><text x="205" y="107">Metal</text>
+</g></svg><figcaption>Energy band diagrams</figcaption></figure>
+<div>
+<table>
+<tr><th>Type</th><th>E<sub>g</sub></th><th>Example</th></tr>
+<tr><td>Insulator</td><td>&gt; 5 eV (wide)</td><td>Diamond (~5.5 eV), glass</td></tr>
+<tr><td>Semiconductor</td><td>~1 eV</td><td>Si 1.12 eV, Ge 0.72 eV</td></tr>
+<tr><td>Metal (conductor)</td><td>0 (bands overlap)</td><td>Cu, Al, Ag</td></tr>
+</table>
+<p class="small">Semiconductor ka resistivity temperature badhne par <b>ghatta</b> hai (negative temperature coefficient), metal ka <b>badhta</b> hai.</p>
+</div>
+</div>
+
+<h3>3. Intrinsic &amp; Extrinsic Semiconductors</h3>
+<div class="grid2">
+<div>
+<h4>Intrinsic (pure) semiconductor</h4>
+<ul>
+<li>Pure Si/Ge; room temp par kuch covalent bonds tootte hain → <b>electron-hole pairs</b>.</li>
+<li>n = p = n<sub>i</sub> (intrinsic concentration). Si: n<sub>i</sub> ≈ 1.5×10<sup>10</sup>/cm³ at 300 K.</li>
+<li>Fermi level E<sub>F</sub> lagbhag band gap ke <b>beech</b> mein.</li>
+</ul>
+</div>
+<div>
+<h4>Extrinsic (doped) semiconductor</h4>
+<ul>
+<li><b>N-type:</b> pentavalent impurity (P, As, Sb) = <b>donor</b>. Majority carriers = electrons. E<sub>F</sub> CB ke paas.</li>
+<li><b>P-type:</b> trivalent impurity (B, Al, Ga, In) = <b>acceptor</b>. Majority = holes. E<sub>F</sub> VB ke paas.</li>
+</ul>
+</div>
+</div>
+<div class="box formula"><span class="lbl">Formula</span> Mass action law: <span class="m">n·p = n<sub>i</sub><sup>2</sup></span> &nbsp;|&nbsp; Conductivity: <span class="m">σ = q(nμ<sub>n</sub> + pμ<sub>p</sub>)</span> &nbsp;|&nbsp; N-type: n ≈ N<sub>D</sub>, p = n<sub>i</sub><sup>2</sup>/N<sub>D</sub> &nbsp;|&nbsp; Intrinsic: σ<sub>i</sub> = q n<sub>i</sub>(μ<sub>n</sub>+μ<sub>p</sub>)</div>
+
+<h3>4. Theory of P-N Junction</h3>
+<p>P aur N type ko ek hi crystal mein milane par junction banta hai. Concentration gradient ki wajah se holes P→N aur electrons N→P <b>diffuse</b> karte hain aur recombine ho jaate hain. Junction ke paas sirf <b>immobile ions</b> bachte hain (P side negative, N side positive) → <b>depletion region</b> (space-charge region). Ye ions ek electric field banate hain jo aur diffusion ko rokta hai → <b>barrier potential V<sub>0</sub></b> (Si ≈ 0.7 V, Ge ≈ 0.3 V).</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">V<sub>0</sub> = V<sub>T</sub> ln<span class="frac"><span>N<sub>A</sub>N<sub>D</sub></span><span>n<sub>i</sub><sup>2</sup></span></span>, &nbsp; V<sub>T</sub> = <span class="frac"><span>kT</span><span>q</span></span> = <span class="frac"><span>T</span><span>11600</span></span> ≈ 26 mV at 300 K</span></div>
+<ul>
+<li><b>Forward bias</b> (P → +ve): barrier kam hota hai, depletion width ghatti hai, large majority-carrier current (mA).</li>
+<li><b>Reverse bias</b> (P → −ve): barrier badhta hai, depletion width badhti hai, sirf tiny minority-carrier current I<sub>0</sub> (nA–μA) = reverse saturation current.</li>
+</ul>
+
+<h3>5. Ideal &amp; Practical Diode; Characteristics &amp; Operation</h3>
+<div class="grid2">
+<div>
+<figure><svg viewBox="0 0 260 135" width="260">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="10" y1="70" x2="250" y2="70" stroke="#1c2230"/><line x1="150" y1="5" x2="150" y2="130" stroke="#1c2230"/>
+<path d="M150,70 L182,69 C194,66 200,50 206,8" fill="none" stroke="#1f4e8c" stroke-width="2"/>
+<path d="M150,70 L70,73 L62,76 L58,128" fill="none" stroke="#1f4e8c" stroke-width="2"/>
+<line x1="186" y1="74" x2="186" y2="66" stroke="#1c2230"/><text x="178" y="84">Vγ</text>
+<text x="232" y="64">V<tspan font-size="8">D</tspan></text><text x="154" y="14">I<tspan font-size="8">D</tspan> (mA)</text>
+<text x="20" y="100">V<tspan font-size="8">BR</tspan></text><text x="70" y="88">I<tspan font-size="8">0</tspan> (μA)</text>
+<text x="208" y="34">Forward</text><text x="80" y="62">Reverse</text>
+</g></svg><figcaption>Practical diode V-I characteristic</figcaption></figure>
+</div>
+<div>
+<ul>
+<li><b>Ideal diode:</b> forward mein short circuit (V=0, R=0), reverse mein open circuit (I=0). Perfect switch.</li>
+<li><b>Practical diode:</b> conduction tab hota hai jab V &gt; <b>cut-in / knee voltage V<sub>γ</sub></b> (Si 0.7 V, Ge 0.3 V); forward resistance r<sub>f</sub> finite hota hai; reverse mein small I<sub>0</sub> flow karta hai; V<sub>BR</sub> par breakdown.</li>
+<li>Static resistance R = V<sub>D</sub>/I<sub>D</sub>; dynamic resistance r<sub>d</sub> = ΔV/ΔI = ηV<sub>T</sub>/I<sub>D</sub> (≈ 26 mV/I<sub>D</sub>).</li>
+</ul>
+</div>
+</div>
+<div class="box formula"><span class="lbl">Diode (Shockley) Equation</span><span class="eq">I = I<sub>0</sub> ( e<sup>V/ηV<sub>T</sub></sup> − 1 )</span>η = ideality factor (1 for Ge, ≈2 for Si at low current). Forward large V: I ≈ I<sub>0</sub>e<sup>V/ηV<sub>T</sub></sup>; reverse: I ≈ −I<sub>0</sub>.</div>
+
+<h3>6. Temperature &amp; Breakdown Characteristics</h3>
+<div class="grid2">
+<div>
+<h4>Temperature effect</h4>
+<ul>
+<li>I<sub>0</sub> har <b>10 °C</b> rise par <b>double</b>: I<sub>0</sub>(T<sub>2</sub>) = I<sub>0</sub>(T<sub>1</sub>)·2<sup>(T<sub>2</sub>−T<sub>1</sub>)/10</sup>.</li>
+<li>Same current ke liye V<sub>D</sub> ≈ <b>−2.5 mV/°C</b> (Si) ghatta hai → forward curve left shift.</li>
+<li>Breakdown voltage temperature ke saath change hota hai (neeche dekho).</li>
+</ul>
+</div>
+<div>
+<h4>Breakdown mechanisms</h4>
+<table>
+<tr><th>Zener breakdown</th><th>Avalanche breakdown</th></tr>
+<tr><td>Heavily doped, thin depletion layer</td><td>Lightly doped, wide depletion layer</td></tr>
+<tr><td>Strong field (~10<sup>7</sup> V/m) bonds todta hai (field emission)</td><td>Carriers accelerate → impact ionization → chain multiplication</td></tr>
+<tr><td>V<sub>Z</sub> &lt; ~5 V; <b>negative</b> temp. coeff.</td><td>V &gt; ~6 V; <b>positive</b> temp. coeff.</td></tr>
+</table>
+</div>
+</div>
+
+<h3>7. Load Line Analysis</h3>
+<div class="grid2">
+<div>
+<p>Circuit: source V<sub>S</sub>, series resistor R<sub>L</sub>, diode. KVL: V<sub>S</sub> = I<sub>D</sub>R<sub>L</sub> + V<sub>D</sub>. Ye ek straight line hai = <b>DC load line</b>.</p>
+<ul>
+<li>I<sub>D</sub> = 0 → V<sub>D</sub> = V<sub>S</sub> (x-intercept)</li>
+<li>V<sub>D</sub> = 0 → I<sub>D</sub> = V<sub>S</sub>/R<sub>L</sub> (y-intercept)</li>
+<li>Load line aur diode curve ka intersection = <b>Q-point</b> (operating point: I<sub>DQ</sub>, V<sub>DQ</sub>).</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 220 120" width="220">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="20" y1="105" x2="210" y2="105" stroke="#1c2230"/><line x1="20" y1="105" x2="20" y2="5" stroke="#1c2230"/>
+<line x1="20" y1="15" x2="190" y2="105" stroke="#c0392b" stroke-width="1.5"/>
+<path d="M20,105 L60,104 C70,100 75,80 82,8" fill="none" stroke="#1f4e8c" stroke-width="2"/>
+<circle cx="75" cy="44" r="3.5" fill="#e0a100"/><text x="82" y="46">Q</text>
+<text x="24" y="14">V<tspan font-size="8">S</tspan>/R<tspan font-size="8">L</tspan></text><text x="180" y="117">V<tspan font-size="8">S</tspan></text><text x="196" y="100">V<tspan font-size="8">D</tspan></text><text x="110" y="62" fill="#c0392b">load line</text>
+</g></svg><figcaption>Q-point = intersection</figcaption></figure>
+</div>
+
+<h3>8. Junction Capacitances</h3>
+<table>
+<tr><th>Transition / Depletion capacitance C<sub>T</sub></th><th>Diffusion / Storage capacitance C<sub>D</sub></th></tr>
+<tr><td>Reverse bias mein dominant. Depletion layer = dielectric, P &amp; N regions = plates.</td><td>Forward bias mein dominant. Injected minority charge store hota hai.</td></tr>
+<tr><td><span class="m">C<sub>T</sub> = εA/W</span>; W ∝ (V<sub>0</sub>+V<sub>R</sub>)<sup>n</sup> → V<sub>R</sub> badhe to C<sub>T</sub> ghate (pF range)</td><td><span class="m">C<sub>D</sub> = τI/(ηV<sub>T</sub>)</span>; current ke proportional (nF–μF range), τ = mean lifetime</td></tr>
+</table>
+
+<h3>9. Piecewise Linear DC Model of Diode</h3>
+<div class="grid2">
+<div>
+<p>Exponential curve ko straight-line segments se approximate karte hain:</p>
+<ol>
+<li><b>Ideal model:</b> V<sub>γ</sub>=0, r<sub>f</sub>=0 (switch).</li>
+<li><b>Constant voltage drop model:</b> ON → battery V<sub>γ</sub> (0.7 V); OFF → open.</li>
+<li><b>Piecewise linear model:</b> ON (V ≥ V<sub>γ</sub>) → V<sub>γ</sub> battery + r<sub>f</sub> series; OFF (V &lt; V<sub>γ</sub>) → open circuit. I = (V − V<sub>γ</sub>)/r<sub>f</sub>.</li>
+</ol>
+</div>
+<figure><svg viewBox="0 0 200 110" width="200">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="15" y1="95" x2="195" y2="95" stroke="#1c2230"/><line x1="30" y1="100" x2="30" y2="5" stroke="#1c2230"/>
+<polyline points="15,95 90,95 150,10" fill="none" stroke="#1f4e8c" stroke-width="2"/>
+<text x="82" y="107">Vγ</text><text x="125" y="60">slope = 1/r<tspan font-size="8">f</tspan></text><text x="34" y="12">I</text><text x="185" y="90">V</text>
+</g></svg><figcaption>Piecewise linear approximation</figcaption></figure>
+</div>
+<div class="box tip"><span class="lbl">Exam Tip</span> Numericals mein jab kuch na diya ho to Si ke liye V<sub>γ</sub> = 0.7 V, Ge ke liye 0.3 V lo. Example: V<sub>S</sub> = 10 V, R = 1 kΩ, Si diode, r<sub>f</sub> = 10 Ω → I = (10 − 0.7)/(1000 + 10) = 9.21 mA.</div>
+</div>
+
+<!-- ======================= UNIT II ======================= -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT II</span> Applications of Diode &amp; Wave Shaping Circuits</h2>
+
+<h3>1. Zener Diode &amp; Design of Zener Regulator</h3>
+<div class="grid2">
+<div>
+<p><b>Zener diode</b> heavily doped P-N diode hai jo <b>reverse breakdown region</b> mein operate karne ke liye design hota hai. Breakdown mein current kaafi change hone par bhi voltage ≈ V<sub>Z</sub> constant rehta hai → <b>voltage regulator / reference</b>.</p>
+<ul>
+<li>Parameters: V<sub>Z</sub>, I<sub>Z(min)</sub> (= I<sub>ZK</sub>, knee), I<sub>Z(max)</sub> = P<sub>Z</sub>/V<sub>Z</sub>, zener resistance r<sub>Z</sub>.</li>
+</ul>
+</div>
+<figure><svg viewBox="0 0 230 105" width="230">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230" stroke-width="1.3">
+<line x1="15" y1="20" x2="55" y2="20" stroke="#1c2230"/><rect x="55" y="14" width="34" height="12" fill="none" stroke="#1c2230"/><line x1="89" y1="20" x2="200" y2="20" stroke="#1c2230"/>
+<line x1="15" y1="90" x2="200" y2="90" stroke="#1c2230"/>
+<line x1="120" y1="20" x2="120" y2="48" stroke="#1c2230"/><polygon points="112,62 128,62 120,48" fill="#1f4e8c"/><polyline points="110,46 112,48 128,48 130,50" fill="none" stroke="#1c2230"/><line x1="120" y1="62" x2="120" y2="90" stroke="#1c2230"/>
+<line x1="180" y1="20" x2="180" y2="36" stroke="#1c2230"/><rect x="174" y="36" width="12" height="34" fill="none" stroke="#1c2230"/><line x1="180" y1="70" x2="180" y2="90" stroke="#1c2230"/>
+<text x="62" y="10">R<tspan font-size="8">S</tspan></text><text x="2" y="58">V<tspan font-size="8">in</tspan></text><text x="132" y="60">V<tspan font-size="8">Z</tspan></text><text x="190" y="58">R<tspan font-size="8">L</tspan></text>
+<text x="92" y="34" font-size="9">I<tspan font-size="7">S</tspan>→</text><text x="122" y="80" font-size="9">I<tspan font-size="7">Z</tspan></text><text x="182" y="82" font-size="9">I<tspan font-size="7">L</tspan></text>
+</g></svg><figcaption>Zener shunt regulator: I<sub>S</sub> = I<sub>Z</sub> + I<sub>L</sub></figcaption></figure>
+</div>
+<div class="box formula"><span class="lbl">Design Formulas</span>
+<span class="eq">R<sub>S</sub> = <span class="frac"><span>V<sub>in</sub> − V<sub>Z</sub></span><span>I<sub>Z</sub> + I<sub>L</sub></span></span> ; &nbsp; R<sub>S(max)</sub> = <span class="frac"><span>V<sub>in(min)</sub> − V<sub>Z</sub></span><span>I<sub>Z(min)</sub> + I<sub>L(max)</sub></span></span> ; &nbsp; R<sub>S(min)</sub> = <span class="frac"><span>V<sub>in(max)</sub> − V<sub>Z</sub></span><span>I<sub>Z(max)</sub> + I<sub>L(min)</sub></span></span></span>
+Zener ON rahe iske liye: V<sub>L</sub> = V<sub>in</sub>R<sub>L</sub>/(R<sub>S</sub>+R<sub>L</sub>) ≥ V<sub>Z</sub>. Zener power P<sub>Z</sub> = V<sub>Z</sub>I<sub>Z</sub> ≤ P<sub>Z(max)</sub>.</div>
+<p class="small"><b>Example:</b> V<sub>in</sub> = 15 V, V<sub>Z</sub> = 10 V, I<sub>L</sub> = 20 mA, I<sub>Z(min)</sub> = 5 mA → R<sub>S</sub> = 5/25 mA = 200 Ω.</p>
+
+<h3>2. Special Purpose Diodes</h3>
+<table>
+<tr><th style="width:17%">Diode</th><th>Construction / Principle</th><th style="width:30%">Key features / Uses</th></tr>
+<tr><td><b>Varactor (Varicap)</b></td><td>Reverse biased diode ki <b>transition capacitance</b> voltage se vary hoti hai. <span class="m">C<sub>T</sub> = K/(V<sub>0</sub>+V<sub>R</sub>)<sup>n</sup></span>, n = 1/2 (abrupt), 1/3 (graded).</td><td>Voltage-controlled capacitor: TV/FM tuning, VCO, AFC, parametric amplifier.</td></tr>
+<tr><td><b>Point-contact</b></td><td>N-type Ge/Si chip par fine <b>tungsten/gold wire (cat's whisker)</b> press; current pulse se chhota P-region banta hai.</td><td>Junction area bahut chhota → very low capacitance → <b>high frequency / microwave detection</b>, mixers.</td></tr>
+<tr><td><b>Tunnel (Esaki)</b></td><td>Very heavy doping (~1 in 10<sup>3</sup>), depletion layer ~10 nm → electrons barrier ke <b>through tunnel</b> karte hain. V-I mein I<sub>P</sub> (peak) se I<sub>V</sub> (valley) tak <b>negative resistance region</b>.</td><td>Very fast switching, microwave oscillators/amplifiers. Reverse mein bhi conduct karta hai.</td></tr>
+<tr><td><b>Schottky barrier</b></td><td><b>Metal–semiconductor</b> (metal + N-type) junction; current sirf <b>majority carriers</b> se, minority charge storage nahi.</td><td>Low V<sub>γ</sub> (0.2–0.3 V), negligible reverse recovery time → high-speed switching, SMPS, clamping, RF.</td></tr>
+<tr><td><b>LED</b></td><td>Forward bias mein electron-hole <b>recombination</b> par energy <b>photon</b> ke roop mein nikalti hai. Direct band gap materials: GaAs (IR), GaAsP (red/yellow), GaP (green), GaN (blue). <span class="m">λ(nm) ≈ 1240/E<sub>g</sub>(eV)</span>.</td><td>V<sub>F</sub> ≈ 1.5–3.5 V; series resistor zaroori. Indicators, displays (7-segment), optocouplers. Low power, long life.</td></tr>
+</table>
+<div class="grid2"><figure><svg viewBox="0 0 200 95" width="200">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="15" y1="80" x2="195" y2="80" stroke="#1c2230"/><line x1="20" y1="85" x2="20" y2="5" stroke="#1c2230"/>
+<path d="M20,80 C35,40 45,12 55,12 C70,12 80,62 105,66 C125,68 140,60 165,8" fill="none" stroke="#1f4e8c" stroke-width="2"/>
+<text x="48" y="10">I<tspan font-size="8">P</tspan></text><text x="98" y="76">I<tspan font-size="8">V</tspan></text><text x="62" y="40" font-size="9">−ve R</text><text x="185" y="92">V</text>
+</g></svg><figcaption>Tunnel diode V-I (negative resistance between I<sub>P</sub> and I<sub>V</sub>)</figcaption></figure>
+<div><h3 style="margin-top:0">3. Power Rating of Diodes</h3>
+<p>Diode mein dissipated power <span class="m">P<sub>D</sub> = V<sub>D</sub> × I<sub>D</sub></span>. Maximum power rating P<sub>D(max)</sub> wo limit hai jiske upar junction temperature safe limit (Si ≈ 150–200 °C) se zyada ho jaata hai. Ambient temperature badhne par rating ko <b>derate</b> karte hain: P<sub>D</sub>(T) = P<sub>D</sub>(25 °C) − (derating factor)(T − 25). Other ratings: I<sub>F(max)</sub>, PIV/PRV, surge current. Example: Zener 1 W, 5 V → I<sub>Z(max)</sub> = 200 mA.</p></div></div>
+
+<h3>4. Rectifiers (Half Wave &amp; Full Wave)</h3>
+<div class="grid2">
+<figure><svg viewBox="0 0 240 100" width="240">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<circle cx="25" cy="50" r="14" fill="none" stroke="#1c2230"/><path d="M17,50 q4,-8 8,0 q4,8 8,0" fill="none" stroke="#1c2230"/>
+<line x1="25" y1="36" x2="25" y2="15" stroke="#1c2230"/><line x1="25" y1="15" x2="80" y2="15" stroke="#1c2230"/>
+<polygon points="80,8 80,22 94,15" fill="#1f4e8c"/><line x1="94" y1="8" x2="94" y2="22" stroke="#1c2230"/>
+<line x1="94" y1="15" x2="140" y2="15" stroke="#1c2230"/><rect x="134" y="32" width="12" height="36" fill="none" stroke="#1c2230"/>
+<line x1="140" y1="15" x2="140" y2="32" stroke="#1c2230"/><line x1="140" y1="68" x2="140" y2="85" stroke="#1c2230"/><line x1="25" y1="64" x2="25" y2="85" stroke="#1c2230"/><line x1="25" y1="85" x2="140" y2="85" stroke="#1c2230"/>
+<text x="150" y="54">R<tspan font-size="8">L</tspan></text><text x="4" y="30">V<tspan font-size="8">m</tspan>sinωt</text><text x="80" y="35">D</text>
+<path d="M170,60 q10,-40 20,0" fill="none" stroke="#1f4e8c" stroke-width="1.6"/><line x1="190" y1="60" x2="210" y2="60" stroke="#1f4e8c" stroke-width="1.6"/><path d="M210,60 q10,-40 20,0" fill="none" stroke="#1f4e8c" stroke-width="1.6"/><text x="180" y="78">HWR output</text>
+</g></svg><figcaption>Half wave rectifier</figcaption></figure>
+<figure><svg viewBox="0 0 240 110" width="240">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230" stroke-width="1.2">
+<polygon points="60,10 100,50 60,90 20,50" fill="none" stroke="#1c2230"/>
+<g fill="#1f4e8c"><polygon points="36,26 46,24 42,34"/><polygon points="74,24 84,26 78,34"/><polygon points="34,74 42,66 44,76"/><polygon points="78,66 86,74 76,76"/></g>
+<line x1="20" y1="50" x2="5" y2="50" stroke="#1c2230"/><line x1="100" y1="50" x2="115" y2="50" stroke="#1c2230"/><text x="0" y="44">ac</text><text x="108" y="44">ac</text>
+<line x1="60" y1="10" x2="150" y2="10" stroke="#1c2230"/><line x1="60" y1="90" x2="150" y2="90" stroke="#1c2230"/>
+<line x1="150" y1="10" x2="150" y2="32" stroke="#1c2230"/><rect x="144" y="32" width="12" height="36" fill="none" stroke="#1c2230"/><line x1="150" y1="68" x2="150" y2="90" stroke="#1c2230"/><text x="160" y="54">R<tspan font-size="8">L</tspan></text><text x="152" y="22">+</text>
+<path d="M180,70 q8,-40 16,0 q8,-40 16,0 q8,-40 16,0" fill="none" stroke="#1f4e8c" stroke-width="1.6"/><text x="178" y="88">FWR output</text>
+</g></svg><figcaption>Bridge full wave rectifier (4 diodes)</figcaption></figure>
+</div>
+<p><b>HWR:</b> sirf positive half cycle mein diode conduct karta hai. <b>Centre-tap FWR:</b> 2 diodes, centre-tapped transformer; har half cycle mein ek diode conduct. <b>Bridge FWR:</b> 4 diodes, har half mein 2 diodes series mein conduct; centre tap nahi chahiye.</p>
+<table>
+<tr><th>Parameter</th><th>Half Wave</th><th>FW Centre-tap</th><th>FW Bridge</th></tr>
+<tr><td>I<sub>dc</sub> / V<sub>dc</sub></td><td>I<sub>m</sub>/π, V<sub>m</sub>/π</td><td>2I<sub>m</sub>/π, 2V<sub>m</sub>/π</td><td>2I<sub>m</sub>/π, 2V<sub>m</sub>/π</td></tr>
+<tr><td>I<sub>rms</sub></td><td>I<sub>m</sub>/2</td><td>I<sub>m</sub>/√2</td><td>I<sub>m</sub>/√2</td></tr>
+<tr><td>Efficiency η (max)</td><td>40.6 %</td><td>81.2 %</td><td>81.2 %</td></tr>
+<tr><td>Ripple factor γ</td><td>1.21</td><td>0.482</td><td>0.482</td></tr>
+<tr><td>PIV of diode</td><td>V<sub>m</sub></td><td>2V<sub>m</sub></td><td>V<sub>m</sub></td></tr>
+<tr><td>Ripple frequency</td><td>f</td><td>2f</td><td>2f</td></tr>
+<tr><td>TUF</td><td>0.287</td><td>0.693</td><td>0.812</td></tr>
+</table>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">η = <span class="frac"><span>P<sub>dc</sub></span><span>P<sub>ac</sub></span></span> = <span class="frac"><span>I<sub>dc</sub><sup>2</sup>R<sub>L</sub></span><span>I<sub>rms</sub><sup>2</sup>(r<sub>f</sub>+R<sub>L</sub>)</span></span>; &nbsp; HWR: η = <span class="frac"><span>0.406</span><span>1 + r<sub>f</sub>/R<sub>L</sub></span></span>; &nbsp; γ = <span class="frac"><span>I<sub>ac(rms)</sub></span><span>I<sub>dc</sub></span></span> = √( (I<sub>rms</sub>/I<sub>dc</sub>)<sup>2</sup> − 1 )</span>
+Form factor = rms/avg (HWR 1.57, FWR 1.11); Peak factor = peak/rms (HWR 2, FWR √2).</div>
+<h4>Rectifiers with filter</h4>
+<table>
+<tr><th>Filter</th><th>Working</th><th>Ripple factor</th></tr>
+<tr><td>Shunt capacitor (C)</td><td>C peak tak charge, diode OFF hone par R<sub>L</sub> mein discharge; light load ke liye best</td><td>HWR: 1/(2√3 fCR<sub>L</sub>); FWR: 1/(4√3 fCR<sub>L</sub>)</td></tr>
+<tr><td>Series inductor (L)</td><td>L current change ko oppose karta hai; heavy load ke liye</td><td>FWR: R<sub>L</sub>/(3√2 ωL)</td></tr>
+<tr><td>LC (choke input) / π (CLC)</td><td>Dono ka combination; ripple load par lagbhag independent (LC)</td><td>LC: √2/(12ω<sup>2</sup>LC) = 1/(6√2 ω<sup>2</sup>LC)</td></tr>
+</table>
+<p class="small">Capacitor filter ke saath V<sub>dc</sub> ≈ V<sub>m</sub> − I<sub>dc</sub>/(4fC) (FWR), aur no-load par V<sub>dc</sub> = V<sub>m</sub>.</p>
+
+<h3>5. Clippers (Limiters)</h3>
+<p>Clipper input waveform ke ek hissa (reference level ke upar ya neeche) ko <b>kaat deta hai</b> bina baaki shape badle. Types: <b>series</b> (diode load ke series mein) &amp; <b>shunt/parallel</b> (diode load ke across); <b>positive</b>, <b>negative</b>, <b>biased</b> (battery V<sub>R</sub> ke saath) aur <b>combination (double-ended)</b> clipper (do diode + do battery, dono side clip). Shunt positive clipper: V<sub>in</sub> &gt; V<sub>R</sub>+V<sub>γ</sub> → diode ON → V<sub>o</sub> = V<sub>R</sub>+V<sub>γ</sub>; else V<sub>o</sub> = V<sub>in</sub>.</p>
+<div class="grid2">
+<figure><svg viewBox="0 0 230 95" width="230">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="10" y1="20" x2="35" y2="20" stroke="#1c2230"/><rect x="35" y="14" width="30" height="12" fill="none" stroke="#1c2230"/><line x1="65" y1="20" x2="120" y2="20" stroke="#1c2230"/><text x="44" y="10">R</text>
+<line x1="90" y1="20" x2="90" y2="32" stroke="#1c2230"/><polygon points="83,32 97,32 90,44" fill="#1f4e8c"/><line x1="83" y1="44" x2="97" y2="44" stroke="#1c2230"/>
+<line x1="90" y1="44" x2="90" y2="56" stroke="#1c2230"/><line x1="82" y1="56" x2="98" y2="56" stroke="#1c2230"/><line x1="86" y1="61" x2="94" y2="61" stroke="#1c2230" stroke-width="2"/><line x1="90" y1="61" x2="90" y2="80" stroke="#1c2230"/><text x="100" y="62">V<tspan font-size="8">R</tspan></text>
+<line x1="10" y1="80" x2="120" y2="80" stroke="#1c2230"/><text x="0" y="52">V<tspan font-size="8">i</tspan></text><text x="114" y="52">V<tspan font-size="8">o</tspan></text>
+<path d="M140,55 C150,55 152,30 158,30 L172,30 C178,30 180,55 190,55 C200,55 202,82 212,82 C220,82 222,55 228,55" fill="none" stroke="#1f4e8c" stroke-width="1.6"/><line x1="140" y1="30" x2="228" y2="30" stroke="#c0392b" stroke-dasharray="3,2"/><text x="196" y="26" fill="#c0392b">V<tspan font-size="8">R</tspan>+V<tspan font-size="8">γ</tspan></text>
+</g></svg><figcaption>Biased shunt positive clipper &amp; output</figcaption></figure>
+<div>
+<h3 style="margin-top:0">6. Clampers (DC Restorers)</h3>
+<p>Clamper waveform ki shape same rakhkar usko <b>DC level shift</b> karta hai (C + diode + R). Capacitor peak tak charge hota hai aur fir battery ki tarah behave karta hai. Condition: <span class="m">τ = RC ≫ T/2</span>.</p>
+<ul>
+<li><b>Positive clamper:</b> waveform upar shift; negative peak 0 par clamp → output 0 se 2V<sub>m</sub>.</li>
+<li><b>Negative clamper:</b> waveform neeche shift → 0 se −2V<sub>m</sub>.</li>
+<li><b>Biased clamper:</b> battery se clamping level V<sub>R</sub> par.</li>
+</ul>
+</div>
+</div>
+
+<h3>7. Voltage Multipliers</h3>
+<p>Diodes + capacitors se transformer ke peak V<sub>m</sub> ka multiple DC output (high voltage, low current). <b>Half-wave doubler:</b> C<sub>1</sub> V<sub>m</sub> tak charge (D<sub>1</sub>), next half mein source + C<sub>1</sub> series se C<sub>2</sub> = <b>2V<sub>m</sub></b> (D<sub>2</sub> ka PIV = 2V<sub>m</sub>). <b>Full-wave doubler:</b> C<sub>1</sub>, C<sub>2</sub> alternate halves mein V<sub>m</sub> charge, output series = 2V<sub>m</sub>. <b>Tripler/Quadrupler:</b> aur stages jodkar 3V<sub>m</sub>, 4V<sub>m</sub> (n stages → nV<sub>m</sub>). Uses: CRT anode supply, X-ray, photocopier.</p>
+<div class="box tip"><span class="lbl">Exam Tip</span> Clipper = shape change (part cut). Clamper = shape same, sirf DC level shift. Clamper mein capacitor zaroori, clipper mein nahi.</div>
+</div>
+
+<!-- ======================= UNIT III ======================= -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT III</span> BJT &amp; FET</h2>
+
+<h3>1. BJT Basic Concept</h3>
+<div class="grid2">
+<div>
+<p><b>Bipolar Junction Transistor</b> = 3 layer (NPN ya PNP), 2 junctions, 3 terminals: <b>Emitter</b> (heavily doped), <b>Base</b> (very thin, lightly doped), <b>Collector</b> (moderately doped, largest). "Bipolar" kyunki electrons aur holes dono conduction mein. Active mode: E-B junction forward, C-B junction reverse. Emitter se injected carriers ka ~98–99 % base cross karke collector tak pahunchta hai.</p>
+</div>
+<div class="box formula"><span class="lbl">Formula</span>
+<span class="eq">I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub></span>
+<span class="eq">α = I<sub>C</sub>/I<sub>E</sub>, &nbsp; β = I<sub>C</sub>/I<sub>B</sub>, &nbsp; β = <span class="frac"><span>α</span><span>1−α</span></span>, &nbsp; α = <span class="frac"><span>β</span><span>1+β</span></span>, γ = 1+β</span>
+<span class="eq">I<sub>C</sub> = αI<sub>E</sub> + I<sub>CBO</sub> = βI<sub>B</sub> + (1+β)I<sub>CBO</sub></span>
+I<sub>CEO</sub> = (1+β)I<sub>CBO</sub>.</div>
+</div>
+
+<h3>2. Input &amp; Output Characteristics of All Configurations</h3>
+<table>
+<tr><th>Config.</th><th>Input char.</th><th>Output char.</th><th>Z<sub>in</sub> / Z<sub>out</sub></th><th>Gain</th><th>Use</th></tr>
+<tr><td><b>CB</b></td><td>I<sub>E</sub> vs V<sub>EB</sub> (V<sub>CB</sub> const) — diode jaisa; V<sub>CB</sub> badhe to curve left shift (Early)</td><td>I<sub>C</sub> vs V<sub>CB</sub> (I<sub>E</sub> const); I<sub>C</sub> ≈ I<sub>E</sub>, nearly flat</td><td>Very low (~50 Ω) / very high</td><td>A<sub>i</sub> = α &lt; 1, A<sub>v</sub> high</td><td>HF amplifier</td></tr>
+<tr><td><b>CE</b></td><td>I<sub>B</sub> vs V<sub>BE</sub> (V<sub>CE</sub> const); V<sub>CE</sub> badhe to curve right shift</td><td>I<sub>C</sub> vs V<sub>CE</sub> (I<sub>B</sub> const); slight slope (Early effect)</td><td>Medium (~1 kΩ) / medium-high</td><td>A<sub>i</sub> = β, A<sub>v</sub> high, 180° phase shift</td><td>Most common amplifier</td></tr>
+<tr><td><b>CC</b> (emitter follower)</td><td>I<sub>B</sub> vs V<sub>CB</sub> (V<sub>CE</sub> const)</td><td>I<sub>E</sub> vs V<sub>CE</sub> (I<sub>B</sub> const)</td><td>Very high / very low</td><td>A<sub>i</sub> = 1+β, A<sub>v</sub> ≈ 1</td><td>Buffer, impedance matching</td></tr>
+</table>
+
+<h3>3. Regions of Operation</h3>
+<div class="grid2">
+<table>
+<tr><th>Region</th><th>E-B jn</th><th>C-B jn</th><th>Use</th></tr>
+<tr><td>Active</td><td>FB</td><td>RB</td><td>Amplifier</td></tr>
+<tr><td>Saturation</td><td>FB</td><td>FB</td><td>Switch ON</td></tr>
+<tr><td>Cut-off</td><td>RB</td><td>RB</td><td>Switch OFF</td></tr>
+<tr><td>Reverse active</td><td>RB</td><td>FB</td><td>Rarely used</td></tr>
+</table>
+<figure><svg viewBox="0 0 230 120" width="230">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="25" y1="105" x2="225" y2="105" stroke="#1c2230"/><line x1="25" y1="105" x2="25" y2="5" stroke="#1c2230"/>
+<g fill="none" stroke="#1f4e8c" stroke-width="1.5"><path d="M25,105 C30,80 35,78 45,77 L210,72"/><path d="M25,105 C30,60 35,55 45,54 L210,48"/><path d="M25,105 C30,40 35,32 45,31 L210,24"/></g>
+<line x1="25" y1="12" x2="200" y2="102" stroke="#c0392b" stroke-dasharray="4,2"/>
+<rect x="25" y="5" width="16" height="100" fill="#e0a100" fill-opacity=".2"/><rect x="25" y="96" width="200" height="9" fill="#888" fill-opacity=".2"/>
+<text x="28" y="118" font-size="9">Sat.</text><text x="140" y="117" font-size="9">Cut-off (I<tspan font-size="7">B</tspan>=0)</text><text x="150" y="66" font-size="9">Active</text>
+<text x="212" y="76" font-size="8">I<tspan font-size="7">B1</tspan></text><text x="212" y="27" font-size="8">I<tspan font-size="7">B3</tspan></text><text x="30" y="12">I<tspan font-size="8">C</tspan></text><text x="198" y="98">V<tspan font-size="8">CE</tspan></text>
+</g></svg><figcaption>CE output characteristics with DC load line</figcaption></figure>
+</div>
+
+<h3>4. Biasing &amp; Thermal Stabilization</h3>
+<p><b>Biasing</b> = DC voltages lagana taaki Q-point active region ke beech mein fix rahe (faithful amplification). Q-point temperature ke saath shift hota hai kyunki <b>I<sub>CBO</sub></b> (har 10 °C par double), <b>V<sub>BE</sub></b> (−2.5 mV/°C) aur <b>β</b> badalte hain. <b>Stabilization</b> = in changes ke bawajood I<sub>C</sub> constant rakhna.</p>
+<div class="box formula"><span class="lbl">Stability Factor</span><span class="eq">S = <span class="frac"><span>∂I<sub>C</sub></span><span>∂I<sub>CBO</sub></span></span> = <span class="frac"><span>1 + β</span><span>1 − β (∂I<sub>B</sub>/∂I<sub>C</sub>)</span></span></span>Ideal S = 1; S jitna kam, stability utni achhi. Also S' = ∂I<sub>C</sub>/∂V<sub>BE</sub>, S'' = ∂I<sub>C</sub>/∂β.</div>
+<table>
+<tr><th>Bias circuit</th><th>Key equations</th><th>Stability factor S</th></tr>
+<tr><td>Fixed bias (base resistor)</td><td>I<sub>B</sub> = (V<sub>CC</sub> − V<sub>BE</sub>)/R<sub>B</sub></td><td>1 + β (poor)</td></tr>
+<tr><td>Collector-to-base (feedback) bias</td><td>I<sub>B</sub> = (V<sub>CC</sub> − V<sub>BE</sub>)/(R<sub>B</sub> + βR<sub>C</sub>)</td><td>(1+β)/[1 + βR<sub>C</sub>/(R<sub>C</sub>+R<sub>B</sub>)] (better)</td></tr>
+<tr><td>Voltage divider (self) bias</td><td>V<sub>Th</sub> = V<sub>CC</sub>R<sub>2</sub>/(R<sub>1</sub>+R<sub>2</sub>), R<sub>Th</sub> = R<sub>1</sub>‖R<sub>2</sub>; I<sub>B</sub> = (V<sub>Th</sub> − V<sub>BE</sub>)/(R<sub>Th</sub> + (1+β)R<sub>E</sub>)</td><td>(1+β)(1 + R<sub>Th</sub>/R<sub>E</sub>)/(1+β+R<sub>Th</sub>/R<sub>E</sub>) ≈ 1 + R<sub>Th</sub>/R<sub>E</sub> (best)</td></tr>
+</table>
+<p class="small">Voltage divider bias mein R<sub>E</sub> <b>negative feedback</b> deta hai: I<sub>C</sub>↑ → V<sub>E</sub>↑ → V<sub>BE</sub>↓ → I<sub>B</sub>↓ → I<sub>C</sub>↓. Isliye ye β-independent aur most stable hai.</p>
+
+<h3>5. AC &amp; DC Load Line and Analysis</h3>
+<div class="grid2">
+<div>
+<p><b>DC load line:</b> V<sub>CE</sub> = V<sub>CC</sub> − I<sub>C</sub>(R<sub>C</sub>+R<sub>E</sub>). End points: (V<sub>CC</sub>, 0) aur (0, V<sub>CC</sub>/(R<sub>C</sub>+R<sub>E</sub>)). Slope = −1/R<sub>DC</sub>.</p>
+<p><b>AC load line:</b> AC mein capacitors short → R<sub>ac</sub> = R<sub>C</sub>‖R<sub>L</sub> (R<sub>E</sub> bypassed). Slope = −1/R<sub>ac</sub> (zyada steep), Q-point se pass hoti hai.</p>
+</div>
+<div class="box formula"><span class="lbl">Formula</span>AC load line end points:<span class="eq">I<sub>C(sat)</sub> = I<sub>CQ</sub> + V<sub>CEQ</sub>/R<sub>ac</sub></span><span class="eq">V<sub>CE(cutoff)</sub> = V<sub>CEQ</sub> + I<sub>CQ</sub>R<sub>ac</sub></span>Maximum symmetrical swing ke liye Q-point AC load line ke <b>centre</b> par: V<sub>CEQ</sub> = I<sub>CQ</sub>R<sub>ac</sub>.</div>
+</div>
+
+<h3>6. Compensation Techniques &amp; Thermal Runaway</h3>
+<ul>
+<li><b>Thermal runaway:</b> I<sub>C</sub>↑ → power dissipation P<sub>C</sub> = V<sub>CE</sub>I<sub>C</sub>↑ → junction temp T<sub>j</sub>↑ → I<sub>CBO</sub>↑ → I<sub>C</sub> aur ↑ ... ye cumulative cycle transistor ko <b>jala</b> sakta hai.</li>
+<li>Avoid karne ki condition: <span class="m">∂P<sub>C</sub>/∂T<sub>j</sub> &lt; 1/θ</span> (θ = thermal resistance, °C/W). Agar <b>V<sub>CE</sub> &lt; V<sub>CC</sub>/2</b> ho (R<sub>E</sub> wale circuit mein) to runaway nahi hota. Heat sink use karke θ kam karte hain.</li>
+<li><b>Compensation techniques</b> (stabilization se alag — temperature-sensitive devices se opposite effect): (i) <b>Diode compensation</b> for V<sub>BE</sub>: emitter/base circuit mein diode jiska V<sub>D</sub> bhi −2.5 mV/°C se change hota hai → V<sub>BE</sub> change cancel; (ii) <b>Diode compensation for I<sub>CO</sub></b>: reverse biased diode ka leakage I<sub>0</sub> base current se subtract; (iii) <b>Thermistor</b> (negative TC) R<sub>2</sub> ki jagah ya R<sub>E</sub> ke saath; (iv) <b>Sensistor</b> (positive TC resistor).</li>
+</ul>
+
+<h3>7. Ebers-Moll Equations &amp; Early Effect</h3>
+<div class="box formula"><span class="lbl">Ebers-Moll Model (NPN)</span>
+<span class="eq">I<sub>E</sub> = I<sub>ES</sub>(e<sup>V<sub>BE</sub>/V<sub>T</sub></sup> − 1) − α<sub>R</sub>I<sub>CS</sub>(e<sup>V<sub>BC</sub>/V<sub>T</sub></sup> − 1)</span>
+<span class="eq">I<sub>C</sub> = α<sub>F</sub>I<sub>ES</sub>(e<sup>V<sub>BE</sub>/V<sub>T</sub></sup> − 1) − I<sub>CS</sub>(e<sup>V<sub>BC</sub>/V<sub>T</sub></sup> − 1)</span>
+Reciprocity: α<sub>F</sub>I<sub>ES</sub> = α<sub>R</sub>I<sub>CS</sub> (= I<sub>S</sub>). Model = do back-to-back diodes + do dependent current sources (α<sub>F</sub>I<sub>F</sub>, α<sub>R</sub>I<sub>R</sub>). Ye har region (active, saturation, cut-off) mein valid hai.</div>
+<p><b>Early effect (base-width modulation):</b> V<sub>CB</sub> (ya V<sub>CE</sub>) badhne par C-B depletion region chauda hota hai aur <b>effective base width W<sub>B</sub> ghat</b> jaati hai. Result: (i) base recombination kam → α, β badhte hain → I<sub>C</sub> V<sub>CE</sub> ke saath slightly badhta hai (output curves sloped); (ii) input curves shift; (iii) extreme case mein <b>punch-through</b>. Output curves ko peeche extend karne par wo <b>−V<sub>A</sub></b> (Early voltage, ~50–200 V) par milte hain. Output resistance <span class="m">r<sub>o</sub> = V<sub>A</sub>/I<sub>C</sub></span>.</p>
+
+<h3>8. BJT as Amplifier &amp; BJT as Switch</h3>
+<div class="grid2">
+<div>
+<h4>Amplifier (CE)</h4>
+<p>Q-point active region ke beech mein; small AC input base par → I<sub>b</sub> change → I<sub>c</sub> = βI<sub>b</sub> → R<sub>C</sub> par bada voltage change, 180° phase shift.</p>
+<p class="m">g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub>, &nbsp; r<sub>π</sub> = β/g<sub>m</sub>, &nbsp; A<sub>v</sub> = −g<sub>m</sub>(R<sub>C</sub>‖R<sub>L</sub>) = −β(R<sub>C</sub>‖R<sub>L</sub>)/r<sub>π</sub></p>
+<p class="small">Example: I<sub>C</sub> = 1 mA → g<sub>m</sub> = 38.5 mA/V; R<sub>C</sub> = 4 kΩ → |A<sub>v</sub>| ≈ 154.</p>
+</div>
+<div>
+<h4>Switch</h4>
+<p><b>OFF:</b> cut-off, V<sub>in</sub> = 0 → I<sub>C</sub> ≈ 0, V<sub>out</sub> = V<sub>CC</sub> (open switch). <b>ON:</b> saturation, V<sub>CE(sat)</sub> ≈ 0.2 V, I<sub>C(sat)</sub> = (V<sub>CC</sub> − V<sub>CE(sat)</sub>)/R<sub>C</sub> (closed switch). Saturation ke liye <span class="m">I<sub>B</sub> &gt; I<sub>C(sat)</sub>/β</span>. Ye NOT gate (inverter) jaisa kaam karta hai; relays, LEDs, digital logic drive karta hai.</p>
+</div>
+</div>
+
+<h3>9. FET: Basic Concept</h3>
+<p><b>Field Effect Transistor</b> = <b>unipolar</b> (sirf majority carriers), <b>voltage-controlled</b> device; gate voltage se channel ka width/conductivity control hota hai. Terminals: Source, Drain, Gate. Very high input impedance (JFET ~10<sup>9</sup> Ω, MOSFET ~10<sup>12</sup>–10<sup>15</sup> Ω), low noise, thermally stable (no thermal runaway), chhota size.</p>
+<div class="grid2">
+<div>
+<h4>JFET</h4>
+<p>N-channel bar ke dono side P<sup>+</sup> gate regions. Gate-source junction <b>reverse biased</b>; V<sub>GS</sub> zyada negative → depletion chauda → channel patla → I<sub>D</sub> kam. V<sub>GS</sub> = V<sub>P</sub> (pinch-off / V<sub>GS(off)</sub>) par I<sub>D</sub> = 0.</p>
+<ul>
+<li><b>Drain char.</b> (I<sub>D</sub> vs V<sub>DS</sub>): ohmic region → pinch-off (saturation, I<sub>D</sub> const) → breakdown.</li>
+<li><b>Transfer char.</b> (I<sub>D</sub> vs V<sub>GS</sub>): parabolic (Shockley).</li>
+</ul>
+</div>
+<div>
+<h4>MOSFET</h4>
+<p>Gate SiO<sub>2</sub> se insulated (IGFET). <b>Depletion (D-MOSFET):</b> channel pehle se bana; −V<sub>GS</sub> (depletion) aur +V<sub>GS</sub> (enhancement) dono mode. <b>Enhancement (E-MOSFET):</b> koi channel nahi; V<sub>GS</sub> &gt; V<sub>T</sub> (threshold) par inversion layer channel banta hai; normally OFF.</p>
+<p class="small">Applications (JFET/MOSFET): buffer/ high-Z input amplifier, analog switch, chopper, VVR (voltage-variable resistor), RF amplifier, CMOS digital ICs, power switching (SMPS, motor drives), memory.</p>
+</div>
+</div>
+<div class="box formula"><span class="lbl">FET Formulas</span>
+JFET / D-MOSFET: <span class="m">I<sub>D</sub> = I<sub>DSS</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>)<sup>2</sup></span>; &nbsp; g<sub>m</sub> = g<sub>m0</sub>(1 − V<sub>GS</sub>/V<sub>P</sub>), g<sub>m0</sub> = 2I<sub>DSS</sub>/|V<sub>P</sub>| &nbsp;|&nbsp; E-MOSFET: <span class="m">I<sub>D</sub> = k(V<sub>GS</sub> − V<sub>T</sub>)<sup>2</sup></span> &nbsp;|&nbsp; CS amplifier A<sub>v</sub> = −g<sub>m</sub>R<sub>D</sub>.<br>Example: I<sub>DSS</sub> = 10 mA, V<sub>P</sub> = −4 V, V<sub>GS</sub> = −2 V → I<sub>D</sub> = 10(1−0.5)<sup>2</sup> = 2.5 mA.</div>
+<p class="small"><b>BJT vs FET:</b> BJT bipolar, current-controlled, low–medium Z<sub>in</sub>, thermal runaway possible, higher gain-bandwidth; FET unipolar, voltage-controlled, very high Z<sub>in</sub>, thermally stable, less noise, smaller &amp; easy IC fabrication.</p>
+</div>
+
+<!-- ======================= UNIT IV ======================= -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT IV</span> Operational Amplifier</h2>
+
+<h3>1. Op-Amp Basics</h3>
+<div class="grid2">
+<div>
+<p><b>Op-amp</b> = high-gain, direct-coupled <b>differential amplifier</b> IC (e.g. IC 741) jisme do inputs: inverting (−) aur non-inverting (+), ek output. Internal stages: differential amp → intermediate gain stage → level shifter → output (push-pull) stage. V<sub>o</sub> = A<sub>OL</sub>(V<sub>2</sub> − V<sub>1</sub>).</p>
+<p><b>Virtual short:</b> negative feedback ke saath V<sub>+</sub> ≈ V<sub>−</sub> aur input current ≈ 0.</p>
+</div>
+<table>
+<tr><th>Parameter</th><th>Ideal</th><th>IC 741</th></tr>
+<tr><td>Open loop gain A<sub>OL</sub></td><td>∞</td><td>2×10<sup>5</sup></td></tr>
+<tr><td>R<sub>in</sub></td><td>∞</td><td>2 MΩ</td></tr>
+<tr><td>R<sub>out</sub></td><td>0</td><td>75 Ω</td></tr>
+<tr><td>Bandwidth</td><td>∞</td><td>1 MHz (GBW)</td></tr>
+<tr><td>CMRR</td><td>∞</td><td>90 dB</td></tr>
+<tr><td>Slew rate</td><td>∞</td><td>0.5 V/μs</td></tr>
+</table>
+</div>
+<p class="small">CMRR = A<sub>d</sub>/A<sub>cm</sub> (dB = 20 log); Slew rate = (dV<sub>o</sub>/dt)<sub>max</sub>; Input offset voltage, input bias current = (I<sub>B1</sub>+I<sub>B2</sub>)/2.</p>
+
+<h3>2. Inverting &amp; Non-Inverting Modes</h3>
+<div class="grid2">
+<figure><svg viewBox="0 0 230 105" width="230">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<polygon points="110,25 110,85 160,55" fill="#eef4fc" stroke="#1c2230"/><text x="114" y="42">−</text><text x="114" y="78">+</text>
+<line x1="10" y1="38" x2="40" y2="38" stroke="#1c2230"/><rect x="40" y="32" width="30" height="12" fill="none" stroke="#1c2230"/><line x1="70" y1="38" x2="110" y2="38" stroke="#1c2230"/><text x="48" y="28">R<tspan font-size="8">1</tspan></text>
+<line x1="90" y1="38" x2="90" y2="10" stroke="#1c2230"/><line x1="90" y1="10" x2="120" y2="10" stroke="#1c2230"/><rect x="120" y="4" width="30" height="12" fill="none" stroke="#1c2230"/><line x1="150" y1="10" x2="180" y2="10" stroke="#1c2230"/><line x1="180" y1="10" x2="180" y2="55" stroke="#1c2230"/><text x="128" y="28">R<tspan font-size="8">f</tspan></text>
+<line x1="160" y1="55" x2="215" y2="55" stroke="#1c2230"/><text x="200" y="48">V<tspan font-size="8">o</tspan></text><text x="2" y="32">V<tspan font-size="8">in</tspan></text>
+<line x1="110" y1="72" x2="95" y2="72" stroke="#1c2230"/><line x1="95" y1="72" x2="95" y2="95" stroke="#1c2230"/><line x1="88" y1="95" x2="102" y2="95" stroke="#1c2230"/>
+</g></svg><figcaption>Inverting amplifier: A<sub>v</sub> = −R<sub>f</sub>/R<sub>1</sub></figcaption></figure>
+<div class="box formula"><span class="lbl">Op-Amp Gains</span>
+<span class="eq">Inverting: A<sub>v</sub> = <span class="frac"><span>V<sub>o</sub></span><span>V<sub>in</sub></span></span> = −<span class="frac"><span>R<sub>f</sub></span><span>R<sub>1</sub></span></span>, &nbsp; R<sub>in</sub> = R<sub>1</sub></span>
+<span class="eq">Non-inverting: A<sub>v</sub> = 1 + <span class="frac"><span>R<sub>f</sub></span><span>R<sub>1</sub></span></span>, &nbsp; R<sub>in</sub> very high</span>
+Voltage follower (R<sub>f</sub>=0, R<sub>1</sub>=∞): A<sub>v</sub> = 1 (buffer). Summer: V<sub>o</sub> = −R<sub>f</sub>(V<sub>1</sub>/R<sub>1</sub>+V<sub>2</sub>/R<sub>2</sub>+…).</div>
+</div>
+<p class="small"><b>Derivation (inverting):</b> V<sub>−</sub> ≈ 0 (virtual ground). Current I = V<sub>in</sub>/R<sub>1</sub> = (0 − V<sub>o</sub>)/R<sub>f</sub> → V<sub>o</sub> = −(R<sub>f</sub>/R<sub>1</sub>)V<sub>in</sub>. <b>Non-inverting:</b> V<sub>−</sub> = V<sub>in</sub> = V<sub>o</sub>R<sub>1</sub>/(R<sub>1</sub>+R<sub>f</sub>) → V<sub>o</sub> = (1+R<sub>f</sub>/R<sub>1</sub>)V<sub>in</sub>. Example: R<sub>1</sub> = 10 kΩ, R<sub>f</sub> = 100 kΩ → inverting gain −10, non-inverting gain 11.</p>
+
+<h3>3. Comparators &amp; Zero Crossing Detector</h3>
+<p><b>Comparator:</b> op-amp open loop (no feedback) mein; ek input par signal, doosre par reference V<sub>ref</sub>. V<sub>in</sub> &gt; V<sub>ref</sub> (non-inverting comparator) → V<sub>o</sub> = +V<sub>sat</sub>; V<sub>in</sub> &lt; V<sub>ref</sub> → −V<sub>sat</sub> (V<sub>sat</sub> ≈ V<sub>CC</sub> − 1 to 2 V). Uses: level detector, ADC, PWM. <b>Zero crossing detector (ZCD):</b> comparator with V<sub>ref</sub> = 0; har baar input zero cross kare tab output state badalta hai → <b>sine wave to square wave converter</b>. Drawback: noisy input par zero ke paas multiple false triggering → solution = Schmitt trigger.</p>
+
+<h3>4. Schmitt Trigger (Regenerative Comparator)</h3>
+<div class="grid2">
+<div>
+<p>Comparator + <b>positive feedback</b> (R<sub>1</sub>, R<sub>2</sub> divider se output ka hissa + input par). Do threshold levels → <b>hysteresis</b>; noise immunity. Inverting Schmitt mein V<sub>in</sub> −ve terminal par.</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">V<sub>UT</sub> = +V<sub>sat</sub><span class="frac"><span>R<sub>2</sub></span><span>R<sub>1</sub>+R<sub>2</sub></span></span>, &nbsp; V<sub>LT</sub> = −V<sub>sat</sub><span class="frac"><span>R<sub>2</sub></span><span>R<sub>1</sub>+R<sub>2</sub></span></span></span><span class="eq">V<sub>H</sub> = V<sub>UT</sub> − V<sub>LT</sub> = 2V<sub>sat</sub>R<sub>2</sub>/(R<sub>1</sub>+R<sub>2</sub>)</span>(R<sub>2</sub> = feedback divider ka ground-side resistor.)</div>
+</div>
+<figure><svg viewBox="0 0 200 115" width="200">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<line x1="10" y1="57" x2="190" y2="57" stroke="#1c2230"/><line x1="100" y1="5" x2="100" y2="110" stroke="#1c2230"/>
+<g fill="none" stroke="#1f4e8c" stroke-width="2"><polyline points="20,20 125,20 125,95 180,95"/><polyline points="180,95 75,95 75,20"/></g>
+<text x="128" y="70">V<tspan font-size="8">UT</tspan></text><text x="50" y="70">V<tspan font-size="8">LT</tspan></text><text x="18" y="15">+V<tspan font-size="8">sat</tspan></text><text x="150" y="108">−V<tspan font-size="8">sat</tspan></text><text x="182" y="52">V<tspan font-size="8">in</tspan></text><text x="104" y="12">V<tspan font-size="8">o</tspan></text>
+</g></svg><figcaption>Hysteresis loop (inverting Schmitt trigger)</figcaption></figure>
+</div>
+
+<h3>5. Instrumentation Amplifier</h3>
+<div class="grid2">
+<div>
+<p>Low-level transducer signals (strain gauge, thermocouple) ko amplify karne ke liye <b>high-gain, high input impedance, very high CMRR</b> differential amplifier. Standard <b>3 op-amp</b> circuit: do non-inverting <b>buffer</b> stages (A<sub>1</sub>, A<sub>2</sub>) jinke beech gain resistor R<sub>G</sub>, fir ek <b>difference amplifier</b> (A<sub>3</sub>). Gain sirf ek resistor R<sub>G</sub> badal kar adjust hota hai.</p>
+</div>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">V<sub>o</sub> = <span class="frac"><span>R<sub>3</sub></span><span>R<sub>2</sub></span></span>(1 + <span class="frac"><span>2R<sub>1</sub></span><span>R<sub>G</sub></span></span>)(V<sub>2</sub> − V<sub>1</sub>)</span>R<sub>1</sub> = buffer feedback resistors; R<sub>2</sub>, R<sub>3</sub> = difference-amp resistors. Features: low output impedance, low drift, gain accurately settable. Example IC: AD620, INA128.</div>
+</div>
+
+<h3>6. 555 Timer &amp; Its Applications</h3>
+<div class="grid2">
+<div>
+<p>IC 555 (8-pin) = precision timing IC. Internal blocks: <b>3 equal 5 kΩ resistors</b> divider (refs <b>2/3 V<sub>CC</sub></b> &amp; <b>1/3 V<sub>CC</sub></b>), 2 comparators (upper/threshold, lower/trigger), <b>SR flip-flop</b>, discharge transistor, output buffer.</p>
+<p class="small">Pins: 1 GND, 2 Trigger, 3 Output, 4 Reset, 5 Control voltage, 6 Threshold, 7 Discharge, 8 V<sub>CC</sub> (4.5–18 V).</p>
+<p class="small"><b>Applications:</b> astable/monostable/bistable MV, PWM, PPM, missing pulse detector, frequency divider, LED flasher, timers, tone generator, ramp generator.</p>
+</div>
+<figure><svg viewBox="0 0 230 135" width="230">
+<g font-size="9" font-family="Segoe UI,Arial" fill="#1c2230">
+<rect x="70" y="10" width="90" height="115" fill="#eef4fc" stroke="#1c2230"/><text x="100" y="72" font-size="13" font-weight="bold" fill="#1f4e8c">555</text>
+<line x1="115" y1="10" x2="115" y2="0" stroke="#1c2230"/><text x="120" y="8">8, 4 → V<tspan font-size="7">CC</tspan></text>
+<line x1="70" y1="25" x2="40" y2="25" stroke="#1c2230"/><text x="74" y="28">7</text>
+<rect x="34" y="1" width="12" height="18" fill="none" stroke="#1c2230"/><line x1="40" y1="0" x2="40" y2="1" stroke="#1c2230"/><text x="10" y="13">R<tspan font-size="7">A</tspan></text>
+<line x1="40" y1="19" x2="40" y2="25" stroke="#1c2230"/><rect x="34" y="34" width="12" height="20" fill="none" stroke="#1c2230"/><line x1="40" y1="25" x2="40" y2="34" stroke="#1c2230"/><text x="10" y="48">R<tspan font-size="7">B</tspan></text>
+<line x1="40" y1="54" x2="40" y2="80" stroke="#1c2230"/><line x1="40" y1="65" x2="70" y2="65" stroke="#1c2230"/><text x="74" y="62">6</text><line x1="40" y1="80" x2="70" y2="80" stroke="#1c2230"/><text x="74" y="84">2</text>
+<line x1="40" y1="80" x2="40" y2="98" stroke="#1c2230"/><line x1="32" y1="98" x2="48" y2="98" stroke="#1c2230"/><line x1="32" y1="103" x2="48" y2="103" stroke="#1c2230"/><line x1="40" y1="103" x2="40" y2="128" stroke="#1c2230"/><text x="14" y="104">C</text>
+<line x1="40" y1="128" x2="200" y2="128" stroke="#1c2230"/><line x1="115" y1="125" x2="115" y2="128" stroke="#1c2230"/><text x="118" y="121">1</text>
+<line x1="160" y1="60" x2="195" y2="60" stroke="#1c2230"/><text x="150" y="63">3</text><text x="170" y="54">Out</text>
+<polyline points="180,90 180,75 195,75 195,90 205,90 205,75 220,75 220,90" fill="none" stroke="#1f4e8c" stroke-width="1.5"/>
+</g></svg><figcaption>555 astable connection</figcaption></figure>
+</div>
+
+<h3>7. Multivibrators</h3>
+<table>
+<tr><th>Type</th><th>Stable states</th><th>Working (555)</th><th>Formula</th></tr>
+<tr><td><b>Astable</b> (free-running)</td><td>0 (dono quasi-stable)</td><td>C, R<sub>A</sub>+R<sub>B</sub> se 1/3 → 2/3 V<sub>CC</sub> charge (output HIGH), R<sub>B</sub> se pin 7 dwara discharge (LOW). Trigger nahi chahiye; square wave generator/clock.</td><td>t<sub>H</sub> = 0.693(R<sub>A</sub>+R<sub>B</sub>)C, t<sub>L</sub> = 0.693R<sub>B</sub>C<br><b>f = 1.44/[(R<sub>A</sub>+2R<sub>B</sub>)C]</b><br>D = (R<sub>A</sub>+R<sub>B</sub>)/(R<sub>A</sub>+2R<sub>B</sub>)</td></tr>
+<tr><td><b>Monostable</b> (one-shot)</td><td>1</td><td>Trigger pin 2 par negative pulse (&lt; 1/3 V<sub>CC</sub>) → output HIGH; C 0 se 2/3 V<sub>CC</sub> charge hone tak, fir wapas LOW (stable). Timer, pulse stretcher.</td><td><b>T = 1.1 RC</b></td></tr>
+<tr><td><b>Bistable</b> (flip-flop)</td><td>2</td><td>Trigger (pin 2) par SET (HIGH), reset/threshold par RESET (LOW); state tab tak rehta hai jab tak external trigger na aaye. Memory element.</td><td>No timing RC</td></tr>
+</table>
+<p class="small"><b>Example:</b> R<sub>A</sub> = 1 kΩ, R<sub>B</sub> = 10 kΩ, C = 0.1 μF → f = 1.44/(21 k × 0.1 μ) ≈ <b>686 Hz</b>, D = 11/21 ≈ 52.4 %. Monostable R = 10 kΩ, C = 10 μF → T = 0.11 s. Op-amp astable (square wave): T = 2RC ln[(1+β)/(1−β)], β = R<sub>2</sub>/(R<sub>1</sub>+R<sub>2</sub>).</p>
+<div class="box warn"><span class="lbl">Common Mistake</span> 555 astable mein duty cycle hamesha &gt; 50 % hota hai (t<sub>H</sub> &gt; t<sub>L</sub>). 50 % ke liye R<sub>B</sub> ke across diode lagate hain ya R<sub>B</sub> ≫ R<sub>A</sub> lete hain.</div>
+</div>
+
+<!-- ======================= UNIT V ======================= -->
+<div class="unit">
+<h2 class="unit-title"><span>UNIT V</span> CRO &amp; Transducers</h2>
+
+<h3>1. Cathode Ray Oscilloscope (CRO) — Construction</h3>
+<p>CRO ek instrument hai jo voltage waveform ko time ke saath screen par <b>display</b> karta hai; amplitude, time period, frequency, phase measure karte hain. Dil hai <b>CRT (cathode ray tube)</b> — evacuated glass tube with:</p>
+<ul class="cols2">
+<li><b>Electron gun:</b> heater + cathode (thermionic emission), <b>control grid</b> (intensity/brightness — negative potential), pre-accelerating, focusing &amp; accelerating anodes.</li>
+<li><b>Deflection system:</b> vertical (Y) plates aur horizontal (X) plates.</li>
+<li><b>Fluorescent screen:</b> phosphor coating (P31 green etc.); electron strike → light. <b>Aquadag</b> (graphite) coating secondary electrons collect karti hai.</li>
+<li><b>Glass envelope:</b> high vacuum, taaki electrons gas molecules se na takrayen.</li>
+</ul>
+
+<h3>2. Block Diagram of CRO</h3>
+<figure><svg viewBox="0 0 470 125" width="470">
+<g font-size="9.5" font-family="Segoe UI,Arial" fill="#1c2230">
+<g fill="#eef4fc" stroke="#1c2230"><rect x="5" y="10" width="62" height="26"/><rect x="85" y="10" width="62" height="26"/><rect x="165" y="10" width="62" height="26"/><rect x="85" y="72" width="62" height="26"/><rect x="165" y="72" width="62" height="26"/><rect x="245" y="72" width="62" height="26"/><rect x="5" y="72" width="62" height="26"/></g>
+<text x="12" y="27">Y input</text><text x="89" y="21">Vert. atten.</text><text x="92" y="32">+ pre-amp</text><text x="172" y="21">Delay line</text><text x="170" y="32">+ vert. amp</text>
+<text x="96" y="83">Trigger</text><text x="96" y="93">circuit</text><text x="172" y="83">Time base</text><text x="172" y="93">(sweep gen)</text><text x="252" y="83">Horiz.</text><text x="252" y="93">amplifier</text><text x="10" y="83">Power</text><text x="10" y="93">supply (HV/LV)</text>
+<g stroke="#1c2230" fill="none"><line x1="67" y1="23" x2="85" y2="23"/><line x1="147" y1="23" x2="165" y2="23"/><line x1="116" y1="36" x2="116" y2="72"/><line x1="147" y1="85" x2="165" y2="85"/><line x1="227" y1="85" x2="245" y2="85"/><line x1="227" y1="23" x2="350" y2="23"/><line x1="350" y1="23" x2="350" y2="45"/><line x1="307" y1="85" x2="335" y2="85"/><line x1="335" y1="85" x2="335" y2="65"/></g>
+<path d="M320,40 L330,40 L330,70 L320,70 Z" fill="none" stroke="#1c2230"/>
+<path d="M310,55 L345,55 L345,45 L380,45 L440,10 L440,110 L380,65 L345,65 L345,55" fill="none" stroke="#1f4e8c" stroke-width="1.5"/>
+<line x1="345" y1="45" x2="358" y2="45" stroke="#c0392b" stroke-width="2"/><line x1="345" y1="65" x2="358" y2="65" stroke="#c0392b" stroke-width="2"/>
+<line x1="363" y1="47" x2="363" y2="63" stroke="#1e8a4c" stroke-width="2"/><line x1="372" y1="47" x2="372" y2="63" stroke="#1e8a4c" stroke-width="2"/>
+<text x="400" y="62">Screen</text><text x="336" y="38" fill="#c0392b">Y plates</text><text x="352" y="78" fill="#1e8a4c">X plates</text><text x="300" y="120">CRT (gun → plates → screen)</text>
+</g></svg><figcaption>CRO block diagram: vertical section, horizontal (time-base) section, trigger, CRT, power supply</figcaption></figure>
+<p class="small"><b>Delay line</b> signal ko ~0.25 μs delay karti hai taaki sweep start hone ke baad signal Y plates par pahunche (leading edge dikh jaye). <b>Time base</b> sawtooth (ramp) voltage X plates par deta hai → spot left se right uniformly move karta hai, fir quick flyback (blanked). <b>Trigger</b> sweep ko signal ke same point se start karata hai → stable display.</p>
+
+<h3>3. Deflection &amp; Focusing System</h3>
+<div class="grid2">
+<div>
+<h4>Electrostatic deflection</h4>
+<p>Plates ke beech field E = V<sub>d</sub>/d electron ko parabolic path mein mod deta hai; plates ke baad seedha screen tak.</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">D = <span class="frac"><span>L l V<sub>d</sub></span><span>2 d V<sub>a</sub></span></span>, &nbsp; S = <span class="frac"><span>D</span><span>V<sub>d</sub></span></span> = <span class="frac"><span>L l</span><span>2 d V<sub>a</sub></span></span> m/V</span>L = plates centre se screen distance, l = plate length, d = plate separation, V<sub>a</sub> = accelerating voltage. Deflection factor G = 1/S (V/m). Electron velocity v = √(2eV<sub>a</sub>/m).</div>
+</div>
+<div>
+<h4>Focusing</h4>
+<p><b>Electrostatic focusing:</b> focusing anode aur accelerating anodes ke beech ka non-uniform field <b>electrostatic lens</b> banata hai jo divergent beam ko screen par ek sharp spot par converge karta hai (focus control = focusing anode potential adjust). <b>Magnetic focusing</b> (coil) TV CRTs mein. Magnetic deflection (coils) bhi possible: D ∝ 1/√V<sub>a</sub>, large-angle (TV), jabki CRO mein electrostatic (high frequency response).</p>
+<p class="small">Example: L = 20 cm, l = 2 cm, d = 0.5 cm, V<sub>a</sub> = 1000 V → S = (0.2×0.02)/(2×0.005×1000) = 0.4 mm/V.</p>
+</div>
+</div>
+
+<h3>4. Lissajous Figures</h3>
+<div class="grid2">
+<div>
+<p>Jab Y aur X dono plates par sinusoidal signals (time base OFF) diye jaate hain to screen par bana pattern = <b>Lissajous figure</b>. Use: unknown <b>frequency</b> aur <b>phase difference</b> measure karna.</p>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq"><span class="frac"><span>f<sub>y</sub></span><span>f<sub>x</sub></span></span> = <span class="frac"><span>No. of horizontal tangencies</span><span>No. of vertical tangencies</span></span></span><span class="eq">Phase: sin φ = Y<sub>1</sub>/Y<sub>2</sub></span>Y<sub>1</sub> = ellipse ka y-axis intercept, Y<sub>2</sub> = max vertical deflection.</div>
+</div>
+<table>
+<tr><th>Phase φ (f<sub>y</sub> = f<sub>x</sub>)</th><th>Pattern</th></tr>
+<tr><td>0° / 180°</td><td>Straight line (right / left tilt)</td></tr>
+<tr><td>0°–90° / 90°–180°</td><td>Tilted ellipse (right / left)</td></tr>
+<tr><td>90° (equal amplitudes)</td><td>Circle</td></tr>
+<tr><td>f<sub>y</sub>:f<sub>x</sub> = 2:1</td><td>Figure-of-eight type (2 horizontal, 1 vertical tangency)</td></tr>
+</table>
+</div>
+
+<h3>5. Dual Trace &amp; Dual Beam CRO</h3>
+<table>
+<tr><th>Dual Trace CRO</th><th>Dual Beam CRO</th></tr>
+<tr><td><b>Ek</b> electron gun/beam; electronic switch dono channels (A, B) ko ek hi vertical amp par switch karta hai.</td><td><b>Do</b> alag electron beams (do guns ya split beam), alag vertical plates/amps.</td></tr>
+<tr><td>Modes: <b>Alternate</b> (ek sweep mein A, next mein B — high freq) &amp; <b>Chopped</b> (sweep ke dauraan ~100–500 kHz par fast switching — low freq). Sasta, common; single-shot events ke liye nahi.</td><td>Dono signals truly simultaneously display; fast single-shot transients capture. Mehenga, bada CRT; same ya alag time base.</td></tr>
+</table>
+
+<h3>6. Sampling &amp; Storage Oscilloscopes</h3>
+<div class="grid2">
+<div>
+<h4>Sampling oscilloscope</h4>
+<p>Bahut <b>high frequency</b> (GHz) repetitive signals ke liye. Har cycle mein signal ka ek <b>sample</b> leta hai, har agle cycle mein sample point thoda aage shift (sequential sampling). Samples jodkar slow "reconstructed" waveform display hota hai. Condition: signal <b>repetitive</b> ho.</p>
+</div>
+<div>
+<h4>Storage oscilloscope</h4>
+<p>Waveform ko screen par lambe time tak <b>store</b> karta hai — slow/one-time transients ke liye. <b>Analog storage:</b> special CRT — <b>bistable</b> storage aur <b>variable persistence</b> (storage mesh + flood gun). <b>Digital storage oscilloscope (DSO):</b> signal → ADC → digital memory → DAC → display; waveform save, analyse, PC transfer.</p>
+</div>
+</div>
+
+<h3>7. Classification of Transducers</h3>
+<p><b>Transducer</b> = device jo ek form ki energy/physical quantity (pressure, displacement, temp.) ko doosri form (mostly electrical) mein convert kare.</p>
+<table>
+<tr><th>Basis</th><th>Types &amp; Examples</th></tr>
+<tr><td>Power</td><td><b>Active</b> (self-generating, external power nahi): thermocouple, piezoelectric, photovoltaic cell. <b>Passive</b> (external excitation chahiye): strain gauge, LVDT, thermistor, RTD, capacitive.</td></tr>
+<tr><td>Principle</td><td>Resistive (strain gauge, POT), Inductive (LVDT), Capacitive, Piezoelectric, Photoelectric, Thermoelectric</td></tr>
+<tr><td>Prim./Sec.</td><td>Primary: physical qty → intermediate (Bourdon tube, diaphragm). Secondary: intermediate → electrical (LVDT).</td></tr>
+<tr><td>Output / Direction</td><td><b>Analog</b> (LVDT, thermocouple) vs <b>Digital</b> (shaft encoder); <b>Transducer</b> (non-elec → elec) vs <b>Inverse</b> (elec → non-elec: loudspeaker)</td></tr>
+</table>
+
+<h3>8. LVDT (Linear Variable Differential Transformer)</h3>
+<div class="grid2">
+<div>
+<p>Passive <b>inductive</b> transducer jo <b>linear displacement</b> ko voltage mein badalta hai. Ek <b>primary</b> (centre) + do identical <b>secondaries</b> S<sub>1</sub>, S<sub>2</sub> (<b>series opposition</b>); beech mein movable soft-iron core (shaft se juda). Primary par AC (1–10 kHz).</p>
+<ul>
+<li><b>Null position</b> (core centre): E<sub>S1</sub> = E<sub>S2</sub> → E<sub>o</sub> = 0.</li>
+<li>Core S<sub>1</sub> ki taraf → E<sub>S1</sub> &gt; E<sub>S2</sub>, output in phase; S<sub>2</sub> ki taraf → output 180° out of phase. Magnitude ∝ displacement (linear range), <b>phase se direction</b>.</li>
+</ul>
+</div>
+<div><figure><svg viewBox="0 0 220 125" width="220">
+<g font-size="10" font-family="Segoe UI,Arial" fill="#1c2230">
+<rect x="20" y="40" width="180" height="26" fill="#d9d9d9" fill-opacity=".5" stroke="#1c2230"/><rect x="70" y="44" width="80" height="18" fill="#8a8a8a"/><text x="92" y="57" fill="#fff">Core</text>
+<line x1="150" y1="53" x2="215" y2="53" stroke="#1c2230" stroke-width="2"/><text x="180" y="47" font-size="9">→ x</text>
+<g fill="none" stroke="#1f4e8c" stroke-width="1.4"><path d="M25,40 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0"/><path d="M85,40 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0"/><path d="M145,40 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0 q5,-12 10,0"/></g>
+<text x="32" y="22">S<tspan font-size="8">1</tspan></text><text x="88" y="22">Primary</text><text x="152" y="22">S<tspan font-size="8">2</tspan></text>
+<text x="88" y="12" font-size="9">AC in</text>
+<line x1="20" y1="85" x2="200" y2="85" stroke="#1c2230"/><line x1="110" y1="80" x2="110" y2="122" stroke="#1c2230"/>
+<polyline points="25,120 110,85 195,120" fill="none" stroke="#c0392b" stroke-width="1.6"/>
+<text x="25" y="100" font-size="9">|E<tspan font-size="7">o</tspan>| (180°)</text><text x="140" y="100" font-size="9">|E<tspan font-size="7">o</tspan>| (0°)</text><text x="98" y="80" font-size="9">null</text>
+</g></svg><figcaption>LVDT construction and output vs displacement</figcaption></figure>
+<div class="box formula"><span class="lbl">LVDT</span><span class="eq">E<sub>o</sub> = E<sub>S1</sub> − E<sub>S2</sub> ∝ x</span><b>Adv:</b> frictionless, high resolution &amp; output, linear, rugged, low hysteresis. <b>Disadv:</b> stray magnetic field se affect, AC excitation + demodulator chahiye. <b>Uses:</b> displacement, force, pressure.</div></div></div>
+
+<h3>9. Strain Gauge</h3>
+<div class="grid2"><p style="margin:0">Passive <b>resistive</b> transducer. Fine wire/foil grid ko object par chipkate hain; strain se length badhti &amp; area ghatta hai (piezoresistive effect se ρ bhi badalta hai) → resistance change. Δ R ko <b>Wheatstone bridge</b> se measure karte hain. Types: unbonded, bonded (wire/foil), semiconductor (G ≈ 100–200, temperature sensitive). Temperature compensation ke liye <b>dummy gauge</b> (unstrained) bridge ki adjacent arm mein.</p>
+<div class="box formula"><span class="lbl">Gauge Factor</span><span class="eq">G = <span class="frac"><span>ΔR/R</span><span>ΔL/L</span></span> = <span class="frac"><span>ΔR/R</span><span>ε</span></span> = 1 + 2ν + <span class="frac"><span>Δρ/ρ</span><span>ε</span></span></span>ν = Poisson's ratio; metal gauge G ≈ 2. <b>Example:</b> R = 120 Ω, G = 2, ε = 500×10<sup>−6</sup> → ΔR = GRε = 2×120×500×10<sup>−6</sup> = 0.12 Ω.</div></div>
+</div>

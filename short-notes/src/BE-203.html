@@ -1,0 +1,639 @@
+<div class="unit">
+<h2 class="unit-title"><span>UNIT I</span> Computer Fundamentals, Operating System &amp; MS Office</h2>
+
+<h3>1. Computer – Definition</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Computer</b> ek electronic device hai jo user se <b>data (input)</b> leta hai, stored <b>instructions (program)</b> ke according use <b>process</b> karta hai, aur <b>information (output)</b> deta hai; result ko future use ke liye <b>store</b> bhi kar sakta hai.</div>
+<p class="small"><b>Characteristics:</b> Speed (nano/pico seconds), Accuracy (GIGO – Garbage In Garbage Out), Diligence (thakta nahi), Versatility, Storage capacity, Automation. <b>Limitation:</b> No IQ, no feelings – khud decision nahi leta.</p>
+
+<h3>2. Block Schematic of Digital Computer &amp; Working</h3>
+<div class="grid2"><figure style="margin:0"><svg viewBox="0 0 470 135" width="340" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">
+<defs><marker id="a1" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 z" fill="#1c2230"/></marker></defs>
+<rect x="5" y="50" width="80" height="34" rx="4" fill="#eef4fc" stroke="#1c2230"/><text x="45" y="64" text-anchor="middle">Input Unit</text><text x="45" y="77" text-anchor="middle" font-size="9">(Keyboard, Mouse)</text>
+<rect x="135" y="4" width="200" height="126" rx="5" fill="none" stroke="#1f4e8c" stroke-dasharray="4 2"/><text x="235" y="16" text-anchor="middle" fill="#1f4e8c" font-weight="bold">CPU</text>
+<rect x="150" y="22" width="170" height="26" rx="3" fill="#fff8e6" stroke="#1c2230"/><text x="235" y="39" text-anchor="middle">Control Unit (CU)</text>
+<rect x="150" y="56" width="170" height="26" rx="3" fill="#fff8e6" stroke="#1c2230"/><text x="235" y="73" text-anchor="middle">ALU (Arithmetic &amp; Logic)</text>
+<rect x="150" y="92" width="170" height="30" rx="3" fill="#eaf7ef" stroke="#1c2230"/><text x="235" y="105" text-anchor="middle">Memory Unit</text><text x="235" y="117" text-anchor="middle" font-size="9">(Primary: RAM/ROM, Registers)</text>
+<rect x="385" y="50" width="80" height="34" rx="4" fill="#eef4fc" stroke="#1c2230"/><text x="425" y="64" text-anchor="middle">Output Unit</text><text x="425" y="77" text-anchor="middle" font-size="9">(Monitor, Printer)</text>
+<line x1="85" y1="67" x2="148" y2="100" stroke="#1c2230" marker-end="url(#a1)"/>
+<line x1="322" y1="100" x2="383" y2="67" stroke="#1c2230" marker-end="url(#a1)"/>
+<line x1="235" y1="82" x2="235" y2="90" stroke="#1c2230" marker-end="url(#a1)"/>
+<line x1="245" y1="90" x2="245" y2="84" stroke="#1c2230" marker-end="url(#a1)"/>
+<text x="345" y="30" font-size="9" fill="#1f4e8c">CU sabko</text><text x="345" y="41" font-size="9" fill="#1f4e8c">control signal</text>
+</svg><figcaption>Input → Memory ⇄ ALU (CU sab control karta hai) → Output</figcaption></figure>
+<ul class="small">
+<li><b>Input Unit:</b> data ko binary mein convert karke memory tak bhejta hai.</li>
+<li><b>Memory Unit:</b> data, program, intermediate results store (primary RAM/ROM/cache; secondary HDD/SSD).</li>
+<li><b>ALU:</b> arithmetic (+ − × ÷) aur logical (AND, OR, NOT, compare) operations.</li>
+<li><b>Control Unit:</b> instructions ka <b>fetch → decode → execute</b>; sab units ko control signals.</li>
+<li><b>Output Unit:</b> result ko human-readable form mein deta hai.</li>
+</ul></div>
+<p class="small"><b>Yaad Rakho:</b> CPU = CU + ALU + Registers. Working cycle = <b>IPOS</b>: Input → Process → Output → Storage; <b>Von Neumann architecture</b> (stored program concept).</p>
+
+<h3>3. Classification of Computers</h3>
+<ul>
+<li><b>By working/data:</b> <b>Analog</b> (continuous data – thermometer, speedometer), <b>Digital</b> (discrete 0/1 – PC), <b>Hybrid</b> (dono – ICU machine, petrol pump).</li>
+<li><b>By size &amp; power:</b> <b>Micro</b> (PC/laptop), <b>Mini</b> (small org, multi-user), <b>Mainframe</b> (banks, railways – IBM z), <b>Super</b> (weather/research – PARAM, Frontier; speed in FLOPS).</li>
+<li><b>By purpose:</b> <b>General purpose</b> (PC) aur <b>Special purpose</b> (ATM, washing machine controller, traffic light).</li>
+</ul>
+
+<h3>4. Generations of Computer</h3>
+<table class="small">
+<tr><th>Gen</th><th>Period</th><th>Technology</th><th>Language</th><th>Example</th></tr>
+<tr><td>1st</td><td>1940–56</td><td>Vacuum tubes; magnetic drum</td><td>Machine language</td><td>ENIAC, EDVAC, UNIVAC</td></tr>
+<tr><td>2nd</td><td>1956–63</td><td>Transistors; magnetic core</td><td>Assembly, early FORTRAN/COBOL</td><td>IBM 1401, IBM 7090</td></tr>
+<tr><td>3rd</td><td>1964–71</td><td>Integrated Circuits (IC)</td><td>High-level (BASIC, Pascal); OS aaya</td><td>IBM 360, PDP-8</td></tr>
+<tr><td>4th</td><td>1971–present</td><td>Microprocessor (VLSI)</td><td>C, C++, GUI OS</td><td>IBM PC, Apple Macintosh</td></tr>
+<tr><td>5th</td><td>Present–future</td><td>AI, ULSI, parallel processing</td><td>Python, Prolog, NLP</td><td>Robots, AI assistants</td></tr>
+</table>
+
+<h3>5. I/O Devices &amp; Storage Devices</h3>
+<p class="small"><b>Input:</b> Keyboard, Mouse, Scanner, Joystick, Light pen, Mic, Webcam, Touch screen, Barcode reader, <b>OCR</b> (Optical Character Reader), <b>MICR</b> (bank cheques), <b>OMR</b> (exam OMR sheet), Biometric. <b>Output:</b> Monitor (CRT/LCD/LED), Printer (Impact – dot matrix; Non-impact – inkjet, laser), Plotter, Speaker, Projector. Soft copy = screen, Hard copy = paper.</p>
+<table class="small">
+<tr><th>Primary Memory</th><th>Secondary Memory</th></tr>
+<tr><td>CPU directly access karta hai; fast, costly, small. <b>RAM</b> (volatile): SRAM (cache), DRAM (main). <b>ROM</b> (non-volatile): PROM, EPROM (UV erase), EEPROM (electrical erase) – BIOS</td><td>CPU directly access nahi; slow, cheap, large, non-volatile: HDD (magnetic), SSD/Pen drive (flash), CD/DVD/Blu-ray (optical), Magnetic tape (sequential). 1 Byte = 8 bits; 1 KB = 1024 B → MB, GB, TB</td></tr>
+</table>
+<p class="small"><b>Memory hierarchy</b> (fast → slow): Registers → Cache → RAM → SSD/HDD → Optical/Tape (speed ↓, size ↑, cost/bit ↓).</p>
+
+<h3>6. System Software vs Application Software</h3>
+<table class="small">
+<tr><th>System Software</th><th>Application Software</th></tr>
+<tr><td>Hardware manage karta hai, platform deta hai; iske bina computer nahi chalega. Ex: OS, Compiler, Interpreter, Assembler, Loader, Linker, Device drivers, Utilities (antivirus)</td><td>User ka specific task karta hai; system software par depend. Ex: MS Word, Excel, Tally, browser, games, Photoshop</td></tr>
+</table>
+
+<h3>7. Computer Applications</h3>
+<div class="cols2 small">
+<p><b>e-Business:</b> online buying/selling (B2B, B2C), e-banking, UPI, online marketing, ERP (Amazon, Flipkart).</p>
+<p><b>Bio-Informatics:</b> DNA/protein sequence data ka storage &amp; analysis; genome sequencing, drug design (BLAST tool).</p>
+<p><b>Health Care:</b> hospital management, e-health records, CT/MRI imaging, telemedicine, robotic surgery.</p>
+<p><b>Remote Sensing &amp; GIS:</b> satellite se bina contact earth ka data; GIS spatial data analyse karta hai – maps, urban planning, disaster &amp; crop monitoring.</p>
+<p><b>Meteorology &amp; Climatology:</b> supercomputers par numerical weather models – forecasting, cyclone tracking, climate change study (IMD).</p>
+<p><b>Computer Gaming:</b> video games, GPU graphics, VR/AR, simulators (flight training), e-sports.</p>
+<p><b>Multimedia &amp; Animation:</b> text + audio + video + image + animation combine; 2D/3D films, e-learning, ads (Maya, Blender).</p>
+</div>
+
+<h3>8. Operating System</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Operating System (OS)</b> ek system software hai jo <b>user aur hardware ke beech interface</b> ka kaam karta hai aur computer ke saare resources (CPU, memory, I/O, files) ko manage karta hai. Ex: Windows, UNIX, Linux, macOS, Android.</div>
+<p class="small"><b>Functions of OS:</b> Process management, Memory management, File management, Device (I/O) management, Security &amp; protection, User interface (CLI/GUI), Job accounting, Error detection, Booting.</p>
+<p><b>Types of OS:</b></p>
+<div class="cols2 small">
+<p><b>Batch OS:</b> similar jobs ka batch, bina user interaction (payroll).</p>
+<p><b>Multiprogramming:</b> memory mein many programs; CPU idle nahi.</p>
+<p><b>Time-sharing / Multitasking:</b> har process ko time-slice (quantum); multi-user (UNIX).</p>
+<p><b>Real-Time OS:</b> fixed deadline mein response; Hard/Soft (missile, ABS brakes, VxWorks).</p>
+<p><b>Distributed OS:</b> many networked computers ek system jaise (Amoeba).</p>
+<p><b>Network OS:</b> server se file/printer sharing (Windows Server, NetWare).</p>
+<p><b>Mobile / Single-user OS:</b> Android, iOS / MS-DOS.</p>
+</div>
+<h4>File, Process &amp; Memory Management</h4>
+<ul class="small">
+<li><b>File Management:</b> files/directories create, delete, read, write, rename; hierarchical directory structure; access permissions; disk space allocation (contiguous, linked, indexed).</li>
+<li><b>Process Management:</b> Process = program in execution. States: <b>New → Ready → Running → Waiting → Terminated</b>. OS CPU scheduling karta hai (FCFS, SJF, Round Robin, Priority), PCB (Process Control Block) maintain karta hai, deadlock handle karta hai.</li>
+<li><b>Memory Management:</b> process ko memory allocate/deallocate karna; track karna kaun sa part free hai; techniques – partitioning, <b>paging</b>, <b>segmentation</b>, <b>virtual memory</b> (RAM kam ho to disk ka part RAM ki tarah use).</li>
+</ul>
+
+<h3>9. Introduction to UNIX and Windows</h3>
+<table class="small">
+<tr><th>UNIX</th><th>Windows</th></tr>
+<tr><td>1969, AT&amp;T Bell Labs (Ken Thompson, Dennis Ritchie); C mein likha. Multi-user, multitasking, portable, secure; mainly CLI. Structure: Hardware → <b>Kernel</b> → <b>Shell</b> → Utilities. Case-sensitive; variants Linux, BSD</td><td>Microsoft (1985 se), GUI based (icons, windows, menus); multitasking. Desktop, Taskbar, Start menu, File Explorer, Control Panel; NTFS file system; proprietary (Windows 10/11)</td></tr>
+</table>
+<h4>Simple UNIX Commands &amp; Directory Commands</h4>
+<table class="small">
+<tr><th>Command</th><th>Kaam</th><th>Command</th><th>Kaam</th></tr>
+<tr><td>ls, ls -l</td><td>files list (long format)</td><td>pwd</td><td>present working directory</td></tr>
+<tr><td>cat f1 / cat &gt; f1</td><td>file display / create</td><td>mkdir d1, rmdir d1</td><td>dir banao / empty dir delete</td></tr>
+<tr><td>cp f1 f2, mv f1 f2</td><td>copy, move/rename</td><td>cd d1, cd .., cd ~</td><td>dir change / parent / home</td></tr>
+<tr><td>rm f1 (rm -r dir)</td><td>delete</td><td>chmod 755 f1</td><td>permissions (rwx)</td></tr>
+<tr><td>date, cal, who, man ls</td><td>date, calendar, users, help</td><td>wc, grep "x" f1, head/tail</td><td>count, search, first/last lines</td></tr>
+</table>
+
+<h3>10. Introduction to MS Word, PowerPoint, Excel</h3>
+<table class="small">
+<tr><th>Software</th><th>Use</th><th>Important Features</th></tr>
+<tr><td><b>MS Word</b> (.docx)</td><td>Word processor – letters, reports, resume</td><td>Formatting (font, bold, alignment), tables, header/footer, page numbers, spell-check, <b>Mail Merge</b>, Find &amp; Replace, Track changes</td></tr>
+<tr><td><b>MS PowerPoint</b> (.pptx)</td><td>Presentation – slides</td><td>Slide layouts, themes, <b>animations</b> (object par), <b>transitions</b> (slide change), Slide Master, Slide Show (F5)</td></tr>
+<tr><td><b>MS Excel</b> (.xlsx)</td><td>Spreadsheet – calculations, data analysis</td><td>Workbook → Worksheets → Cells (A1 address); formulas start with <b>=</b>: =SUM(A1:A5), =AVERAGE(), =MAX(), =IF(); charts, sorting, filtering</td></tr>
+</table>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT II</span> Algorithm, Programming Concepts &amp; Introduction to C</h2>
+
+<h3>1. Algorithm</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Algorithm</b> = kisi problem ko solve karne ke liye <b>finite, well-defined, step-by-step instructions</b> ka sequence. Properties: <b>Input</b> (0 ya more), <b>Output</b> (≥1), <b>Definiteness</b> (har step clear), <b>Finiteness</b> (finite steps mein khatam), <b>Effectiveness</b> (simple, doable).</div>
+<p class="small"><b>Example – Largest of two numbers:</b> Step 1: Start. Step 2: Read A, B. Step 3: If A &gt; B print A else print B. Step 4: Stop.</p>
+<h4>Complexity of Algorithm</h4>
+<ul class="small">
+<li><b>Time complexity:</b> input size n ke function mein algorithm kitna time (steps) leta hai. <b>Space complexity:</b> kitni memory leta hai.</li>
+<li>Asymptotic notations: <b>Big-O</b> (upper bound / worst case), <b>Ω Omega</b> (lower bound / best case), <b>Θ Theta</b> (tight bound / average).</li>
+<li>Order: O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n<sup>2</sup>) &lt; O(2<sup>n</sup>). Ex: Linear search O(n), Binary search O(log n), Bubble sort O(n<sup>2</sup>).</li>
+</ul>
+<h4>Flowchart</h4>
+<p>Flowchart = algorithm ka <b>graphical/pictorial representation</b> standard symbols ke saath.</p>
+<div class="grid2">
+<div><figure><svg viewBox="0 0 230 130" width="230" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">
+<ellipse cx="35" cy="15" rx="30" ry="11" fill="#eef4fc" stroke="#1c2230"/><text x="35" y="19" text-anchor="middle" font-size="9">Start/Stop</text><text x="75" y="19">Terminal</text>
+<polygon points="15,35 70,35 60,55 5,55" fill="#eef4fc" stroke="#1c2230"/><text x="37" y="49" text-anchor="middle" font-size="9">Read/Print</text><text x="75" y="49">Input/Output</text>
+<rect x="5" y="62" width="60" height="18" fill="#eef4fc" stroke="#1c2230"/><text x="35" y="75" text-anchor="middle" font-size="9">X = A+B</text><text x="75" y="75">Process</text>
+<polygon points="35,85 62,100 35,115 8,100" fill="#fff8e6" stroke="#1c2230"/><text x="35" y="103" text-anchor="middle" font-size="9">A&gt;B?</text><text x="75" y="103">Decision</text>
+<circle cx="160" cy="20" r="8" fill="#eef4fc" stroke="#1c2230"/><text x="175" y="24">Connector</text>
+<line x1="150" y1="50" x2="185" y2="50" stroke="#1c2230"/><polygon points="185,46 193,50 185,54" fill="#1c2230"/><text x="150" y="66">Flow line</text>
+<rect x="148" y="80" width="56" height="18" fill="#eef4fc" stroke="#1c2230"/><line x1="154" y1="80" x2="154" y2="98" stroke="#1c2230"/><line x1="198" y1="80" x2="198" y2="98" stroke="#1c2230"/><text x="140" y="112" font-size="9">Predefined process</text>
+</svg><figcaption>Standard flowchart symbols</figcaption></figure></div>
+<div><figure><svg viewBox="0 0 200 135" width="200" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="9">
+<defs><marker id="a2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#1c2230"/></marker></defs>
+<ellipse cx="100" cy="10" rx="24" ry="8" fill="#eef4fc" stroke="#1c2230"/><text x="100" y="13" text-anchor="middle">Start</text>
+<line x1="100" y1="18" x2="100" y2="27" stroke="#1c2230" marker-end="url(#a2)"/>
+<polygon points="75,28 135,28 127,44 67,44" fill="#eef4fc" stroke="#1c2230"/><text x="101" y="39" text-anchor="middle">Read A, B</text>
+<line x1="100" y1="44" x2="100" y2="52" stroke="#1c2230" marker-end="url(#a2)"/>
+<polygon points="100,53 130,68 100,83 70,68" fill="#fff8e6" stroke="#1c2230"/><text x="100" y="71" text-anchor="middle">A &gt; B ?</text>
+<line x1="70" y1="68" x2="40" y2="68" stroke="#1c2230"/><line x1="40" y1="68" x2="40" y2="92" stroke="#1c2230" marker-end="url(#a2)"/><text x="50" y="64">Yes</text>
+<line x1="130" y1="68" x2="160" y2="68" stroke="#1c2230"/><line x1="160" y1="68" x2="160" y2="92" stroke="#1c2230" marker-end="url(#a2)"/><text x="137" y="64">No</text>
+<polygon points="15,93 70,93 63,107 8,107" fill="#eef4fc" stroke="#1c2230"/><text x="39" y="103" text-anchor="middle">Print A</text>
+<polygon points="135,93 190,93 183,107 128,107" fill="#eef4fc" stroke="#1c2230"/><text x="159" y="103" text-anchor="middle">Print B</text>
+<line x1="39" y1="107" x2="39" y2="125" stroke="#1c2230"/><line x1="159" y1="107" x2="159" y2="125" stroke="#1c2230"/><line x1="39" y1="125" x2="76" y2="125" stroke="#1c2230" marker-end="url(#a2)"/><line x1="159" y1="125" x2="124" y2="125" stroke="#1c2230" marker-end="url(#a2)"/>
+<ellipse cx="100" cy="125" rx="24" ry="8" fill="#eef4fc" stroke="#1c2230"/><text x="100" y="128" text-anchor="middle">Stop</text>
+</svg><figcaption>Flowchart: largest of two numbers</figcaption></figure></div>
+</div>
+
+<h3>2. Introduction to Programming &amp; Categories of Languages</h3>
+<p class="small"><b>Program</b> = instructions ka set jo computer ko task karne ke liye diya jata hai. <b>Programming</b> = program likhne ka process. <b>Translators:</b> Assembler (assembly → machine), Compiler (poora HLL program ek baar mein translate – C), Interpreter (line by line – Python, BASIC).</p>
+<table class="small">
+<tr><th>Category</th><th>Description</th><th>Pros / Cons</th></tr>
+<tr><td>Machine (1GL) – low level</td><td>Binary 0/1 code, CPU directly samajhta hai</td><td>Fastest / machine dependent, error-prone</td></tr>
+<tr><td>Assembly (2GL) – low level</td><td>Mnemonics (ADD, MOV); assembler chahiye</td><td>Easier than binary / machine dependent</td></tr>
+<tr><td>High-Level (3GL)</td><td>English-like (C, C++, Java, FORTRAN)</td><td>Portable, easy / translation needed</td></tr>
+<tr><td>4GL / 5GL</td><td>Non-procedural (SQL, MATLAB) / AI (Prolog, LISP)</td><td>"What" batao, "how" nahi</td></tr>
+</table>
+
+<h3>3. Program Design &amp; Programming Paradigms</h3>
+<p class="small"><b>Program Design (Program Development Life Cycle):</b> Problem definition → Analysis → Design (algorithm/flowchart/pseudocode) → Coding → Testing &amp; Debugging → Documentation → Maintenance. Approaches: <b>Top-down</b> (bade problem ko chhote modules mein todna – C), <b>Bottom-up</b> (chhote objects se system banana – C++/Java), <b>Modular</b> programming.</p>
+<p class="small"><b>Programming Paradigms</b> (programming ki style/approach): <b>Procedural/Structured</b> – program = functions ka sequence, top-down (C, Pascal); <b>Object-Oriented</b> – program = objects (data + functions), bottom-up (C++, Java); <b>Functional</b> – mathematical functions, no side effects (Haskell, LISP); <b>Logic/Declarative</b> – facts + rules (Prolog, SQL); <b>Event-driven</b> – click/key events par code chale (Visual Basic, JavaScript).</p>
+
+<h3>4. OOP – Characteristics/Concepts &amp; POP vs OOP</h3>
+<div class="cols2 small">
+<p><b>Class:</b> blueprint/template – data members + member functions (ex: class Car).</p>
+<p><b>Object:</b> class ka instance (real entity) – ex: Car c1;</p>
+<p><b>Encapsulation:</b> data + functions ko ek unit (class) mein wrap karna.</p>
+<p><b>Abstraction:</b> sirf essential features dikhana, details chhupana (ATM use karna).</p>
+<p><b>Data Hiding:</b> private data bahar se access nahi.</p>
+<p><b>Inheritance:</b> ek class doosri class ki properties le (reusability) – parent → child.</p>
+<p><b>Polymorphism:</b> "one name, many forms" – function/operator overloading, overriding.</p>
+<p><b>Dynamic Binding:</b> kaunsa function call hoga ye run-time par decide.</p>
+<p><b>Message Passing:</b> objects function call se communicate karte hain.</p>
+</div>
+<table class="small">
+<tr><th>POP (Procedure Oriented)</th><th>OOP (Object Oriented)</th></tr>
+<tr><td>Focus on functions; top-down approach</td><td>Focus on data (objects); bottom-up approach</td></tr>
+<tr><td>Global data freely move karta hai – less secure</td><td>Data hiding via access specifiers (private, public, protected)</td></tr>
+<tr><td>No inheritance/overloading; bade program maintain karna mushkil</td><td>Inheritance, polymorphism; reusable, real-world modelling</td></tr>
+<tr><td>Ex: C, Pascal, FORTRAN</td><td>Ex: C++, Java, C#, Python</td></tr>
+</table>
+
+<h3>5. Introduction to C – Program Structure</h3>
+<p class="small">C language <b>Dennis Ritchie</b> ne <b>1972</b> mein AT&amp;T Bell Labs par develop ki (UNIX likhne ke liye). C = middle-level, structured, portable, fast, case-sensitive language.</p>
+<div class="grid2">
+<div><pre>/* Documentation section */
+#include &lt;stdio.h&gt;   // Link section
+#define PI 3.14       // Definition section
+int count = 0;        // Global declaration
+int main() {          // main() function
+    int r = 2; float area;   // declaration
+    area = PI * r * r;       // executable part
+    printf("Area = %f\n", area);  return 0;
+}
+/* User-defined functions (subprogram) */</pre></div>
+<div><p class="small"><b>Sections:</b> Documentation (comments) → Link (#include header files) → Definition (#define constants) → Global declaration → <b>main()</b> (execution yahi se start) → Sub-program (user functions).</p>
+<p class="small"><b>Compile process:</b> Source (.c) → Preprocessor → Compiler → Object (.obj/.o) → Linker → Executable (.exe).</p>
+<p class="small"><b>Tokens:</b> Keywords (32 in C89: int, if, while, return...), Identifiers, Constants, Strings, Operators, Special symbols.</p></div>
+</div>
+<h4>Data Types</h4>
+<table class="small">
+<tr><th>Type</th><th>Size (typical 32/64-bit GCC)</th><th>Format specifier</th><th>Range / Example</th></tr>
+<tr><td>char</td><td>1 byte</td><td>%c</td><td>−128 to 127; 'A'</td></tr>
+<tr><td>int</td><td>4 bytes (Turbo C: 2 bytes)</td><td>%d</td><td>±2.1×10<sup>9</sup> approx (2-byte: −32768 to 32767)</td></tr>
+<tr><td>float</td><td>4 bytes</td><td>%f</td><td>~6 decimal digits precision; 3.14</td></tr>
+<tr><td>double</td><td>8 bytes</td><td>%lf</td><td>~15 digits precision</td></tr>
+</table>
+<p class="small"><b>void</b> = no value. Modifiers: short, long, signed, unsigned. <b>Derived:</b> array, pointer, function. <b>User-defined:</b> struct, union, enum, typedef. <b>Assignment statement:</b> <code>x = 10;</code> Compound: <code>x += 5;</code> (x = x + 5), <code>-=, *=, /=, %=</code>. Multiple: <code>a = b = c = 0;</code> (right to left).</p>
+
+<h3>6. Operators – Unary, Binary, Ternary</h3>
+<table class="small">
+<tr><th>Type</th><th>Operators</th><th>Example</th></tr>
+<tr><td><b>Unary</b> (1 operand)</td><td>++, --, unary −, !, ~, sizeof, &amp; (address), * (value at)</td><td>++a (pre: pehle badhao phir use), a++ (post: pehle use phir badhao)</td></tr>
+<tr><td><b>Binary</b> – Arithmetic</td><td>+ − * / %</td><td>7/2 = 3 (int division), 7%2 = 1</td></tr>
+<tr><td>Binary – Relational / Logical</td><td>&lt; &gt; &lt;= &gt;= == != / &amp;&amp; ||</td><td>result 1 (true) ya 0 (false); (a&gt;0 &amp;&amp; b&gt;0)</td></tr>
+<tr><td>Binary – Bitwise / Assignment</td><td>&amp; | ^ &lt;&lt; &gt;&gt; / = += −= *= /= %=</td><td>5&amp;3 = 1, 5|3 = 7, 5^3 = 6, 5&lt;&lt;1 = 10; a += 2</td></tr>
+<tr><td><b>Ternary</b> (3 operands)</td><td>condition ? expr1 : expr2</td><td>max = (a &gt; b) ? a : b;</td></tr>
+</table>
+<div class="box warn"><span class="lbl">Common Mistake</span> <code>=</code> (assignment) aur <code>==</code> (comparison) mein confusion. <code>if(x = 5)</code> hamesha true hoga! a=5: <code>b = a++;</code> → b=5, a=6; <code>b = ++a;</code> → b=6, a=6.</div>
+<p class="small"><b>Precedence (high → low):</b> () [] → Unary → * / % → + − → &lt;&lt; &gt;&gt; → &lt; &lt;= &gt; &gt;= → == != → &amp; → ^ → | → &amp;&amp; → || → ?: → = += …</p>
+
+<h3>7. Input-Output Statements &amp; Simple C Programs</h3>
+<p class="small"><b>Formatted:</b> <code>scanf("%d", &amp;x);</code> (address operator &amp; zaroori), <code>printf("%d", x);</code>. <b>Unformatted:</b> getchar(), putchar(), gets()/fgets(), puts(), getch().</p>
+<div class="grid2">
+<div><pre>/* Sum and average of 3 numbers */
+#include &lt;stdio.h&gt;
+int main() {
+    int a, b, c;  float avg;
+    scanf("%d %d %d", &amp;a, &amp;b, &amp;c);
+    avg = (a + b + c) / 3.0;
+    printf("Sum=%d Avg=%.2f\n", a+b+c, avg);
+    return 0;
+}</pre></div>
+<div><pre>/* Swap without third variable */
+int a = 10, b = 20;
+a = a + b;   /* a = 30 */
+b = a - b;   /* b = 10 */
+a = a - b;   /* a = 20 */
+/* Area of circle: area = 3.14*r*r; */
+/* C to F: f = c * 9.0 / 5 + 32;    */</pre></div>
+</div>
+
+<h3>8. Decision Making &amp; Branching</h3>
+<h4>if Statements</h4>
+<p>Types: simple <b>if</b>, <b>if-else</b>, <b>nested if</b>, <b>else-if ladder</b>.</p>
+<div class="grid2">
+<div><pre>/* if-else : even or odd */
+if (n % 2 == 0) printf("Even");
+else            printf("Odd");
+/* else-if ladder : grade */
+if (m &gt;= 75)      printf("A");
+else if (m &gt;= 60) printf("B");
+else if (m &gt;= 33) printf("C");
+else              printf("Fail");</pre></div>
+<div><pre>/* nested if : largest of three */
+if (a &gt; b) {
+    if (a &gt; c) printf("%d", a);
+    else       printf("%d", c);
+} else {
+    if (b &gt; c) printf("%d", b);
+    else       printf("%d", c);
+}</pre></div>
+</div>
+<h4>switch Statement</h4>
+<div class="grid2">
+<div><pre>switch (op) {
+  case '+': r = a + b; break;
+  case '-': r = a - b; break;
+  case '*': r = a * b; break;
+  default : printf("Invalid");
+}</pre></div>
+<div><p class="small">Expression ka value <b>int ya char</b> hona chahiye (float/string nahi). <b>break</b> na ho to <b>fall-through</b> – agle cases bhi execute. <b>default</b> optional hai. Duplicate case labels allowed nahi.</p></div>
+</div>
+<h4>Loops – for, while, do-while</h4>
+<table class="small">
+<tr><th>for</th><th>while</th><th>do-while</th></tr>
+<tr><td>for(init; cond; update)</td><td>while(cond) { ... }</td><td>do { ... } while(cond);</td></tr>
+<tr><td>Entry-controlled; jab iterations pata ho</td><td>Entry-controlled; condition pehle check</td><td><b>Exit-controlled</b>; body <b>kam se kam ek baar</b> chalegi</td></tr>
+</table>
+<div class="grid2">
+<div><pre>/* Factorial using for */
+long f = 1;
+for (i = 1; i &lt;= n; i++)  f = f * i;
+/* Reverse digits using while */
+while (n != 0) {
+    rev = rev * 10 + n % 10;  n = n / 10;
+}</pre></div>
+<div><pre>/* Sum of digits using do-while */
+do { sum += n % 10;  n /= 10; } while (n &gt; 0);
+/* break &amp; continue */
+for (i = 1; i &lt;= 10; i++) {
+    if (i == 3) continue;  /* skip 3    */
+    if (i == 6) break;     /* stop at 6 */
+    printf("%d ", i);      /* 1 2 4 5   */
+}</pre></div>
+</div>
+<p class="small"><b>break</b> = loop/switch se turant bahar; <b>continue</b> = current iteration skip, next par jao; <b>goto</b> = label par jump (avoid). Practice: prime, Fibonacci, palindrome, Armstrong number.</p>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT III</span> Arrays, Functions, Structures, Recursion, Pointers, Files</h2>
+
+<h3>1. Arrays</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Array</b> = same data type ke elements ka collection jo <b>contiguous memory locations</b> mein store hota hai aur ek common name + <b>index</b> (0 se start) se access hota hai.</div>
+<p class="small">Declaration: <code>int a[5] = {10, 20, 30, 40, 50};</code> → a[0]=10 ... a[4]=50. 2-D: <code>int m[3][3];</code> (row-major order mein store). String = char array ending with <code>'\0'</code>: <code>char s[] = "UIT";</code> (size 4). String functions (&lt;string.h&gt;): strlen, strcpy, strcat, strcmp, strrev (non-standard, Turbo C).</p>
+<div class="grid2">
+<div><pre>/* Largest element of array */
+int a[5] = {4, 9, 2, 7, 5}, i, max = a[0];
+for (i = 1; i &lt; 5; i++)
+    if (a[i] &gt; max) max = a[i];
+printf("Max = %d", max);   /* 9 */</pre></div>
+<div><pre>/* Matrix addition (2-D array) */
+for (i = 0; i &lt; 2; i++)
+  for (j = 0; j &lt; 2; j++)
+    c[i][j] = a[i][j] + b[i][j];
+/* Address of a[i] = Base + i*sizeof(type) */</pre></div>
+</div>
+
+<h3>2. Functions</h3>
+<p class="small"><b>Function</b> = self-contained block of code jo specific task karta hai. Benefits: modularity, reusability, easy debugging. Types: <b>Library</b> (printf, sqrt, strlen) aur <b>User-defined</b>. Parts: <b>declaration (prototype)</b>, <b>definition</b>, <b>call</b>.</p>
+<div class="grid2">
+<div><pre>#include &lt;stdio.h&gt;
+void swap(int *x, int *y);  /* prototype */
+int main() {
+    int a = 5, b = 8;
+    swap(&amp;a, &amp;b);           /* call by reference */
+    printf("%d %d", a, b);  /* 8 5 */
+    return 0;
+}
+void swap(int *x, int *y) {  /* definition */
+    int t = *x; *x = *y; *y = t;
+}</pre></div>
+<div><table class="small">
+<tr><th>Call by Value</th><th>Call by Reference</th></tr>
+<tr><td>Value ki copy pass hoti hai</td><td>Address (pointer) pass hota hai</td></tr>
+<tr><td>Original variable change nahi hota</td><td>Original variable change hota hai</td></tr>
+<tr><td>swap(a, b)</td><td>swap(&amp;a, &amp;b)</td></tr>
+</table>
+<p class="small">Categories: no arg-no return, arg-no return, no arg-return, arg-return.</p></div>
+</div>
+
+<h3>3. Structures (and Union)</h3>
+<p class="small"><b>Structure</b> = different data types ke related items ka user-defined group. Members ko <b>dot (.)</b> operator se access karte hain; pointer se <b>arrow (-&gt;)</b>.</p>
+<div class="grid2">
+<div><pre>struct student { int roll; char name[20];
+                 float marks; };
+struct student s1 = {1, "Ravi", 82.5};
+printf("%d %s", s1.roll, s1.name);
+struct student *p = &amp;s1;  printf("%d", p-&gt;roll);</pre></div>
+<div><table class="small">
+<tr><th>Structure</th><th>Union</th></tr>
+<tr><td>Har member ki alag memory</td><td>Sab members ek hi memory share</td></tr>
+<tr><td>Size ≥ sum of members</td><td>Size = largest member</td></tr>
+<tr><td>Sab members ek saath use (struct)</td><td>Ek time par ek member valid (union)</td></tr>
+</table></div>
+</div>
+
+<h3>4. Recursion</h3>
+<p class="small">Jab function <b>khud ko call</b> kare = recursion. Har recursive function mein <b>base condition</b> (termination) zaroori, warna infinite calls → stack overflow. Internally <b>stack</b> use hota hai.</p>
+<div class="grid2">
+<div><pre>/* Factorial: n! = n * (n-1)! */
+long fact(int n) {
+    if (n == 0 || n == 1) return 1;  /* base */
+    return n * fact(n - 1);
+}
+/* fact(4) = 4*3*2*1 = 24 */</pre></div>
+<div><pre>/* Fibonacci: 0 1 1 2 3 5 8 ... */
+int fib(int n) {
+    if (n &lt;= 1) return n;         /* base */
+    return fib(n - 1) + fib(n - 2);
+}</pre></div>
+</div>
+<p class="small"><b>Recursion vs Iteration:</b> recursion – code chhota, elegant, par zyada memory (stack) aur slow; iteration – loop based, fast, kam memory.</p>
+
+<h3>5. Pointers</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Pointer</b> ek variable hai jo doosre variable ka <b>memory address</b> store karta hai. <code>&amp;</code> = address-of operator, <code>*</code> = dereference (value at address).</div>
+<div class="grid2">
+<div><pre>int x = 10;
+int *p = &amp;x;   /* p stores address of x */
+printf("%d %d", x, *p);  /* 10 10 */
+printf("%p", (void*)p);  /* address of x */
+*p = 20;            /* x becomes 20 */
+int **q = &amp;p;       /* pointer to pointer */</pre></div>
+<div><ul class="small">
+<li><b>Pointer arithmetic:</b> p++ next element par jata hai (sizeof(type) bytes aage).</li>
+<li><b>Array &amp; pointer:</b> a == &amp;a[0]; a[i] ≡ *(a + i).</li>
+<li><b>NULL pointer:</b> kuch point nahi karta (int *p = NULL;).</li>
+<li><b>void pointer:</b> generic, kisi bhi type ka address.</li>
+<li><b>Dangling pointer:</b> free ki hui memory ko point kare.</li>
+<li>Dynamic memory: malloc(), calloc(), realloc(), free() (&lt;stdlib.h&gt;).</li>
+</ul></div>
+</div>
+
+<h3>6. Files and File Handling</h3>
+<p class="small">File = secondary storage par permanent data. Program khatam hone ke baad bhi data rehta hai. <code>FILE *fp;</code> pointer use hota hai (&lt;stdio.h&gt;). Types: <b>Text file</b> aur <b>Binary file</b>.</p>
+<table class="small">
+<tr><th>Mode</th><th>Meaning</th><th>Function</th><th>Kaam</th></tr>
+<tr><td>"r"</td><td>read (file honi chahiye, warna NULL)</td><td>fopen(), fclose()</td><td>open / close</td></tr>
+<tr><td>"w"</td><td>write (nayi banegi / purana data erase)</td><td>fprintf(), fscanf()</td><td>formatted write/read</td></tr>
+<tr><td>"a"</td><td>append (end mein add)</td><td>fputc(), fgetc()</td><td>character write/read</td></tr>
+<tr><td>"r+", "w+", "a+"</td><td>read + write</td><td>fputs(), fgets()</td><td>string write/read</td></tr>
+<tr><td>"rb", "wb"</td><td>binary mode</td><td>fread(), fwrite(), fseek(), ftell(), rewind(), feof()</td><td>block I/O, positioning</td></tr>
+</table>
+<div class="grid2">
+<div><pre>/* Write to a file */
+FILE *fp = fopen("data.txt", "w");
+if (fp == NULL) { printf("Error"); return 1; }
+fprintf(fp, "Roll=%d\n", 101);
+fclose(fp);</pre></div>
+<div><pre>/* Read file character by character */
+FILE *fp = fopen("data.txt", "r");  int ch;
+while ((ch = fgetc(fp)) != EOF) putchar(ch);
+fclose(fp);</pre></div>
+</div>
+
+<h3>7. Storage Classes &amp; Scope of Variables</h3>
+<table class="small">
+<tr><th>Storage Class</th><th>Storage</th><th>Default value</th><th>Scope</th><th>Lifetime</th></tr>
+<tr><td><b>auto</b> (default local)</td><td>Memory (stack)</td><td>Garbage</td><td>Block (local)</td><td>Block khatam tak</td></tr>
+<tr><td><b>register</b></td><td>CPU register (agar free ho)</td><td>Garbage</td><td>Block (local)</td><td>Block khatam tak; &amp; address nahi le sakte</td></tr>
+<tr><td><b>static</b></td><td>Memory (data segment)</td><td>Zero</td><td>Block (local) / file (global static)</td><td>Poore program tak – value calls ke beech retain</td></tr>
+<tr><td><b>extern</b></td><td>Memory</td><td>Zero</td><td>Global (multiple files)</td><td>Poore program tak</td></tr>
+</table>
+<div class="grid2">
+<div><pre>void count() {
+    static int c = 0;  /* sirf ek baar init */
+    c++;  printf("%d ", c);
+}
+/* count() 3 baar call: output 1 2 3 */
+/* agar 'auto int c' hota: 1 1 1 */</pre></div>
+<div><p><b>Scope of variables:</b> <b>Local</b> – function/block ke andar declare, wahin visible. <b>Global</b> – sab functions ke bahar declare, poore program mein visible. <b>Block scope</b> { }, <b>function scope</b> (labels), <b>file scope</b>. Same naam ho to local, global ko <b>hide</b> kar deta hai.</p></div>
+</div>
+
+<h3>8. Basic Concepts of OOPs (Revision)</h3>
+<p class="small">OOP ke basic concepts: <b>Class, Object, Encapsulation, Abstraction, Data hiding, Inheritance, Polymorphism, Dynamic binding, Message passing</b> (details Unit II mein). C procedural hai; OOP <b>C++</b> mein implement hota hai. C ka <b>struct</b> sirf data rakhta hai, C++ <b>class</b> data + functions + access control rakhti hai – ex: <code>class Rect { private: int l, b; public: int area() { return l*b; } };</code> aur <code>Rect r1;</code> (r1 = object).</p>
+
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT IV</span> Computer Networking &amp; Computer Security</h2>
+
+<h3>1. Computer Networking – Introduction</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Computer network</b> = do ya zyada computers/devices ka interconnection (wired ya wireless) jisse wo <b>data, resources (printer, files) aur information share</b> kar sakein.</div>
+<p class="small"><b>Types by area:</b> <b>PAN</b> (~10 m, Bluetooth), <b>LAN</b> (building/campus, Ethernet), <b>MAN</b> (city, cable TV), <b>WAN</b> (country/world, Internet). <b>Topologies:</b> Bus, Star (central hub/switch), Ring, Mesh (n(n−1)/2 links), Tree, Hybrid. <b>Media:</b> Twisted pair, Coaxial, Optical fibre (guided); Radio, Microwave, Infrared, Satellite (unguided).</p>
+
+<h3>2. ISO-OSI Reference Model (7 Layers)</h3>
+<table class="small">
+<tr><th>#</th><th>Layer</th><th>Main Function</th><th>Data unit / Device / Protocol</th></tr>
+<tr><td>7</td><td>Application</td><td>User ko network services (email, browsing)</td><td>HTTP, FTP, SMTP, DNS</td></tr>
+<tr><td>6</td><td>Presentation</td><td>Translation, encryption, compression</td><td>JPEG, SSL/TLS, ASCII</td></tr>
+<tr><td>5</td><td>Session</td><td>Session establish, maintain, terminate; synchronization</td><td>RPC, NetBIOS</td></tr>
+<tr><td>4</td><td>Transport</td><td>End-to-end delivery, segmentation, flow &amp; error control</td><td>Segment; TCP, UDP</td></tr>
+<tr><td>3</td><td>Network</td><td>Logical addressing (IP), routing</td><td>Packet; Router; IP</td></tr>
+<tr><td>2</td><td>Data Link</td><td>Framing, physical (MAC) addressing, error detection</td><td>Frame; Switch, Bridge</td></tr>
+<tr><td>1</td><td>Physical</td><td>Bits ka transmission, cables, signals</td><td>Bits; Hub, Repeater</td></tr>
+</table>
+<p class="small"><b>Yaad Rakho</b> (1→7): "<b>P</b>lease <b>D</b>o <b>N</b>ot <b>T</b>hrow <b>S</b>ausage <b>P</b>izza <b>A</b>way". OSI ISO ne 1984 mein publish kiya.</p>
+
+<h3>3. Internetworking Concepts &amp; Devices</h3>
+<p class="small"><b>Internetworking</b> = alag-alag networks (LAN, WAN, different technologies) ko devices (router, gateway) se jodkar ek bada network banana – jaise <b>Internet</b> = "network of networks".</p>
+<table class="small">
+<tr><th>Device</th><th>OSI Layer</th><th>Kaam</th></tr>
+<tr><td>Repeater / Hub</td><td>Physical</td><td>Repeater: weak signal regenerate; Hub: data sab ports par broadcast (dumb)</td></tr>
+<tr><td>Bridge / Switch</td><td>Data Link</td><td>MAC address se filter; switch sirf destination port par bhejta hai (smart hub)</td></tr>
+<tr><td>Router</td><td>Network</td><td>Different networks jodta hai, IP address se best path (routing)</td></tr>
+<tr><td>Gateway</td><td>All layers</td><td>Different protocols wale networks jodta hai (protocol converter)</td></tr>
+<tr><td>Modem / NIC</td><td>Physical / DL</td><td>Modem: digital ⇄ analog; NIC: network card with unique 48-bit MAC</td></tr>
+</table>
+
+<h3>4. TCP/IP Model</h3>
+<div class="grid2">
+<div><table class="small">
+<tr><th>TCP/IP Layer</th><th>OSI equivalent</th><th>Protocols</th></tr>
+<tr><td>Application</td><td>Application + Presentation + Session</td><td>HTTP, FTP, SMTP, DNS, Telnet</td></tr>
+<tr><td>Transport</td><td>Transport</td><td>TCP, UDP</td></tr>
+<tr><td>Internet</td><td>Network</td><td>IP, ICMP, ARP</td></tr>
+<tr><td>Network Access (Link)</td><td>Data Link + Physical</td><td>Ethernet, Wi-Fi</td></tr>
+</table></div>
+<div><table class="small">
+<tr><th>OSI</th><th>TCP/IP</th></tr>
+<tr><td>7 layers; theoretical reference model</td><td>4 layers; practical, Internet par use</td></tr>
+<tr><td>Model pehle, protocols baad mein</td><td>Protocols pehle, model baad mein</td></tr>
+<tr><td>Strict layering</td><td>Loosely layered</td></tr>
+</table>
+<p class="small"><b>TCP</b> = connection-oriented, reliable; <b>UDP</b> = connectionless, fast (video, DNS).</p></div>
+</div>
+
+<h3>5. Internet, WWW &amp; Computer Communication</h3>
+<ul class="small">
+<li><b>Internet:</b> worldwide network of networks, TCP/IP use karta hai; origin ARPANET (1969). Services: email, WWW, FTP, chat, video calling, e-commerce. <b>IP address</b> (IPv4 = 32-bit, e.g. 192.168.1.1; IPv6 = 128-bit). <b>DNS</b> domain name ko IP mein convert karta hai. <b>ISP</b> = Internet Service Provider (BSNL, Jio).</li>
+<li><b>WWW (World Wide Web):</b> Tim Berners-Lee (1989, CERN). Internet par hyperlinked web pages ka collection; <b>HTTP/HTTPS</b> protocol, <b>HTML</b> language, <b>URL</b> address (https://www.bubhopal.ac.in), <b>browser</b> (Chrome, Firefox), <b>web server</b>, search engine (Google). <b>Internet ≠ WWW</b> – WWW internet ki ek service hai.</li>
+<li><b>Computer Communication:</b> components – <b>Sender, Receiver, Message, Medium, Protocol</b>. Modes: <b>Simplex</b> (one-way – keyboard, TV), <b>Half-duplex</b> (dono taraf, ek time ek – walkie-talkie), <b>Full-duplex</b> (dono taraf ek saath – phone). Bandwidth (bps), Analog vs Digital signal, Serial vs Parallel transmission.</li>
+</ul>
+
+<h3>6. Computer Security Basics – Malicious Software</h3>
+<table class="small">
+<tr><th>Threat</th><th>Meaning</th><th>Key feature</th></tr>
+<tr><td><b>Malware</b></td><td>Malicious software ka general naam</td><td>Virus, worm, trojan, spyware, ransomware</td></tr>
+<tr><td><b>Virus</b></td><td>Files/programs se attach hokar failta hai</td><td>Host program + user action chahiye</td></tr>
+<tr><td><b>Worm</b></td><td>Network se khud self-replicate karta hai</td><td>Host nahi chahiye (WannaCry, ILOVEYOU)</td></tr>
+<tr><td><b>Trojan Horse</b></td><td>Useful software jaisa dikhe, andar malicious code</td><td>Self-replicate nahi; backdoor kholta hai</td></tr>
+<tr><td><b>Spyware</b></td><td>Chupke se activity/passwords collect kare</td><td>Keylogger, adware</td></tr>
+<tr><td><b>Anti-spyware</b></td><td>Spyware detect, block, remove kare</td><td>Windows Defender, Malwarebytes</td></tr>
+</table>
+
+<h3>7. Cyber Attacks</h3>
+<div class="cols2 small">
+<p><b>Money Laundering (cyber):</b> illegal (black) money ko online transactions, fake accounts, crypto, shell companies se legal dikhana.</p>
+<p><b>Email Spoofing:</b> email ka "From" address fake karna taaki lage trusted source se aaya hai; phishing ke liye use.</p>
+<p><b>DoS (Denial of Service):</b> server ko fake requests se flood karna taaki genuine users ko service na mile. <b>DDoS</b> = many computers (botnet) se.</p>
+<p><b>Cyber Stalking:</b> internet/email/social media se kisi ko baar-baar harass, follow ya threaten karna.</p>
+<p><b>Logic Bomb:</b> program mein chhupa code jo specific condition/date aane par trigger hokar damage kare (ex: employee ke nikaalne par data delete).</p>
+<p><b>Hacking:</b> bina permission computer/network mein unauthorized access. White hat (ethical), Black hat (criminal), Grey hat.</p>
+<p><b>Spamming:</b> bulk unsolicited (bina maange) emails/messages bhejna – ads, scams, malware links.</p>
+<p><b>Phishing:</b> fake website/email se password, OTP, card details churana.</p>
+</div>
+
+<h3>8. Security Measures, Firewall, Ethics, Cyber Laws</h3>
+<ul class="small">
+<li><b>Security measures:</b> strong passwords, <b>2-factor authentication</b>, antivirus/anti-spyware, <b>encryption</b> (plain text → cipher text), regular <b>backup</b>, software updates/patches, access control, digital signature, biometric.</li>
+<li><b>Firewall:</b> hardware/software security system jo <b>incoming &amp; outgoing network traffic</b> ko predefined rules ke according monitor aur filter karta hai – trusted internal network aur untrusted internet ke beech "wall". Types: packet filtering, stateful inspection, proxy (application gateway).</li>
+<li><b>Computer Ethics &amp; Good Practices:</b> doosre ki files/privacy respect karo, piracy na karo (licensed software), plagiarism na karo, copyright/IPR respect, kisi ko harm na karo, fake news share na karo (Ten Commandments of Computer Ethics).</li>
+<li><b>Cyber Laws – IT Act 2000 (India):</b> 17 Oct 2000 se lagu; <b>electronic records &amp; digital signatures</b> ko legal recognition, e-commerce ko support, cyber crimes ki punishment. Amendment 2008. Important sections:
+<table class="small">
+<tr><th>Section</th><th>Offence</th><th>Section</th><th>Offence</th></tr>
+<tr><td>43</td><td>Unauthorised access/damage – compensation</td><td>66C</td><td>Identity theft (password misuse)</td></tr>
+<tr><td>65</td><td>Tampering with source code</td><td>66D</td><td>Cheating by personation (online fraud)</td></tr>
+<tr><td>66</td><td>Computer related offences (hacking)</td><td>66E / 67</td><td>Privacy violation / obscene content</td></tr>
+</table></li>
+<li><b>Good Security Habits:</b> unknown links/attachments na kholo, OTP/password share na karo, public Wi-Fi par banking avoid, HTTPS (lock icon) check, logout karo, screen lock, software update, alag-alag passwords, regular backup.</li>
+</ul>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT V</span> Database Management System &amp; Cloud Computing</h2>
+
+<h3>1. DBMS – Introduction</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Data</b> = raw facts; <b>Database</b> = logically related data ka organized collection; <b>DBMS</b> = software jo database ko create, store, retrieve, update, manage karne deta hai (MySQL, Oracle, MS Access).</div>
+
+<h3>2. File-Oriented Approach vs Database Approach</h3>
+<table class="small">
+<tr><th>File-Oriented System</th><th>Database Approach (DBMS)</th></tr>
+<tr><td>Data <b>redundancy</b> (same data many files mein) → <b>inconsistency</b></td><td>Redundancy controlled (centralized) → consistency</td></tr>
+<tr><td>Har query ke liye naya program; data isolation</td><td>Query language (SQL) se easy access, data sharing</td></tr>
+<tr><td>Poor security, no concurrency control, no backup/recovery</td><td>Security, integrity constraints, concurrency control, backup &amp; recovery</td></tr>
+<tr><td>Cheap, simple</td><td>Costly, complex</td></tr>
+</table>
+
+<h3>3. Data Models <span class="small" style="font-weight:normal">– data, relationships aur constraints describe karne ka conceptual tool</span></h3>
+<table class="small">
+<tr><th>Model</th><th>Structure</th><th>Note</th></tr>
+<tr><td>Hierarchical</td><td>Tree (parent-child), 1:N; child ka ek hi parent</td><td>IBM IMS</td></tr>
+<tr><td>Network</td><td>Graph; record ke multiple parents (M:N)</td><td>CODASYL, IDMS</td></tr>
+<tr><td>Relational</td><td>Tables – rows (tuples) &amp; columns (attributes)</td><td>E.F. Codd (1970); MySQL, Oracle</td></tr>
+<tr><td>E-R Model</td><td>Entity (rectangle), Attribute (ellipse), Relationship (diamond)</td><td>P. Chen (1976); DB design</td></tr>
+<tr><td>Object-Oriented</td><td>Data objects + methods</td><td>Multimedia, CAD</td></tr>
+</table>
+
+<h3>4. Architecture of Database System (Three-Schema) &amp; Data Independence</h3>
+<div class="grid2">
+<div><figure><svg viewBox="0 0 260 135" width="250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial" font-size="10">
+<rect x="5" y="5" width="60" height="22" rx="3" fill="#eef4fc" stroke="#1c2230"/><text x="35" y="20" text-anchor="middle" font-size="9">View 1</text>
+<rect x="85" y="5" width="60" height="22" rx="3" fill="#eef4fc" stroke="#1c2230"/><text x="115" y="20" text-anchor="middle" font-size="9">View 2</text>
+<rect x="165" y="5" width="60" height="22" rx="3" fill="#eef4fc" stroke="#1c2230"/><text x="195" y="20" text-anchor="middle" font-size="9">View n</text>
+<line x1="35" y1="27" x2="100" y2="55" stroke="#1c2230"/><line x1="115" y1="27" x2="115" y2="55" stroke="#1c2230"/><line x1="195" y1="27" x2="130" y2="55" stroke="#1c2230"/>
+<rect x="45" y="55" width="140" height="24" rx="3" fill="#fff8e6" stroke="#1c2230"/><text x="115" y="71" text-anchor="middle">Conceptual Schema</text>
+<line x1="115" y1="79" x2="115" y2="100" stroke="#1c2230"/>
+<rect x="45" y="100" width="140" height="24" rx="3" fill="#eaf7ef" stroke="#1c2230"/><text x="115" y="116" text-anchor="middle">Internal Schema</text>
+<text x="232" y="20" font-size="8" fill="#1f4e8c">External</text>
+<text x="178" y="47" font-size="8" fill="#1f4e8c">Logical DI</text>
+<text x="190" y="71" font-size="8" fill="#1f4e8c">Conceptual</text>
+<text x="120" y="93" font-size="8" fill="#1f4e8c">Physical DI</text>
+<text x="190" y="116" font-size="8" fill="#1f4e8c">Internal</text>
+</svg><figcaption>ANSI/SPARC three-schema architecture</figcaption></figure></div>
+<div><ul class="small">
+<li><b>External level (View):</b> individual user ka view – sirf required data dikhta hai.</li>
+<li><b>Conceptual level (Logical):</b> poore database ka logical structure – entities, relationships, constraints (DBA define karta hai).</li>
+<li><b>Internal level (Physical):</b> data disk par actually kaise store hai – file organisation, indexes.</li>
+<li><b>Data Independence</b> = lower level schema change ho to upper level change na karna pade:</li>
+<li><b>Logical data independence:</b> conceptual schema change (naya column add) → external views change nahi.</li>
+<li><b>Physical data independence:</b> internal schema change (storage, index) → conceptual schema same.</li>
+</ul></div>
+</div>
+
+<h3>5. Data Dictionary, DBA, Primary Key</h3>
+<ul class="small">
+<li><b>Data Dictionary:</b> "data about data" (<b>metadata</b>) store karta hai – table/attribute names, data types, constraints, users, access rights (system catalog).</li>
+<li><b>DBA (Database Administrator):</b> person jo poore database par central control rakhta hai. Roles: schema definition, storage &amp; access methods, users ko <b>authorization</b>, integrity constraints, <b>backup &amp; recovery</b>, performance tuning.</li>
+<li><b>Keys:</b> <b>Primary Key</b> = attribute(s) jo table ki har row ko <b>uniquely identify</b> kare; <b>NULL nahi</b> ho sakta, <b>duplicate nahi</b>, ek table mein ek hi primary key (ex: Roll_No). Others: Super, Candidate, Alternate, Composite, <b>Foreign key</b> (doosri table ki primary key ko refer kare).</li>
+</ul>
+
+<h3>6. DDL and DML</h3>
+<table class="small">
+<tr><th>DDL – Data Definition Language</th><th>DML – Data Manipulation Language</th></tr>
+<tr><td>Database ka <b>structure (schema)</b> define/change karta hai</td><td>Database ke andar ke <b>data</b> ko access/modify karta hai</td></tr>
+<tr><td>CREATE, ALTER, DROP, TRUNCATE, RENAME</td><td>SELECT, INSERT, UPDATE, DELETE</td></tr>
+<tr><td>Auto-commit (rollback nahi hota)</td><td>Rollback possible</td></tr>
+<tr><td colspan="2">Others: <b>DCL</b> (GRANT, REVOKE), <b>TCL</b> (COMMIT, ROLLBACK, SAVEPOINT)</td></tr>
+</table>
+<pre>CREATE TABLE Student (Roll INT PRIMARY KEY, Name VARCHAR(20), Marks INT);   -- DDL
+INSERT INTO Student VALUES (101, 'Amit', 78);                              -- DML
+UPDATE Student SET Marks = 82 WHERE Roll = 101;                            -- DML
+SELECT Name, Marks FROM Student WHERE Marks &gt; 60;                          -- DML</pre>
+
+
+<h3>7. Cloud Computing</h3>
+<div class="box def"><span class="lbl">Definition</span> <b>Cloud Computing</b> = internet ke through computing resources (servers, storage, databases, software, networking) ko <b>on-demand</b>, <b>pay-as-you-go</b> basis par provide karna. NIST characteristics: <b>On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service</b>. Ex: AWS, Azure.</div>
+<p class="small"><b>Cloud Infrastructure:</b> data centre hardware (servers, storage, network) + <b>virtualization</b> (hypervisor – ek physical server par many virtual machines) + management software. Front-end (browser) internet se back-end se judta hai.</p>
+<h4>Service Models</h4>
+<table class="small">
+<tr><th>Model</th><th>Provider deta hai</th><th>User manage karta hai</th><th>Example</th></tr>
+<tr><td><b>IaaS</b> – Infrastructure</td><td>VMs, storage, network</td><td>OS, runtime, apps, data</td><td>AWS EC2, Azure VM</td></tr>
+<tr><td><b>PaaS</b> – Platform</td><td>Infra + OS + runtime/dev tools</td><td>Apps &amp; data</td><td>Google App Engine, Heroku</td></tr>
+<tr><td><b>SaaS</b> – Software</td><td>Ready-to-use software</td><td>Sirf use karo (control: IaaS &gt; PaaS &gt; SaaS)</td><td>Gmail, Google Docs, Zoom</td></tr>
+</table>
+
+<h4>Deployment Models</h4>
+<table class="small">
+<tr><th>Model</th><th>Description</th><th>Example</th></tr>
+<tr><td><b>Public</b></td><td>Third-party, sabke liye open; low cost, less control</td><td>AWS, Azure, Google Cloud</td></tr>
+<tr><td><b>Private</b></td><td>Ek organization ke liye dedicated; secure, costly</td><td>Bank/defence data centre</td></tr>
+<tr><td><b>Community</b></td><td>Same need wali kai organizations share; cost shared</td><td>Govt. departments, hospitals</td></tr>
+<tr><td><b>Hybrid</b></td><td>Public + private; sensitive data private mein</td><td>Payment private, website public</td></tr>
+</table>
+<h4>Pros and Cons of Cloud Computing</h4>
+<div class="grid2 small">
+<div><b>Pros:</b> low cost (pay-per-use), scalability/elasticity, anywhere access, auto updates, easy backup &amp; recovery.</div>
+<div><b>Cons:</b> internet dependency, security/privacy risk, limited control, vendor lock-in, downtime risk.</div>
+</div>
+</div>

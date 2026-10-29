@@ -1,0 +1,550 @@
+<!-- BE-205 Engineering Graphics & CAD : Hinglish short notes fragment -->
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT I</span> Introduction, Scales, Conics &amp; Special Curves</h2>
+
+<h3>1. Engineering Drawing – Need &amp; Classification</h3>
+<div class="box def"><span class="lbl">Definition</span> Engineering drawing ek <b>graphical language</b> hai jisme kisi object ka shape, size, material aur manufacturing detail lines, symbols aur notes se exact tarike se dikhaya jata hai. Isko "language of engineers" kehte hain – har country ka engineer same convention padh leta hai.</div>
+<p><b>Need:</b> idea ko accurately communicate karna, manufacturing / construction ke liye exact size dena, records maintain karna, design check karna aur ambiguity khatam karna (words se 3D shape describe karna mushkil hai).</p>
+<table>
+<tr><th>Basis</th><th>Types</th></tr>
+<tr><td>Nature / purpose</td><td>Artistic drawing (feelings, art) vs <b>Engineering drawing</b> (technical, exact)</td></tr>
+<tr><td>Field</td><td>Machine drawing, Civil / building drawing, Electrical &amp; electronic drawing, Structural, Production drawing</td></tr>
+<tr><td>Method</td><td>Freehand sketch, Instrument drawing, Computer aided drawing (CAD)</td></tr>
+<tr><td>Projection</td><td>Orthographic (multi-view) vs Pictorial (isometric, oblique, perspective)</td></tr>
+<tr><td>Use in industry</td><td>Layout / assembly drawing, detail (part) drawing, working drawing, patent drawing</td></tr>
+</table>
+
+<h3>2. Drawing Instruments &amp; Uses</h3>
+<div class="cols2 small">
+<p><b>Drawing board</b> – soft wood board, sheet fix karne ke liye (D0–D3 sizes).</p>
+<p><b>Mini-drafter</b> – T-square + set-squares + protractor ka kaam ek saath; parallel lines kisi bhi angle par.</p>
+<p><b>T-square</b> – horizontal parallel lines; working edge par set-square slide hota hai.</p>
+<p><b>Set-squares</b> – 45° and 30°–60°; vertical / inclined lines (15° multiples).</p>
+<p><b>Protractor</b> – angles measure/mark karna.</p>
+<p><b>Compass &amp; divider</b> – compass se circles/arcs; divider se distance transfer / line ko equal parts mein divide karna.</p>
+<p><b>Bow compass / bow divider</b> – chhote circles (dia &lt; 25 mm) ke liye.</p>
+<p><b>Scales</b> – plastic/cardboard scales M1–M8 (e.g. M1 = 1:1 &amp; 1:2.5).</p>
+<p><b>French curves</b> – irregular smooth curves (conics, cycloid) draw karne ke liye.</p>
+<p><b>Pencils</b> – grades: 2H/H (construction, thin lines), HB (lettering, outlines). H = hard, B = black/soft.</p>
+<p><b>Others</b> – eraser, erasing shield, drawing clips/pins, sand paper block, templates.</p>
+</div>
+
+<h3>3. Indian Standards (BIS SP-46 : 2003) &amp; Sheet Layout</h3>
+<p>Bureau of Indian Standards ne <b>SP-46</b> "Engineering Drawing Practice for Schools &amp; Colleges" diya hai (ISO based). Isme sheet size, lines, lettering, dimensioning, projection method (first angle preferred) sab standard kiye gaye hain.</p>
+<div class="grid2">
+<div>
+<table>
+<tr><th>Designation</th><th>Size (mm)</th><th>Border</th></tr>
+<tr><td>A0</td><td>841 × 1189 (area 1 m²)</td><td>20</td></tr>
+<tr><td>A1</td><td>594 × 841</td><td>20</td></tr>
+<tr><td>A2</td><td>420 × 594</td><td>10</td></tr>
+<tr><td>A3</td><td>297 × 420</td><td>10</td></tr>
+<tr><td>A4</td><td>210 × 297</td><td>10</td></tr>
+</table>
+<p class="small">Har next size = pichle ka half; sides ka ratio 1 : √2.</p>
+<figure><svg viewBox="0 0 220 96" width="220">
+<rect x="4" y="4" width="212" height="88" fill="none" stroke="#9aa5b5" stroke-width=".8"/>
+<rect x="28" y="12" width="180" height="72" fill="none" stroke="#1c2230" stroke-width="1.6"/>
+<rect x="130" y="60" width="78" height="24" fill="#eef4fc" stroke="#1f4e8c" stroke-width="1"/>
+<line x1="130" y1="68" x2="208" y2="68" stroke="#1f4e8c" stroke-width=".5"/><line x1="170" y1="68" x2="170" y2="84" stroke="#1f4e8c" stroke-width=".5"/>
+<line x1="118" y1="4" x2="118" y2="12" stroke="#1c2230"/><line x1="118" y1="84" x2="118" y2="92" stroke="#1c2230"/>
+<g font-size="8" fill="#1c2230" font-family="Segoe UI">
+<text x="138" y="66" fill="#1f4e8c">TITLE BLOCK</text><text x="6" y="48" font-size="6.5">filing</text><text x="6" y="57" font-size="6.5">margin</text>
+<text x="60" y="45">Drawing space</text><text x="122" y="10" font-size="7">centring mark</text><text x="32" y="22" font-size="7">border line</text>
+</g></svg><figcaption>Sheet layout (trimmed sheet, border, title block)</figcaption></figure>
+</div>
+<div>
+<p><b>Layout of sheet:</b></p>
+<ul class="small">
+<li><b>Border lines</b> + left side par ~20 mm <b>filing margin</b>.</li>
+<li><b>Title block</b> – bottom right corner (approx 185 × 65 mm): title, drawing no., scale, projection symbol, name, roll no., date, checked by.</li>
+<li><b>Grid reference / zones</b>, <b>orientation &amp; centring marks</b>, <b>trimming marks</b>.</li>
+<li><b>Revision panel</b> and parts list (assembly drawing mein) title block ke upar.</li>
+</ul>
+</div>
+</div>
+
+<h3>4. Conventions – Types of Lines</h3>
+<div class="grid2">
+<table class="small">
+<tr><th>Line</th><th>Name</th><th>Use</th></tr>
+<tr><td>A</td><td>Continuous thick</td><td>Visible outlines &amp; edges</td></tr>
+<tr><td>B</td><td>Continuous thin</td><td>Dimension, extension, leader, hatching lines</td></tr>
+<tr><td>C</td><td>Thin freehand</td><td>Short break lines</td></tr>
+<tr><td>D</td><td>Thin zig-zag</td><td>Long break lines</td></tr>
+<tr><td>E / F</td><td>Dashed thick / thin</td><td>Hidden outlines &amp; edges</td></tr>
+</table>
+<table class="small">
+<tr><th>Line</th><th>Name</th><th>Use</th></tr>
+<tr><td>G</td><td>Thin chain (dash-dot)</td><td>Centre lines, axis, pitch circle, symmetry</td></tr>
+<tr><td>H</td><td>Chain thin, thick at ends &amp; turns</td><td>Cutting plane line</td></tr>
+<tr><td>J</td><td>Chain thick</td><td>Surfaces with special treatment</td></tr>
+<tr><td>K</td><td>Chain thin double-dashed</td><td>Adjacent parts, alternative positions of moving parts</td></tr>
+</table>
+</div>
+<p class="small">Conventions mein materials ki hatching (steel, brass, wood, concrete), breaks of shafts/pipes, aur standard parts (springs, threads, gears) ke conventional symbols bhi aate hain. Thick : thin line width ratio ≈ 2 : 1 (e.g. 0.7 &amp; 0.35 mm).</p>
+
+<h3>5. Technical Lettering</h3>
+<ul>
+<li>Single-stroke capital letters, <b>vertical</b> ya <b>inclined (75° to horizontal)</b>.</li>
+<li><b>Type A</b>: stroke thickness d = h/14 (thin, condensed). <b>Type B</b>: d = h/10 (most used in schools).</li>
+<li>Standard heights h: <b>2.5, 3.5, 5, 7, 10, 14, 20 mm</b>. Drawing no./title: 7–10 mm; sub-titles: 5–7 mm; dimensions/notes: 3.5–5 mm.</li>
+<li>Spacing between characters ≈ 2d (Type B: 0.2h), words ≈ 6d, lines ≈ 14d (baseline to baseline). Guide lines thin (2H) lagao.</li>
+</ul>
+
+<h3>6. Dimensioning</h3>
+<p>Dimensioning = drawing par size aur location ke numerical values + notes dena taaki part bina scale lagaye ban sake.</p>
+<div class="grid2">
+<div>
+<p><b>Elements:</b> extension (projection) line – object se ~1 mm gap, dimension line se ~2–3 mm aage; <b>dimension line</b> (thin, arrowheads ke saath); <b>arrowhead</b> (length : width = 3 : 1, closed &amp; filled); <b>leader line</b> (notes ke liye); dimension figure (value, mm mein, unit nahi likhte).</p>
+<p><b>Types:</b> size dimensions (length, dia) &amp; location dimensions (centres, holes).</p>
+</div>
+<div>
+<p><b>Systems:</b> (1) <b>Aligned</b> – values dimension line ke upar, bottom ya right side se padhi jaayein. (2) <b>Unidirectional</b> – sab values horizontal, sirf bottom se padhi jaayein (dimension line beech se tooti).</p>
+<p><b>Arrangement:</b> chain (series), parallel, combined, progressive (from a datum) / co-ordinate.</p>
+</div>
+</div>
+<div class="box tip"><span class="lbl">Exam Tip</span> Rules: har dimension sirf ek baar; hidden lines par dimension mat do; centre line / outline ko dimension line mat banao; dia ke liye Ø, radius ke liye R, square ke liye □; smaller dimension andar, larger bahar (lines cross na karein).</div>
+
+<h3>7. Scales</h3>
+<div class="box formula"><span class="lbl">Formula</span><span class="eq">R.F. = <span class="frac"><span>Length on drawing</span><span>Actual length of object</span></span> (same units) ; &nbsp; Length of scale = R.F. × Max. length to be measured</span></div>
+<p><b>Types by RF:</b> full size (1:1), reducing scale (1:2, 1:5, 1:10 …; RF &lt; 1), enlarging scale (2:1, 5:1 …; RF &gt; 1). Scale ka naam drawing par likhna zaroori.</p>
+<h4>(a) Plain scale – sirf 2 units (e.g. m &amp; dm)</h4>
+<ol class="small">
+<li>RF aur max length se scale length nikaalo; line draw karo (normally 150 mm ke aas-paas).</li>
+<li>Usko main units mein divide karo; <b>zero</b> first division ke end par likho (right side numbering: 1, 2, 3…).</li>
+<li>First division ko sub-units mein divide karo (left side numbering).</li>
+<li>Scale ki width ~10 mm rakho, name, RF aur units likho; required length mark karke dikhao.</li>
+</ol>
+<div class="box tip"><span class="lbl">Example</span> RF = 1/60, m &amp; dm padhne hain, max 6 m. Scale length = 600 cm × 1/60 = <b>10 cm</b>. 10 cm ko 6 equal parts (each = 1 m) mein bato; first part ko 10 parts (each = 1 dm). 3.7 m dikhane ke liye: zero se right 3 main divisions + zero se left 7 sub-divisions.</div>
+<h4>(b) Diagonal scale – 3 units (e.g. m, dm, cm) – based on similar triangles</h4>
+<div class="grid2">
+<div>
+<figure><svg viewBox="0 0 240 120" width="240">
+<g stroke="#1c2230" fill="none" stroke-width="1">
+<rect x="20" y="10" width="200" height="90"/>
+<line x1="100" y1="10" x2="100" y2="100"/><line x1="160" y1="10" x2="160" y2="100"/>
+</g>
+<g stroke="#c3cfdf" stroke-width=".6">
+<line x1="20" y1="19" x2="100" y2="19"/><line x1="20" y1="28" x2="100" y2="28"/><line x1="20" y1="37" x2="100" y2="37"/><line x1="20" y1="46" x2="100" y2="46"/><line x1="20" y1="55" x2="100" y2="55"/><line x1="20" y1="64" x2="100" y2="64"/><line x1="20" y1="73" x2="100" y2="73"/><line x1="20" y1="82" x2="100" y2="82"/><line x1="20" y1="91" x2="100" y2="91"/>
+</g>
+<g stroke="#1f4e8c" stroke-width="1">
+<line x1="20" y1="100" x2="28" y2="10"/><line x1="28" y1="100" x2="36" y2="10"/><line x1="36" y1="100" x2="44" y2="10"/><line x1="44" y1="100" x2="52" y2="10"/><line x1="52" y1="100" x2="60" y2="10"/><line x1="60" y1="100" x2="68" y2="10"/><line x1="68" y1="100" x2="76" y2="10"/><line x1="76" y1="100" x2="84" y2="10"/><line x1="84" y1="100" x2="92" y2="10"/><line x1="92" y1="100" x2="100" y2="10"/>
+</g>
+<g font-size="9" fill="#1c2230" font-family="Segoe UI">
+<text x="96" y="112">0</text><text x="156" y="112">1</text><text x="214" y="112">2</text><text x="16" y="112">10</text>
+<text x="4" y="104">0</text><text x="4" y="14">10</text>
+</g>
+</svg><figcaption>Diagonal scale – first main division mein 10 diagonals, 10 horizontal strips</figcaption></figure>
+</div>
+<div>
+<p class="small"><b>Principle:</b> ek short length <i>b</i> ko n equal parts mein divide karna ho to diagonal draw karo; k-th horizontal par diagonal ka horizontal offset = k·b/n. Isse 1/10 of smallest division read hota hai.</p>
+<ol class="small">
+<li>Scale length nikaalo, main units mein divide karo, 10 (ya n) parallel horizontal lines equal spacing par draw karo.</li>
+<li>First main division ko top &amp; bottom dono par 10 sub-divisions mein bato.</li>
+<li>Bottom ke k-th point ko top ke (k+1)-th point se join karo (diagonals).</li>
+<li>Reading = main + sub-division + (horizontal line no. × least count).</li>
+</ol>
+</div>
+</div>
+<div class="box tip"><span class="lbl">Example</span> RF = 1/4000, max 500 m, metres tak padhna hai. Scale length = 500 m × 1/4000 = 12.5 cm. 12.5 cm ko 5 parts (each = 100 m) mein bato; first part ko 10 parts (10 m) mein; 10 horizontal divisions se 1 m. 438 m dikhane ke liye: 4 main (400) + 3 sub (30) + 8th horizontal line par diagonal tak.</div>
+<h4>(c) Scale of chords – angles measure / set karne ke liye (protractor na ho to)</h4>
+<ol class="small">
+<li>Line AO draw karo; O par perpendicular, radius R se quarter circle (quadrant) A se B tak banao.</li>
+<li>Arc AB ko 9 equal parts (each 10°) mein divide karo (pehle 60° &amp; 30° compass se, phir trisect).</li>
+<li>A ko centre lekar har division point tak radius (chord) se arc kheecho jo AO extended line ko kaate – ye points 0°, 10°, 20° … 90° ki chord lengths hain.</li>
+<li>Note: <b>chord of 60° = radius</b>; angle θ banane ke liye radius = chord of 60° se arc lo aur chord of θ cut karo.</li>
+</ol>
+
+<h3>8. Conic Sections</h3>
+<div class="box def"><span class="lbl">Definition</span> Right circular cone ko different planes se kaatne par mile curves = conics. <b>Eccentricity e = (distance of point from focus) / (distance from directrix)</b>. e &lt; 1 → <b>ellipse</b> (plane cuts all generators), e = 1 → <b>parabola</b> (plane ∥ one generator), e &gt; 1 → <b>hyperbola</b> (plane ∥ axis / cuts both nappes).</div>
+<table class="small">
+<tr><th>Curve</th><th>Construction methods</th></tr>
+<tr><td><b>Ellipse</b></td><td>(1) <b>Concentric circle</b> method (2) <b>Oblong / rectangle</b> method (3) <b>Arcs of circles</b> (foci) method: PF<sub>1</sub>+PF<sub>2</sub> = major axis (4) <b>Eccentricity</b> (directrix-focus) method (5) Parallelogram, loop-of-thread, trammel methods</td></tr>
+<tr><td><b>Parabola</b></td><td>(1) Eccentricity (directrix-focus) method (2) <b>Rectangle</b> method (3) <b>Tangent</b> method (4) Parallelogram method</td></tr>
+<tr><td><b>Hyperbola</b></td><td>(1) Eccentricity method (2) <b>Rectangular hyperbola</b> (asymptotes at 90°, PV = constant) (3) Foci / arcs method: |PF<sub>1</sub> − PF<sub>2</sub>| = transverse axis</td></tr>
+</table>
+<h4>Ellipse by concentric circle method (most asked)</h4>
+<ol class="small">
+<li>Major axis AB aur minor axis CD ko centre O par perpendicular draw karo; O se dono ke circles (dia = AB &amp; CD) banao.</li>
+<li>Dono circles ko 12 equal parts mein radial lines se divide karo.</li>
+<li>Bade circle ke point se vertical line, chhote circle ke corresponding point se horizontal line – intersection = ellipse ka point.</li>
+<li>Saare points ko French curve se smooth join karo. Foci: C se radius AB/2 se AB par cut → F<sub>1</sub>, F<sub>2</sub>.</li>
+</ol>
+<h4>Eccentricity method (any conic) – steps</h4>
+<ol class="small">
+<li>Directrix DD aur axis (⊥ DD) draw karo; focus F distance par mark karo. Vertex V ko CF par is tarah divide karo ki VF/VC = e (e.g. e = 2/3 → CF ko 5 parts, V ko C se 3rd division par lo: VC = 3, VF = 2).</li>
+<li>V par perpendicular VE = VF lo; CE join karke extend karo (ye line slope e deti hai).</li>
+<li>Axis par points 1, 2, 3 … lo; har point par vertical line jo CE extended ko kaate (1′, 2′ …). Distance 1–1′ radius se F centre lekar vertical 1-1′ ko dono side cut karo → curve ke points.</li>
+</ol>
+<div class="grid2 small">
+<div><b>Ellipse – oblong (rectangle) method:</b> rectangle = major × minor axis. Half major axis OA aur rectangle ki side AE (= CD/2) dono ko same no. (e.g. 4) equal parts mein bato, dono ko A se number karo (1, 2, 3). C ko AE ke points se join karo; D (minor axis ka doosra end) se OA ke points se line extend karo; same number wali lines ke intersection = ellipse points (har quarter mein repeat).</div>
+<div><b>Parabola – rectangle method:</b> rectangle (base × axis height) banao. Half base ko n parts aur side ko n parts mein bato (base points axis se, side points vertex wale corner se number karo). Side ke points ko vertex V se join karo; base ke points se axis ke parallel lines – same number ke intersections = parabola points. <b>Hyperbola (rectangular):</b> asymptotes OX, OY; given point P se lines ∥ OX, ∥ OY; O se radial lines – inse PV = const points milte hain.</div>
+</div>
+<div class="box trick"><span class="lbl">Tangent &amp; Normal</span> <b>Eccentricity curves:</b> point P ko F se join karo; F par PF ke ⊥ line draw karo jo directrix ko T par mile; <b>TP = tangent</b>, P par TP ke ⊥ = <b>normal</b>. <b>Ellipse (foci method):</b> PF<sub>1</sub>, PF<sub>2</sub> join karo; ∠F<sub>1</sub>PF<sub>2</sub> ka bisector = normal, uske ⊥ = tangent. <b>Parabola:</b> tangent, PF aur P se axis ke parallel line ke beech ke angle ko bisect karta hai.</div>
+
+<h3>9. Special (Roulette) Curves</h3>
+<table class="small">
+<tr><th>Curve</th><th>Generation</th><th>Key data</th></tr>
+<tr><td><b>Cycloid</b></td><td>Circle seedhi line par bina slip roll kare, circumference ke point ka locus</td><td>Base length = πD</td></tr>
+<tr><td><b>Epicycloid</b></td><td>Generating circle (r) directing circle (R) ke <b>bahar</b> roll kare</td><td>Subtended angle θ = 360°·r/R</td></tr>
+<tr><td><b>Hypocycloid</b></td><td>Generating circle directing circle ke <b>andar</b> roll kare</td><td>θ = 360°·r/R (if r = R/2 → straight line)</td></tr>
+<tr><td><b>Involute</b></td><td>Taut string ko circle/polygon se unwind karne par end point ka locus</td><td>Circle: length = πD; gear teeth profile</td></tr>
+<tr><td><b>Archimedean spiral</b></td><td>Point radius vector par uniform linear speed se move kare jab radius uniform angular speed se ghume</td><td>r = aθ (equal angle → equal increase in r); cams</td></tr>
+<tr><td><b>Logarithmic (equiangular) spiral</b></td><td>Consecutive radius vectors (equal angles par) ka ratio constant</td><td>r = a·e<sup>bθ</sup>, log r ∝ θ; tangent–radius angle constant</td></tr>
+</table>
+<h4>Cycloid – steps (circle dia D)</h4>
+<ol class="small">
+<li>Circle draw karo, usse 12 equal parts mein divide karo; base line PA = πD draw karo aur usko bhi 12 parts mein bato.</li>
+<li>Centre C se base ke parallel <b>locus of centre</b> line draw karo; uspe C<sub>1</sub>, C<sub>2</sub> … C<sub>12</sub> (base divisions ke upar) mark karo.</li>
+<li>Circle ke division points se horizontal lines draw karo.</li>
+<li>C<sub>1</sub> centre, radius D/2 se arc jo 1st horizontal line ko kaate → P<sub>1</sub>; aise hi C<sub>2</sub> se 2nd line par P<sub>2</sub> … Smooth curve join karo.</li>
+</ol>
+<p class="small"><b>Epi/Hypo:</b> same steps, bas base line ki jagah directing circle ka arc (angle θ) lo, 12 radial divisions, locus of centre ek arc (radius R + r ya R − r) hoga. <b>Involute of circle:</b> circle ko 12 parts mein bato, har point par tangent draw karo, tangent par length = (n/12)·πD mark karo → points join. <b>Archimedean spiral:</b> 12 radial lines aur radius ko 12 equal parts; circle 1 ka radial line 1 se intersection … point join.</p>
+<div class="box tip"><span class="lbl">Normal &amp; Tangent</span> <b>Cycloid / epi / hypo:</b> point P se radius r leke locus of centre par C cut karo; C se base (ya directing circle radius) par perpendicular → N; <b>PN = normal</b>, ⊥ = tangent. <b>Involute:</b> P se base circle par tangent = normal. <b>Archimedean spiral:</b> constant C = (r<sub>1</sub> − r<sub>2</sub>)/(θ<sub>1</sub> − θ<sub>2</sub>) (θ in radian); O se OP ke ⊥ OM = C lo; <b>MP = normal</b>.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT II</span> Projections, Points, Lines &amp; Planes</h2>
+
+<h3>1. Types of Projection</h3>
+<table class="small">
+<tr><th>Type</th><th>Projectors</th><th>Result / use</th></tr>
+<tr><td><b>Orthographic</b></td><td>Parallel to each other &amp; ⊥ to plane of projection</td><td>2-D multi-view (FV, TV, SV) – true size; manufacturing drawing</td></tr>
+<tr><td><b>Isometric</b> (axonometric)</td><td>Parallel, ⊥ to plane; object tilted so 3 axes equally inclined (120°)</td><td>Single pictorial view, measurable along iso axes</td></tr>
+<tr><td><b>Oblique</b></td><td>Parallel to each other but <b>inclined</b> to plane</td><td>Front face true shape; receding lines at 30°/45° (cavalier = full, cabinet = half length)</td></tr>
+<tr><td><b>Perspective</b></td><td><b>Converge</b> to station point (eye)</td><td>Realistic view, as eye sees; architecture. Size reduces with distance</td></tr>
+</table>
+<div class="grid2">
+<div>
+<figure><svg viewBox="0 0 230 120" width="230">
+<g stroke="#1c2230" stroke-width="1.2" fill="none">
+<line x1="115" y1="8" x2="115" y2="112"/><line x1="10" y1="60" x2="220" y2="60"/>
+</g>
+<g font-size="10" fill="#1c2230" font-family="Segoe UI">
+<text x="150" y="35">I</text><text x="70" y="35">II</text><text x="65" y="92">III</text><text x="150" y="92">IV</text>
+<text x="118" y="16" fill="#1f4e8c">VP (above HP)</text><text x="118" y="110" fill="#1f4e8c">VP (below)</text>
+<text x="165" y="56" fill="#1f4e8c">HP (front)</text><text x="12" y="56" fill="#1f4e8c">HP (behind)</text>
+<text x="160" y="72" font-size="9">Observer →</text>
+</g>
+</svg><figcaption>Four quadrants (side view of HP &amp; VP); observer right side se dekhta hai</figcaption></figure>
+</div>
+<div>
+<p class="small"><b>Principal planes:</b> VP (vertical, FV/elevation milta hai), HP (horizontal, TV/plan) aur PP (profile plane, side view). HP &amp; VP ki intersection line = <b>reference line XY</b>. Drawing ke liye HP ko clockwise 90° ghuma kar VP ke saath ek plane mein laate hain.</p>
+<p class="small"><b>Missing views:</b> do given views (FV, TV) se teesra view (SV) banana.</p>
+<ol class="small">
+<li>Given views mein har corner ko number karo; object ko mentally visualise karo.</li>
+<li>FV se horizontal projectors SV ki taraf; TV se horizontal projectors 45° <b>miter line</b> tak, wahan se vertical SV mein (depth transfer).</li>
+<li>Intersections join karo; hidden edges dashed, centre lines chain.</li>
+</ol>
+</div>
+</div>
+<h4>First angle vs Third angle</h4>
+<div class="grid2">
+<div>
+<table class="small">
+<tr><th>First angle (BIS recommended)</th><th>Third angle (USA)</th></tr>
+<tr><td>Object 1st quadrant mein: observer → object → plane</td><td>Object 3rd quadrant: observer → plane (transparent) → object</td></tr>
+<tr><td>TV, FV ke <b>neeche</b></td><td>TV, FV ke <b>upar</b></td></tr>
+<tr><td>LHSV, FV ke <b>right</b> mein</td><td>LHSV, FV ke <b>left</b> mein</td></tr>
+</table>
+</div>
+<div>
+<figure><svg viewBox="0 0 240 70" width="240">
+<g stroke="#1c2230" stroke-width="1.2" fill="none">
+<polygon points="10,25 50,12 50,52 10,39"/>
+<circle cx="80" cy="32" r="20"/><circle cx="80" cy="32" r="7"/>
+<circle cx="150" cy="32" r="20"/><circle cx="150" cy="32" r="7"/>
+<polygon points="180,25 220,12 220,52 180,39"/>
+</g>
+<g stroke="#1f4e8c" stroke-width=".6" stroke-dasharray="6 2 1 2"><line x1="5" y1="32" x2="105" y2="32"/><line x1="125" y1="32" x2="228" y2="32"/></g>
+<g font-size="9.5" fill="#1c2230" font-family="Segoe UI"><text x="22" y="67">First angle</text><text x="150" y="67">Third angle</text></g>
+</svg><figcaption>Projection symbols (truncated cone) – title block mein lagate hain</figcaption></figure>
+</div>
+</div>
+
+<h3>2. Projection of Points</h3>
+<table class="small">
+<tr><th>Quadrant</th><th>Position</th><th>FV (a′)</th><th>TV (a)</th></tr>
+<tr><td>I</td><td>Above HP, in front of VP</td><td>Above XY</td><td>Below XY</td></tr>
+<tr><td>II</td><td>Above HP, behind VP</td><td>Above XY</td><td>Above XY</td></tr>
+<tr><td>III</td><td>Below HP, behind VP</td><td>Below XY</td><td>Above XY</td></tr>
+<tr><td>IV</td><td>Below HP, in front of VP</td><td>Below XY</td><td>Below XY</td></tr>
+</table>
+<p class="small">Rule: FV ki XY se distance = point ki HP se distance; TV ki XY se distance = VP se distance. a′ aur a hamesha ek hi vertical <b>projector</b> par. Point HP par → a′ XY par; VP par → a XY par.</p>
+
+<h3>3. Projection of Straight Lines</h3>
+<p>Notation: true length <b>TL (L)</b>, true inclination with HP = <b>θ</b>, with VP = <b>φ</b>; FV ka XY se angle = <b>α</b> (apparent), TV ka = <b>β</b>.</p>
+<table class="small">
+<tr><th>Position</th><th>FV</th><th>TV</th></tr>
+<tr><td>∥ to both HP &amp; VP</td><td>TL, ∥ XY</td><td>TL, ∥ XY</td></tr>
+<tr><td>⊥ to HP (∥ VP)</td><td>TL, ⊥ XY</td><td>Point</td></tr>
+<tr><td>⊥ to VP (∥ HP)</td><td>Point</td><td>TL, ⊥ XY</td></tr>
+<tr><td>Inclined θ to HP, ∥ VP</td><td>TL at θ</td><td>L cos θ, ∥ XY</td></tr>
+<tr><td>Inclined φ to VP, ∥ HP</td><td>L cos φ, ∥ XY</td><td>TL at φ</td></tr>
+<tr><td>Inclined to both (oblique)</td><td>L cos φ at α (α &gt; θ)</td><td>L cos θ at β (β &gt; φ)</td></tr>
+</table>
+<div class="box formula"><span class="lbl">Key relations</span> θ + φ ≤ 90° (= 90° → line profile plane mein, FV &amp; TV dono ⊥ XY). Difference of distances of ends from HP = L sin θ; from VP = L sin φ.</div>
+<h4>True length &amp; true inclinations (line inclined to both) – rotating line method</h4>
+<ol class="small">
+<li>Given FV a′b′ aur TV ab draw karo (end projectors).</li>
+<li>TV ab ko a centre lekar ghumao jab tak ∥ XY na ho (ab<sub>1</sub>); b<sub>1</sub> se vertical projector, b′ ka horizontal locus se mile → b<sub>1</sub>′. <b>a′b<sub>1</sub>′ = TL</b>, aur XY se angle = <b>θ</b>.</li>
+<li>Isi tarah FV a′b′ ko XY ke ∥ ghumao (a′b<sub>2</sub>′), project down to b's locus → ab<sub>2</sub> = TL aur angle = <b>φ</b>.</li>
+<li>Reverse problem (L, θ, φ given): pehle line ko θ par (∥ VP) aur φ par (∥ HP) draw karke lengths L cos θ, L cos φ nikaalo, phir loci ke beech arcs se final views.</li>
+</ol>
+<p class="small">Other methods: <b>trapezoid method</b> (TV ke ends par ⊥ heights = FV ki heights → TL) aur <b>auxiliary plane method</b> (X<sub>1</sub>Y<sub>1</sub> ∥ to TV lekar auxiliary FV = TL).</p>
+<h4>Traces of a line</h4>
+<div class="box def"><span class="lbl">Definition</span> Line (ya extended line) jahan HP ko mile = <b>Horizontal Trace (HT)</b>; jahan VP ko mile = <b>Vertical Trace (VT)</b>. Line ∥ HP → HT nahi; ∥ VP → VT nahi; ∥ both → koi trace nahi.</div>
+<ol class="small">
+<li><b>HT:</b> FV a′b′ ko extend karo jab tak XY ko h′ par mile; h′ se vertical projector draw karo jo TV (extended) ko h par mile → <b>h = HT</b>.</li>
+<li><b>VT:</b> TV ab ko extend karo jab tak XY ko v par mile; v se vertical projector FV (extended) ko v′ par mile → <b>v′ = VT</b>.</li>
+</ol>
+
+<h3>4. Projection of Planes &amp; Traces</h3>
+<p><b>Planes (laminae):</b> triangle, square, rectangle, pentagon, hexagon, circle, semicircle. <b>Types:</b> (i) <b>perpendicular planes</b> – ⊥ to both (profile), ⊥ one &amp; ∥ other, ⊥ one &amp; inclined to other; (ii) <b>oblique plane</b> – inclined to both HP &amp; VP.</p>
+<p class="small"><b>Traces of plane:</b> plane (extended) jis line par HP ko kaate = <b>HT</b>, VP ko kaate = <b>VT</b>. Plane ∥ HP → sirf VT (∥ XY); ⊥ HP &amp; inclined VP → HT at φ, VT ⊥ XY; inclined HP &amp; ⊥ VP → VT at θ, HT ⊥ XY. Oblique plane ke HT &amp; VT XY par ek point par milte hain.</p>
+<table class="small">
+<tr><th>Plane position</th><th>True shape in</th><th>Other view</th></tr>
+<tr><td>∥ HP (⊥ VP)</td><td>TV</td><td>FV = line ∥ XY</td></tr>
+<tr><td>∥ VP (⊥ HP)</td><td>FV</td><td>TV = line ∥ XY</td></tr>
+<tr><td>Inclined θ to HP, ⊥ VP</td><td>– (TV reduced)</td><td>FV = line at θ</td></tr>
+<tr><td>Inclined φ to VP, ⊥ HP</td><td>– (FV reduced)</td><td>TV = line at φ</td></tr>
+</table>
+<h4>Plane inclined to both HP &amp; VP – change of position (3 stages)</h4>
+<ol class="small">
+<li><b>Stage 1:</b> plane ko ∥ HP maan lo (agar θ given hai HP se) – TV true shape, FV line on XY. Given edge/corner ki condition ke hisaab se rakho (e.g. one side ⊥ VP).</li>
+<li><b>Stage 2:</b> FV line ko XY se θ par tilt karo; points project karke naya TV (reduced) banao.</li>
+<li><b>Stage 3:</b> stage-2 ke TV ko φ (ya β) se rotate karo jaisa given hai; FV ke points stage-2 FV ke horizontal loci aur naye TV ke projectors ke intersection se lo.</li>
+</ol>
+<div class="box warn"><span class="lbl">Common Mistake</span> Edge/diagonal "inclined φ to VP" (true angle) aur "TV makes β with XY" (apparent angle) ko same mat samjho. φ ho to stage 3 mein TL-locus method lagana padta hai.</div>
+<h4>Auxiliary planes</h4>
+<p class="small"><b>Auxiliary Inclined Plane (AIP)</b>: ⊥ VP, inclined to HP. <b>Auxiliary Vertical Plane (AVP)</b>: ⊥ HP, inclined to VP. Inclined surface ka true shape dekhne ke liye naya reference line <b>X<sub>1</sub>Y<sub>1</sub></b> us surface ke edge-view ke <b>parallel</b> lete hain; projectors X<sub>1</sub>Y<sub>1</sub> ke ⊥ aur distances pichle (dusre) view se X<sub>1</sub>Y<sub>1</sub> tak transfer karte hain → <b>auxiliary view</b> (true shape). Isse plane / line ki TL &amp; true inclination bhi milti hai.</p>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT III</span> Solids, Sections &amp; Intersection of Surfaces</h2>
+
+<h3>1. Types of Solids</h3>
+<table class="small">
+<tr><th>Group</th><th>Examples &amp; key points</th></tr>
+<tr><td><b>Polyhedra</b> (plane faces)</td><td><b>Regular polyhedra</b>: tetrahedron (4 equilateral Δ), cube/hexahedron (6 squares), octahedron (8 Δ), dodecahedron (12 pentagons), icosahedron (20 Δ). <b>Prisms</b> (two equal parallel bases + rectangular faces) and <b>pyramids</b> (base polygon + triangular faces meeting at apex) – named by base: triangular, square, pentagonal, hexagonal.</td></tr>
+<tr><td><b>Solids of revolution</b></td><td><b>Cylinder</b> (rectangle rotated about a side), <b>cone</b> (right Δ about one side), <b>sphere</b> (semicircle about diameter).</td></tr>
+<tr><td>Modified</td><td><b>Frustum</b> (pyramid/cone ka part base ke ∥ plane se kaatne par), <b>truncated</b> (inclined plane se kaate), right vs oblique solids (axis ⊥ base or not).</td></tr>
+</table>
+
+<h3>2. Projection of Solids (first angle)</h3>
+<table class="small">
+<tr><th>Position of axis</th><th>Which view first?</th></tr>
+<tr><td>⊥ HP</td><td>TV first (true shape of base), then FV</td></tr>
+<tr><td>⊥ VP</td><td>FV first (true base), then TV</td></tr>
+<tr><td>∥ to both HP &amp; VP</td><td>Side view first (true base), then FV &amp; TV</td></tr>
+<tr><td>Inclined θ to HP, ∥ VP</td><td>Stage 1: axis ⊥ HP → Stage 2: tilt FV by θ</td></tr>
+<tr><td>Inclined φ to VP, ∥ HP</td><td>Stage 1: axis ⊥ VP → Stage 2: tilt TV by φ</td></tr>
+<tr><td>Inclined to both HP &amp; VP</td><td>3 stages (below)</td></tr>
+</table>
+<h4>Axis inclined to one plane, parallel to other – steps (e.g. cone, axis 30° to HP, ∥ VP)</h4>
+<ol class="small">
+<li><b>Stage 1:</b> solid ko simple position mein lo – axis ⊥ HP, base HP par. TV = circle (12 generators ke points), FV = triangle.</li>
+<li><b>Stage 2:</b> FV ko as it is copy karke is tarah tilt karo ki axis HP se 30° (ya base 60°) par ho; condition dhyan do – "resting on a point of base", "on a generator", "on an edge".</li>
+<li>Naye FV ke har point se vertical projectors, aur stage-1 TV ke points se horizontal lines → intersections = naya TV. Visible/hidden edges check karke join karo.</li>
+</ol>
+<p class="small">Cylinder (generators ∥ axis, base ellipse dikhega), pyramid/prism (corners/edges number karke) sab mein same procedure. Polyhedra (tetrahedron, cube) bhi isi tarah.</p>
+<h4>Axis inclined to both HP &amp; VP</h4>
+<ol class="small">
+<li>Stage 1 &amp; 2 upar jaise (axis θ to HP, ∥ VP).</li>
+<li><b>Stage 3:</b> stage-2 ka TV ko copy karke rotate karo taaki axis ka TV XY se <b>β</b> par ho (agar φ given ho to β pehle TL method se nikaalo). Naye TV ke points se projectors upar, stage-2 FV ke horizontal loci se mila kar final FV.</li>
+</ol>
+<div class="box trick"><span class="lbl">Yaad Rakho</span> Visibility rule: FV mein jo edges observer ke paas (TV mein XY se door) hain wo visible; TV mein jo edges upar hain (FV mein XY se door) wo visible. Outer boundary hamesha visible hoti hai.</div>
+
+<h3>3. Section of Solids</h3>
+<div class="box def"><span class="lbl">Definition</span> Solid ko imaginary <b>section (cutting) plane</b> se kaat kar andar ka shape dikhana. Kata hua surface = <b>section</b>, uska <b>true shape</b> tab milta hai jab use section plane ke ∥ plane par project karein. Cut surface par 45° thin <b>hatching</b> lines (2–3 mm spacing).</div>
+<table class="small">
+<tr><th>Section plane</th><th>Seen in</th><th>True shape kaise</th></tr>
+<tr><td>∥ HP (⊥ VP)</td><td>FV = line ∥ XY</td><td>TV itself = true shape</td></tr>
+<tr><td>∥ VP (⊥ HP)</td><td>TV = line ∥ XY</td><td>FV itself = true shape</td></tr>
+<tr><td><b>Inclined to HP, ⊥ VP (AIP)</b></td><td>FV = line (VT) at θ</td><td>Auxiliary TV on X<sub>1</sub>Y<sub>1</sub> ∥ VT</td></tr>
+<tr><td><b>Inclined to VP, ⊥ HP (AVP)</b></td><td>TV = line (HT) at φ</td><td>Auxiliary FV on X<sub>1</sub>Y<sub>1</sub> ∥ HT</td></tr>
+</table>
+<h4>Steps – section plane inclined to HP (e.g. hexagonal pyramid cut by AIP)</h4>
+<ol class="small">
+<li>Solid ke FV &amp; TV draw karo, sab corners name karo.</li>
+<li>FV mein given angle/position par cutting plane (VT) draw karo; jahan ye edges/generators ko kaate wo points 1′, 2′, 3′ … mark karo.</li>
+<li>Points ko neeche TV ke corresponding edges par project karo; join karke <b>sectional TV</b> hatch karo (cut part hata kar).</li>
+<li><b>True shape:</b> VT ke ∥ X<sub>1</sub>Y<sub>1</sub> lo; 1′, 2′ … se ⊥ projectors, aur TV mein XY se distances X<sub>1</sub>Y<sub>1</sub> se mark karo → join &amp; hatch.</li>
+</ol>
+<p class="small"><b>Cone ke sections:</b> plane through apex → triangle; ∥ base → circle; inclined, all generators cut → ellipse; ∥ to a generator → parabola; ∥ axis (or angle with base &gt; generator angle) → hyperbola. Cylinder: inclined plane → ellipse, ∥ axis → rectangle.</p>
+<div class="box warn"><span class="lbl">Common Mistake</span> Cone/cylinder par points generators se project karo; agar point FV mein extreme generator par na ho to <b>horizontal circle method</b> (point se ∥ base circle) use karo, warna TV galat aata hai.</div>
+
+<h3>4. Intersection (Interpenetration) of Surfaces</h3>
+<p>Jab ek solid doosre mein ghusta hai to dono surfaces ki common line = <b>curve / line of intersection</b>. Use: pipe joints, ducts, boiler, chimney, machine castings.</p>
+<div class="grid2">
+<div>
+<p class="small"><b>(a) Line method:</b> ek solid ki surface par kai lines (edges / generators) lo; har line doosre solid ki surface ko jahan pierce kare wo point dhoondo (us view se jahan doosra solid edge-view / circle mein dikhe). Prism–prism, cylinder–cylinder, prism–cylinder ke liye easy.</p>
+</div>
+<div>
+<p class="small"><b>(b) Cutting plane method:</b> dono solids ko kai parallel cutting planes se kaato (preferably jo dono par simple sections de – lines ya circles). Har plane par dono sections ke intersection points = curve ke points. Cone–cylinder, cone–prism ke liye best (horizontal planes → cone par circle).</p>
+</div>
+</div>
+<table class="small">
+<tr><th>Case</th><th>Result / tip</th></tr>
+<tr><td>Prism – prism</td><td>Intersection straight line segments; edge points line method se, phir visibility se join</td></tr>
+<tr><td>Cylinder – cylinder (axes ⊥, intersecting)</td><td>Curve; equal diameters → FV mein straight lines (45° V shape)</td></tr>
+<tr><td>Cylinder – prism</td><td>Prism edges cylinder ko kahan kaatte hain (TV circle se), phir intermediate lines</td></tr>
+<tr><td>Cone – cylinder / cone – prism</td><td>Cutting plane method (horizontal planes): cone section = circle, cylinder section = rectangle lines</td></tr>
+</table>
+<div class="box tip"><span class="lbl">Exam Tip</span> Pehle "critical points" (extreme top/bottom/front/back aur outlines par) zaroor locate karo; curve unhi se visible/hidden part mein divide hota hai.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT IV</span> Development of Surfaces &amp; Isometric Projection</h2>
+
+<h3>1. Development of Surfaces</h3>
+<div class="box def"><span class="lbl">Definition</span> Solid ki saari surfaces ko ek plane par khol kar (unfold) true size mein dikhana = <b>development</b>. Sheet-metal work (buckets, funnels, ducts, hoppers, chimneys) mein pattern banane ke liye. Development mein har line <b>true length</b> mein hoti hai. Sirf <b>developable</b> surfaces (prism, cylinder, pyramid, cone) exactly khulte hain; sphere approximate.</div>
+<figure><svg viewBox="0 0 250 92" width="250"><g stroke="#1c2230" stroke-width="1.1" fill="none"><polygon points="40,10 15,76 65,76"/><line x1="40" y1="10" x2="40" y2="76" stroke-dasharray="6 2 1 2" stroke-width=".6"/><path d="M160,10 L97.5,41.6 A70,70 0 0 0 222.5,41.6 Z" fill="#eef4fc"/><path d="M146,17 A16,16 0 0 0 174,17" stroke="#1f4e8c"/></g><g font-size="9" fill="#1c2230" font-family="Segoe UI"><text x="6" y="40">L</text><text x="44" y="72">r</text><text x="6" y="88">Cone FV</text><text x="112" y="30">L</text><text x="150" y="37" fill="#1f4e8c">θ</text><text x="131" y="60">arc = 2πr</text><text x="180" y="90">θ = 360° × r/L</text></g></svg><figcaption>Cone ki lateral surface ka development = sector (radius L, arc length = base circumference)</figcaption></figure>
+<table class="small">
+<tr><th>Method</th><th>Used for</th><th>Idea</th></tr>
+<tr><td><b>Parallel line</b></td><td>Prisms, cylinders</td><td>Lateral edges/generators parallel; stretch-out line = perimeter, verticals par heights transfer</td></tr>
+<tr><td><b>Radial line</b></td><td>Pyramids, cones</td><td>Edges/generators apex se radiate; slant edge/height ko radius lekar arc</td></tr>
+<tr><td><b>Triangulation</b></td><td>Transition pieces, oblique cones</td><td>Surface ko chhote triangles mein todo, har triangle ka TL se true shape bana kar sequence mein lagao</td></tr>
+<tr><td>Approximate</td><td>Sphere (zone / lune method)</td><td>Non-developable; segments approximate</td></tr>
+</table>
+<div class="box formula"><span class="lbl">Formula</span> Cylinder: rectangle <b>πD × H</b>. Cone (base radius r, slant height L = √(r² + h²)): sector of radius L, <b>θ = 360° × r / L</b>. Cube: 6 equal squares (cross / T shape). Prism: rectangles side by side, total length = perimeter of base. Pyramid: n triangles with radius = true slant edge length.</div>
+<h4>Steps – development of lateral surface of a cut (truncated) cone</h4>
+<ol class="small">
+<li>FV &amp; TV draw karo; TV circle ko 12 parts mein bato, generators o′1′, o′2′ … FV mein draw karo.</li>
+<li>Radius = L (slant height) aur angle θ = 360 r/L se sector banao; sector ko 12 parts mein bato, generators O–1, O–2 … draw karo.</li>
+<li>Cutting plane jahan generators ko kaate (FV mein), un points ko <b>true length</b> par laane ke liye horizontal line extreme generator (o′a′, jo TL hai) tak le jao; O se wo TL distance development ke corresponding generator par mark karo.</li>
+<li>Points ko smooth curve se join karo; jo part hataya gaya use thin/dashed dikhao. Prism/cylinder ke parts mein heights seedhe verticals par transfer hoti hain.</li>
+</ol>
+<p class="small"><b>Pyramid development:</b> slant edge ka TL nikaalo (edge ko FV mein extreme edge par ghuma kar); radius = TL se arc, uspar base side length n baar cut karo, apex se join. Cut pyramid mein cut points ko true length ke liye extreme (TL) edge par horizontal shift karo.</p>
+<h4>Transition pieces</h4>
+<p class="small">Do alag shapes ya sizes ke openings ko jodne wala piece – e.g. <b>square-to-round</b>, round-to-rectangle (ducts, hoppers, chimney). Development triangulation se: round end ko 12 parts mein, har corner of square ko nearest circle points se join karke triangles + flat triangles bante hain; har line ka TL (TL diagram: horizontal = TV length, vertical = height) nikaal kar triangles ek-ek karke lagao.</p>
+
+<h3>2. Isometric Projection</h3>
+<div class="box def"><span class="lbl">Definition</span> Pictorial orthographic projection jisme cube ka body diagonal VP ke ⊥ hota hai, isliye teeno mutually perpendicular edges VP se <b>equally inclined</b> hote hain aur equally foreshortened. FV mein ek hi view mein teeno faces dikhti hain.</div>
+<ul class="small">
+<li><b>Isometric axes:</b> teen lines aapas mein <b>120°</b> par – ek vertical, do horizontal se <b>30°</b> par.</li>
+<li><b>Isometric lines:</b> iso axes ke parallel lines (inpe hi measurement hoti hai). <b>Non-isometric lines:</b> parallel nahi (inclined edges) – unke end points coordinates se locate karke join karo (box / offset method).</li>
+<li><b>Isometric planes:</b> do iso axes se bane plane – top (horizontal), left &amp; right vertical faces.</li>
+</ul>
+<div class="grid2">
+<div>
+<figure><svg viewBox="0 0 230 120" width="230">
+<g stroke="#1c2230" stroke-width="1" fill="none">
+<line x1="15" y1="105" x2="220" y2="105"/>
+<line x1="15" y1="105" x2="113" y2="7" stroke="#1f4e8c"/>
+<line x1="15" y1="105" x2="185" y2="7" stroke="#8a3b12"/>
+</g>
+<g stroke="#9aa5b5" stroke-width=".7" stroke-dasharray="2 2">
+<line x1="37" y1="83" x2="37" y2="92.3"/><line x1="59" y1="61" x2="59" y2="79.6"/><line x1="81" y1="39" x2="81" y2="66.9"/><line x1="103" y1="17" x2="103" y2="54.2"/>
+</g>
+<g font-size="9" fill="#1c2230" font-family="Segoe UI">
+<text x="30" y="100">45°</text><text x="58" y="102" fill="#8a3b12">30°</text>
+<text x="70" y="22" fill="#1f4e8c">True scale</text><text x="140" y="44" fill="#8a3b12">Isometric scale</text>
+</g>
+</svg><figcaption>Isometric scale: 45° line par true lengths, verticals se 30° line par project</figcaption></figure>
+</div>
+<div>
+<div class="box formula"><span class="lbl">Isometric scale</span><span class="eq">Iso length = <span class="frac"><span>cos 45°</span><span>cos 30°</span></span> × TL = √(2/3) × TL ≈ 0.816 TL</span></div>
+<p class="small">Construction: horizontal line se 45° aur 30° lines draw karo; 45° line par true divisions (mm/cm) mark karo; har point se vertical drop karo 30° line tak → iso divisions.</p>
+</div>
+</div>
+<table class="small">
+<tr><th>Isometric VIEW (drawing)</th><th>Isometric PROJECTION</th></tr>
+<tr><td>Iso lines par <b>true lengths</b> (ordinary scale)</td><td>Iso lines par <b>isometric lengths</b> (0.816 × true, iso scale)</td></tr>
+<tr><td>Bada dikhta hai (≈ 22.5% larger)</td><td>Actual projection – exact size</td></tr>
+<tr><td>Sphere: circle of radius ≈ 1.22 R</td><td>Sphere: circle of <b>true radius R</b></td></tr>
+</table>
+<h4>Isometric of plane figures &amp; solids</h4>
+<ul class="small">
+<li><b>Rectangle/square/polygon:</b> enclosing rectangle (box) iso axes par banao, corners offsets se locate karo. Hexagon/pentagon ke liye box method.</li>
+<li><b>Circle → ellipse</b> by <b>four-centre method</b>: circle ke around square ka isometric (rhombus) banao; obtuse-angle corners se opposite sides ke mid-points tak lines → do centres yahi corners, aur in lines ke intersection do aur centres; char arcs se ellipse. Ya <b>offset / co-ordinate method</b> (points plotting).</li>
+<li><b>Cylinder:</b> top &amp; bottom ellipses (four-centre), common tangents (extreme lines) se join; hidden half bottom ellipse dashed/omit.</li>
+<li><b>Cone:</b> base ellipse + apex (axis par height mark) se ellipse ko tangent lines.</li>
+<li><b>Pyramid:</b> base iso mein, centre se axis ∥ vertical iso axis par height, apex ko base corners se join (slant edges non-isometric).</li>
+<li><b>Prism:</b> base iso mein draw karke har corner se axis ki direction mein length ∥ lines, top face join.</li>
+<li><b>Sphere:</b> isometric projection = circle of radius R. Combination (e.g. sphere on cube/frustum): sphere ka contact point aur centre <b>iso scale</b> se locate karo (centre contact point se iso R upar), phir true R se circle.</li>
+<li><b>Combination of solids:</b> neeche wale solid se shuru karo, upar wale ka base centre axis par locate karke draw karo; hidden lines generally nahi dikhate.</li>
+</ul>
+<div class="box warn"><span class="lbl">Common Mistake</span> Non-isometric line (jaise pyramid ka slant edge, ya inclined face) par direct length mat napo – sirf iso lines par measure hota hai. Isometric drawing mein angle bhi true nahi dikhte.</div>
+</div>
+
+<div class="unit">
+<h2 class="unit-title"><span>UNIT V</span> Computer Aided Drawing &amp; Computer Graphics</h2>
+
+<h3>1. CAD, CAED &amp; CAE</h3>
+<table class="small">
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td><b>CAD</b> – Computer Aided Design / Drafting</td><td>Computer ka use design create, modify, analyse aur optimise karne ke liye; 2D drafting + 3D modelling (AutoCAD, SolidWorks, CATIA, Creo).</td></tr>
+<tr><td><b>CAED</b> – Computer Aided Engineering Design (/ Drafting)</td><td>CAD ka engineering design wala part: geometric modelling + engineering calculations + automated drafting, design ko documentation tak le jana.</td></tr>
+<tr><td><b>CAE</b> – Computer Aided Engineering</td><td>Design ka computer par analysis/simulation – FEA (stress), CFD (flow), kinematics, thermal (ANSYS, Abaqus) – prototype banane se pehle.</td></tr>
+</table>
+<h4>Design process mein CAD ka role</h4>
+<p class="small">Design cycle: recognition of need → definition → synthesis → analysis &amp; optimisation → evaluation → presentation. CAD mein: <b>geometric modelling</b> (synthesis), <b>engineering analysis</b> (CAE), <b>design review &amp; evaluation</b> (interference check, animation), <b>automated drafting</b> (drawings, BOM).</p>
+
+<h3>2. Elements &amp; Essential Requirements of CAD</h3>
+<div class="grid2">
+<div>
+<p class="small"><b>Elements (components) of a CAD system:</b></p>
+<ul class="small">
+<li><b>Hardware</b> – CPU/workstation, memory, graphics card, input devices, display, output (printer/plotter), storage.</li>
+<li><b>Software</b> – OS, graphics package (2D/3D), application &amp; analysis software, database.</li>
+<li><b>User / designer</b> – jo system ko operate kare (human creativity).</li>
+<li>Network &amp; data-exchange (IGES, STEP, DXF).</li>
+</ul>
+</div>
+<div>
+<p class="small"><b>Essential requirements:</b> fast processor &amp; sufficient RAM, high-resolution graphics display, accurate input devices, large storage, reliable software with standard drafting features (layers, snaps, dimensioning, libraries), good user interface, data security/back-up, trained operator, hard-copy output devices.</p>
+</div>
+</div>
+<figure><svg viewBox="0 0 400 46" width="400"><g stroke="#1c2230" stroke-width="1" fill="#eef4fc"><rect x="2" y="8" width="62" height="30" rx="3"/><rect x="86" y="8" width="78" height="30" rx="3"/><rect x="186" y="8" width="100" height="30" rx="3" fill="#fff8e6"/><rect x="308" y="8" width="90" height="30" rx="3"/></g><g stroke="#1f4e8c" stroke-width="1.2"><line x1="64" y1="23" x2="84" y2="23"/><line x1="164" y1="23" x2="184" y2="23"/><line x1="286" y1="23" x2="306" y2="23"/></g><g fill="#1f4e8c"><polygon points="86,23 80,20 80,26"/><polygon points="186,23 180,20 180,26"/><polygon points="308,23 302,20 302,26"/></g><g font-size="9" fill="#1c2230" font-family="Segoe UI" text-anchor="middle"><text x="33" y="21">User /</text><text x="33" y="32">designer</text><text x="125" y="21">Input devices</text><text x="125" y="32">(mouse, digitizer)</text><text x="236" y="21">CPU + CAD software</text><text x="236" y="32">+ database</text><text x="353" y="21">Display &amp;</text><text x="353" y="32">printer / plotter</text></g></svg><figcaption>Block diagram of a CAD system (hardware + software + user)</figcaption></figure>
+<h4>Integrated CAD / CAM</h4>
+<p class="small"><b>CAM</b> = Computer Aided Manufacturing (CNC part programming, process planning, robots, inspection). Integrated CAD/CAM mein ek hi <b>common database</b> design se manufacturing tak use hota hai – CAD model se seedha CNC tool-path (G-code) bante hain. Pura plant (design, planning, production, QC, business) jud jaye to <b>CIM</b> (Computer Integrated Manufacturing).</p>
+<h4>Necessity, importance &amp; applications</h4>
+<div class="grid2">
+<div>
+<p class="small"><b>Necessity / importance (advantages):</b> productivity badhti hai, drafting time kam; high accuracy; easy modification &amp; reuse (copy, mirror, array); better visualisation (3D, shading, animation); standardisation &amp; libraries; analysis possible; easy storage, retrieval, sharing; less paper; lower cost &amp; time-to-market; CAM se direct link.</p>
+</div>
+<div>
+<p class="small"><b>Applications:</b> mechanical (machine parts, assembly, CNC), civil &amp; architecture (building plans, structures, GIS), electrical/electronics (PCB, circuits, VLSI), automobile &amp; aerospace (body design, simulation), textile &amp; fashion, ship building, plant layout &amp; piping, animation &amp; medical imaging.</p>
+</div>
+</div>
+<div class="box trick"><span class="lbl">Yaad Rakho</span> CAD systems ke types: mainframe-based, minicomputer-based, <b>workstation-based</b> aur <b>PC-based</b>. Modelling ke types: <b>2D drafting</b>, 3D <b>wireframe</b> (sirf edges), <b>surface</b> model (skin) aur <b>solid</b> model (mass, volume, interference check possible – sabse complete).</div>
+
+<h3>3. Computer Graphics – Input Devices</h3>
+<table class="small">
+<tr><th>Device</th><th>Working / use</th></tr>
+<tr><td><b>Cursor control devices</b></td><td>Screen par cursor move karke point/command select: <b>mouse</b> (optical/mechanical), <b>trackball</b>, <b>joystick</b>, <b>thumb wheels</b>, <b>light pen</b> (photocell screen se light sense kare), cursor keys.</td></tr>
+<tr><td><b>Digitizer (graphic tablet)</b></td><td>Flat surface + <b>stylus / puck</b> (cross-hair); tablet ke andar wire grid electromagnetic signal se position (x, y) coordinates computer ko deta hai. Existing paper drawings ko CAD mein trace karne ke liye; high accuracy.</td></tr>
+<tr><td><b>Keyboard terminals</b></td><td>Alphanumeric keys (text, coordinates, commands), function keys (programmable commands), cursor keys, numeric keypad.</td></tr>
+<tr><td><b>Image scanner</b></td><td>Drawing/photo ko light se scan karke CCD sensors se digital raster image banata hai; raster-to-vector conversion software se CAD entity bana sakte hain.</td></tr>
+<tr><td><b>Speech (voice) control</b></td><td>Microphone + voice recognition system; pre-recorded words ko pattern-match karke commands deta hai – hands free operation.</td></tr>
+<tr><td><b>Touch panels</b></td><td>Screen ko ungli se chhoo kar select: <b>optical</b> (IR LEDs &amp; detectors grid), <b>electrical/resistive</b> (do conductive sheets, pressure se contact), <b>capacitive</b>, <b>acoustic</b> (surface waves).</td></tr>
+</table>
+
+<h3>4. Display Devices</h3>
+<h4>Cathode Ray Tube (CRT)</h4>
+<p class="small"><b>Parts:</b> electron gun (heated cathode + control grid), focusing system, deflection system (electrostatic/magnetic plates – horizontal &amp; vertical), phosphor-coated screen. Electron beam phosphor ko hit kare to light emit hoti hai; light jaldi decay hoti hai isliye picture ko baar-baar <b>refresh</b> karna padta hai (refresh CRT). <b>Persistence</b> = light ke 1/10 tak girne ka time; <b>resolution</b> = max points/pixels display; <b>aspect ratio</b> = vertical : horizontal points.</p>
+<table class="small">
+<tr><th>Random scan (vector / calligraphic)</th><th>Raster scan</th></tr>
+<tr><td>Beam sirf un points par jaata hai jahan line draw karni hai</td><td>Beam pure screen ko row-by-row (left→right, top→bottom) sweep karta hai</td></tr>
+<tr><td>Picture = line-drawing commands in <b>display file / refresh buffer</b></td><td>Picture = intensity values of all <b>pixels</b> in <b>frame buffer</b> (bit-map)</td></tr>
+<tr><td>Refresh 30–60 times/s; smooth, high-resolution lines</td><td>Refresh 60–80 frames/s (interlaced possible); lines staircase (<b>jaggies</b>/aliasing)</td></tr>
+<tr><td>Realistic shaded/filled images mushkil; costly</td><td>Shading, colour, filled areas easy; cheap; TV technology</td></tr>
+<tr><td>Use: line drawings, CAD wireframes (old)</td><td>Use: almost all modern monitors</td></tr>
+</table>
+<p class="small"><b>CRT monitors (colour):</b> (1) <b>Beam penetration</b> – red &amp; green phosphor layers, beam speed se colour (only 4 colours, random scan). (2) <b>Shadow mask</b> – 3 electron guns (R, G, B), phosphor dots triad, shadow mask ke holes se har beam apne colour dot par – millions of colours (raster displays).</p>
+<p class="small"><b>DVST (Direct View Storage Tube):</b> picture <b>storage grid</b> par charge distribution ke roop mein store; <b>primary (writing) gun</b> pattern banata hai, <b>flood gun</b> continuously screen ko illuminate rakhta hai → <b>refresh ki zaroorat nahi</b>, flicker-free, complex drawings high resolution par. Drawbacks: selective erase nahi (poora screen erase karna padta hai), colour nahi, low contrast, animation possible nahi.</p>
+<p class="small"><b>Flat panel displays:</b> CRT se kam volume, weight &amp; power. <b>Emissive</b> (electrical energy → light): plasma panel (gas-discharge, neon cells), thin-film electroluminescent, LED. <b>Non-emissive</b>: <b>LCD</b> – liquid crystal light ko polarise karke pass/block karta hai (backlight chahiye); passive &amp; active-matrix (TFT). Laptops, tablets, modern monitors.</p>
+
+<h3>5. Hard Copy Devices – Printers &amp; Plotters</h3>
+<table class="small">
+<tr><th>Device</th><th>Types &amp; working</th></tr>
+<tr><td><b>Impact printers</b></td><td>Ribbon par hammer/pin se strike: <b>dot-matrix</b> (9/24 pins), daisy wheel, line/drum printer. Noisy, low quality, carbon copies possible.</td></tr>
+<tr><td><b>Non-impact printers</b></td><td><b>Inkjet</b> (ink droplets nozzles se), <b>laser</b> (laser beam drum par electrostatic image, toner, heat fusing – high quality &amp; fast), thermal, electrostatic.</td></tr>
+<tr><td><b>Pen plotters</b></td><td>Vector type, pen se continuous lines – large drawings (A0). <b>Flatbed</b> (paper fixed, pen X-Y move) aur <b>drum</b> (paper drum par ek axis mein move, pen doosre axis mein). Multiple coloured pens.</td></tr>
+<tr><td><b>Electrostatic / inkjet plotters</b></td><td>Raster type; paper par charged dots + toner (electrostatic) ya ink droplets (inkjet plotter) – fast, large size, colour; aaj kal mostly inkjet wide-format plotters.</td></tr>
+</table>
+<div class="box tip"><span class="lbl">Exam Tip</span> Random vs raster scan, DVST ke advantages/disadvantages, aur digitizer ka working – ye 5–7 marks ke favourite questions hain. Table form mein likho aur CRT ka labelled block diagram (gun → focusing → deflection → phosphor screen) banao.</div>
+</div>
