@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { Command, LogIn, Menu, X } from "lucide-react";
+import { Command, LayoutDashboard, LogIn, Menu, X } from "lucide-react";
+import { useWorkspaceRole } from "../lib/session";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
 import { FeedbackHost } from "../components/Feedback";
@@ -14,6 +15,7 @@ export default function Layout() {
   const shortcut = /Mac|iPhone|iPad/.test(navigator.platform)
     ? "⌘ K"
     : "Ctrl K";
+  const workspace = useWorkspaceRole();
   const [palette, setPalette] = useState(false),
     [menu, setMenu] = useState(false);
   const dialog = useRef<HTMLDivElement>(null);
@@ -130,23 +132,44 @@ export default function Layout() {
                 Jobs &amp; internships
               </NavLink>
               <NavLink
-                to="/contributor/login"
+                to={workspace ? `/${workspace}` : "/contributor/login"}
                 className="nav-menu-login"
                 onClick={() => setMenu(false)}
               >
-                Contributor login
+                {workspace === "admin"
+                  ? "Admin panel"
+                  : workspace
+                    ? "My workspace"
+                    : "Contributor login"}
               </NavLink>
             </nav>
-            <Link
-              className="nav-login"
-              to="/contributor/login"
-              aria-label="Contributor login"
-              title="Contributor login"
-              onClick={() => setMenu(false)}
-            >
-              <LogIn size={16} aria-hidden />
-              <span>Login</span>
-            </Link>
+            {workspace ? (
+              <Link
+                className="nav-login nav-workspace"
+                to={`/${workspace}`}
+                aria-label={
+                  workspace === "admin" ? "Admin panel" : "My workspace"
+                }
+                title={workspace === "admin" ? "Admin panel" : "My workspace"}
+                onClick={() => setMenu(false)}
+              >
+                <LayoutDashboard size={16} aria-hidden />
+                <span>
+                  {workspace === "admin" ? "Admin panel" : "My workspace"}
+                </span>
+              </Link>
+            ) : (
+              <Link
+                className="nav-login"
+                to="/contributor/login"
+                aria-label="Contributor login"
+                title="Contributor login"
+                onClick={() => setMenu(false)}
+              >
+                <LogIn size={16} aria-hidden />
+                <span>Login</span>
+              </Link>
+            )}
             <button
               className="palette-trigger"
               onClick={(event) => {

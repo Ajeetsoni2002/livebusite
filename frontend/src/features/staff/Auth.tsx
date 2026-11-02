@@ -1,4 +1,4 @@
-import { useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import {
   Link,
   Navigate,
@@ -9,6 +9,7 @@ import {
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, errorMessage } from "../../lib/api";
 import { usePageMeta } from "../../lib/meta";
+import { rememberWorkspace } from "../../lib/session";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 type User = {
   _id: string;
@@ -30,6 +31,11 @@ export function Guard({ role }: { role: "admin" | "contributor" }) {
     retry: false,
     staleTime: 0,
   });
+  const signedIn = query.data?.role;
+  // Public pages read this to offer a way back into the workspace.
+  useEffect(() => {
+    if (signedIn) rememberWorkspace(signedIn);
+  }, [signedIn]);
   if (query.isPending)
     return (
       <main className="page" role="status">

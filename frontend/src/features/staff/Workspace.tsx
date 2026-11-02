@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useUser } from "./Auth";
 import { api } from "../../lib/api";
+import { rememberWorkspace } from "../../lib/session";
 
 const COLLAPSE_KEY = "buit-staff-collapsed";
 const readCollapsed = () => {
@@ -91,6 +92,7 @@ export default function Workspace() {
   }, [profile]);
   async function signOut() {
     await api.post("/auth/logout");
+    rememberWorkspace(null);
     client.clear();
     navigate(`/${user.role}/login`);
   }

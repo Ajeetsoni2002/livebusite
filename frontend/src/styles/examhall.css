@@ -1289,3 +1289,14 @@ kbd {
     padding: 16px 20px 22px;
   }
 }
+/* Signed-in staff get a filled button back to their workspace. */
+.nav-login.nav-workspace {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+.nav-login.nav-workspace:hover,
+.nav-login.nav-workspace:focus-visible {
+  color: var(--on-primary);
+  filter: brightness(1.1);
+}
