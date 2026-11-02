@@ -98,10 +98,10 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
       port: Number(env.SMTP_PORT || 587),
       user: env.SMTP_USER || "",
       pass: env.SMTP_PASS || "",
-      from: env.MAIL_FROM || env.SMTP_USER || "",
+      from: (env.MAIL_FROM || env.SMTP_USER || "").trim(),
     },
     // Preferred over SMTP: sends over HTTPS, which hosts that block SMTP still allow.
-    brevoApiKey: env.BREVO_API_KEY || "",
+    brevoApiKey: (env.BREVO_API_KEY || "").trim().replace(/^["']|["']$/g, ""),
     adminNotifyEmail: env.ADMIN_NOTIFY_EMAIL || env.CONTACT_EMAIL || "",
   };
 }

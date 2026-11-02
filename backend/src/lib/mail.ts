@@ -52,10 +52,20 @@ async function sendWithBrevo(mail: Mail) {
     }),
     signal: AbortSignal.timeout(15_000),
   });
-  if (!response.ok)
+  if (!response.ok) {
+    const key = config.brevoApiKey;
+    const hint =
+      response.status !== 401
+        ? ""
+        : key.startsWith("xsmtpsib-")
+          ? " BREVO_API_KEY holds an SMTP key (xsmtpsib-...); create an API key (xkeysib-...) under SMTP & API > API Keys."
+          : !key.startsWith("xkeysib-")
+            ? " BREVO_API_KEY should start with xkeysib-; copy the whole key again."
+            : ` Brevo does not know this key (${key.slice(0, 12)}...${key.slice(-4)}); it may be deleted or copied incompletely.`;
     throw new Error(
-      `Brevo ${response.status}: ${(await response.text()).slice(0, 300)}`,
+      `Brevo ${response.status}: ${(await response.text()).slice(0, 300)}${hint}`,
     );
+  }
 }
 
 /** Sends one email and throws on failure; used by the admin "send test email" check. */
