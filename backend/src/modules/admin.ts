@@ -28,6 +28,8 @@ import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
 import { storage } from "../storage/index.js";
 import { THUMBNAIL_VERSION } from "../storage/thumbnail.js";
 import { FileAsset } from "./models.js";
+import { config } from "../config.js";
+import { deliverMail, mailProvider } from "../lib/mail.js";
 import {
   defaultWatermark,
   getWatermarkSettings,
@@ -185,6 +187,31 @@ adminRouter.post("/taxonomy/standard-setup", async (req: AuthRequest, res) => {
       merged: plan.merged.length,
     });
   ok(res, plan);
+});
+// Sends a real email and reports the provider's error, so mail setup can be checked from Settings.
+adminRouter.get("/settings/email", (_req, res) =>
+  ok(res, {
+    provider: mailProvider(),
+    from: config.smtp.from,
+    adminNotifyEmail: config.adminNotifyEmail,
+  }),
+);
+adminRouter.post("/settings/email/test", async (req: AuthRequest, res) => {
+  const to = config.adminNotifyEmail || req.user.email;
+  try {
+    await deliverMail({
+      to,
+      subject: "BUIT Papers test email",
+      text: "Email from BUIT Papers is working. Password resets and new-contributor alerts will reach people.",
+    });
+  } catch (error) {
+    throw new HttpError(
+      422,
+      `Email could not be sent via ${mailProvider()}: ${(error as Error).message}`,
+      "EMAIL_FAILED",
+    );
+  }
+  ok(res, { sent: true, to, provider: mailProvider() });
 });
 adminRouter.get("/settings/watermark", async (_req, res) => {
   const { settings, revision } = await getWatermarkSettings();

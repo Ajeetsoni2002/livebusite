@@ -100,6 +100,8 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
       pass: env.SMTP_PASS || "",
       from: env.MAIL_FROM || env.SMTP_USER || "",
     },
+    // Preferred over SMTP: sends over HTTPS, which hosts that block SMTP still allow.
+    brevoApiKey: env.BREVO_API_KEY || "",
     adminNotifyEmail: env.ADMIN_NOTIFY_EMAIL || env.CONTACT_EMAIL || "",
   };
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ImageOff, Loader2, Stamp } from "lucide-react";
+import { ImageOff, Loader2, Mail, Stamp } from "lucide-react";
 import { api, errorMessage } from "../../lib/api";
 import { confirmDialog, toast } from "../../components/Feedback";
 
@@ -63,6 +63,74 @@ function BatchProgress({
           : `${label}: ${done} of ${total || "…"} — this keeps running on the server; you can leave this page.`}
       </small>
     </div>
+  );
+}
+
+/** Shows how mail is sent and lets the admin send a real test message. */
+function EmailCheck() {
+  const status = useQuery({
+    queryKey: ["email-settings"],
+    queryFn: async () =>
+      (await api.get("/admin/settings/email")).data.data as {
+        provider: "brevo" | "smtp" | "none";
+        from: string;
+        adminNotifyEmail: string;
+      },
+  });
+  const [busy, setBusy] = useState(false),
+    [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
+  const label = {
+    brevo: "Brevo (HTTPS API)",
+    smtp: "SMTP",
+    none: "Not set up",
+  }[status.data?.provider || "none"];
+  return (
+    <section className="card staff-card settings-card">
+      <h3>
+        <Mail size={18} /> Email
+      </h3>
+      <p className="muted">
+        Used for password resets and new-contributor alerts. Sending with:{" "}
+        <strong>{status.data ? label : "…"}</strong>
+        {status.data?.from && <> · from {status.data.from}</>}
+        {status.data && (
+          <>
+            {" "}
+            · alerts to{" "}
+            {status.data.adminNotifyEmail || "nobody (set ADMIN_NOTIFY_EMAIL)"}
+          </>
+        )}
+      </p>
+      <div className="row-actions">
+        <button
+          disabled={busy}
+          onClick={async () => {
+            setBusy(true);
+            setResult(null);
+            try {
+              const sent = (await api.post("/admin/settings/email/test")).data
+                .data;
+              setResult({
+                ok: true,
+                text: `Test email sent to ${sent.to}. Check the inbox and spam folder.`,
+              });
+            } catch (e) {
+              setResult({ ok: false, text: errorMessage(e) });
+            } finally {
+              setBusy(false);
+            }
+          }}
+        >
+          {busy ? <Loader2 className="spin" size={15} /> : <Mail size={15} />}{" "}
+          Send test email
+        </button>
+      </div>
+      {result && (
+        <p className={`notice ${result.ok ? "" : "error"}`} role="status">
+          {result.text}
+        </p>
+      )}
+    </section>
   );
 }
 
@@ -331,6 +399,7 @@ export default function Settings() {
         </div>
         <BatchProgress batch={applyBatch} label="Watermarking" />
       </section>
+      <EmailCheck />
       <section className="card staff-card settings-card">
         <h3>
           <ImageOff size={18} /> Missing cover thumbnails

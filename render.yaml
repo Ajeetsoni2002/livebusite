@@ -39,6 +39,8 @@ services:
         sync: false
       - key: TRUST_PROXY
         sync: false
+      - key: BREVO_API_KEY
+        sync: false
       - key: SMTP_HOST
         sync: false
       - key: SMTP_PORT
