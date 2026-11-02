@@ -3,8 +3,24 @@ import { FileText } from "lucide-react";
 import { apiUrl } from "../lib/api";
 
 // Without the Pages R2 binding every /files request 404s. After the first miss, go
-// straight to the API for the rest of the visit instead of failing once per image.
-let cdnMissing = false;
+// straight to the API for the rest of the visit (kept across reloads in this tab)
+// instead of failing once per image.
+const CDN_KEY = "buit-cdn-missing";
+let cdnMissing = (() => {
+  try {
+    return sessionStorage.getItem(CDN_KEY) === "1";
+  } catch {
+    return false;
+  }
+})();
+function markCdnMissing() {
+  cdnMissing = true;
+  try {
+    sessionStorage.setItem(CDN_KEY, "1");
+  } catch {
+    /* Remembering the miss is an optimisation only. */
+  }
+}
 
 export function PdfThumbnail({
   id,
@@ -44,7 +60,7 @@ export function PdfThumbnail({
   }, [waiting]);
   const onError = () => {
     if (!viaApi) {
-      cdnMissing = true;
+      markCdnMissing();
       setViaApi(true);
     } else {
       setFailed(true);

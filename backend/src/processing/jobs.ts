@@ -98,10 +98,18 @@ async function watermarkJob(job: any) {
     { _id: item._id },
     { $set: { "watermark.status": "running" } },
   );
+  // The file students received until now; its cover is reused if the source has none.
+  const previousAsset = item.asset;
   const finish = async (watermark: object, asset = sourceId) => {
     item.asset = asset;
     item.watermark = { ...watermark, hold: false, format: WATERMARK_FORMAT };
     await item.save();
+    // A new public file must never wait for the next sweep to get its cover.
+    const cover: any = await FileAsset.findById(asset)
+      .select("thumbnailKey thumbnailVersion")
+      .lean();
+    if (!cover?.thumbnailKey || cover.thumbnailVersion !== THUMBNAIL_VERSION)
+      await enqueueJob("thumbnail", job.contentType, item._id);
   };
   if (!text && !siteLink)
     return finish({
@@ -122,6 +130,12 @@ async function watermarkJob(job: any) {
     );
   const source: any = await FileAsset.findById(sourceId);
   if (!source) throw new Error("Source file is missing");
+  const coverFrom: any = source.thumbnailKey
+    ? source
+    : await FileAsset.findOne({
+        _id: previousAsset,
+        thumbnailKey: { $nin: [null, ""] },
+      }).lean();
   let output: Buffer;
   try {
     output = await watermarkPdf(await readAll(source.key), {
@@ -153,9 +167,10 @@ async function watermarkJob(job: any) {
         size: output.length,
         mime: "application/pdf",
         originalName: source.originalName,
-        // The watermark is faint; the source's cover thumbnail stays representative.
-        thumbnailKey: source.thumbnailKey,
-        thumbnailVersion: source.thumbnailVersion,
+        // The watermark is faint, so the source's cover (or the previous public
+        // copy's, when only that one was rendered) stays representative.
+        thumbnailKey: coverFrom?.thumbnailKey,
+        thumbnailVersion: coverFrom?.thumbnailVersion,
       });
     } catch (error: any) {
       await storage.delete(key).catch(() => {});
@@ -251,9 +266,10 @@ export async function queueMissingThumbnails(limit = 500) {
           content: { $in: candidates.map((r: any) => r._id) },
           $or: [
             { status: { $in: ["queued", "running"] } },
+            // A cover that failed is tried again the next day (a few renders a day at most).
             {
               status: "failed",
-              finishedAt: { $gte: new Date(Date.now() - 7 * 86_400_000) },
+              finishedAt: { $gte: new Date(Date.now() - 86_400_000) },
             },
           ],
         })

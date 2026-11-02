@@ -22,7 +22,7 @@ export async function renderPdfThumbnail(
       const child = spawn(
         process.execPath,
         [
-          "--max-old-space-size=160",
+          "--max-old-space-size=320",
           fileURLToPath(new URL("./thumbnail-worker.mjs", import.meta.url)),
         ],
         { stdio: ["pipe", "pipe", "ignore"], windowsHide: true },

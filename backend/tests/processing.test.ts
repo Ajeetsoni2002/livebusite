@@ -1034,8 +1034,15 @@ test("papers processed before the site link existed are re-run automatically, on
   );
   while (await runNextJob());
   const id = created.body.data._id;
-  // Make it look like an item watermarked by the old pipeline.
+  const { FileAsset } = await import("../src/modules/models.js");
+  const before: any = await Paper.findById(id).lean();
+  // Make it look like an item watermarked by the old pipeline whose public copy lost
+  // its cover (what happened to papers re-run for the site link).
   await Paper.updateOne({ _id: id }, { $unset: { "watermark.format": "" } });
+  await FileAsset.updateOne(
+    { _id: before.asset },
+    { $unset: { thumbnailKey: "", thumbnailVersion: "" } },
+  );
   assert.equal(await queueOutdatedWatermarks(), 1);
   while (await runNextJob());
   const item: any = await Paper.findById(id).lean();
@@ -1044,4 +1051,10 @@ test("papers processed before the site link existed are re-run automatically, on
   const pages = await pageTexts(await publicPdf(String(id)));
   assert.match(pages[0], /BUIT Papers .*\| localhost:5173/);
   assert.equal(await queueOutdatedWatermarks(), 0, "nothing left to redo");
+  // The re-run must leave the public file with a cover, served cacheably.
+  const asset: any = await FileAsset.findById(item.asset).lean();
+  assert.ok(asset.thumbnailKey, "re-processed file keeps a cover");
+  const cover = await request(app).get(`/api/papers/${id}/thumbnail`);
+  assert.equal(cover.status, 200);
+  assert.match(cover.headers["cache-control"], /^public, max-age=/);
 });

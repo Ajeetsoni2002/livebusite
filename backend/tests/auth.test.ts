@@ -206,7 +206,7 @@ test("uploads generate first-page thumbnails with the same visibility as the PDF
   const response = await request(app).get(path).buffer(true);
   assert.equal(response.status, 200);
   assert.match(response.headers["content-type"], /image\/webp/);
-  assert.match(response.headers["cache-control"], /no-store/);
+  assert.equal(response.headers["cache-control"], "public, max-age=3600");
   const { data, info } = await sharp(response.body)
     .removeAlpha()
     .raw()

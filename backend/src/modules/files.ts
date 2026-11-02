@@ -77,7 +77,12 @@ fileRouter.get(
     res.set({
       "Content-Type": "image/webp",
       "Content-Length": String(object.size),
-      "Cache-Control": "private, no-store",
+      // Published covers may sit in browsers for an hour instead of re-downloading on
+      // every visit; a takedown still clears within the hour. Drafts stay private.
+      "Cache-Control":
+        item.status === "published" && !item.deletedAt && !item.watermark?.hold
+          ? "public, max-age=3600"
+          : "private, no-store",
       "Content-Disposition": "inline",
     });
     object.body.on("error", next);
