@@ -205,12 +205,12 @@ export default function BecomeContributor() {
             </label>
           </div>
           <label>
-            Password · at least 12 characters
+            Password · at least 6 characters
             <input
               name="password"
               type="password"
               required
-              minLength={12}
+              minLength={6}
               maxLength={72}
               autoComplete="new-password"
             />
@@ -221,7 +221,7 @@ export default function BecomeContributor() {
               name="confirm"
               type="password"
               required
-              minLength={12}
+              minLength={6}
               maxLength={72}
               autoComplete="new-password"
             />

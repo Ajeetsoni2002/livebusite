@@ -113,12 +113,12 @@ export function ResetPassword() {
             }}
           >
             <label>
-              New password · at least 12 characters
+              New password · at least 6 characters
               <input
                 type="password"
                 name="password"
                 required
-                minLength={12}
+                minLength={6}
                 maxLength={72}
                 autoComplete="new-password"
               />
@@ -129,7 +129,7 @@ export function ResetPassword() {
                 type="password"
                 name="confirm"
                 required
-                minLength={12}
+                minLength={6}
                 maxLength={72}
                 autoComplete="new-password"
               />

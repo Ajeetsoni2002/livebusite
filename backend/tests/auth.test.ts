@@ -1083,6 +1083,11 @@ test("students can create an untrusted contributor account and are signed in", a
     .set("X-CSRF-Token", csrf)
     .send({ ...body, email: "other@example.test", password: "short" });
   assert.equal(short.status, 400);
+  const six = await agent
+    .post("/api/auth/register")
+    .set("X-CSRF-Token", csrf)
+    .send({ ...body, email: "six@example.test", password: "abc123" });
+  assert.equal(six.status, 201, "six characters are enough");
 });
 test("forgot password answers the same for unknown emails and reset links work once", async () => {
   const user = await account();

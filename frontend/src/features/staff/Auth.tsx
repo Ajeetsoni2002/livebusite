@@ -170,12 +170,12 @@ function ChangePassword() {
             />
           </label>
           <label>
-            New password · at least 12 characters
+            New password · at least 6 characters
             <input
               type="password"
               name="new"
               required
-              minLength={12}
+              minLength={6}
               maxLength={72}
               autoComplete="new-password"
             />

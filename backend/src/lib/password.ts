@@ -10,6 +10,6 @@ export const passwordInput = z
     "Password must be at most 72 UTF-8 bytes.",
   );
 export const newPasswordInput = passwordInput.refine(
-  (value) => value.length >= 12,
-  "Password must contain at least 12 characters.",
+  (value) => value.length >= 6,
+  "Password must contain at least 6 characters.",
 );
