@@ -1,4 +1,5 @@
 import {
+  blankOutside,
   contentBox,
   crop,
   detectSpread,
@@ -39,10 +40,15 @@ export type RasterAnalysis = {
 };
 export const PHOTO_THRESHOLD = 0.45;
 
-/** Looks at a rendered image page: where the sheet is, photo-likeness, two-page spread. */
-export function analyzeRaster(img: Img): RasterAnalysis {
+/**
+ * Looks at a rendered image page: where the sheet is, photo-likeness, two-page spread.
+ * `placed` is where the PDF itself paints its photo(s) (see placement.ts); when the rest
+ * of the page is blank it is exact, so it beats guessing the box from pixels.
+ */
+export function analyzeRaster(img: Img, placed?: Box | null): RasterAnalysis {
   const gray = toGray(img);
-  const outer = contentBox(gray);
+  const outer =
+    placed && blankOutside(gray, placed) ? placed : contentBox(gray);
   const inner = paperBox(crop(gray, outer));
   const box = {
     x: outer.x + inner.x,

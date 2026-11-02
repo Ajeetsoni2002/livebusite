@@ -126,10 +126,60 @@ function percentile(values: ArrayLike<number>, p: number) {
 }
 
 /**
+ * Finds a photo inside flat white padding, even when the photo is so bright that most
+ * of its paper is pure white. Padding is a band of completely blank rows (or columns)
+ * at the page edges; the photo between them is largely light-grey paper (texture,
+ * shading, the table it lies on). Printed text is dark ink on white with almost no
+ * light grey, so a clean page with an empty lower half is never mistaken for one.
+ */
+export function paddingBox(g: Gray): Box | null {
+  const { width: w, height: h, data } = g;
+  const step = Math.max(1, Math.floor(Math.min(w, h) / 500));
+  const marked = (n: number, t: number) => n / t > 0.0005;
+  const rowMarked = (y: number) => {
+    let n = 0,
+      t = 0;
+    for (let x = 0; x < w; x += step, t++) if (data[y * w + x] < 248) n++;
+    return marked(n, t);
+  };
+  const colMarked = (x: number, y0: number, y1: number) => {
+    let n = 0,
+      t = 0;
+    for (let y = y0; y < y1; y += step, t++) if (data[y * w + x] < 248) n++;
+    return marked(n, t);
+  };
+  let top = 0,
+    bottom = h - 1;
+  while (top < h && !rowMarked(top)) top++;
+  while (bottom > top && !rowMarked(bottom)) bottom--;
+  if (bottom - top < h * 0.2) return null;
+  let left = 0,
+    right = w - 1;
+  while (left < w && !colMarked(left, top, bottom + 1)) left++;
+  while (right > left && !colMarked(right, top, bottom + 1)) right--;
+  if (right - left < w * 0.2) return null;
+  const padY = (top + (h - 1 - bottom)) / h,
+    padX = (left + (w - 1 - right)) / w;
+  if (padY < 0.08 && padX < 0.08) return null;
+  // Photographed paper is light grey (midtones); printed text is dark ink on white.
+  let paper = 0,
+    total = 0;
+  for (let y = top; y <= bottom; y += step)
+    for (let x = left; x <= right; x += step, total++) {
+      const v = data[y * w + x];
+      if (v >= 170 && v < 248) paper++;
+    }
+  if (paper / total < 0.12) return null;
+  return { x: left, y: top, width: right - left + 1, height: bottom - top + 1 };
+}
+
+/**
  * Trims plain white page padding around a photo that was placed on a PDF page (the photo
  * is a solid non-white block). Clean scans with sparse text are never cropped.
  */
 export function contentBox(g: Gray): Box {
+  const padded = paddingBox(g);
+  if (padded) return padded;
   const { width: w, height: h, data } = g;
   const full = { x: 0, y: 0, width: w, height: h };
   const step = Math.max(1, Math.floor(Math.min(w, h) / 400));
@@ -170,6 +220,30 @@ export function contentBox(g: Gray): Box {
   return solidRows / rows > 0.8 && box.width > w * 0.2 && box.height > h * 0.2
     ? box
     : full;
+}
+
+/**
+ * True when everything outside `box` is plain page (white padding), so `box` can be
+ * trusted as the photo's area. Sampled; a few specks or a thin border are tolerated.
+ */
+export function blankOutside(g: Gray, box: Box) {
+  const { width: w, height: h, data } = g;
+  const step = Math.max(1, Math.floor(Math.min(w, h) / 300));
+  let outside = 0,
+    blank = 0;
+  for (let y = 0; y < h; y += step)
+    for (let x = 0; x < w; x += step) {
+      if (
+        x >= box.x &&
+        x < box.x + box.width &&
+        y >= box.y &&
+        y < box.y + box.height
+      )
+        continue;
+      outside++;
+      if (data[y * w + x] >= 240) blank++;
+    }
+  return outside > 0 && blank / outside > 0.97;
 }
 
 /** Ink/paper split for a normalized sheet; faint photo text sits much higher than scan ink. */

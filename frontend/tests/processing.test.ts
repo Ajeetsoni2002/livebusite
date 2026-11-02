@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   contentBox,
+  paddingBox,
   detectSpread,
   enhance,
   estimateSkew,
@@ -18,6 +19,11 @@ import {
   processRaster,
   wantsEnhance,
 } from "../src/lib/processing/pipeline.ts";
+import {
+  imageRects,
+  photoRegion,
+  type Ops,
+} from "../src/lib/processing/placement.ts";
 
 // Deterministic "text": rows of word-like bars inside the given columns.
 function page(
@@ -249,4 +255,118 @@ test("born-digital spreads are found from text positions", () => {
   const across = [...two, { x: 330, width: 200 }];
   assert.equal(analyzeTextLayout(842, 595, across).split, false);
   assert.equal(analyzeTextLayout(595, 842, two).split, false);
+});
+
+/**
+ * A bright phone photo of an open answer book, placed on a portrait page with white bands
+ * above and below (what "images to PDF" apps make). Its paper is nearly white, like an
+ * over-exposed shot, so only the text and a soft shadow mark the photo's area.
+ */
+function paddedBrightSpread(pageW = 850, pageH = 1200) {
+  const spread = page(1200, 850, [
+    [60, 540],
+    [660, 1140],
+  ]);
+  const photoH = Math.round((850 / 1200) * pageW),
+    top = Math.round((pageH - photoH) / 2);
+  const data = new Uint8ClampedArray(pageW * pageH * 4).fill(255);
+  for (let y = 0; y < photoH; y++)
+    for (let x = 0; x < pageW; x++) {
+      const sx = Math.floor((x / pageW) * 1200),
+        sy = Math.floor((y / photoH) * 850);
+      const v = spread.data[(sy * 1200 + sx) * 4];
+      // Near-white paper with a faint shade towards the edges of the photo.
+      const shade = 246 - 14 * Math.abs(x / pageW - 0.5);
+      const o = ((top + y) * pageW + x) * 4;
+      data[o] = data[o + 1] = data[o + 2] = v < 128 ? v : shade;
+    }
+  return { img: { width: pageW, height: pageH, data }, top, photoH };
+}
+
+test("a bright spread photo inside white padding is found and split", () => {
+  const { img, top, photoH } = paddedBrightSpread();
+  const box = paddingBox(toGray(img));
+  assert.ok(box, "padding is detected");
+  assert.ok(Math.abs(box.y - top) <= 3 && Math.abs(box.height - photoH) <= 6);
+  const analysis = analyzeRaster(img);
+  assert.equal(analysis.spread.split, true, analysis.spread.reason);
+  assert.equal(
+    processRaster(img, analysis, defaultDecision, "none", "grayscale").length,
+    2,
+  );
+});
+
+test("a clean text page with an empty lower half is never trimmed", () => {
+  const img = page(850, 1200, [[60, 790]], (img) => {
+    // Blank out the lower half: a short last page.
+    img.data.fill(255, img.width * 600 * 4);
+  });
+  assert.equal(paddingBox(toGray(img)), null);
+  const box = contentBox(toGray(img));
+  assert.deepEqual(box, { x: 0, y: 0, width: 850, height: 1200 });
+});
+
+const ops: Ops = {
+  save: 10,
+  restore: 11,
+  transform: 12,
+  paintFormXObjectBegin: 74,
+  paintFormXObjectEnd: 75,
+  paintImageXObject: 85,
+  paintInlineImageXObject: 86,
+  paintImageMaskXObject: 83,
+  paintImageXObjectRepeat: 88,
+};
+
+test("the PDF's own image placement gives the photo's exact box", () => {
+  // A4 page; a 595x420 photo drawn 211 pt above the bottom, inside a form XObject.
+  const rects = imageRects(
+    [
+      ops.save,
+      ops.paintFormXObjectBegin,
+      ops.transform,
+      ops.paintImageXObject,
+      ops.paintFormXObjectEnd,
+      ops.restore,
+    ],
+    [
+      null,
+      [[1, 0, 0, 1, 0, 11], null],
+      [595, 0, 0, 420, 0, 200],
+      ["img1"],
+      null,
+      null,
+    ],
+    ops,
+  );
+  assert.deepEqual(rects, [[0, 211, 595, 631]]);
+  // Rendered at 2x with the y axis flipped (PDF origin is bottom-left).
+  const toPixels = ([x0, y0, x1, y1]: number[]) =>
+    [x0 * 2, (842 - y0) * 2, x1 * 2, (842 - y1) * 2] as [
+      number,
+      number,
+      number,
+      number,
+    ];
+  assert.deepEqual(photoRegion(rects, toPixels, 1190, 1684), {
+    x: 0,
+    y: 422,
+    width: 1190,
+    height: 840,
+  });
+  // A full-page photo needs no trimming; a tiny logo is not the sheet.
+  assert.equal(photoRegion([[0, 0, 595, 842]], toPixels, 1190, 1684), null);
+  assert.equal(photoRegion([[10, 10, 60, 60]], toPixels, 1190, 1684), null);
+});
+
+test("a placed photo box is trusted only when the rest of the page is blank", () => {
+  const { img, top, photoH } = paddedBrightSpread();
+  const placed = { x: 0, y: top, width: img.width, height: photoH };
+  const box = analyzeRaster(img, placed).box;
+  // paperBox may shave a pixel or two off the photo's own edge.
+  for (const key of ["x", "y", "width", "height"] as const)
+    assert.ok(Math.abs(box[key] - placed[key]) <= 4, `${key}: ${box[key]}`);
+  // Text outside the claimed box means it is not just padding: ignore the hint.
+  const busy = page(850, 1200, [[60, 790]]);
+  assert.ok(Math.abs(analyzeRaster(busy, placed).box.y - placed.y) > 4);
 });

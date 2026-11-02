@@ -1,12 +1,15 @@
 import {
   GlobalWorkerOptions,
+  OPS,
   getDocument,
   type PDFDocumentProxy,
+  type PDFPageProxy,
 } from "pdfjs-dist/legacy/build/pdf.mjs";
 import workerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import { PDFDocument, degrees } from "pdf-lib";
 import type { Img, Preset } from "./core";
 import { eraseRollNumber, type RollMatch } from "./rollnumber";
+import { imageRects, photoRegion, type PdfRect } from "./placement";
 import {
   analyzeRaster,
   analyzeTextLayout,
@@ -136,6 +139,32 @@ async function renderPage(
   return { canvas, scale, base };
 }
 
+/** Where the page paints its photo(s), in pixels of a render at `scale`. */
+async function placedPhotos(
+  page: PDFPageProxy,
+  scale: number,
+  width: number,
+  height: number,
+) {
+  try {
+    const ops = await page.getOperatorList();
+    const viewport = page.getViewport({ scale });
+    return photoRegion(
+      imageRects(ops.fnArray, ops.argsArray, OPS),
+      ([x0, y0, x1, y1]: PdfRect) => {
+        const [a, b] = viewport.convertToViewportPoint(x0, y0);
+        const [c, d] = viewport.convertToViewportPoint(x1, y1);
+        return [a, b, c, d];
+      },
+      width,
+      height,
+    );
+  } catch {
+    // Unusual drawing instructions: fall back to finding the sheet from pixels.
+    return null;
+  }
+}
+
 /** First pass: classify every page and keep a small preview of the original. */
 export async function analyzeDocument(
   doc: PDFDocumentProxy,
@@ -158,7 +187,11 @@ export async function analyzeDocument(
     );
     // Real text means a born-digital page: never re-rendered, only watermarked.
     const bornDigital = chars > 80;
-    const { canvas } = await renderPage(doc, i, bornDigital ? 1200 : 2200);
+    const { canvas, scale } = await renderPage(
+      doc,
+      i,
+      bornDigital ? 1200 : 2200,
+    );
     const info: PageInfo = {
       index: i,
       width: base.width,
@@ -185,7 +218,10 @@ export async function analyzeDocument(
       const ctx = canvas.getContext("2d")!;
       const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const img = { width: data.width, height: data.height, data: data.data };
-      info.raster = analyzeRaster(img);
+      info.raster = analyzeRaster(
+        img,
+        await placedPhotos(page, scale, img.width, img.height),
+      );
       // Students write their roll number on page 1; it must not reach the public copy.
       if (i === 0)
         try {
