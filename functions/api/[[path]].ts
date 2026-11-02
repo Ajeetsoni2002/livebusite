@@ -32,6 +32,7 @@ function wakingUp() {
 }
 
 const previewPath = /^\/api\/(papers|notes)\/[^/]+\/preview$/;
+const thumbnailPath = /^\/api\/(papers|notes)\/[a-f0-9]{24}\/thumbnail$/i;
 
 // The in-page PDF viewer asks for ?stream=1: follow the storage redirect here so
 // the browser reads the PDF same-origin (no bucket CORS) and only ever gets a PDF.
@@ -131,7 +132,17 @@ export async function onRequest(context: {
     }
     const headers = new Headers(response.headers);
     for (const header of hopHeaders) headers.delete(header);
-    headers.set("Cache-Control", "private, no-store");
+    // Published covers may stay in the visitor's browser (the API marks them public
+    // for an hour); everything else, including errors, is never stored.
+    const upstreamCache = response.headers.get("Cache-Control") || "";
+    const cover =
+      response.status === 200 &&
+      thumbnailPath.test(incoming.pathname) &&
+      /^public, max-age=\d+$/.test(upstreamCache);
+    headers.set(
+      "Cache-Control",
+      cover ? upstreamCache.replace("public", "private") : "private, no-store",
+    );
     const location = headers.get("Location");
     if (
       location &&

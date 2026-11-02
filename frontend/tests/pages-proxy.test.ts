@@ -215,6 +215,34 @@ test("upstream auth failures keep their status and errors and cannot be cached",
   assert.equal((await response.json()).error.code, "CSRF_REQUIRED");
 });
 
+test("published covers may be kept by the browser; other public answers may not", async (t) => {
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async () =>
+      new Response("webp", {
+        status: 200,
+        headers: {
+          "Content-Type": "image/webp",
+          "Cache-Control": "public, max-age=3600",
+        },
+      }),
+  );
+  t.after(() => fetchMock.mock.restore());
+  const cover = await onRequest({
+    request: new Request(
+      origin + "/api/papers/6ac3e19fb7fe60ca4469d30f/thumbnail",
+    ),
+    env,
+  });
+  assert.equal(cover.headers.get("Cache-Control"), "private, max-age=3600");
+  const listing = await onRequest({
+    request: new Request(origin + "/api/papers"),
+    env,
+  });
+  assert.equal(listing.headers.get("Cache-Control"), "private, no-store");
+});
+
 test("network failures produce a retryable 502 without exposing upstream details", async (t) => {
   const fetchMock = mock.method(globalThis, "fetch", async () => {
     throw new Error("private internal error");
