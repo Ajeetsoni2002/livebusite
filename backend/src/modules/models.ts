@@ -114,6 +114,8 @@ const watermarkState = new Schema(
     reason: String,
     error: String,
     appliedAt: Date,
+    // Version of the processing pipeline (see WATERMARK_FORMAT); older items are re-run automatically.
+    format: Number,
   },
   { _id: false },
 );

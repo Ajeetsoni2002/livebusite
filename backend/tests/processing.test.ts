@@ -1018,3 +1018,30 @@ test("the sweep re-renders covers made by an older renderer", async () => {
   );
   assert.equal(await queueMissingThumbnails(), 0);
 });
+
+test("papers processed before the site link existed are re-run automatically, once", async () => {
+  const { runNextJob, queueOutdatedWatermarks, WATERMARK_FORMAT } =
+    await import("../src/processing/jobs.js");
+  await account("admin");
+  const admin = await login("admin");
+  const { offering: o } = await offering();
+  const created = await upload(
+    admin,
+    "admin",
+    o._id,
+    await samplePdf("Question 1"),
+    "published",
+  );
+  while (await runNextJob());
+  const id = created.body.data._id;
+  // Make it look like an item watermarked by the old pipeline.
+  await Paper.updateOne({ _id: id }, { $unset: { "watermark.format": "" } });
+  assert.equal(await queueOutdatedWatermarks(), 1);
+  while (await runNextJob());
+  const item: any = await Paper.findById(id).lean();
+  assert.equal(item.watermark.status, "done");
+  assert.equal(item.watermark.format, WATERMARK_FORMAT);
+  const pages = await pageTexts(await publicPdf(String(id)));
+  assert.match(pages[0], /BUIT Papers .*\| localhost:5173/);
+  assert.equal(await queueOutdatedWatermarks(), 0, "nothing left to redo");
+});

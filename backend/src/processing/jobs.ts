@@ -20,6 +20,12 @@ import {
  * Jobs are idempotent: re-running one recomputes the same output from the stored source.
  */
 const LEASE_MS = 10 * 60_000;
+/*
+ * Bump when the watermark worker changes what it adds to every page. Items processed
+ * by an older version are re-run by the sweep below, so nobody has to press "Apply".
+ * 2 = clickable site name and link at the top of each page.
+ */
+export const WATERMARK_FORMAT = 2;
 const MAX_ATTEMPTS = 3;
 type Kind = "papers" | "notes";
 
@@ -94,7 +100,7 @@ async function watermarkJob(job: any) {
   );
   const finish = async (watermark: object, asset = sourceId) => {
     item.asset = asset;
-    item.watermark = { ...watermark, hold: false };
+    item.watermark = { ...watermark, hold: false, format: WATERMARK_FORMAT };
     await item.save();
   };
   if (!text && !siteLink)
@@ -270,10 +276,58 @@ export async function queueMissingThumbnails(limit = 500) {
   return queued;
 }
 
+/**
+ * Queues a watermark job for every live PDF last processed by an older WATERMARK_FORMAT,
+ * so existing papers pick up changes like the site link on their own. Jobs rebuild from
+ * the stored original; items with a pending job, or one that failed this week, are skipped.
+ */
+export async function queueOutdatedWatermarks(limit = 500) {
+  let queued = 0;
+  for (const [kind, model] of Object.entries(contentModels) as [Kind, any][]) {
+    const rows = await model
+      .find({
+        deletedAt: null,
+        asset: { $ne: null },
+        format: { $ne: "markdown" },
+        "watermark.format": { $ne: WATERMARK_FORMAT },
+      })
+      .select("_id")
+      .lean();
+    if (!rows.length) continue;
+    const busy = new Set(
+      (
+        await ProcessingJob.find({
+          type: "watermark",
+          content: { $in: rows.map((r: any) => r._id) },
+          $or: [
+            { status: { $in: ["queued", "running"] } },
+            {
+              status: "failed",
+              finishedAt: { $gte: new Date(Date.now() - 7 * 86_400_000) },
+            },
+          ],
+        })
+          .select("content")
+          .lean()
+      ).map((j: any) => String(j.content)),
+    );
+    for (const row of rows) {
+      if (queued >= limit) break;
+      if (busy.has(String(row._id))) continue;
+      await enqueueWatermark(kind, row._id, { batch: "format-sweep" });
+      queued++;
+    }
+  }
+  return queued;
+}
+
 /** Runs the sweep shortly after start and then every few hours. */
 export function startThumbnailSweep(everyMs = 6 * 3600_000, firstMs = 30_000) {
   const sweep = () =>
-    queueMissingThumbnails()
+    queueOutdatedWatermarks()
+      .then((n) => n && console.info(`Queued ${n} outdated watermarks`))
+      .catch(() => console.warn("Watermark sweep failed; will retry later."))
+      .then(() => queueMissingThumbnails())
       .then((n) => n && console.info(`Queued ${n} missing thumbnails`))
       .catch(() => console.warn("Thumbnail sweep failed; will retry later."));
   const first = setTimeout(sweep, firstMs);
