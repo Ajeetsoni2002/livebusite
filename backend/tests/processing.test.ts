@@ -201,11 +201,11 @@ test("new uploads stay private until every page is watermarked; the original is 
   assert.equal("files" in listed || "watermark" in listed, false);
 });
 
-test("PDFs that already carry the name are skipped and served as uploaded", async () => {
+test("PDFs that already carry the name keep it but still get the clickable site link", async () => {
   const { runNextJob } = await import("../src/processing/jobs.js");
   await account("admin");
   const admin = await login("admin");
-  const { offering: o } = await offering();
+  const { offering: o, code } = await offering();
   const created = await upload(
     admin,
     "admin",
@@ -215,13 +215,22 @@ test("PDFs that already carry the name are skipped and served as uploaded", asyn
   );
   while (await runNextJob());
   const item: any = await Paper.findById(created.body.data._id).lean();
-  assert.equal(item.watermark.status, "skipped");
-  assert.equal(item.watermark.reason, "already-watermarked");
-  assert.equal(String(item.asset), String(item.files.original));
-  assert.equal(
-    (await request(app).get(`/api/papers/${item._id}/preview`)).status,
-    302,
-  );
+  assert.equal(item.watermark.status, "done");
+  assert.notEqual(String(item.asset), String(item.files.original));
+  const bytes = await publicPdf(String(item._id));
+  const pages = await pageTexts(bytes);
+  for (const text of pages) {
+    assert.match(text, /BUIT Papers .*\| localhost:5173/);
+    assert.doesNotMatch(text, new RegExp(`${code} \\| Ajeet Soni`));
+  }
+  const pdf = await PDFDocument.load(bytes);
+  for (const page of pdf.getPages()) {
+    const links = page.node
+      .Annots()
+      ?.asArray()
+      .map((ref) => String(pdf.context.lookup(ref)));
+    assert.ok(links?.some((a) => a.includes("(http://localhost:5173/)")));
+  }
 });
 
 test("watermark settings are admin-only; re-apply re-marks outdated items in place", async () => {

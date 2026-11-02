@@ -113,6 +113,9 @@ export default function Layout() {
               <NavLink to="/notes" onClick={() => setMenu(false)}>
                 Short notes
               </NavLink>
+              <NavLink to="/jobs" onClick={() => setMenu(false)}>
+                Jobs &amp; internships
+              </NavLink>
               <NavLink to="/contributors" onClick={() => setMenu(false)}>
                 Contributors
               </NavLink>
@@ -125,6 +128,9 @@ export default function Layout() {
                 onClick={() => setMenu(false)}
               >
                 Earn ₹{RATE}
+              </NavLink>
+              <NavLink to="/contributor/login" onClick={() => setMenu(false)}>
+                Contributor login
               </NavLink>
             </nav>
             <button

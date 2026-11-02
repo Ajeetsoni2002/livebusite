@@ -92,6 +92,15 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
     atlasSearch: env.ATLAS_SEARCH_ENABLED === "true",
     cfOriginSecret: env.CF_ORIGIN_SECRET || "",
     contactEmail: env.CONTACT_EMAIL || "",
+    // Outgoing mail (password resets, new-contributor alerts). Unset = log to console.
+    smtp: {
+      host: env.SMTP_HOST || "",
+      port: Number(env.SMTP_PORT || 587),
+      user: env.SMTP_USER || "",
+      pass: env.SMTP_PASS || "",
+      from: env.MAIL_FROM || env.SMTP_USER || "",
+    },
+    adminNotifyEmail: env.ADMIN_NOTIFY_EMAIL || env.CONTACT_EMAIL || "",
   };
 }
 export const config = parseConfig();

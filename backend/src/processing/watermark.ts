@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { z } from "zod";
+import { config } from "../config.js";
 import { Setting } from "../modules/models.js";
 
 // Helvetica (WinAnsi) can only draw printable Latin characters; templates are limited to them.
@@ -24,6 +25,13 @@ export const watermarkSettingsInput = z
       .trim()
       .max(60)
       .regex(printable, "Use plain letters, digits and punctuation only."),
+    siteLink: z.boolean(),
+    siteLabel: z
+      .string()
+      .trim()
+      .min(1)
+      .max(60)
+      .regex(printable, "Use plain letters, digits and punctuation only."),
   })
   .strict();
 export type WatermarkSettings = z.infer<typeof watermarkSettingsInput>;
@@ -36,7 +44,23 @@ export const defaultWatermark: WatermarkSettings = {
   tiled: true,
   footer: true,
   skipIfContains: "Ajeet Soni",
+  siteLink: true,
+  siteLabel: "BUIT Papers - free previous year papers",
 };
+
+/** The clickable line printed at the top of every page, pointing back to the site. */
+export function siteLinkFor(
+  settings: WatermarkSettings,
+  siteUrl = config.siteUrl,
+) {
+  if (!settings.siteLink || !/^https?:\/\//.test(siteUrl || "")) return null;
+  const url = new URL(siteUrl);
+  return {
+    label: settings.siteLabel,
+    url: url.origin + "/",
+    host: url.host,
+  };
+}
 
 export async function getWatermarkSettings() {
   const doc = await Setting.findOne({ key: "watermark" }).lean<any>();
@@ -65,7 +89,11 @@ export class AlreadyWatermarked extends Error {}
 /** Runs pdf-lib in a separate process so large scans never stall or bloat the API. */
 export function watermarkPdf(
   bytes: Buffer,
-  options: WatermarkSettings & { text: string; title?: string },
+  options: Omit<WatermarkSettings, "siteLink"> & {
+    text: string;
+    title?: string;
+    siteLink?: ReturnType<typeof siteLinkFor>;
+  },
   timeoutMs = 180_000,
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowUpRight,
-  CheckCircle2,
   FileUp,
   KeyRound,
   IndianRupee,
@@ -16,16 +16,16 @@ import { usePublic } from "../../lib/queries";
 import type { Entity } from "../../lib/types";
 
 const steps = [
-  [UserPlus, "Send a request", "Tell us who you are and what you can share."],
-  [
-    KeyRound,
-    "Get your login",
-    "An admin reviews it and sends your sign-in details.",
-  ],
+  [UserPlus, "Create your account", "Takes a minute. No waiting for approval."],
   [
     FileUp,
     "Upload papers",
-    "Upload PDFs; each one is checked before it goes live.",
+    "Upload PDFs or photos from your contributor workspace.",
+  ],
+  [
+    KeyRound,
+    "Admin approves",
+    "Each upload is checked by an admin before it goes live.",
   ],
   [
     IndianRupee,
@@ -58,7 +58,9 @@ export default function BecomeContributor() {
     `Have Barkatullah University question papers or notes? Become a contributor and earn ${rupees(RATE)} for every approved upload.`,
   );
   const branches = usePublic<Entity[]>("/branches");
-  const [state, setState] = useState<"idle" | "sending" | "sent">("idle");
+  const navigate = useNavigate(),
+    client = useQueryClient();
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
 
   return (
@@ -72,11 +74,17 @@ export default function BecomeContributor() {
         <p>
           Upload previous year question papers and your notes. Every approved
           paper earns you {rupees(RATE)}, and every approved note earns{" "}
-          {rupees(RATE)} too. Ask for an account and we will set you up.
+          {rupees(RATE)} too. Create your contributor account and start
+          uploading right away.
         </p>
-        <a className="button" href="#request">
-          Request contributor access <ArrowUpRight size={17} />
-        </a>
+        <div className="row-actions">
+          <a className="button" href="#join">
+            Create contributor account <ArrowUpRight size={17} />
+          </a>
+          <Link className="button secondary" to="/contributor/login">
+            Contributor login
+          </Link>
+        </div>
       </div>
       <ol className="become-steps">
         {steps.map(([Icon, title, text], i) => (
@@ -91,7 +99,7 @@ export default function BecomeContributor() {
         ))}
       </ol>
       <EarnCheque heading={false} />
-      <div className="contact-grid" id="request">
+      <div className="contact-grid" id="join">
         <div className="become-copy">
           <h2>What we look for</h2>
           <ul>
@@ -103,144 +111,140 @@ export default function BecomeContributor() {
             <li>Your own notes, or material you are allowed to share.</li>
           </ul>
           <p className="muted">
-            We use your email or phone only to send your login details. Already
-            have an account? <Link to="/contributor/login">Sign in</Link>.
+            We use your email for sign-in and password resets only. Already have
+            an account? <Link to="/contributor/login">Sign in</Link>. Forgot
+            your password? <Link to="/forgot-password">Reset it</Link>.
           </p>
         </div>
-        {state === "sent" ? (
-          <div className="card become-done" role="status">
-            <CheckCircle2 size={34} aria-hidden />
-            <h2>Request received.</h2>
-            <p>
-              Thank you! An admin will review it and send your sign-in details
-              to the email or phone you gave. This usually takes a day or two.
-            </p>
-            <Link className="button secondary" to="/papers">
-              Browse papers meanwhile <ArrowUpRight size={16} />
-            </Link>
+        <form
+          className="card"
+          onSubmit={async (event) => {
+            event.preventDefault();
+            const values = new FormData(event.currentTarget);
+            const text = (name: string) =>
+              String(values.get(name) || "").trim();
+            setError("");
+            if (text("password") !== text("confirm"))
+              return setError("The two passwords do not match.");
+            setSending(true);
+            try {
+              const result = await api.post("/auth/register", {
+                name: text("name"),
+                email: text("email"),
+                password: String(values.get("password") || ""),
+                phone: text("phone"),
+                branch: text("branch") || undefined,
+                semester: text("semester")
+                  ? Number(text("semester"))
+                  : undefined,
+                consent: values.get("consent") === "on",
+                website: text("website") || undefined,
+              });
+              client.setQueryData(["me"], result.data.data);
+              navigate("/contributor/upload");
+            } catch (e) {
+              setError(errorMessage(e));
+              setSending(false);
+            }
+          }}
+        >
+          <label>
+            Full name
+            <input
+              name="name"
+              required
+              minLength={2}
+              maxLength={120}
+              autoComplete="name"
+            />
+          </label>
+          <label>
+            Email
+            <input
+              name="email"
+              type="email"
+              required
+              maxLength={254}
+              autoComplete="email"
+            />
+          </label>
+          <label>
+            Phone / WhatsApp (optional)
+            <input
+              name="phone"
+              type="tel"
+              maxLength={18}
+              pattern="\+?[0-9 \-]{7,18}"
+              autoComplete="tel"
+              placeholder="+91 98765 43210"
+            />
+          </label>
+          <div className="become-row">
+            <label>
+              Branch
+              <select name="branch" defaultValue="">
+                <option value="">Choose…</option>
+                {branches.data?.data.map((b) => (
+                  <option key={b._id} value={b.code || b.name}>
+                    {b.code ? `${b.code} · ${b.name}` : b.name}
+                  </option>
+                ))}
+                <option value="Other">Other</option>
+              </select>
+            </label>
+            <label>
+              Semester
+              <select name="semester" defaultValue="">
+                <option value="">Choose…</option>
+                {Array.from({ length: 8 }, (_, i) => (
+                  <option key={i} value={i + 1}>
+                    Semester {i + 1}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-        ) : (
-          <form
-            className="card"
-            onSubmit={async (event) => {
-              event.preventDefault();
-              const values = new FormData(event.currentTarget);
-              const text = (name: string) =>
-                String(values.get(name) || "").trim();
-              setError("");
-              setState("sending");
-              try {
-                await api.post("/contributor-requests", {
-                  name: text("name"),
-                  email: text("email"),
-                  phone: text("phone"),
-                  branch: text("branch") || undefined,
-                  semester: text("semester")
-                    ? Number(text("semester"))
-                    : undefined,
-                  institution: text("institution") || undefined,
-                  message: text("message"),
-                  consent: values.get("consent") === "on",
-                  website: text("website") || undefined,
-                });
-                setState("sent");
-              } catch (e) {
-                setError(errorMessage(e));
-                setState("idle");
-              }
-            }}
-          >
-            <label>
-              Full name
-              <input
-                name="name"
-                required
-                minLength={2}
-                maxLength={120}
-                autoComplete="name"
-              />
-            </label>
-            <label>
-              Email
-              <input
-                name="email"
-                type="email"
-                required
-                maxLength={254}
-                autoComplete="email"
-              />
-            </label>
-            <label>
-              Phone / WhatsApp (optional)
-              <input
-                name="phone"
-                type="tel"
-                maxLength={18}
-                pattern="\+?[0-9 \-]{7,18}"
-                autoComplete="tel"
-                placeholder="+91 98765 43210"
-              />
-            </label>
-            <div className="become-row">
-              <label>
-                Branch
-                <select name="branch" defaultValue="">
-                  <option value="">Choose…</option>
-                  {branches.data?.data.map((b) => (
-                    <option key={b._id} value={b.code || b.name}>
-                      {b.code ? `${b.code} · ${b.name}` : b.name}
-                    </option>
-                  ))}
-                  <option value="Other">Other</option>
-                </select>
-              </label>
-              <label>
-                Semester
-                <select name="semester" defaultValue="">
-                  <option value="">Choose…</option>
-                  {Array.from({ length: 8 }, (_, i) => (
-                    <option key={i} value={i + 1}>
-                      Semester {i + 1}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <label>
-              College / enrollment number (optional)
-              <input name="institution" maxLength={160} />
-            </label>
-            <label>
-              What can you share?
-              <textarea
-                name="message"
-                required
-                minLength={20}
-                maxLength={1500}
-                rows={4}
-                placeholder="E.g. CSE semester 3 end-sem papers for 2023 and 2024, and my DBMS notes."
-              />
-            </label>
-            {/* Hidden from people; bots that fill it are ignored. */}
-            <label className="become-trap" aria-hidden="true">
-              Website
-              <input name="website" tabIndex={-1} autoComplete="off" />
-            </label>
-            <label className="inline-check">
-              <input type="checkbox" name="consent" required />
-              <span>I own these files or am allowed to share them.</span>
-            </label>
-            {error && (
-              <p className="notice error" role="alert">
-                {error}
-              </p>
-            )}
-            <button className="button" disabled={state === "sending"}>
-              {state === "sending" ? "Sending…" : "Request contributor access"}
-              <ArrowUpRight size={17} />
-            </button>
-          </form>
-        )}
+          <label>
+            Password · at least 12 characters
+            <input
+              name="password"
+              type="password"
+              required
+              minLength={12}
+              maxLength={72}
+              autoComplete="new-password"
+            />
+          </label>
+          <label>
+            Type the password again
+            <input
+              name="confirm"
+              type="password"
+              required
+              minLength={12}
+              maxLength={72}
+              autoComplete="new-password"
+            />
+          </label>
+          {/* Hidden from people; bots that fill it are ignored. */}
+          <label className="become-trap" aria-hidden="true">
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+          <label className="inline-check">
+            <input type="checkbox" name="consent" required />
+            <span>I own these files or am allowed to share them.</span>
+          </label>
+          {error && (
+            <p className="notice error" role="alert">
+              {error}
+            </p>
+          )}
+          <button className="button" disabled={sending}>
+            {sending ? "Creating account…" : "Create contributor account"}
+            <ArrowUpRight size={17} />
+          </button>
+        </form>
       </div>
       <section className="eh-faq" aria-labelledby="earn-faq">
         <h2 id="earn-faq">Questions about earning</h2>

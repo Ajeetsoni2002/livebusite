@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, errorMessage } from "../../lib/api";
+import { usePageMeta } from "../../lib/meta";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 type User = {
   _id: string;
@@ -46,7 +47,14 @@ export function Guard({ role }: { role: "admin" | "contributor" }) {
   );
 }
 export function Login() {
-  const contributor = useLocation().pathname.startsWith("/contributor");
+  const location = useLocation(),
+    contributor = location.pathname.startsWith("/contributor"),
+    justReset = Boolean((location.state as { reset?: boolean } | null)?.reset);
+  usePageMeta(
+    contributor ? "Contributor login" : "Admin login",
+    "Sign in to upload Barkatullah University question papers and notes.",
+    { noindex: !contributor },
+  );
   const navigate = useNavigate(),
     client = useQueryClient(),
     [error, setError] = useState(""),
@@ -55,8 +63,12 @@ export function Login() {
     <main className="login-page">
       <div className="login-card card">
         <ShieldCheck size={32} className="accent" />
-        <h1>Library workspace</h1>
-        <p>Sign in with the account provided by your administrator.</p>
+        <h1>{contributor ? "Contributor login" : "Library workspace"}</h1>
+        <p>
+          {contributor
+            ? "Sign in to upload papers and notes and see your earnings."
+            : "Sign in with your admin account."}
+        </p>
         <form
           onSubmit={async (event) => {
             event.preventDefault();
@@ -91,6 +103,11 @@ export function Login() {
               maxLength={72}
             />
           </label>
+          {justReset && !error && (
+            <p className="notice" role="status">
+              Password changed. Sign in with your new password.
+            </p>
+          )}
           {error && (
             <p className="notice error" role="alert">
               {error}
@@ -101,10 +118,13 @@ export function Login() {
             <ArrowRight size={16} />
           </button>
         </form>
+        <p className="login-help">
+          <Link to="/forgot-password">Forgot password?</Link>
+        </p>
         {contributor && (
           <p className="login-help">
             No account yet?{" "}
-            <Link to="/contribute">Request contributor access</Link>
+            <Link to="/contribute#join">Create a contributor account</Link>
           </p>
         )}
       </div>

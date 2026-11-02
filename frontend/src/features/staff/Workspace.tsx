@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3,
+  BriefcaseBusiness,
   ChevronsLeft,
   ChevronsRight,
   FileText,
@@ -51,6 +52,7 @@ export default function Workspace() {
           ["taxonomy", "Branches & subjects", FolderTree],
           ["contributors", "Contributors", Users],
           ["payouts", "Payouts", IndianRupee],
+          ["jobs", "Jobs & internships", BriefcaseBusiness],
           ["inbox", "Reports & requests", Inbox],
           ["audit", "Audit log", ScrollText],
           ["analytics", "Analytics", BarChart3],

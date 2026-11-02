@@ -14,7 +14,14 @@ import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 import { config } from "../config.js";
 import { HttpError, ok } from "../lib/http.js";
-import { User, Session, AuditLog } from "./models.js";
+import { escapeHtml, sendMail } from "../lib/mail.js";
+import {
+  User,
+  Session,
+  AuditLog,
+  PasswordReset,
+  ContributorRequest,
+} from "./models.js";
 export type AuthRequest = Request & { user?: any; session?: any };
 const digest = (value: string) =>
   createHash("sha256").update(value).digest("hex");
@@ -214,36 +221,207 @@ router.post(
     }
     await User.updateOne(
       { _id: user._id },
-      { $set: { failedLogins: 0, lockedUntil: null } },
+      {
+        $set: {
+          failedLogins: 0,
+          lockedUntil: null,
+          ...(user.firstLoginAt ? {} : { firstLoginAt: new Date() }),
+        },
+      },
     );
-    const session = new Session({
-      user: user._id,
-      refreshHash: "pending",
-      expiresAt: new Date(Date.now() + 7 * 86400_000),
-    });
-    const refresh = sign(user, session, true);
-    session.refreshHash = digest(refresh);
-    await session.save();
-    cookies(res, sign(user, session), refresh);
-    req.user = user;
+    await startSession(req, res, user);
     await audit(req, "login", String(user._id));
-    ok(res, {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      mustChangePassword: user.mustChangePassword,
+    ok(res, me(user));
+  },
+);
+const me = (user: any) => ({
+  _id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  mustChangePassword: user.mustChangePassword,
+});
+async function startSession(req: AuthRequest, res: Response, user: any) {
+  const session = new Session({
+    user: user._id,
+    refreshHash: "pending",
+    expiresAt: new Date(Date.now() + 7 * 86400_000),
+  });
+  const refresh = sign(user, session, true);
+  session.refreshHash = digest(refresh);
+  await session.save();
+  cookies(res, sign(user, session), refresh);
+  req.user = user;
+}
+const limited = (limit: number, windowMs: number, message: string) =>
+  rateLimit({
+    windowMs,
+    limit,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    handler: (_req, res) =>
+      res.status(429).json({
+        error: { code: "RATE_LIMIT", message, requestId: res.locals.requestId },
+      }),
+  });
+const email = z
+  .email()
+  .max(254)
+  .transform((s) => s.toLowerCase().trim());
+const registerInput = z
+  .object({
+    name: z.string().trim().min(2).max(120),
+    email,
+    password: newPasswordInput,
+    phone: z
+      .string()
+      .trim()
+      .regex(/^\+?[0-9 -]{7,18}$/, "Enter a valid phone number.")
+      .optional()
+      .or(z.literal("")),
+    branch: z.string().trim().max(80).optional(),
+    semester: z.coerce.number().int().min(1).max(12).optional(),
+    consent: z.literal(true, "Please confirm you may share these files."),
+    // Bot trap: humans never see or fill this field.
+    website: z.string().max(200).optional(),
+  })
+  .strict();
+// Students create their own contributor account; their uploads still wait for an admin.
+router.post(
+  "/register",
+  limited(5, 60 * 60_000, "Too many sign-ups from here. Try again later."),
+  requireCsrf,
+  async (req: AuthRequest, res) => {
+    const {
+      website,
+      consent: _consent,
+      password,
+      ...data
+    } = registerInput.parse(req.body);
+    if (website) throw new HttpError(400, "Please try again.");
+    if (await User.exists({ email: data.email }))
+      throw new HttpError(
+        409,
+        "An account with this email already exists. Sign in, or use “Forgot password”.",
+        "EMAIL_TAKEN",
+      );
+    const now = new Date();
+    const user = await User.create({
+      ...data,
+      phone: data.phone || undefined,
+      passwordHash: await bcrypt.hash(password, 12),
+      role: "contributor",
+      trusted: false,
+      mustChangePassword: false,
+      selfRegistered: true,
+      firstLoginAt: now,
     });
+    await ContributorRequest.updateMany(
+      { email: data.email, status: "open" },
+      { $set: { status: "approved", user: user._id, handledAt: now } },
+    );
+    // Signing up is the account's first sign-in, so the admin hears about it once, here.
+    await startSession(req, res, user);
+    await audit(req, "contributor-registered", String(user._id));
+    void notifyNewContributor(user);
+    res.status(201);
+    ok(res, me(user));
+  },
+);
+function notifyNewContributor(user: any) {
+  const rows: [string, string][] = [
+    ["Name", user.name],
+    ["Email", user.email],
+    ["Phone", user.phone || "-"],
+    ["Branch", user.branch || "-"],
+    ["Semester", user.semester ? String(user.semester) : "-"],
+    [
+      "Joined",
+      new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+    ],
+  ];
+  const link = `${config.siteUrl}/admin/contributors`;
+  return sendMail({
+    to: config.adminNotifyEmail,
+    subject: `New contributor: ${user.name}`,
+    text: `${user.name} just created a contributor account on BUIT Papers.\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nTheir uploads wait for your approval. Manage contributors: ${link}`,
+    html: `<p><strong>${escapeHtml(user.name)}</strong> just created a contributor account on BUIT Papers.</p><table cellpadding="4">${rows.map(([k, v]) => `<tr><td><b>${k}</b></td><td>${escapeHtml(v)}</td></tr>`).join("")}</table><p>Their uploads wait for your approval.</p><p><a href="${link}">Manage contributors</a></p>`,
+  });
+}
+const RESET_MINUTES = 30;
+// Same answer whether or not the email exists, so the form cannot be used to find accounts.
+router.post(
+  "/forgot-password",
+  limited(5, 15 * 60_000, "Too many requests. Try again in a few minutes."),
+  requireCsrf,
+  async (req: AuthRequest, res) => {
+    const input = z.object({ email }).strict().parse(req.body);
+    const user = await User.findOne({ email: input.email, active: true });
+    if (user) {
+      const token = randomBytes(32).toString("base64url");
+      await PasswordReset.deleteMany({ user: user._id });
+      await PasswordReset.create({
+        user: user._id,
+        tokenHash: digest(token),
+        expiresAt: new Date(Date.now() + RESET_MINUTES * 60_000),
+      });
+      const link = `${config.siteUrl}/reset-password?token=${token}`;
+      void sendMail({
+        to: user.email,
+        subject: "Reset your BUIT Papers password",
+        text: `Hi ${user.name},\n\nOpen this link to choose a new password (it works for ${RESET_MINUTES} minutes):\n${link}\n\nIf you did not ask for this, ignore this email; your password stays the same.`,
+        html: `<p>Hi ${escapeHtml(user.name)},</p><p><a href="${link}">Choose a new password</a>. The link works for ${RESET_MINUTES} minutes.</p><p>If you did not ask for this, ignore this email; your password stays the same.</p>`,
+      });
+      req.user = user;
+      await audit(req, "password-reset-requested", String(user._id));
+    }
+    ok(res, { sent: true });
+  },
+);
+router.post(
+  "/reset-password",
+  limited(10, 15 * 60_000, "Too many attempts. Try again in a few minutes."),
+  requireCsrf,
+  async (req: AuthRequest, res) => {
+    const input = z
+      .object({
+        token: z.string().min(20).max(100),
+        password: newPasswordInput,
+      })
+      .strict()
+      .parse(req.body);
+    const reset = await PasswordReset.findOneAndUpdate(
+      {
+        tokenHash: digest(input.token),
+        usedAt: null,
+        expiresAt: { $gt: new Date() },
+      },
+      { $set: { usedAt: new Date() } },
+    );
+    const user =
+      reset && (await User.findOne({ _id: reset.user, active: true }));
+    if (!user)
+      throw new HttpError(
+        400,
+        "This reset link is invalid or has expired. Ask for a new one.",
+        "RESET_INVALID",
+      );
+    user.passwordHash = await bcrypt.hash(input.password, 12);
+    user.mustChangePassword = false;
+    user.failedLogins = 0;
+    user.lockedUntil = null;
+    await user.save();
+    await Session.updateMany(
+      { user: user._id, revokedAt: null },
+      { $set: { revokedAt: new Date() } },
+    );
+    req.user = user;
+    await audit(req, "password-reset", String(user._id));
+    ok(res, { reset: true, role: user.role });
   },
 );
 router.get("/me", requireUser, (req: AuthRequest, res) =>
-  ok(res, {
-    _id: req.user._id,
-    name: req.user.name,
-    email: req.user.email,
-    role: req.user.role,
-    mustChangePassword: req.user.mustChangePassword,
-  }),
+  ok(res, me(req.user)),
 );
 router.post("/refresh", requireCsrf, async (req: AuthRequest, res) => {
   let payload: jwt.JwtPayload;

@@ -13,6 +13,7 @@ import {
   ErrorState,
 } from "../../components/ui";
 import { usePublic } from "../../lib/queries";
+import { usePageMeta } from "../../lib/meta";
 import type { Entity, ContentItem } from "../../lib/types";
 
 /** A question heading: "Q.2  Recently added  [link]". */
@@ -46,6 +47,9 @@ function Question({
 }
 
 export default function Home() {
+  usePageMeta(
+    "BUIT Papers – Barkatullah University Previous Year Question Papers & Notes",
+  );
   const branches = usePublic<Entity[]>("/branches"),
     programs = usePublic<Entity[]>("/programs"),
     recent = usePublic<ContentItem[]>("/papers", { limit: 6 }),

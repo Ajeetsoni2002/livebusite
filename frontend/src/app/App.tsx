@@ -14,6 +14,16 @@ const Browse = lazy(() => import("../features/catalog/Browse")),
 const Login = lazy(() =>
     import("../features/staff/Auth").then((m) => ({ default: m.Login })),
   ),
+  ForgotPassword = lazy(() =>
+    import("../features/staff/PasswordReset").then((m) => ({
+      default: m.ForgotPassword,
+    })),
+  ),
+  ResetPassword = lazy(() =>
+    import("../features/staff/PasswordReset").then((m) => ({
+      default: m.ResetPassword,
+    })),
+  ),
   Guard = lazy(() =>
     import("../features/staff/Auth").then((m) => ({ default: m.Guard })),
   ),
@@ -34,6 +44,11 @@ const Payouts = lazy(() =>
   import("../features/staff/Earnings").then((m) => ({ default: m.Payouts })),
 );
 const Legacy = lazy(() => import("../features/Legacy"));
+const Jobs = lazy(() => import("../features/careers/Jobs")),
+  JobDetail = lazy(() =>
+    import("../features/careers/Jobs").then((m) => ({ default: m.JobDetail })),
+  ),
+  Careers = lazy(() => import("../features/staff/Careers"));
 const client = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
 });
@@ -67,6 +82,8 @@ export default function App() {
               <Route path="/notes/:slug" element={<Detail kind="notes" />} />
               <Route path="/contributors" element={<Leaderboard />} />
               <Route path="/contribute" element={<BecomeContributor />} />
+              <Route path="/jobs" element={<Jobs />} />
+              <Route path="/jobs/:slug" element={<JobDetail />} />
               <Route path="/papers/:filename.pdf" element={<Legacy />} />
               <Route path="/New papers/*" element={<Legacy />} />
               <Route path="/images/:filename.pdf" element={<Legacy />} />
@@ -86,6 +103,8 @@ export default function App() {
               <Route path="/story" element={<Navigate to="/about" replace />} />
               <Route path="/admin/login" element={<Login />} />
               <Route path="/contributor/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route element={<Guard role="admin" />}>
                 <Route path="/admin" element={<Workspace />}>
                   <Route index element={<Dashboard />} />
@@ -99,6 +118,7 @@ export default function App() {
                   <Route path="audit" element={<Inbox audit />} />
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="payouts" element={<Payouts />} />
+                  <Route path="jobs" element={<Careers />} />
                   <Route path="settings" element={<StaffSettings />} />
                 </Route>
               </Route>

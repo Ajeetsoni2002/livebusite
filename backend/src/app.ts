@@ -21,6 +21,7 @@ import { avatarRouter, profileRouter } from "./modules/profile.js";
 import { adminRouter } from "./modules/admin.js";
 import { analyticsRouter, analyticsAdminRouter } from "./modules/analytics.js";
 import { earningsRouter, earningsAdminRouter } from "./modules/earnings.js";
+import { careersRouter, careersAdminRouter } from "./modules/careers.js";
 
 export function createApp() {
   const app = express();
@@ -86,7 +87,14 @@ export function createApp() {
       return next(new HttpError(400, "Invalid input keys"));
     next();
   });
-  app.use("/api", fileRouter, catalogRouter, analyticsRouter, avatarRouter);
+  app.use(
+    "/api",
+    fileRouter,
+    catalogRouter,
+    analyticsRouter,
+    avatarRouter,
+    careersRouter,
+  );
   app.use(
     "/api/admin",
     requireCsrf,
@@ -96,6 +104,7 @@ export function createApp() {
     adminRouter,
     analyticsAdminRouter,
     earningsAdminRouter,
+    careersAdminRouter,
   );
   app.use(
     "/api/contributor",

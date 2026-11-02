@@ -11,6 +11,11 @@ type Contributor = {
   trusted: boolean;
   papers: number;
   notes: number;
+  selfRegistered?: boolean;
+  phone?: string;
+  branch?: string;
+  semester?: number;
+  createdAt?: string;
 };
 export default function Contributors() {
   const [message, setMessage] = useState(""),
@@ -55,6 +60,23 @@ export default function Contributors() {
                   {user.name}
                   <br />
                   <small className="muted">{user.email}</small>
+                  {(user.selfRegistered || user.branch || user.phone) && (
+                    <>
+                      <br />
+                      <small className="muted">
+                        {[
+                          user.selfRegistered && "Signed up on the site",
+                          user.branch,
+                          user.semester && `Sem ${user.semester}`,
+                          user.phone,
+                          user.createdAt &&
+                            new Date(user.createdAt).toLocaleDateString(),
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </small>
+                    </>
+                  )}
                 </td>
                 <td>
                   {user.papers} papers · {user.notes} notes

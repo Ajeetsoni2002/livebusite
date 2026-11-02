@@ -85,7 +85,21 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
     subject?.name ||
     branch?.name ||
     (kind === "notes" ? "Short notes" : "Question papers");
-  usePageMeta(title);
+  const code = subject?.code ? ` (${subject.code})` : "";
+  usePageMeta(
+    subject
+      ? `${subject.name}${code} previous year question papers${semester ? ` – ${[branch?.code, semester.name].filter(Boolean).join(" ")}` : ""}`
+      : branch
+        ? `${branch.name}${branch.code ? ` (${branch.code})` : ""} previous year question papers – BUIT Bhopal`
+        : kind === "notes"
+          ? "Short notes for Barkatullah University (BUIT) subjects"
+          : "Barkatullah University previous year question papers (BUIT B.Tech)",
+    subject
+      ? `Download ${subject.name}${code} previous year question papers${branch ? ` for ${branch.name}` : ""}${semester ? `, ${semester.name}` : ""} – Barkatullah University Institute of Technology (BUIT), Bhopal. Free PDFs, sorted by year.`
+      : branch
+        ? `All ${branch.name} previous year question papers of Barkatullah University (BUIT Bhopal), semester-wise and subject-wise. Free PDF download.`
+        : undefined,
+  );
   const identity = branchIdentity(branch?.code),
     BranchIcon = identity.Icon;
   const branchSemesters = [

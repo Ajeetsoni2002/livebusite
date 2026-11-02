@@ -51,6 +51,8 @@ export default function Footer() {
           <nav aria-label="Footer community">
             <span>THE COMMUNITY</span>
             <Link to="/contribute">Become a contributor · earn ₹15</Link>
+            <Link to="/jobs">Jobs &amp; internships</Link>
+            <Link to="/contributor/login">Contributor login</Link>
             <Link to="/contributors">Top contributors</Link>
             <Link to="/about">Our story</Link>
             <Link to="/contact">Contact</Link>

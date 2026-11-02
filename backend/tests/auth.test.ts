@@ -5,7 +5,14 @@ import bcrypt from "bcrypt";
 import request from "supertest";
 import { MongoMemoryReplSet } from "mongodb-memory-server";
 import { resolve } from "node:path";
-import { User, Session, Paper, Note } from "../src/modules/models.js";
+import {
+  User,
+  Session,
+  Paper,
+  Note,
+  PasswordReset,
+} from "../src/modules/models.js";
+import { createHash } from "node:crypto";
 import { PDFDocument, rgb } from "pdf-lib";
 import sharp from "sharp";
 let db: MongoMemoryReplSet, app: any;
@@ -53,9 +60,8 @@ async function login(role = "contributor") {
     .send({ email: `${role}@example.test`, password: "TestPassword!12345" });
   return { agent, csrf, response };
 }
-test("no public registration; login requires CSRF and correct credentials", async () => {
+test("login requires CSRF and correct credentials", async () => {
   await account();
-  assert.equal((await request(app).post("/api/auth/register")).status, 404);
   assert.equal(
     (
       await request(app).post("/api/auth/login").send({
@@ -1032,4 +1038,91 @@ test("contributors earn ₹15 per approved upload and admins record payouts", as
     (await request(app).get("/api/contributor/earnings")).status,
     401,
   );
+});
+
+test("students can create an untrusted contributor account and are signed in", async () => {
+  const agent = request.agent(app);
+  const csrf = (await agent.get("/api/auth/csrf")).body.data.token;
+  const body = {
+    name: "New Student",
+    email: "Student@Example.test",
+    password: "StudentPassword1",
+    branch: "CSE",
+    semester: 3,
+    consent: true,
+  };
+  assert.equal(
+    (await agent.post("/api/auth/register").send(body)).status,
+    403,
+    "CSRF is required",
+  );
+  const created = await agent
+    .post("/api/auth/register")
+    .set("X-CSRF-Token", csrf)
+    .send(body);
+  assert.equal(created.status, 201);
+  assert.equal(created.body.data.role, "contributor");
+  assert.equal(created.body.data.mustChangePassword, false);
+  const user = await User.findOne({ email: "student@example.test" });
+  assert.equal(user.trusted, false);
+  assert.equal(user.selfRegistered, true);
+  assert.ok(user.firstLoginAt);
+  assert.equal((await agent.get("/api/auth/me")).body.data.name, "New Student");
+  assert.equal(
+    (await agent.get("/api/contributor/uploads")).status,
+    200,
+    "workspace opens straight away",
+  );
+  const again = await agent
+    .post("/api/auth/register")
+    .set("X-CSRF-Token", csrf)
+    .send(body);
+  assert.equal(again.status, 409);
+  const short = await agent
+    .post("/api/auth/register")
+    .set("X-CSRF-Token", csrf)
+    .send({ ...body, email: "other@example.test", password: "short" });
+  assert.equal(short.status, 400);
+});
+test("forgot password answers the same for unknown emails and reset links work once", async () => {
+  const user = await account();
+  const agent = request.agent(app);
+  const csrf = (await agent.get("/api/auth/csrf")).body.data.token;
+  for (const email of ["contributor@example.test", "nobody@example.test"]) {
+    const response = await agent
+      .post("/api/auth/forgot-password")
+      .set("X-CSRF-Token", csrf)
+      .send({ email });
+    assert.equal(response.status, 200);
+    assert.equal(response.body.data.sent, true);
+  }
+  assert.equal(await PasswordReset.countDocuments({ user: user._id }), 1);
+  const token = "known-reset-token-for-the-test-0123456789";
+  await PasswordReset.deleteMany({});
+  await PasswordReset.create({
+    user: user._id,
+    tokenHash: createHash("sha256").update(token).digest("hex"),
+    expiresAt: new Date(Date.now() + 60_000),
+  });
+  const { agent: signedIn } = await login();
+  const reset = await agent
+    .post("/api/auth/reset-password")
+    .set("X-CSRF-Token", csrf)
+    .send({ token, password: "BrandNewPassword9" });
+  assert.equal(reset.status, 200);
+  assert.equal(
+    (await signedIn.get("/api/auth/me")).status,
+    401,
+    "old sessions are signed out",
+  );
+  const reused = await agent
+    .post("/api/auth/reset-password")
+    .set("X-CSRF-Token", csrf)
+    .send({ token, password: "AnotherPassword9" });
+  assert.equal(reused.status, 400);
+  const relogin = await agent
+    .post("/api/auth/login")
+    .set("X-CSRF-Token", csrf)
+    .send({ email: "contributor@example.test", password: "BrandNewPassword9" });
+  assert.equal(relogin.status, 200);
 });

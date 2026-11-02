@@ -10,6 +10,7 @@ import {
   AlreadyWatermarked,
   getWatermarkSettings,
   renderWatermarkText,
+  siteLinkFor,
   watermarkPdf,
 } from "./watermark.js";
 
@@ -83,7 +84,10 @@ async function watermarkJob(job: any) {
   const sourceId = item.files[active];
   const { settings, revision } = await getWatermarkSettings();
   const subject = item.offerings?.[0]?.subject;
-  const text = renderWatermarkText(settings.template, subject?.code);
+  const text = settings.enabled
+    ? renderWatermarkText(settings.template, subject?.code)
+    : "";
+  const siteLink = siteLinkFor(settings);
   await model.updateOne(
     { _id: item._id },
     { $set: { "watermark.status": "running" } },
@@ -93,13 +97,13 @@ async function watermarkJob(job: any) {
     item.watermark = { ...watermark, hold: false };
     await item.save();
   };
-  if (!settings.enabled || !text)
+  if (!text && !siteLink)
     return finish({
       status: "skipped",
       reason: settings.enabled ? "empty-text" : "disabled",
       revision,
     });
-  const signature = `${revision}|${text}`;
+  const signature = `${revision}|${text}|${siteLink?.url || ""}`;
   const cached = item.files.watermarked?.[active];
   if (
     cached &&
@@ -117,6 +121,7 @@ async function watermarkJob(job: any) {
     output = await watermarkPdf(await readAll(source.key), {
       ...settings,
       text,
+      siteLink,
       title: subject
         ? `${subject.name}${item.year ? ` ${item.year}` : ""}`
         : item.title,

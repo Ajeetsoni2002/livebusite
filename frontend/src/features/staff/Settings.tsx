@@ -13,6 +13,8 @@ type Watermark = {
   tiled: boolean;
   footer: boolean;
   skipIfContains: string;
+  siteLink: boolean;
+  siteLabel: string;
 };
 type Counts = Partial<Record<"queued" | "running" | "done" | "failed", number>>;
 
@@ -241,6 +243,26 @@ export default function Settings() {
               />
               <span>Footer line</span>
             </label>
+            <label className="wide inline-check">
+              <input
+                type="checkbox"
+                checked={form.siteLink}
+                onChange={(e) => set("siteLink", e.target.checked)}
+              />
+              <span>
+                Clickable site name and link at the top of every page (added
+                even when the watermark is off)
+              </span>
+            </label>
+            <label className="wide">
+              Site line text
+              <input
+                value={form.siteLabel}
+                maxLength={60}
+                disabled={!form.siteLink}
+                onChange={(e) => set("siteLabel", e.target.value)}
+              />
+            </label>
             <div className="wide row-actions">
               <button className="button" disabled={saving} onClick={save}>
                 {saving ? <Loader2 className="spin" size={16} /> : null} Save
@@ -282,6 +304,11 @@ export default function Settings() {
                       {sample}
                     </span>,
                   ])}
+            {form.siteLink && (
+              <small className="wm-sitelink">
+                {form.siteLabel} | {location.host}
+              </small>
+            )}
             <div className="wm-lines" aria-hidden="true" />
             {form.enabled && form.footer && (
               <small className="wm-footer">{sample}</small>
@@ -294,7 +321,8 @@ export default function Settings() {
         <p className="muted">
           Watermarks every paper and note that does not yet carry the current
           settings, including the older archive. Items that already contain “
-          {form.skipIfContains}” are left as they are.
+          {form.skipIfContains}” keep their old watermark but still get the site
+          link.
         </p>
         <div className="row-actions">
           <button onClick={applyAll}>

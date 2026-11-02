@@ -198,6 +198,12 @@ const userSchema = new Schema(
     mustChangePassword: { type: Boolean, default: true },
     failedLogins: { type: Number, default: 0 },
     lockedUntil: Date,
+    // Students who created their own contributor account from the site.
+    selfRegistered: { type: Boolean, default: false },
+    phone: String,
+    branch: String,
+    semester: Number,
+    firstLoginAt: Date,
     // How a contributor appears publicly (leaderboard, paper credits).
     profile: {
       visibility: {
@@ -224,6 +230,18 @@ const sessionSchema = new Schema(
 );
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const Session = model("Session", sessionSchema);
+// Single-use "forgot password" links; only the hash of the token is stored.
+const passwordResetSchema = new Schema(
+  {
+    user: ref("User", true),
+    tokenHash: { type: String, required: true, unique: true },
+    expiresAt: { type: Date, required: true },
+    usedAt: { type: Date, default: null },
+  },
+  options,
+);
+passwordResetSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+export const PasswordReset = model("PasswordReset", passwordResetSchema);
 export const AuditLog = model(
   "AuditLog",
   new Schema(
@@ -342,6 +360,57 @@ const payoutSchema = new Schema(
 );
 payoutSchema.index({ contributor: 1, createdAt: -1 });
 export const Payout = model("Payout", payoutSchema);
+// Jobs and internships posted by admins; students apply with a short form.
+const jobPostSchema = new Schema(
+  {
+    title: { type: String, required: true, maxlength: 160 },
+    slug: { type: String, required: true, unique: true },
+    kind: { type: String, enum: ["job", "internship"], required: true },
+    company: { type: String, required: true, maxlength: 120 },
+    location: { type: String, maxlength: 120 },
+    mode: {
+      type: String,
+      enum: ["onsite", "remote", "hybrid"],
+      default: "onsite",
+    },
+    pay: { type: String, maxlength: 80 },
+    duration: { type: String, maxlength: 80 },
+    eligibility: { type: String, maxlength: 400 },
+    description: { type: String, required: true, maxlength: 8000 },
+    deadline: Date,
+    // Optional: send applicants to the company's own form instead of ours.
+    externalUrl: String,
+    active: { type: Boolean, default: true },
+    applications: { type: Number, default: 0 },
+    author: ref("User"),
+  },
+  options,
+);
+jobPostSchema.index({ active: 1, createdAt: -1 });
+export const JobPost = model("JobPost", jobPostSchema);
+const jobApplicationSchema = new Schema(
+  {
+    post: ref("JobPost", true),
+    name: { type: String, required: true, maxlength: 120 },
+    email: { type: String, required: true, lowercase: true, trim: true },
+    phone: { type: String, required: true },
+    branch: String,
+    semester: Number,
+    graduationYear: Number,
+    college: { type: String, maxlength: 160 },
+    resumeUrl: { type: String, required: true },
+    note: { type: String, maxlength: 1500 },
+    status: {
+      type: String,
+      enum: ["new", "shortlisted", "rejected", "hired"],
+      default: "new",
+    },
+  },
+  options,
+);
+jobApplicationSchema.index({ post: 1, email: 1 }, { unique: true });
+jobApplicationSchema.index({ post: 1, createdAt: -1 });
+export const JobApplication = model("JobApplication", jobApplicationSchema);
 export const publicationFilter = { status: "published", deletedAt: null };
 export const taxonomyModels = {
   universities: University,

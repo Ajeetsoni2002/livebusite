@@ -29,7 +29,15 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
     [message, setMessage] = useState(""),
     [report, setReport] = useState(false);
   const data = item.data?.data;
-  usePageMeta(data?.title || "Resource");
+  const offering = data?.offerings[0];
+  usePageMeta(
+    data && offering
+      ? `${offering.subject.name} (${offering.subject.code})${data.year ? ` ${data.year}` : ""} ${kind === "notes" ? "short notes" : "question paper"} – ${offering.branch.code || offering.branch.name} ${offering.semester.name}`
+      : data?.title || "Resource",
+    data && offering
+      ? `${kind === "notes" ? "Short notes" : data.examType && data.examType !== "Unknown" ? `${data.examType} question paper` : "Question paper"} of ${offering.subject.name} (${offering.subject.code})${data.year ? ` ${data.year}` : ""} for ${offering.branch.name}, ${offering.semester.name} – Barkatullah University Institute of Technology (BUIT), Bhopal. View online or download the PDF free.`
+      : undefined,
+  );
   async function download() {
     if (!data) return;
     setBusy(true);
@@ -64,7 +72,6 @@ export default function Detail({ kind = "papers" }: { kind?: string }) {
         </Link>
       </main>
     );
-  const offering = data.offerings[0];
   return (
     <main
       className={`page detail-page ${kind === "notes" ? "note-detail" : ""}`}
