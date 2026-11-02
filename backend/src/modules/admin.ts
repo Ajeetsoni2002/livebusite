@@ -30,6 +30,7 @@ import { THUMBNAIL_VERSION } from "../storage/thumbnail.js";
 import { FileAsset } from "./models.js";
 import { config } from "../config.js";
 import { deliverMail, mailProvider } from "../lib/mail.js";
+import { renderEmail } from "../lib/email-template.js";
 import {
   defaultWatermark,
   getWatermarkSettings,
@@ -202,7 +203,23 @@ adminRouter.post("/settings/email/test", async (req: AuthRequest, res) => {
     await deliverMail({
       to,
       subject: "BUIT Papers test email",
-      text: "Email from BUIT Papers is working. Password resets and new-contributor alerts will reach people.",
+      ...renderEmail({
+        preheader: "Email from BUIT Papers is working.",
+        eyebrow: "Test email",
+        title: "Email is working.",
+        paragraphs: [
+          "This is a test from your BUIT Papers admin settings. Password resets and new-contributor alerts will reach people.",
+        ],
+        rows: [
+          ["Sent with", mailProvider() === "brevo" ? "Brevo" : "SMTP"],
+          ["Sent to", to],
+          [
+            "Time",
+            new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+          ],
+        ],
+        button: { label: "Open the site", url: `${config.siteUrl}/` },
+      }),
     });
   } catch (error) {
     throw new HttpError(

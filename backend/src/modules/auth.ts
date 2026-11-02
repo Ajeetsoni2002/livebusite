@@ -14,7 +14,8 @@ import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 import { config } from "../config.js";
 import { HttpError, ok } from "../lib/http.js";
-import { escapeHtml, sendMail } from "../lib/mail.js";
+import { sendMail } from "../lib/mail.js";
+import { renderEmail } from "../lib/email-template.js";
 import {
   User,
   Session,
@@ -340,12 +341,23 @@ function notifyNewContributor(user: any) {
       new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
     ],
   ];
-  const link = `${config.siteUrl}/admin/contributors`;
   return sendMail({
     to: config.adminNotifyEmail,
     subject: `New contributor: ${user.name}`,
-    text: `${user.name} just created a contributor account on BUIT Papers.\n\n${rows.map(([k, v]) => `${k}: ${v}`).join("\n")}\n\nTheir uploads wait for your approval. Manage contributors: ${link}`,
-    html: `<p><strong>${escapeHtml(user.name)}</strong> just created a contributor account on BUIT Papers.</p><table cellpadding="4">${rows.map(([k, v]) => `<tr><td><b>${k}</b></td><td>${escapeHtml(v)}</td></tr>`).join("")}</table><p>Their uploads wait for your approval.</p><p><a href="${link}">Manage contributors</a></p>`,
+    ...renderEmail({
+      preheader: `${user.name} just signed up as a contributor.`,
+      eyebrow: "New contributor",
+      title: `${user.name} joined the team.`,
+      paragraphs: [
+        "A student just created a contributor account on BUIT Papers. Their uploads will wait in the moderation queue for your approval.",
+      ],
+      rows,
+      button: {
+        label: "Open contributors",
+        url: `${config.siteUrl}/admin/contributors`,
+      },
+      note: "You get this email once per contributor, when they first sign up.",
+    }),
   });
 }
 const RESET_MINUTES = 30;
@@ -369,8 +381,17 @@ router.post(
       void sendMail({
         to: user.email,
         subject: "Reset your BUIT Papers password",
-        text: `Hi ${user.name},\n\nOpen this link to choose a new password (it works for ${RESET_MINUTES} minutes):\n${link}\n\nIf you did not ask for this, ignore this email; your password stays the same.`,
-        html: `<p>Hi ${escapeHtml(user.name)},</p><p><a href="${link}">Choose a new password</a>. The link works for ${RESET_MINUTES} minutes.</p><p>If you did not ask for this, ignore this email; your password stays the same.</p>`,
+        ...renderEmail({
+          preheader: `Your password reset link works for ${RESET_MINUTES} minutes.`,
+          eyebrow: "Password reset",
+          title: "Let's get you back in.",
+          paragraphs: [
+            `Hi ${user.name.split(/\s+/)[0]},`,
+            "Someone (hopefully you) asked to reset the password for your BUIT Papers account. Tap the button below to choose a new one.",
+          ],
+          button: { label: "Choose a new password", url: link },
+          note: `This link works once, for ${RESET_MINUTES} minutes. If you did not ask for it, ignore this email; your password stays the same.`,
+        }),
       });
       req.user = user;
       await audit(req, "password-reset-requested", String(user._id));

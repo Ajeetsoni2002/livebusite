@@ -18,15 +18,6 @@ function transporter() {
   return transport;
 }
 
-export const escapeHtml = (value: string) =>
-  value.replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ]!,
-  );
-
 /** Which way mail leaves the server: Brevo's HTTPS API, SMTP, or nowhere (printed). */
 export const mailProvider = () =>
   config.brevoApiKey ? "brevo" : config.smtp.host ? "smtp" : "none";
