@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { Command, Menu, X } from "lucide-react";
+import { Command, LogIn, Menu, X } from "lucide-react";
 import Footer from "../components/Footer";
 import ThemeToggle from "../components/ThemeToggle";
 import { FeedbackHost } from "../components/Feedback";
@@ -113,9 +113,6 @@ export default function Layout() {
               <NavLink to="/notes" onClick={() => setMenu(false)}>
                 Short notes
               </NavLink>
-              <NavLink to="/jobs" onClick={() => setMenu(false)}>
-                Jobs &amp; internships
-              </NavLink>
               <NavLink to="/contributors" onClick={() => setMenu(false)}>
                 Contributors
               </NavLink>
@@ -129,10 +126,27 @@ export default function Layout() {
               >
                 Earn ₹{RATE}
               </NavLink>
-              <NavLink to="/contributor/login" onClick={() => setMenu(false)}>
+              <NavLink to="/jobs" onClick={() => setMenu(false)}>
+                Jobs &amp; internships
+              </NavLink>
+              <NavLink
+                to="/contributor/login"
+                className="nav-menu-login"
+                onClick={() => setMenu(false)}
+              >
                 Contributor login
               </NavLink>
             </nav>
+            <Link
+              className="nav-login"
+              to="/contributor/login"
+              aria-label="Contributor login"
+              title="Contributor login"
+              onClick={() => setMenu(false)}
+            >
+              <LogIn size={16} aria-hidden />
+              <span>Login</span>
+            </Link>
             <button
               className="palette-trigger"
               onClick={(event) => {

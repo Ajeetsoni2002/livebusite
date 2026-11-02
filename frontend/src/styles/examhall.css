@@ -1187,3 +1187,105 @@ kbd {
     animation: none;
   }
 }
+
+/* Navbar: labels stay on one line; links fold into the menu before they would crowd. */
+@media (min-width: 761px) {
+  .nav-inner {
+    gap: 24px;
+  }
+  .navbar nav {
+    gap: 24px;
+  }
+}
+.navbar nav a {
+  white-space: nowrap;
+}
+.nav-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--control-border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    color var(--duration-fast) var(--ease),
+    border-color var(--duration-fast) var(--ease);
+}
+.nav-login:hover,
+.nav-login:focus-visible {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+@media (min-width: 761px) and (max-width: 1440px) {
+  .nav-inner {
+    padding: 0 32px;
+  }
+  .palette-trigger kbd {
+    display: none;
+  }
+}
+@media (max-width: 1240px) {
+  .navbar nav {
+    display: none;
+  }
+  .navbar nav.open {
+    display: flex;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 18px 32px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-2);
+  }
+  .navbar nav.open a {
+    font-size: 15px;
+    padding: 10px 0;
+  }
+  .navbar nav.open a.nav-earn {
+    padding: 6px 11px;
+    margin: 6px 0;
+  }
+  .nav-login {
+    margin-left: auto;
+  }
+  .mobile-toggle {
+    display: flex;
+  }
+}
+/* Phones have no room for the header button; the menu carries the link instead. */
+.navbar nav a.nav-menu-login {
+  display: none;
+}
+@media (max-width: 760px) {
+  .nav-login {
+    display: none;
+  }
+  .navbar nav.open a.nav-menu-login {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--control-border);
+    border-radius: 12px;
+    background: var(--surface);
+    font-weight: 600;
+  }
+  .navbar nav.open a.nav-menu-login.active::after {
+    display: none;
+  }
+  .navbar nav.open {
+    padding: 16px 20px 22px;
+  }
+}
