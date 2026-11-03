@@ -394,7 +394,7 @@ await writeFile(
 );
 await writeFile(
   resolve(dist, "robots.txt"),
-  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /contributor$\nDisallow: /contributor/\nAllow: /contributor/login\nDisallow: /api\nDisallow: /forgot-password\nDisallow: /reset-password\n\nSitemap: ${site}/sitemap.xml\n`,
+  `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /contributor$\nDisallow: /contributor/\nAllow: /contributor/login\nDisallow: /api\nDisallow: /forgot-password\nDisallow: /reset-password\nDisallow: /verify-email\n\nSitemap: ${site}/sitemap.xml\n`,
 );
 console.info(
   `Prerendered ${routes.size} public pages and sitemap. Rebuild after snapshot updates.`,

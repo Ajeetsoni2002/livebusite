@@ -11,6 +11,7 @@ import {
   Paper,
   Note,
   PasswordReset,
+  EmailVerification,
 } from "../src/modules/models.js";
 import { createHash } from "node:crypto";
 import { PDFDocument, rgb } from "pdf-lib";
@@ -1040,7 +1041,20 @@ test("contributors earn ₹15 per approved upload and admins record payouts", as
   );
 });
 
-test("students can create an untrusted contributor account and are signed in", async () => {
+/** Replaces the emailed token for `email` with a known one, as if the inbox were read. */
+async function knownVerificationToken(email: string) {
+  const token = `verify-token-for-${email}-0123456789`.replace(
+    /[^a-z0-9-]/gi,
+    "-",
+  );
+  await EmailVerification.updateOne(
+    { email },
+    { $set: { tokenHash: createHash("sha256").update(token).digest("hex") } },
+  );
+  return token;
+}
+test("sign-up creates the account only after the emailed link is opened", async () => {
+  await EmailVerification.deleteMany({});
   const agent = request.agent(app);
   const csrf = (await agent.get("/api/auth/csrf")).body.data.token;
   const body = {
@@ -1056,23 +1070,55 @@ test("students can create an untrusted contributor account and are signed in", a
     403,
     "CSRF is required",
   );
-  const created = await agent
+  const pending = await agent
     .post("/api/auth/register")
     .set("X-CSRF-Token", csrf)
     .send(body);
-  assert.equal(created.status, 201);
-  assert.equal(created.body.data.role, "contributor");
-  assert.equal(created.body.data.mustChangePassword, false);
+  assert.equal(pending.status, 202);
+  assert.equal(pending.body.data.pending, true);
+  assert.equal(
+    await User.countDocuments({ email: "student@example.test" }),
+    0,
+    "no account before the link is opened",
+  );
+  assert.equal((await agent.get("/api/auth/me")).status, 401);
+  const login = await agent
+    .post("/api/auth/login")
+    .set("X-CSRF-Token", csrf)
+    .send({ email: body.email, password: body.password });
+  assert.equal(login.status, 401, "cannot sign in with an unconfirmed address");
+
+  const bad = await agent
+    .post("/api/auth/verify-email")
+    .set("X-CSRF-Token", csrf)
+    .send({ token: "not-the-real-token-0123456789" });
+  assert.equal(bad.status, 400);
+  const token = await knownVerificationToken("student@example.test");
+  const verified = await agent
+    .post("/api/auth/verify-email")
+    .set("X-CSRF-Token", csrf)
+    .send({ token });
+  assert.equal(verified.status, 201);
+  assert.equal(verified.body.data.role, "contributor");
   const user = await User.findOne({ email: "student@example.test" });
   assert.equal(user.trusted, false);
   assert.equal(user.selfRegistered, true);
-  assert.ok(user.firstLoginAt);
+  assert.ok(user.emailVerifiedAt && user.firstLoginAt);
   assert.equal((await agent.get("/api/auth/me")).body.data.name, "New Student");
-  assert.equal(
-    (await agent.get("/api/contributor/uploads")).status,
-    200,
-    "workspace opens straight away",
-  );
+  assert.equal((await agent.get("/api/contributor/uploads")).status, 200);
+  const reused = await agent
+    .post("/api/auth/verify-email")
+    .set("X-CSRF-Token", csrf)
+    .send({ token });
+  assert.equal(reused.status, 400, "links work once");
+  const relogin = await request
+    .agent(app)
+    .post("/api/auth/login")
+    .set("X-CSRF-Token", csrf)
+    .set("Cookie", `csrf=${csrf}`)
+    .send({ email: body.email, password: body.password });
+  assert.equal(relogin.status, 200, "the password chosen at sign-up works");
+
   const again = await agent
     .post("/api/auth/register")
     .set("X-CSRF-Token", csrf)
@@ -1087,7 +1133,27 @@ test("students can create an untrusted contributor account and are signed in", a
     .post("/api/auth/register")
     .set("X-CSRF-Token", csrf)
     .send({ ...body, email: "six@example.test", password: "abc123" });
-  assert.equal(six.status, 201, "six characters are enough");
+  assert.equal(six.status, 202, "six characters are enough");
+});
+test("older self-registered accounts must confirm their email before signing in", async () => {
+  await EmailVerification.deleteMany({});
+  const user = await account();
+  await User.updateOne({ _id: user._id }, { $set: { selfRegistered: true } });
+  const { agent, csrf, response } = await login();
+  assert.equal(response.status, 403);
+  assert.equal(response.body.error.code, "EMAIL_UNVERIFIED");
+  assert.equal(
+    await EmailVerification.countDocuments({ user: user._id }),
+    1,
+    "a link was sent",
+  );
+  const token = await knownVerificationToken("contributor@example.test");
+  const verified = await agent
+    .post("/api/auth/verify-email")
+    .set("X-CSRF-Token", csrf)
+    .send({ token });
+  assert.equal(verified.status, 200);
+  assert.equal((await login()).response.status, 200);
 });
 test("forgot password answers the same for unknown emails and reset links work once", async () => {
   const user = await account();

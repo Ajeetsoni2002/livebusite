@@ -202,6 +202,8 @@ const userSchema = new Schema(
     lockedUntil: Date,
     // Students who created their own contributor account from the site.
     selfRegistered: { type: Boolean, default: false },
+    // Set when the owner opened a link sent to this address (sign-up or password reset).
+    emailVerifiedAt: Date,
     phone: String,
     branch: String,
     semester: Number,
@@ -244,6 +246,33 @@ const passwordResetSchema = new Schema(
 );
 passwordResetSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 export const PasswordReset = model("PasswordReset", passwordResetSchema);
+/*
+ * A sign-up waiting for its email link. The account is created only when the link is
+ * opened, so nobody can register someone else's address. `user` is set instead of
+ * `signup` when an older account that was never verified signs in.
+ */
+const emailVerificationSchema = new Schema(
+  {
+    email: { type: String, required: true, lowercase: true, trim: true },
+    tokenHash: { type: String, required: true, unique: true },
+    expiresAt: { type: Date, required: true },
+    signup: {
+      name: String,
+      passwordHash: String,
+      phone: String,
+      branch: String,
+      semester: Number,
+    },
+    user: ref("User"),
+  },
+  options,
+);
+emailVerificationSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+emailVerificationSchema.index({ email: 1 });
+export const EmailVerification = model(
+  "EmailVerification",
+  emailVerificationSchema,
+);
 export const AuditLog = model(
   "AuditLog",
   new Schema(

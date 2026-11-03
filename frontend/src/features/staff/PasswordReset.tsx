@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { ArrowRight, KeyRound, MailCheck } from "lucide-react";
 import { api, errorMessage } from "../../lib/api";
 import { usePageMeta } from "../../lib/meta";
+import { rememberWorkspace } from "../../lib/session";
 
 export function ForgotPassword() {
   usePageMeta("Forgot password", undefined, { noindex: true });
@@ -147,6 +149,60 @@ export function ResetPassword() {
               <ArrowRight size={16} />
             </button>
           </form>
+        )}
+      </div>
+    </main>
+  );
+}
+
+/** Opened from the sign-up email: confirms the address, creates the account, signs in. */
+export function VerifyEmail() {
+  usePageMeta("Confirm your email", undefined, { noindex: true });
+  const [params] = useSearchParams(),
+    navigate = useNavigate(),
+    client = useQueryClient(),
+    token = params.get("token") || "",
+    [error, setError] = useState(token ? "" : "This link is incomplete."),
+    started = useRef(false);
+  useEffect(() => {
+    // Links are single-use: never send the token twice (React dev runs effects twice).
+    if (!token || started.current) return;
+    started.current = true;
+    api
+      .post("/auth/verify-email", { token })
+      .then((result) => {
+        const user = result.data.data;
+        client.setQueryData(["me"], user);
+        rememberWorkspace(user.role);
+        navigate(
+          `/${user.role}${user.role === "contributor" ? "/upload" : ""}`,
+          {
+            replace: true,
+          },
+        );
+      })
+      .catch((e) => setError(errorMessage(e)));
+  }, [token, client, navigate]);
+  return (
+    <main className="login-page">
+      <div className="login-card card" role="status">
+        <MailCheck size={32} className="accent" />
+        {error ? (
+          <>
+            <h1>That link did not work.</h1>
+            <p className="notice error">{error}</p>
+            <Link className="button secondary" to="/contribute#join">
+              Sign up again
+            </Link>
+            <p className="login-help">
+              Already confirmed? <Link to="/contributor/login">Sign in</Link>
+            </p>
+          </>
+        ) : (
+          <>
+            <h1>Confirming your email…</h1>
+            <p>Your contributor account will open in a moment.</p>
+          </>
         )}
       </div>
     </main>

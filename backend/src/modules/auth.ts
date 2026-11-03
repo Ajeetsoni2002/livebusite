@@ -14,7 +14,7 @@ import { rateLimit } from "express-rate-limit";
 import { z } from "zod";
 import { config } from "../config.js";
 import { HttpError, ok } from "../lib/http.js";
-import { sendMail } from "../lib/mail.js";
+import { mailProvider, sendMail } from "../lib/mail.js";
 import { renderEmail } from "../lib/email-template.js";
 import {
   User,
@@ -22,6 +22,7 @@ import {
   AuditLog,
   PasswordReset,
   ContributorRequest,
+  EmailVerification,
 } from "./models.js";
 export type AuthRequest = Request & { user?: any; session?: any };
 const digest = (value: string) =>
@@ -174,9 +175,11 @@ router.get("/csrf", (_req, res) => {
   res.cookie("csrf", token, { ...cookieOptions, maxAge: 86400_000 });
   ok(res, { token });
 });
+// Counts failed sign-ins only: guessing is what it stops, not people signing in.
 const loginLimit = rateLimit({
   windowMs: 15 * 60_000,
   limit: 20,
+  skipSuccessfulRequests: true,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   handler: (_req, res) =>
@@ -218,6 +221,20 @@ router.post(
         401,
         "Invalid credentials or account temporarily unavailable.",
         "LOGIN_FAILED",
+      );
+    }
+    // Accounts made before sign-up needed an emailed link must confirm their address once.
+    if (user.selfRegistered && !user.emailVerifiedAt) {
+      const recent = await EmailVerification.exists({
+        user: user._id,
+        createdAt: { $gt: new Date(Date.now() - 5 * 60_000) },
+      });
+      if (!recent)
+        await sendVerification(user.email, user.name, { user: user._id });
+      throw new HttpError(
+        403,
+        `Please confirm your email first. We have sent a link to ${user.email}; open it to sign in.`,
+        "EMAIL_UNVERIFIED",
       );
     }
     await User.updateOne(
@@ -287,7 +304,40 @@ const registerInput = z
     website: z.string().max(200).optional(),
   })
   .strict();
-// Students create their own contributor account; their uploads still wait for an admin.
+const VERIFY_HOURS = 24;
+/** Stores a verification link for `email` (replacing older ones) and mails it. */
+async function sendVerification(
+  email: string,
+  name: string,
+  record: { signup?: object; user?: unknown },
+) {
+  const token = randomBytes(32).toString("base64url");
+  await EmailVerification.deleteMany({ email });
+  await EmailVerification.create({
+    email,
+    tokenHash: digest(token),
+    expiresAt: new Date(Date.now() + VERIFY_HOURS * 3600_000),
+    ...record,
+  });
+  const link = `${config.siteUrl}/verify-email?token=${token}`;
+  return sendMail({
+    to: email,
+    subject: "Confirm your email for BUIT Papers",
+    ...renderEmail({
+      preheader: "One tap to finish creating your contributor account.",
+      eyebrow: "Confirm your email",
+      title: "One tap and you're in.",
+      paragraphs: [
+        `Hi ${name.split(/\s+/)[0]},`,
+        "Thanks for joining BUIT Papers as a contributor. Confirm that this email is yours to finish creating your account.",
+      ],
+      button: { label: "Confirm my email", url: link },
+      note: `This link works once, for ${VERIFY_HOURS} hours. If you did not sign up, ignore this email and no account will be created.`,
+    }),
+  });
+}
+// Students sign up as contributors; the account exists only once the emailed link is
+// opened, and their uploads still wait for an admin.
 router.post(
   "/register",
   limited(5, 60 * 60_000, "Too many sign-ups from here. Try again later."),
@@ -306,22 +356,78 @@ router.post(
         "An account with this email already exists. Sign in, or use “Forgot password”.",
         "EMAIL_TAKEN",
       );
+    const sent = await sendVerification(data.email, data.name, {
+      signup: {
+        name: data.name,
+        passwordHash: await bcrypt.hash(password, 12),
+        phone: data.phone || undefined,
+        branch: data.branch,
+        semester: data.semester,
+      },
+    });
+    if (!sent && mailProvider() !== "none")
+      throw new HttpError(
+        503,
+        "We could not send the confirmation email. Please try again in a few minutes.",
+      );
+    await audit(req, "contributor-signup-pending", data.email);
+    res.status(202);
+    ok(res, { pending: true, email: data.email });
+  },
+);
+// Opening the emailed link: creates the account (or confirms an older one) and signs in.
+router.post(
+  "/verify-email",
+  limited(20, 15 * 60_000, "Too many attempts. Try again in a few minutes."),
+  requireCsrf,
+  async (req: AuthRequest, res) => {
+    const { token } = z
+      .object({ token: z.string().min(20).max(100) })
+      .strict()
+      .parse(req.body);
+    const record: any = await EmailVerification.findOneAndDelete({
+      tokenHash: digest(token),
+      expiresAt: { $gt: new Date() },
+    });
+    if (!record)
+      throw new HttpError(
+        400,
+        "This link is invalid or has expired. Sign up again to get a new one.",
+        "VERIFY_INVALID",
+      );
     const now = new Date();
+    if (record.user) {
+      const user = await User.findOneAndUpdate(
+        { _id: record.user, active: true },
+        { $set: { emailVerifiedAt: now } },
+        { returnDocument: "after" },
+      );
+      if (!user) throw new HttpError(400, "This account is not available.");
+      await startSession(req, res, user);
+      await audit(req, "email-verified", String(user._id));
+      return ok(res, me(user));
+    }
+    if (await User.exists({ email: record.email }))
+      throw new HttpError(
+        409,
+        "This email is already confirmed. Please sign in.",
+        "EMAIL_TAKEN",
+      );
     const user = await User.create({
-      ...data,
-      phone: data.phone || undefined,
-      passwordHash: await bcrypt.hash(password, 12),
+      ...record.signup.toObject(),
+      email: record.email,
       role: "contributor",
       trusted: false,
       mustChangePassword: false,
       selfRegistered: true,
+      emailVerifiedAt: now,
       firstLoginAt: now,
     });
     await ContributorRequest.updateMany(
-      { email: data.email, status: "open" },
+      { email: record.email, status: "open" },
       { $set: { status: "approved", user: user._id, handledAt: now } },
     );
-    // Signing up is the account's first sign-in, so the admin hears about it once, here.
+    // Confirming is the account's first sign-in, so the admin hears about it once, here.
     await startSession(req, res, user);
     await audit(req, "contributor-registered", String(user._id));
     void notifyNewContributor(user);
@@ -431,6 +537,8 @@ router.post(
     user.mustChangePassword = false;
     user.failedLogins = 0;
     user.lockedUntil = null;
+    // The reset link reached this inbox, which proves the address too.
+    user.emailVerifiedAt ||= new Date();
     await user.save();
     await Session.updateMany(
       { user: user._id, revokedAt: null },

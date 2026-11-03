@@ -24,6 +24,11 @@ const Login = lazy(() =>
       default: m.ResetPassword,
     })),
   ),
+  VerifyEmail = lazy(() =>
+    import("../features/staff/PasswordReset").then((m) => ({
+      default: m.VerifyEmail,
+    })),
+  ),
   Guard = lazy(() =>
     import("../features/staff/Auth").then((m) => ({ default: m.Guard })),
   ),
@@ -105,6 +110,7 @@ export default function App() {
               <Route path="/contributor/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
               <Route element={<Guard role="admin" />}>
                 <Route path="/admin" element={<Workspace />}>
                   <Route index element={<Dashboard />} />
