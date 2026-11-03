@@ -46,6 +46,7 @@ type Report = {
     types: Record<string, number>;
     branches: Record<string, number>;
     semesters: Record<string, number>;
+    cities?: Record<string, number>;
     uniqueDownloaders: number;
   };
   breakdown: Record<string, Record<string, number>>;
@@ -69,11 +70,20 @@ type LogRow = {
   os?: string;
   browser?: string;
   country?: string;
+  region?: string;
+  city?: string;
   page?: string;
 };
 type Log = { rows: LogRow[]; total: number; page: number; pages: number };
 
 const ranges = [7, 14, 30, 90];
+/** "Bhopal, Madhya Pradesh · IN" from Cloudflare's IP geolocation. */
+const place = (row: LogRow) => {
+  const country =
+    row.country && row.country !== "Unknown" ? row.country : undefined;
+  const local = [row.city, row.region].filter(Boolean).join(", ");
+  return [local, country].filter(Boolean).join(" · ") || "Location unknown";
+};
 const kpis: [Counter, string][] = [
   ["visitors", "Unique visitors"],
   ["pageViews", "Page views"],
@@ -259,7 +269,7 @@ function DownloadLog({ days }: { days: number }) {
       <div className="toolbar">
         <input
           type="search"
-          placeholder="Search title, subject, visitor ID or staff name…"
+          placeholder="Search title, subject, city, visitor ID or staff name…"
           value={q}
           onChange={(e) => reset(setQ)(e.target.value)}
           aria-label="Search downloads"
@@ -353,11 +363,7 @@ function DownloadLog({ days }: { days: number }) {
                           <>
                             Visitor <code>{row.visitor}</code>
                             <br />
-                            <small className="muted">
-                              {row.country && row.country !== "Unknown"
-                                ? row.country
-                                : "Location unknown"}
-                            </small>
+                            <small className="muted">{place(row)}</small>
                           </>
                         )}
                       </td>
@@ -616,6 +622,12 @@ export default function Analytics() {
                   <BarList values={data.downloads.semesters} limit={6} />
                 </div>
               </div>
+              <h4>City</h4>
+              <BarList
+                values={data.downloads.cities || {}}
+                limit={6}
+                empty="No city data yet."
+              />
               <h4>Type</h4>
               <BarList
                 values={data.downloads.types}
@@ -665,6 +677,7 @@ export default function Analytics() {
                 ["devices", "Devices"],
                 ["os", "Operating systems"],
                 ["browsers", "Browsers"],
+                ["cities", "Cities"],
                 ["countries", "Countries"],
                 ["referrers", "Traffic sources"],
               ] as const

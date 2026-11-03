@@ -53,6 +53,8 @@ API_ORIGIN=https://buit-papers-api.onrender.com
 
 Database/R2/JWT secrets Pages mein add nahi karne. API origin public address hai. Function sirf configured origin ko forward karta hai; browser arbitrary upstream choose nahi kar sakta. [Pages bindings](https://developers.cloudflare.com/pages/functions/bindings/).
 
+**Downloader ki city (analytics):** Pages mein ek **Secret** `CF_ORIGIN_SECRET` add karein (32+ random characters, jaise `openssl rand -hex 32`). Wahi exact value Render mein bhi `CF_ORIGIN_SECRET` ke naam se dalein (section 4). Proxy is secret ke saath visitor ka asli IP aur Cloudflare ki city/state/country backend ko bhejta hai; secret match na ho to backend location "Unknown" rakhta hai aur browser ke forged headers ignore karta hai.
+
 Compatibility date `2026-10-01` par set karein if your existing project uses an old date. Yeh date local Worker runtime mein verify hui hai. Proxy mein Node APIs nahi hain; `nodejs_compat` flag required nahi hai.
 
 ## 4. Render environment update karein
@@ -63,6 +65,7 @@ Render -> **buit-papers-api** -> Environment:
 SITE_URL=https://livebusite.pages.dev
 API_URL=https://buit-papers-api.onrender.com
 CORS_ORIGINS=https://livebusite.pages.dev
+CF_ORIGIN_SECRET=SAME_VALUE_AS_PAGES_SECRET
 ```
 
 Existing MongoDB URI, R2 settings aur three JWT/analytics secrets preserve karein. Save and deploy karein. Backend `.env.production` automatically load nahi karta; dashboard mein values import/update karein.

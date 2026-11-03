@@ -33,9 +33,27 @@ const hourKey = (date = new Date()) =>
       hourCycle: "h23",
     }).format(date),
   );
+/** True when the request came through our Pages proxy, so its visitor headers are real. */
+const viaProxy = (req: AuthRequest) =>
+  !!config.cfOriginSecret &&
+  req.get("X-Origin-Verify") === config.cfOriginSecret;
+const proxied = (req: AuthRequest, name: string) => {
+  if (!viaProxy(req)) return "";
+  try {
+    return decodeURIComponent(req.get(name) || "")
+      .replace(/[\x00-\x1f]/g, "")
+      .trim()
+      .slice(0, 80);
+  } catch {
+    return "";
+  }
+};
+/** The visitor's own address: behind the proxy, req.ip is Cloudflare's, not theirs. */
+const clientIp = (req: AuthRequest) =>
+  proxied(req, "X-Visitor-IP") || req.ip || "";
 export function visitorKey(req: AuthRequest, day = dayKey()) {
   return createHmac("sha256", config.analyticsSecret)
-    .update(`${day}|${req.ip || ""}|${req.get("User-Agent") || ""}`)
+    .update(`${day}|${clientIp(req)}|${req.get("User-Agent") || ""}`)
     .digest("hex");
 }
 const untracked = (req: AuthRequest) =>
@@ -80,13 +98,11 @@ export function clientInfo(req: AuthRequest) {
             : /linux/i.test(ua)
               ? "Linux"
               : "Other";
-  const country =
-    config.cfOriginSecret &&
-    req.get("X-Origin-Verify") === config.cfOriginSecret &&
-    /^[A-Z]{2}$/.test(req.get("CF-IPCountry") || "")
-      ? (req.get("CF-IPCountry") as string)
-      : "Unknown";
-  return { device, browser, os, country };
+  const code = proxied(req, "X-Visitor-Country").toUpperCase();
+  const country = /^[A-Z]{2}$/.test(code) && code !== "XX" ? code : "Unknown";
+  const region = proxied(req, "X-Visitor-Region") || undefined;
+  const city = proxied(req, "X-Visitor-City") || undefined;
+  return { device, browser, os, country, region, city };
 }
 export function normalizeQuery(query: string) {
   return query
@@ -131,7 +147,10 @@ export async function recordBatch(
   if (excluded(req)) return;
   const day = dayKey(),
     visitor = visitorKey(req, day),
-    { device, browser, os, country } = clientInfo(req);
+    { device, browser, os, country, city, region } = clientInfo(req);
+  const place = city
+    ? [city, region].filter(Boolean).join(", ").replace(/[.$]/g, "_")
+    : "Unknown";
   for (const event of events) {
     if (event.path && /^\/(?:admin|contributor|auth)(?:\/|$)/.test(event.path))
       continue;
@@ -191,6 +210,7 @@ export async function recordBatch(
           increment[`browsers.${browser}`] = 1;
           increment[`os.${os}`] = 1;
           increment[`countries.${country}`] = 1;
+          increment[`cities.${place}`] = 1;
           increment[`referrers.${referrer}`] = 1;
         }
         if (event.kind === "contentview") increment.contentViews = 1;
@@ -456,6 +476,28 @@ async function report(days: number) {
               { $sort: { count: -1 } },
               { $limit: 10 },
             ],
+            cities: [
+              { $match: { city: { $nin: [null, ""] } } },
+              {
+                $group: {
+                  _id: {
+                    $concat: [
+                      "$city",
+                      {
+                        $cond: [
+                          { $ifNull: ["$region", false] },
+                          { $concat: [", ", "$region"] },
+                          "",
+                        ],
+                      },
+                    ],
+                  },
+                  count: { $sum: 1 },
+                },
+              },
+              { $sort: { count: -1 } },
+              { $limit: 10 },
+            ],
             downloaders: [
               { $group: { _id: { day: "$day", visitor: "$visitor" } } },
               { $count: "n" },
@@ -483,6 +525,7 @@ async function report(days: number) {
     os: {},
     referrers: {},
     countries: {},
+    cities: {},
   };
   for (const row of stats as any[])
     for (const category of Object.keys(breakdown))
@@ -541,6 +584,7 @@ async function report(days: number) {
       types: counted(facets.types),
       branches: counted(facets.branches),
       semesters: counted(facets.semesters),
+      cities: counted(facets.cities),
       uniqueDownloaders: facets.downloaders?.[0]?.n || 0,
     },
     breakdown,
@@ -568,6 +612,8 @@ function logFilter(input: z.infer<typeof logQuery>) {
       { subjects: pattern },
       { visitor: pattern },
       { userName: pattern },
+      { city: pattern },
+      { region: pattern },
     ];
   }
   return filter;
@@ -619,6 +665,8 @@ analyticsAdminRouter.get("/analytics/downloads.csv", async (req, res) => {
     "device",
     "os",
     "browser",
+    "city",
+    "region",
     "country",
     "page",
   ];
@@ -645,6 +693,8 @@ analyticsAdminRouter.get("/analytics/downloads.csv", async (req, res) => {
         r.device,
         r.os,
         r.browser,
+        r.city,
+        r.region,
         r.country,
         r.page,
       ]

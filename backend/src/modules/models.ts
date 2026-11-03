@@ -338,6 +338,7 @@ export const DailyStats = model(
     os: { type: Map, of: Number },
     referrers: { type: Map, of: Number },
     countries: { type: Map, of: Number },
+    cities: { type: Map, of: Number },
   }),
 );
 // One row per download action so staff can see who took what. Visitors stay
@@ -364,6 +365,8 @@ const downloadLogSchema = new Schema({
   browser: String,
   os: String,
   country: String,
+  region: String,
+  city: String,
   page: String,
   expiresAt: Date,
 });

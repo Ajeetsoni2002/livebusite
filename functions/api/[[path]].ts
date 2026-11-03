@@ -78,9 +78,37 @@ async function streamPdf(target: URL, original: Request, sameOrigin: boolean) {
   return new Response(file.body, { status: file.status, headers: out });
 }
 
+// Headers only this proxy may set; anything a browser sends under these names is dropped.
+const visitorHeaders = [
+  "x-origin-verify",
+  "x-visitor-ip",
+  "x-visitor-country",
+  "x-visitor-region",
+  "x-visitor-city",
+];
+
+// Render only sees this Function's address, so pass on where the visitor really is.
+// Cloudflare's IP geolocation is city-level; values are URI-encoded for header safety.
+function forwardVisitor(original: Request, headers: Headers, secret?: string) {
+  for (const header of visitorHeaders) headers.delete(header);
+  if (!secret) return;
+  const cf = ((original as any).cf || {}) as Record<string, unknown>;
+  const text = (value: unknown) =>
+    typeof value === "string" && value.trim()
+      ? encodeURIComponent(value.trim().slice(0, 80))
+      : "";
+  headers.set("X-Origin-Verify", secret);
+  const ip = original.headers.get("CF-Connecting-IP");
+  if (ip) headers.set("X-Visitor-IP", ip);
+  const country = text(cf.country || original.headers.get("CF-IPCountry"));
+  if (country) headers.set("X-Visitor-Country", country);
+  if (text(cf.region)) headers.set("X-Visitor-Region", text(cf.region));
+  if (text(cf.city)) headers.set("X-Visitor-City", text(cf.city));
+}
+
 export async function onRequest(context: {
   request: Request;
-  env: { API_ORIGIN?: string };
+  env: { API_ORIGIN?: string; CF_ORIGIN_SECRET?: string };
 }): Promise<Response> {
   const incoming = new URL(context.request.url);
   let upstream: URL;
@@ -113,6 +141,11 @@ export async function onRequest(context: {
   const request = new Request(upstream.href, context.request);
   request.headers.delete("host");
   for (const header of hopHeaders) request.headers.delete(header);
+  forwardVisitor(
+    context.request,
+    request.headers,
+    context.env.CF_ORIGIN_SECRET,
+  );
 
   try {
     // Preserve Cookie, Origin, CSRF, upload bodies and range requests. Do not

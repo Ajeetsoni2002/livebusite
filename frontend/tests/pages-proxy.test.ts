@@ -387,3 +387,36 @@ test("browser-style redirects with Express's HTML body still redirect, without t
   assert.equal(response.headers.get("Content-Type"), null);
   assert.equal(await response.text(), "");
 });
+
+test("proxy forwards the visitor's city and IP with the origin secret and drops forged ones", async (t) => {
+  let seen: Headers | undefined;
+  const fetchMock = mock.method(
+    globalThis,
+    "fetch",
+    async (request: Request) => {
+      seen = request.headers;
+      return Response.json({ data: {} });
+    },
+  );
+  t.after(() => fetchMock.mock.restore());
+  const request = new Request(origin + "/api/analytics/events", {
+    headers: {
+      "CF-Connecting-IP": "203.0.113.7",
+      "X-Visitor-City": "Forged",
+      "X-Origin-Verify": "forged",
+    },
+  });
+  Object.defineProperty(request, "cf", {
+    value: { country: "IN", region: "Madhya Pradesh", city: "Bhopal" },
+  });
+  await onRequest({ request, env: { ...env, CF_ORIGIN_SECRET: "s3cret" } });
+  assert.equal(seen?.get("X-Origin-Verify"), "s3cret");
+  assert.equal(seen?.get("X-Visitor-IP"), "203.0.113.7");
+  assert.equal(seen?.get("X-Visitor-Country"), "IN");
+  assert.equal(seen?.get("X-Visitor-Region"), "Madhya%20Pradesh");
+  assert.equal(seen?.get("X-Visitor-City"), "Bhopal");
+
+  await onRequest({ request: new Request(request), env });
+  assert.equal(seen?.get("X-Origin-Verify"), null);
+  assert.equal(seen?.get("X-Visitor-City"), null);
+});
