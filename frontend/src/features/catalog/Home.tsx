@@ -46,6 +46,30 @@ function Question({
   );
 }
 
+/* What students search for, answered. Keep in step with homeFaq in scripts/prerender.mjs. */
+const homeFaq = [
+  [
+    "Where can I find Barkatullah University previous year question papers?",
+    "BUIT Papers collects Barkatullah University (BU Bhopal) B.Tech previous year question papers for every branch – CSE, IT, EC, EX, ME and Civil – sorted by semester, subject and year. Search by subject name or paper code, for example CSE-501 or BE-102.",
+  ],
+  [
+    "Are the papers free to download?",
+    "Yes. Every paper and note can be viewed online or downloaded as a PDF for free, without signing up.",
+  ],
+  [
+    "Are first-year (semester 1 and 2) papers included?",
+    "Yes. First-year BE papers such as Engineering Mathematics, Chemistry, Physics and Basic Electrical Engineering are common to all branches and appear under every branch.",
+  ],
+  [
+    "Is this the official Barkatullah University website?",
+    "No. BUIT Papers is an unofficial archive made by students of BUIT, Bhopal. Papers are shared by students and checked by an admin before they go live.",
+  ],
+  [
+    "Can I share my old papers or notes?",
+    "Yes. Create a contributor account, upload clear photos or scans, and earn for every paper or note that is approved.",
+  ],
+] as const;
+
 export default function Home() {
   usePageMeta(
     "BUIT Papers – Barkatullah University Previous Year Question Papers & Notes",
@@ -149,6 +173,15 @@ export default function Home() {
         saved={notes.data?.saved}
         loading={notes.isPending}
       />
+      <section className="eh-faq" aria-labelledby="home-faq">
+        <h2 id="home-faq">Questions students ask</h2>
+        {homeFaq.map(([q, a]) => (
+          <details key={q}>
+            <summary>{q}</summary>
+            <p>{a}</p>
+          </details>
+        ))}
+      </section>
     </main>
   );
 }

@@ -157,9 +157,17 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
           </div>
         )}
         <div className="eyebrow">
-          {subject?.code || branch?.code || "THE STUDENT LIBRARY"}
+          {subject?.code || branch?.code || "BARKATULLAH UNIVERSITY · BUIT"}
         </div>
-        <h1>{title}</h1>
+        <h1>
+          {subject
+            ? `${title} question papers`
+            : branch
+              ? `${title} papers`
+              : kind === "notes"
+                ? "Short notes"
+                : "Previous year question papers"}
+        </h1>
         <p>
           {subject
             ? "Papers and notes, together for this subject."

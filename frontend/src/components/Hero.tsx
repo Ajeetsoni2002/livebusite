@@ -50,6 +50,9 @@ export default function Hero({
           <em>are</em> allowed.
         </p>
         <h1 id="hero-title">
+          <span className="eh-h1-kicker">
+            BU Bhopal (BUIT) previous year question papers
+          </span>
           Your next exam,
           <br />
           <span className="eh-underlined">

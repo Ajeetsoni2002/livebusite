@@ -19,6 +19,7 @@ export default function Info({ page }: { page: string }) {
     page === "about"
       ? "Meet Ajeet Kumar Soni and the student community behind the unofficial BUIT question paper and notes archive."
       : undefined,
+    { noindex: !titles[page] },
   );
   return (
     <main className="page info-page">

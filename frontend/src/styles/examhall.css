@@ -1300,3 +1300,15 @@ kbd {
   color: var(--on-primary);
   filter: brightness(1.1);
 }
+/* Small keyword line above the hero heading: what the site is, in searchers' words. */
+.eh-h1-kicker {
+  display: block;
+  margin-bottom: 10px;
+  font-family: var(--font-body);
+  font-size: clamp(13px, 1.4vw, 15px);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

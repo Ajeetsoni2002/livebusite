@@ -1,0 +1,37 @@
+name: Rebuild the site for search engines
+
+# Each Cloudflare Pages build fetches the published papers, notes and jobs from the live
+# API, so rebuilding regularly puts new uploads into the sitemap and gives them their own
+# prerendered pages. Needs the CF_PAGES_DEPLOY_HOOK repository secret: Cloudflare →
+# Workers & Pages → the project → Settings → Builds → Deploy hooks → Add (branch main).
+on:
+  workflow_dispatch:
+  schedule:
+    # Every 6 hours (~120 builds a month; the free plan allows 500).
+    - cron: "40 */6 * * *"
+
+permissions: {}
+
+concurrency:
+  group: rebuild-site
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Wake the API so the build can read it
+        run: |
+          curl -s -o /dev/null --max-time 90 -A buit-rebuild \
+            "${{ vars.KEEP_ALIVE_URL || 'https://buit-papers-api.onrender.com/api/ping' }}" || true
+      - name: Trigger a Cloudflare Pages build
+        env:
+          HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::Add the CF_PAGES_DEPLOY_HOOK secret to enable scheduled rebuilds."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "Build requested."

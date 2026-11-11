@@ -13,7 +13,11 @@ export function usePageMeta(
     document.title = title.includes(SITE_NAME)
       ? title
       : `${title} · ${SITE_NAME}`;
-    const url = `${import.meta.env.VITE_SITE_URL || location.origin}${location.pathname}`;
+    // Pages are served at their trailing-slash address (see scripts/prerender.mjs).
+    const path = location.pathname.endsWith("/")
+      ? location.pathname
+      : `${location.pathname}/`;
+    const url = `${import.meta.env.VITE_SITE_URL || location.origin}${path}`;
     let canonical = document.head.querySelector<HTMLLinkElement>(
       'link[rel="canonical"]',
     );
@@ -22,7 +26,8 @@ export function usePageMeta(
       canonical.rel = "canonical";
       document.head.append(canonical);
     }
-    canonical.href = url;
+    if (noindex) canonical.remove();
+    else canonical.href = url;
     for (const [key, value] of [
       ["description", description],
       [
