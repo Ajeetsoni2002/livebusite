@@ -184,7 +184,9 @@ export async function fitPdf(
     out: Uint8Array,
     extra: Pick<FitResult, "dpi" | "textRasterized">,
   ): FitResult => ({
-    file: new File([out], file.name, { type: "application/pdf" }),
+    file: new File([new Uint8Array(out)], file.name, {
+      type: "application/pdf",
+    }),
     compressed: true,
     before,
     after: out.length,
