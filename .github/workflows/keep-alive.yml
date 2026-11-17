@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Ping the API
         env:
-          PING_URL: ${{ vars.KEEP_ALIVE_URL || 'https://buit-papers-api.onrender.com/api/ping' }}
+          PING_URL: ${{ vars.KEEP_ALIVE_URL || 'https://livebusite-api.onrender.com/api/ping' }}
         run: |
           for attempt in 1 2 3; do
             code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 -A buit-keepalive "$PING_URL" || true)

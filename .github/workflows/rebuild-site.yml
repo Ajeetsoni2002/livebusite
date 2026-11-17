@@ -24,7 +24,7 @@ jobs:
       - name: Wake the API so the build can read it
         run: |
           curl -s -o /dev/null --max-time 90 -A buit-rebuild \
-            "${{ vars.KEEP_ALIVE_URL || 'https://buit-papers-api.onrender.com/api/ping' }}" || true
+            "${{ vars.KEEP_ALIVE_URL || 'https://livebusite-api.onrender.com/api/ping' }}" || true
       - name: Trigger a Cloudflare Pages build
         env:
           HOOK: ${{ secrets.CF_PAGES_DEPLOY_HOOK }}

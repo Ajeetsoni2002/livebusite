@@ -20,7 +20,7 @@ import {
   wordsFrom,
 } from "../frontend/src/lib/processing/rollnumber.ts";
 
-const API = process.env.ERASE_API || "https://buit-papers-api.onrender.com/api";
+const API = process.env.ERASE_API || "https://livebusite-api.onrender.com/api";
 const args = process.argv.slice(2);
 const dry = args.includes("--dry");
 const out = args.find((a) => a.startsWith("--out="))?.slice(6);

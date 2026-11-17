@@ -204,7 +204,7 @@ VITE_SITE_URL=https://www.YOUR_DOMAIN.COM
 VITE_CONTACT_EMAIL=YOUR_REAL_CONTACT_EMAIL
 ```
 
-**Custom domain nahi hai?** Upar ka direct-API configuration use karne ki jagah [Pages API proxy guide](PAGES-API-PROXY-HI.md) follow karein: `VITE_API_BASE_URL=/api`, `VITE_SITE_URL=https://livebusite.pages.dev`, aur runtime `API_ORIGIN=https://buit-papers-api.onrender.com`. Render mein SITE_URL/CORS frontend ke `pages.dev` origin par set karein. Is case mein section 7.6 ka custom-domain step optional hai.
+**Custom domain nahi hai?** Upar ka direct-API configuration use karne ki jagah [Pages API proxy guide](PAGES-API-PROXY-HI.md) follow karein: `VITE_API_BASE_URL=/api`, `VITE_SITE_URL=https://livebusite.pages.dev`, aur runtime `API_ORIGIN=https://livebusite-api.onrender.com`. Render mein SITE_URL/CORS frontend ke `pages.dev` origin par set karein. Is case mein section 7.6 ka custom-domain step optional hai.
 
 `SKIP_DEPENDENCY_INSTALL=true` automatic installation skip karta hai, kyunki build command khud `npm ci --include=dev` chalata hai. `NODE_ENV=production` add karna required nahi hai: Vite build production build banata hai.
 

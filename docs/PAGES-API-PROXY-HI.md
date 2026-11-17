@@ -43,7 +43,7 @@ SKIP_DEPENDENCY_INSTALL=true
 VITE_API_BASE_URL=/api
 VITE_SITE_URL=https://livebusite.pages.dev
 VITE_CONTACT_EMAIL=YOUR_REAL_CONTACT_EMAIL
-API_ORIGIN=https://buit-papers-api.onrender.com
+API_ORIGIN=https://livebusite-api.onrender.com
 ```
 
 **Do URLs ka difference:**
@@ -63,7 +63,7 @@ Render -> **buit-papers-api** -> Environment:
 
 ```dotenv
 SITE_URL=https://livebusite.pages.dev
-API_URL=https://buit-papers-api.onrender.com
+API_URL=https://livebusite-api.onrender.com
 CORS_ORIGINS=https://livebusite.pages.dev
 CF_ORIGIN_SECRET=SAME_VALUE_AS_PAGES_SECRET
 ```
