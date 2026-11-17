@@ -1197,3 +1197,9 @@ test("forgot password answers the same for unknown emails and reset links work o
     .send({ email: "contributor@example.test", password: "BrandNewPassword9" });
   assert.equal(relogin.status, 200);
 });
+test("upload limits are public so the browser can compress oversized PDFs first", async () => {
+  const response = await request(app).get("/api/upload-limits");
+  assert.equal(response.status, 200);
+  assert.equal(response.body.data.maxFiles, 5);
+  assert.ok(response.body.data.maxFileBytes >= 1024 * 1024);
+});

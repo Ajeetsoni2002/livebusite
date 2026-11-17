@@ -56,6 +56,10 @@ export function createApp() {
   );
   app.use(express.json({ limit: "256kb" }), cookieParser());
   app.get("/api/ping", (_req, res) => ok(res, { server: "alive" }));
+  // The upload page compresses PDFs over this size in the browser before sending them.
+  app.get("/api/upload-limits", (_req, res) =>
+    ok(res, { maxFileBytes: config.maxUploadBytes, maxFiles: 5 }),
+  );
   app.get("/api/health", (_req, res) => {
     const ready = mongoose.connection.readyState === 1;
     res.status(ready ? 200 : 503);

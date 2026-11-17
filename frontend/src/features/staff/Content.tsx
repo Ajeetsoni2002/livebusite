@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import type { ContentItem } from "../../lib/types";
 import { api, errorMessage } from "../../lib/api";
+import { fitForUpload } from "../../lib/uploadFit";
 import { useUser } from "./Auth";
 import ReviewPreview from "./ReviewPreview";
 import { lazy, Suspense } from "react";
@@ -62,6 +63,7 @@ export default function Content({
     null,
   );
   const [bulkStatus, setBulkStatus] = useState("");
+  const [studioStatus, setStudioStatus] = useState("");
   const editableByMe = (item: Row) =>
     admin || ["draft", "pending", "rejected"].includes(item.status || "");
   const base = (item: Row) => `/${user.role}/${item._kind || kind}/${item._id}`;
@@ -80,16 +82,20 @@ export default function Content({
       toast(errorMessage(e), "error");
     }
   }
-  async function saveProcessed(item: Row, blob: Blob, meta: object) {
+  async function saveProcessed(
+    item: Row,
+    blob: Blob,
+    meta: object,
+    onStatus: (message: string) => void,
+  ) {
+    // Cleaned pages are re-encoded images and can outgrow the limit on long scans.
+    const fit = await fitForUpload(blob, "processed.pdf", onStatus);
     const data = new FormData();
     data.append(
       "metadata",
       JSON.stringify({ processedMeta: meta, activate: true }),
     );
-    data.append(
-      "processed",
-      new File([blob], "processed.pdf", { type: "application/pdf" }),
-    );
+    data.append("processed", fit.file);
     await api.post(`${base(item)}/processed`, data, { timeout: 120_000 });
   }
   async function switchVersion(item: Row, version: "original" | "processed") {
@@ -111,7 +117,7 @@ export default function Content({
     const { item } = studio;
     try {
       if (result.choice === "processed") {
-        await saveProcessed(item, result.blob, result.meta);
+        await saveProcessed(item, result.blob, result.meta, setStudioStatus);
         toast("Processed version saved. Watermarking now.", "success");
       } else if (item.activeVersion === "processed")
         await api.post(`${base(item)}/activate`, { version: "original" });
@@ -121,6 +127,8 @@ export default function Content({
     } catch (e) {
       // Shown inside the open studio (a toast would sit behind the modal).
       throw new Error(`Saving failed: ${errorMessage(e)}`);
+    } finally {
+      setStudioStatus("");
     }
   }
   async function watermark(targets: Row[]) {
@@ -171,7 +179,9 @@ export default function Content({
         if ("skipped" in result) summary.skipped++;
         else {
           setBulkStatus(`${label}: saving…`);
-          await saveProcessed(item, result.blob!, result.meta!);
+          await saveProcessed(item, result.blob!, result.meta!, (step) =>
+            setBulkStatus(`${label}: ${step}`),
+          );
           summary.done++;
         }
       } catch {
@@ -684,6 +694,7 @@ export default function Content({
                 : "Keep original"
             }
             processedLabel="Apply processed version"
+            status={studioStatus}
           />
         </Suspense>
       )}

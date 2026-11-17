@@ -64,6 +64,7 @@ export default function ProcessStudio({
   onDone,
   originalLabel = "Use original file",
   processedLabel = "Use processed version",
+  status,
 }: {
   bytes: Uint8Array;
   title: string;
@@ -71,6 +72,8 @@ export default function ProcessStudio({
   onDone: (result: StudioResult) => Promise<void> | void;
   originalLabel?: string;
   processedLabel?: string;
+  /** Progress text from the caller while it saves (for example, compressing the PDF). */
+  status?: string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const doc = useRef<PDFDocumentProxy | null>(null);
@@ -612,7 +615,8 @@ export default function ProcessStudio({
           </span>
         ) : saving ? (
           <span role="status">
-            Saving… if the server was asleep this can take a minute.
+            {status ||
+              "Saving… if the server was asleep this can take a minute."}
           </span>
         ) : (
           <span className="muted">

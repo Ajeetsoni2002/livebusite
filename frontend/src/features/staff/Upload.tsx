@@ -11,6 +11,12 @@ import { useUser } from "./Auth";
 import { usePublic } from "../../lib/queries";
 import type { Offering, ContentItem } from "../../lib/types";
 import OfferingPicker from "./OfferingPicker";
+import { describeFit, fitForUpload, uploadLimit } from "../../lib/uploadFit";
+import {
+  DEFAULT_MAX_FILE_BYTES,
+  formatMB,
+  planBatches,
+} from "../../lib/processing/compress-plan";
 type Row = {
   title: string;
   offerings: string[];
@@ -35,7 +41,12 @@ export default function Upload() {
       bytes: Uint8Array;
       metadata: Record<string, unknown>;
       file: File;
-    } | null>(null);
+    } | null>(null),
+    [studioStatus, setStudioStatus] = useState(""),
+    [limit, setLimit] = useState(DEFAULT_MAX_FILE_BYTES);
+  useEffect(() => {
+    void uploadLimit().then(setLimit);
+  }, []);
   const upload = {
     // Large scans on slow connections to a free instance can take minutes.
     timeout: 600_000,
@@ -99,39 +110,68 @@ export default function Upload() {
       if (files.length > 1 && !edit) {
         if (rows.some((r) => !r.offerings.length))
           throw new Error("Choose at least one subject for every PDF.");
-        const data = new FormData();
-        files.forEach((f) => data.append("files", f));
-        data.append(
-          "metadata",
-          JSON.stringify(
-            rows.map((row) => ({
-              title: row.title,
-              offerings: row.offerings,
-              ...(kind === "papers"
-                ? {
-                    year: row.year ? Number(row.year) : undefined,
-                    examType: row.examType,
-                  }
-                : { format: "pdf" }),
-              ...(user.role === "admin"
-                ? { status: String(form.get("status") || "pending") }
-                : {}),
-            })),
-          ),
-        );
-        await wakeFirst();
-        const result = await api.post(
-          `/${user.role}/${kind}/bulk`,
-          data,
-          upload,
-        );
+        const meta = rows.map((row) => ({
+          title: row.title,
+          offerings: row.offerings,
+          ...(kind === "papers"
+            ? {
+                year: row.year ? Number(row.year) : undefined,
+                examType: row.examType,
+              }
+            : { format: "pdf" }),
+          ...(user.role === "admin"
+            ? { status: String(form.get("status") || "pending") }
+            : {}),
+        }));
+        type Result = { index: number; error?: string; item?: ContentItem };
+        const results: Result[] = [],
+          notes: string[] = [],
+          ready: { index: number; file: File }[] = [];
+        // Only files over the limit are compressed; one that cannot be is reported, not sent.
+        for (const [index, file] of files.entries()) {
+          try {
+            const fit = await fitForUpload(file, file.name, setMessage);
+            if (fit.compressed) notes.push(describeFit(fit));
+            ready.push({ index, file: fit.file });
+          } catch (error) {
+            results.push({ index, error: errorMessage(error) });
+          }
+        }
+        if (ready.length) await wakeFirst();
+        // Several near-limit files together could pass the proxy's request size cap.
+        for (const batch of planBatches(ready.map((r) => r.file.size))) {
+          const data = new FormData();
+          batch.forEach((b) => data.append("files", ready[b].file));
+          data.append(
+            "metadata",
+            JSON.stringify(batch.map((b) => meta[ready[b].index])),
+          );
+          try {
+            const result = await api.post(
+              `/${user.role}/${kind}/bulk`,
+              data,
+              upload,
+            );
+            for (const r of result.data.data as Result[])
+              results.push({ ...r, index: ready[batch[r.index]].index });
+          } catch (error) {
+            batch.forEach((b) =>
+              results.push({
+                index: ready[b].index,
+                error: errorMessage(error),
+              }),
+            );
+          }
+        }
         setMessage(
-          result.data.data
-            .map(
-              (r: { index: number; error?: string; item?: ContentItem }) =>
-                `${files[r.index].name}: ${r.error || r.item?.status}`,
-            )
-            .join("\n"),
+          [
+            ...notes,
+            ...results
+              .sort((a, b) => a.index - b.index)
+              .map(
+                (r) => `${files[r.index].name}: ${r.error || r.item?.status}`,
+              ),
+          ].join("\n"),
         );
         setFiles([]);
       } else {
@@ -162,9 +202,10 @@ export default function Upload() {
         if (edit) {
           await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
           if (files[0]) {
+            const fit = await fitForUpload(files[0], files[0].name, setMessage);
             await wakeFirst();
             const replacement = new FormData();
-            replacement.append("file", files[0]);
+            replacement.append("file", fit.file);
             await api.post(
               `/${user.role}/${kind}/${edit}/replace-file`,
               replacement,
@@ -172,11 +213,17 @@ export default function Upload() {
             );
           }
         } else if (files[0] && format === "pdf") {
+          // An oversized original is compressed first, so both versions start from it.
+          const fit = await fitForUpload(files[0], files[0].name, setMessage);
+          if (fit.compressed) {
+            setMessage(describeFit(fit));
+            toast(describeFit(fit), "success");
+          }
           // Preview the cleaned/split version first; the upload happens on the choice.
           setStudio({
-            bytes: new Uint8Array(await files[0].arrayBuffer()),
+            bytes: new Uint8Array(await fit.file.arrayBuffer()),
             metadata,
-            file: files[0],
+            file: fit.file,
           });
           return;
         } else {
@@ -214,17 +261,16 @@ export default function Upload() {
         }),
       );
       data.append("file", studio.file);
-      if (result.choice === "processed")
-        data.append(
-          "processed",
-          new File(
-            [result.blob],
-            studio.file.name.replace(/.pdf$/i, "") + "-processed.pdf",
-            {
-              type: "application/pdf",
-            },
-          ),
+      if (result.choice === "processed") {
+        // Cleaned pages are re-encoded images and can outgrow the limit on long scans.
+        const fit = await fitForUpload(
+          result.blob,
+          studio.file.name.replace(/.pdf$/i, "") + "-processed.pdf",
+          setStudioStatus,
         );
+        data.append("processed", fit.file);
+      }
+      setStudioStatus("");
       await wakeFirst();
       await api.post(`/${user.role}/${kind}`, data, upload);
       setStudio(null);
@@ -243,6 +289,7 @@ export default function Upload() {
     } finally {
       setBusy(false);
       setProgress(null);
+      setStudioStatus("");
     }
   }
   if (edit && item.isPending) return <p>Loading resource…</p>;
@@ -319,7 +366,8 @@ export default function Upload() {
             <p>
               Drop PDFs here, or choose files.
               <br />
-              Up to 5 PDFs per batch, 20 MB each by default.
+              Up to 5 PDFs per batch, {formatMB(limit)} each. Larger PDFs are
+              compressed in your browser, keeping them readable.
             </p>
             <input
               aria-label="Choose PDFs"
@@ -603,6 +651,7 @@ export default function Upload() {
             onDone={sendWithChoice}
             originalLabel="Upload original file"
             processedLabel="Upload processed version"
+            status={studioStatus}
           />
         </Suspense>
       )}
