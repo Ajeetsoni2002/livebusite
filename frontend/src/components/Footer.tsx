@@ -3,6 +3,30 @@ import { ArrowUpRight, Heart } from "lucide-react";
 import CreatorLink from "./CreatorLink";
 import { EarnSticky } from "./Earn";
 
+/* Social profiles from VITE_SOCIAL_LINKS (comma-separated); also used as sameAs in the
+   Organization schema by scripts/prerender.mjs. */
+const socialNames: [RegExp, string][] = [
+  [/instagram\.com/, "Instagram"],
+  [/(t\.me|telegram\.)/, "Telegram"],
+  [/(youtube\.com|youtu\.be)/, "YouTube"],
+  [/linkedin\.com/, "LinkedIn"],
+  [/whatsapp\.com/, "WhatsApp channel"],
+  [/^(x|twitter)\.com$/, "X (Twitter)"],
+  [/facebook\.com/, "Facebook"],
+  [/github\.com/, "GitHub"],
+];
+const socialLinks = String(import.meta.env.VITE_SOCIAL_LINKS || "")
+  .split(",")
+  .map((link) => link.trim())
+  .filter((link) => /^https:\/\/[^\s"<>]+$/.test(link))
+  .map((link) => {
+    const host = new URL(link).hostname.replace(/^www\./, "");
+    return {
+      link,
+      name: socialNames.find(([pattern]) => pattern.test(host))?.[1] || host,
+    };
+  });
+
 export default function Footer() {
   return (
     <footer className="site-footer eh-footer">
@@ -24,7 +48,9 @@ export default function Footer() {
             text="Every approved paper or note you upload earns you ₹15."
           />
         </div>
-        <div className="footer-columns">
+        <div
+          className={`footer-columns ${socialLinks.length ? "with-social" : ""}`}
+        >
           <div className="footer-about">
             <Link className="brand" to="/">
               <img src="/branding/crest.webp" alt="" width="42" height="42" />
@@ -44,6 +70,7 @@ export default function Footer() {
             <span>THE ARCHIVE</span>
             <Link to="/papers">Question papers</Link>
             <Link to="/notes">Short notes</Link>
+            <Link to="/syllabus">B.Tech syllabus</Link>
             <Link to="/contact?request=true">
               Request a paper <ArrowUpRight size={13} />
             </Link>
@@ -58,6 +85,16 @@ export default function Footer() {
             <Link to="/contact">Contact</Link>
             <Link to="/copyright">Copyright & takedown</Link>
           </nav>
+          {socialLinks.length > 0 && (
+            <nav aria-label="Follow BUIT Papers">
+              <span>FOLLOW US</span>
+              {socialLinks.map(({ link, name }) => (
+                <a key={link} href={link} target="_blank" rel="noopener me">
+                  {name} <ArrowUpRight size={13} />
+                </a>
+              ))}
+            </nav>
+          )}
         </div>
         <div className="footer-bottom">
           <span>

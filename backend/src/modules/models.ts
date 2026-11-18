@@ -530,3 +530,23 @@ export const ContributorRequest = model(
   "ContributorRequest",
   contributorRequestSchema,
 );
+
+// A subject's syllabus (units, objectives, books) as Markdown, shown on its own public page.
+const syllabusSchema = new Schema(
+  {
+    subject: { ...ref("Subject", true), unique: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      match: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+    },
+    subtitle: { type: String, maxlength: 160 },
+    credits: { L: Number, T: Number, P: Number, total: Number },
+    markdown: { type: String, required: true, maxlength: 60_000 },
+    published: { type: Boolean, default: true },
+    updatedBy: ref("User"),
+  },
+  options,
+);
+export const Syllabus = model("Syllabus", syllabusSchema);

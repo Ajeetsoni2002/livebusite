@@ -22,6 +22,7 @@ import { adminRouter } from "./modules/admin.js";
 import { analyticsRouter, analyticsAdminRouter } from "./modules/analytics.js";
 import { earningsRouter, earningsAdminRouter } from "./modules/earnings.js";
 import { careersRouter, careersAdminRouter } from "./modules/careers.js";
+import { syllabusRouter, syllabusAdminRouter } from "./modules/syllabus.js";
 
 export function createApp() {
   const app = express();
@@ -98,6 +99,7 @@ export function createApp() {
     analyticsRouter,
     avatarRouter,
     careersRouter,
+    syllabusRouter,
   );
   app.use(
     "/api/admin",
@@ -109,6 +111,7 @@ export function createApp() {
     analyticsAdminRouter,
     earningsAdminRouter,
     careersAdminRouter,
+    syllabusAdminRouter,
   );
   app.use(
     "/api/contributor",

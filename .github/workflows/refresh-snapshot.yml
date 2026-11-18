@@ -40,6 +40,7 @@ jobs:
           VITE_CONTACT_EMAIL: ${{ vars.VITE_CONTACT_EMAIL }}
           VITE_GOOGLE_SITE_VERIFICATION: ${{ vars.VITE_GOOGLE_SITE_VERIFICATION }}
           VITE_BING_SITE_VERIFICATION: ${{ vars.VITE_BING_SITE_VERIFICATION }}
+          VITE_SOCIAL_LINKS: ${{ vars.VITE_SOCIAL_LINKS }}
         run: |
           node scripts/check-snapshot-build-env.mjs
           npm run build -w frontend

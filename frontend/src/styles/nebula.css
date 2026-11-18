@@ -2271,3 +2271,111 @@ th[aria-sort="descending"] .sort-header {
     grid-template-columns: 1fr;
   }
 }
+
+/* Syllabus */
+.syllabus-page .tabs {
+  margin-bottom: 20px;
+}
+.syllabus-semester {
+  margin: 28px 0;
+}
+.syllabus-semester h2 {
+  margin: 0 0 12px;
+}
+.syllabus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+.syllabus-card {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 18px;
+  color: var(--text);
+  text-decoration: none;
+  transition: transform var(--duration-hover) var(--ease);
+}
+.syllabus-card:hover {
+  transform: translateY(-2px);
+}
+.syllabus-card h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+.syllabus-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.syllabus-detail .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.syllabus-subtitle {
+  font-weight: 600;
+}
+.syllabus-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+.syllabus-body {
+  padding: 28px;
+  line-height: 1.7;
+}
+.syllabus-body h2 {
+  margin: 1.4em 0 0.4em;
+  font-size: 1.25rem;
+}
+.syllabus-body h2:first-child {
+  margin-top: 0;
+}
+.syllabus-body h3 {
+  margin: 1.1em 0 0.3em;
+  font-size: 1.05rem;
+}
+.syllabus-aside {
+  display: grid;
+  gap: 10px;
+  padding: 20px;
+  position: sticky;
+  top: 90px;
+}
+.syllabus-aside h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.1rem;
+}
+.syllabus-aside ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+.syllabus-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.syllabus-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 14px;
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .syllabus-layout {
+    grid-template-columns: 1fr;
+  }
+  .syllabus-aside {
+    position: static;
+  }
+}

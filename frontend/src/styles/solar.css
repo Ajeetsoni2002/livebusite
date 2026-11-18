@@ -2248,6 +2248,9 @@ kbd {
   gap: 40px;
   padding: 40px 0 24px;
 }
+.footer-columns.with-social {
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+}
 .footer-about p {
   margin: 20px 0 0;
   font-size: 12px;
@@ -2480,7 +2483,8 @@ kbd {
   .footer-top h2 {
     font-size: 44px;
   }
-  .footer-columns {
+  .footer-columns,
+  .footer-columns.with-social {
     grid-template-columns: 1fr 1fr;
     gap: 32px 20px;
     padding-top: 32px;

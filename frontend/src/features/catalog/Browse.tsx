@@ -20,6 +20,7 @@ import { branchIdentity } from "../../lib/branches";
 import { track } from "../../lib/analytics";
 import { EarnSticky } from "../../components/Earn";
 import { RATE } from "../../lib/earn";
+import { useSyllabusList } from "../../lib/syllabus";
 const sortOptions = [
   ["newest", "Newest added"],
   ["oldest", "Oldest added"],
@@ -37,7 +38,8 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
     programs = usePublic<Entity[]>("/programs"),
     semesters = usePublic<Entity[]>("/semesters"),
     subjects = usePublic<Entity[]>("/subjects"),
-    offerings = usePublic<Offering[]>("/offerings");
+    offerings = usePublic<Offering[]>("/offerings"),
+    syllabi = useSyllabusList(!!params.subject);
   const program = programs.data?.data.find((p) => p.slug === params.program);
   const branch = branches.data?.data.find(
       (b) =>
@@ -50,6 +52,8 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
         `sem-${s.number}` === params.semester &&
         (!params.program || s.program === program?._id),
     );
+  const syllabus =
+    subject && syllabi.data?.find((s) => s.subject._id === subject._id);
   const currentKind = subject && search.get("tab") === "notes" ? "notes" : kind;
   const selectedBranch = branch?._id || search.get("branch") || "",
     selectedSubject = subject?._id || search.get("subject") || "",
@@ -224,6 +228,11 @@ export default function Browse({ kind = "papers" }: { kind?: string }) {
           >
             Notes
           </button>
+          {syllabus && (
+            <Link className="syllabus-tab" to={`/syllabus/${syllabus.slug}`}>
+              Syllabus <ArrowUpRight size={14} />
+            </Link>
+          )}
         </div>
       )}
       <form

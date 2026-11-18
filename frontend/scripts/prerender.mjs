@@ -1,6 +1,11 @@
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSanitize from "rehype-sanitize";
 /*
  * Writes a static HTML page for every public route so search engines (and slow phones)
  * get real titles, text, links and structured data before any JavaScript runs.
@@ -46,6 +51,37 @@ async function liveJobs() {
   }
 }
 const jobs = await liveJobs();
+/* Published syllabi (with their text), also from the live API. */
+async function liveSyllabus() {
+  if (!jobsApi || process.env.SNAPSHOT_FETCH === "off") return [];
+  try {
+    const response = await fetch(`${jobsApi}/syllabus?full=1`, {
+      signal: AbortSignal.timeout(30_000),
+    });
+    return response.ok ? (await response.json()).data : [];
+  } catch {
+    return [];
+  }
+}
+const syllabi = await liveSyllabus();
+const syllabusBySubject = new Map(syllabi.map((s) => [s.subject._id, s]));
+const markdownHtml = (markdown) =>
+  renderToStaticMarkup(
+    createElement(
+      ReactMarkdown,
+      { remarkPlugins: [remarkGfm], rehypePlugins: [rehypeSanitize] },
+      markdown || "",
+    ),
+  );
+/*
+ * Social profiles (Instagram, Telegram, YouTube…) as a comma-separated list of links in
+ * VITE_SOCIAL_LINKS. They go into the Organization schema (sameAs), which helps search
+ * engines tie the profiles and the site together as one brand; the footer shows them too.
+ */
+const socialLinks = (process.env.VITE_SOCIAL_LINKS || "")
+  .split(",")
+  .map((link) => link.trim())
+  .filter((link) => /^https:\/\/[^\s"<>]+$/.test(link));
 const SITE_NAME = "BUIT Papers",
   UNIVERSITY = "Barkatullah University",
   INSTITUTE = "Barkatullah University Institute of Technology (BUIT), Bhopal";
@@ -111,7 +147,7 @@ const organization = {
   url: `${site}/`,
   logo: `${site}/branding/crest.png`,
   description: `Free, student-built archive of ${UNIVERSITY} previous year question papers and notes.`,
-  sameAs: ["https://github.com/Ajeetsoni2002/livebusite"],
+  sameAs: ["https://github.com/Ajeetsoni2002/livebusite", ...socialLinks],
 };
 
 const itemsFor = (offering, items) =>
@@ -219,7 +255,7 @@ routes.set("/", {
     },
     organization,
   ],
-  body: `<main class="page"><section class="hero"><div><div class="eyebrow">BARKATULLAH UNIVERSITY · BHOPAL</div><h1>${UNIVERSITY} (BU Bhopal) previous year question papers</h1><p>${snapshot.papers.length} BUIT B.Tech question papers and ${snapshot.notes.length} short notes, organized by branch, semester and subject. Free to view and download.</p><a href="/papers" class="button">Browse question papers</a> <a href="/notes" class="button secondary">Short notes</a></div></section><section><h2>Papers by branch</h2>${branchLinks}</section><section><h2>Recently added papers</h2>${cards(snapshot.papers.slice(0, 9))}</section>${snapshot.notes.length ? `<section><h2>Recently added notes</h2>${cards(snapshot.notes.slice(0, 6), true)}</section>` : ""}<section><h2>Jobs &amp; internships</h2><p><a href="/jobs">Latest jobs and internships for BUIT students</a></p></section>${homeFaqHtml}</main>`,
+  body: `<main class="page"><section class="hero"><div><div class="eyebrow">BARKATULLAH UNIVERSITY · BHOPAL</div><h1>${UNIVERSITY} (BU Bhopal) previous year question papers</h1><p>${snapshot.papers.length} BUIT B.Tech question papers and ${snapshot.notes.length} short notes, organized by branch, semester and subject. Free to view and download.</p><a href="/papers" class="button">Browse question papers</a> <a href="/notes" class="button secondary">Short notes</a></div></section><section><h2>Papers by branch</h2>${branchLinks}</section><section><h2>Recently added papers</h2>${cards(snapshot.papers.slice(0, 9))}</section>${snapshot.notes.length ? `<section><h2>Recently added notes</h2>${cards(snapshot.notes.slice(0, 6), true)}</section>` : ""}${syllabi.length ? `<section><h2>Syllabus</h2><p><a href="/syllabus">${UNIVERSITY} B.Tech syllabus, subject-wise</a></p></section>` : ""}<section><h2>Jobs &amp; internships</h2><p><a href="/jobs">Latest jobs and internships for BUIT students</a></p></section>${homeFaqHtml}</main>`,
 });
 for (const [page, title, description, heading, text] of [
   [
@@ -425,9 +461,130 @@ for (const offering of offerings) {
         },
       },
     ],
-    body: `<main class="page"><nav class="breadcrumbs"><a href="/">Home</a> / <a href="${escape(branchPath(b))}">${escape(b.name)}</a></nav><h1>${escape(s.name)} (${escape(s.code)}) ${what}</h1><p>${escape(s.code)} · ${escape(b.name)} · ${escape(sem.name)} · ${UNIVERSITY}, Bhopal${years.length ? `. Years available: ${years.join(", ")}` : ""}.</p>${papers.length ? `<h2>Question papers</h2>${cards(papers)}` : ""}${notes.length ? `<h2>Short notes</h2>${cards(notes, true)}` : ""}</main>`,
+    body: `<main class="page"><nav class="breadcrumbs"><a href="/">Home</a> / <a href="${escape(branchPath(b))}">${escape(b.name)}</a></nav><h1>${escape(s.name)} (${escape(s.code)}) ${what}</h1><p>${escape(s.code)} · ${escape(b.name)} · ${escape(sem.name)} · ${UNIVERSITY}, Bhopal${years.length ? `. Years available: ${years.join(", ")}` : ""}.</p>${syllabusBySubject.has(s._id) ? `<p><a href="/syllabus/${escape(syllabusBySubject.get(s._id).slug)}">${escape(s.name)} (${escape(s.code)}) syllabus</a></p>` : ""}${papers.length ? `<h2>Question papers</h2>${cards(papers)}` : ""}${notes.length ? `<h2>Short notes</h2>${cards(notes, true)}` : ""}</main>`,
   });
 }
+/* Syllabus pages. Keep titles in step with src/features/catalog/Syllabus.tsx. */
+const paperOffering = new Set(offerings.map((o) => o._id));
+const unitTitles = (markdown = "") =>
+  [...markdown.matchAll(/^##\s+Unit\s+[IVX\d]+\s*[–:-]\s*(.+)$/gim)].map((m) =>
+    m[1].trim(),
+  );
+const syllabusPlacement = (entry) => {
+  const branches = [
+      ...new Map(entry.offerings.map((o) => [o.branch._id, o.branch])).values(),
+    ].sort((a, z) => (a.order ?? 0) - (z.order ?? 0)),
+    sems = [...new Set(entry.offerings.map((o) => o.semester.number))].sort(
+      (a, z) => a - z,
+    );
+  return [
+    branches.length > 2
+      ? "All branches"
+      : branches.map((b) => b.code || b.name).join(", "),
+    sems.length ? `Semester ${sems.join(", ")}` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+};
+const firstSemester = (entry) =>
+  Math.min(...entry.offerings.map((o) => o.semester.number), 99);
+const syllabusPath = (entry) => `/syllabus/${entry.slug}`;
+const syllabusIndex = {
+  title: `${UNIVERSITY} B.Tech syllabus – BU Bhopal (BUIT) subject-wise`,
+  description: `Subject-wise syllabus of ${UNIVERSITY} (BU Bhopal) BUIT B.Tech: unit-wise topics, course objectives and reference books, with previous year question papers for each subject.`,
+  priority: "0.8",
+  changefreq: "weekly",
+  lastmod: syllabi
+    .map((s) => s.updatedAt)
+    .sort()
+    .at(-1),
+  schema: [
+    breadcrumbs([
+      ["Home", "/"],
+      ["Syllabus", "/syllabus"],
+    ]),
+  ],
+  body: `<main class="page syllabus-page"><div class="page-heading"><div class="eyebrow">BUIT / SYLLABUS</div><h1>${UNIVERSITY} B.Tech syllabus, subject by subject.</h1><p>The ${UNIVERSITY} (BU Bhopal) BUIT syllabus for each subject: units, objectives and books, next to that subject's previous year papers.</p></div>${[
+    ...syllabi
+      .reduce(
+        (groups, entry) =>
+          groups.set(firstSemester(entry), [
+            ...(groups.get(firstSemester(entry)) || []),
+            entry,
+          ]),
+        new Map(),
+      )
+      .entries(),
+  ]
+    .sort(([a], [z]) => a - z)
+    .map(
+      ([sem, list]) =>
+        `<section><h2>${sem === 99 ? "Other subjects" : `Semester ${sem}`}</h2><ul>${list
+          .sort((a, z) => a.subject.code.localeCompare(z.subject.code))
+          .map(
+            (entry) =>
+              `<li><a href="${escape(syllabusPath(entry))}">${escape(entry.subject.code)} ${escape(entry.subject.name)} syllabus</a> (${escape(syllabusPlacement(entry))})</li>`,
+          )
+          .join("")}</ul></section>`,
+    )
+    .join("")}</main>`,
+};
+if (syllabi.length) routes.set("/syllabus", syllabusIndex);
+for (const entry of syllabi) {
+  const { subject: s } = entry,
+    path = syllabusPath(entry),
+    where = syllabusPlacement(entry),
+    units = unitTitles(entry.markdown),
+    credits = entry.credits
+      ? `L-T-P ${entry.credits.L ?? 0}-${entry.credits.T ?? 0}-${entry.credits.P ?? 0}${entry.credits.total != null ? ` · ${entry.credits.total} credits` : ""}`
+      : "",
+    paperLinks = entry.offerings.filter((o) => paperOffering.has(o._id));
+  routes.set(path, {
+    title: `${s.name} (${s.code}) syllabus – BU Bhopal B.Tech`,
+    description: `${s.name} (${s.code}) syllabus for ${UNIVERSITY} (BUIT Bhopal) B.Tech, ${where}${units.length ? `. Units: ${units.join(", ")}` : ""}. With previous year question papers.`,
+    priority: "0.7",
+    changefreq: "monthly",
+    lastmod: entry.updatedAt,
+    schema: [
+      breadcrumbs([
+        ["Home", "/"],
+        ["Syllabus", "/syllabus"],
+        [`${s.code} ${s.name}`, path],
+      ]),
+      {
+        "@context": "https://schema.org",
+        "@type": "LearningResource",
+        name: `${s.name} (${s.code}) syllabus`,
+        url: pageUrl(path),
+        learningResourceType: "Syllabus",
+        educationalLevel: "Undergraduate (B.Tech)",
+        inLanguage: "en-IN",
+        isAccessibleForFree: true,
+        dateModified: entry.updatedAt,
+        ...(units.length ? { teaches: units } : {}),
+        about: { "@type": "Thing", name: s.name },
+        educationalAlignment: {
+          "@type": "AlignmentObject",
+          alignmentType: "educationalSubject",
+          targetName: `${s.code} ${s.name}`,
+        },
+        provider: {
+          "@type": "CollegeOrUniversity",
+          name: "Barkatullah University Institute of Technology",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Bhopal",
+            addressRegion: "Madhya Pradesh",
+            addressCountry: "IN",
+          },
+        },
+        publisher: { "@id": `${site}/#organization` },
+      },
+    ],
+    body: `<main class="page syllabus-detail"><nav class="breadcrumbs"><a href="/">Home</a> / <a href="/syllabus">Syllabus</a></nav><div class="page-heading"><div class="eyebrow">${escape(s.code)} · SYLLABUS</div><h1>${escape(s.name)} (${escape(s.code)}) syllabus</h1>${entry.subtitle ? `<p class="syllabus-subtitle">${escape(entry.subtitle)}</p>` : ""}<p>${escape([where, credits, `${UNIVERSITY}, Bhopal`].filter(Boolean).join(" · "))}</p></div><div class="syllabus-layout"><article class="card markdown syllabus-body">${markdownHtml(entry.markdown)}</article><aside class="card syllabus-aside"><h2>Previous year papers</h2>${paperLinks.length ? `<ul>${paperLinks.map((o) => `<li><a href="${escape(`/subjects/${o.program.slug}/${o.branch.slug}/sem-${o.semester.number}/${s.slug}`)}">${escape(s.code)} papers · ${escape(o.branch.code || o.branch.name)} ${escape(o.semester.name)}</a></li>`).join("")}</ul>` : `<p><a href="/papers">Search all question papers</a></p>`}</aside></div></main>`,
+  });
+}
+
 for (const [kind, items] of [
   ["papers", snapshot.papers],
   ["notes", snapshot.notes],
@@ -550,6 +707,13 @@ for (const [path, page] of routes) await write(path, render(path, page));
 
 // App screens that are not for search results but must still answer 200 (the app takes
 // over in the browser). Not listed in the sitemap.
+// Without any published syllabus yet, /syllabus still opens (the app shows "coming soon")
+// but stays out of search results until it has content.
+if (!syllabi.length)
+  await write(
+    "/syllabus",
+    render("/syllabus", syllabusIndex, { noindex: true }),
+  );
 for (const [path, title] of [
   ["/contributor/login", "Contributor login"],
   ["/admin/login", "Admin login"],
@@ -625,6 +789,53 @@ await writeFile(
   resolve(dist, "sitemap.txt"),
   `${[...routes.keys()].map(pageUrl).join("\n")}\n`,
 );
+/*
+ * IndexNow (Bing, Yandex, Seznam, Naver…): this build lists the pages that are new or
+ * changed since the version now live, in /indexnow.json. After the deploy, the "IndexNow"
+ * GitHub workflow reads that file and submits the list, so search engines hear about new
+ * papers within the hour instead of waiting to recrawl the sitemap. The key file
+ * (public/<key>.txt) proves the site owns the submissions.
+ */
+const indexNowKey = (await readdir(dist).catch(() => []))
+  .find((name) => /^[a-f0-9]{32}\.txt$/.test(name))
+  ?.slice(0, -4);
+const sitemapEntries = [...routes].map(([path, page]) => [
+  pageUrl(path),
+  day(page.lastmod),
+]);
+async function liveSitemap() {
+  try {
+    const response = await fetch(`${site}/sitemap.xml`, {
+      signal: AbortSignal.timeout(20_000),
+    });
+    if (!response.ok) return null;
+    const xml = await response.text();
+    return new Map(
+      [
+        ...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g),
+      ].map(([, loc, lastmod]) => [
+        loc.replace(/&amp;/g, "&"),
+        lastmod.slice(0, 10),
+      ]),
+    );
+  } catch {
+    return null;
+  }
+}
+const previous = site.startsWith("https://") ? await liveSitemap() : null;
+const changed = sitemapEntries
+  .filter(([url, lastmod]) => !previous || previous.get(url) !== lastmod)
+  .map(([url]) => url);
+if (indexNowKey)
+  await writeFile(
+    resolve(dist, "indexnow.json"),
+    JSON.stringify({
+      key: indexNowKey,
+      builtAt: new Date().toISOString(),
+      compared: !!previous,
+      urls: changed.slice(0, 10_000),
+    }),
+  );
 await writeFile(
   resolve(dist, "robots.txt"),
   `User-agent: *
@@ -643,5 +854,5 @@ Sitemap: ${site}/sitemap.txt
 `,
 );
 console.info(
-  `Prerendered ${routes.size} public pages (${snapshot.papers.length} papers, ${snapshot.notes.length} notes, ${offerings.length} subjects, ${jobs.length} jobs), 404 page, ${legacyRules.length} legacy redirects and sitemap.`,
+  `Prerendered ${routes.size} public pages (${snapshot.papers.length} papers, ${snapshot.notes.length} notes, ${offerings.length} subjects, ${syllabi.length} syllabus pages, ${jobs.length} jobs), 404 page, ${legacyRules.length} legacy redirects and sitemap; ${indexNowKey ? `${changed.length} changed pages for IndexNow` : "no IndexNow key"}.`,
 );

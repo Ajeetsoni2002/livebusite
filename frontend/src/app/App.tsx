@@ -54,6 +54,13 @@ const Jobs = lazy(() => import("../features/careers/Jobs")),
     import("../features/careers/Jobs").then((m) => ({ default: m.JobDetail })),
   ),
   Careers = lazy(() => import("../features/staff/Careers"));
+const SyllabusIndex = lazy(() => import("../features/catalog/Syllabus")),
+  SyllabusPage = lazy(() =>
+    import("../features/catalog/Syllabus").then((m) => ({
+      default: m.SyllabusPage,
+    })),
+  ),
+  SyllabusAdmin = lazy(() => import("../features/staff/SyllabusAdmin"));
 const client = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } },
 });
@@ -87,6 +94,8 @@ export default function App() {
               <Route path="/notes/:slug" element={<Detail kind="notes" />} />
               <Route path="/contributors" element={<Leaderboard />} />
               <Route path="/contribute" element={<BecomeContributor />} />
+              <Route path="/syllabus" element={<SyllabusIndex />} />
+              <Route path="/syllabus/:slug" element={<SyllabusPage />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/jobs/:slug" element={<JobDetail />} />
               <Route path="/papers/:filename.pdf" element={<Legacy />} />
@@ -125,6 +134,7 @@ export default function App() {
                   <Route path="analytics" element={<Analytics />} />
                   <Route path="payouts" element={<Payouts />} />
                   <Route path="jobs" element={<Careers />} />
+                  <Route path="syllabus" element={<SyllabusAdmin />} />
                   <Route path="settings" element={<StaffSettings />} />
                 </Route>
               </Route>
