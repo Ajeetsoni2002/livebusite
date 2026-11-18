@@ -619,6 +619,12 @@ ${[...routes]
   )
   .join("\n")}\n</urlset>\n`,
 );
+// The same list as plain text (one URL per line), which search engines also accept;
+// it is a fallback when a console is slow to read the XML file.
+await writeFile(
+  resolve(dist, "sitemap.txt"),
+  `${[...routes.keys()].map(pageUrl).join("\n")}\n`,
+);
 await writeFile(
   resolve(dist, "robots.txt"),
   `User-agent: *
@@ -633,6 +639,7 @@ Disallow: /reset-password
 Disallow: /verify-email
 
 Sitemap: ${site}/sitemap.xml
+Sitemap: ${site}/sitemap.txt
 `,
 );
 console.info(
