@@ -3,14 +3,15 @@ name: Tell search engines about new pages (IndexNow)
 # Each site build writes /indexnow.json with the pages that are new or changed since the
 # previous deploy. This job reads it after builds and submits those pages to IndexNow
 # (Bing, Yandex and others), so new papers are found within the hour.
-# Run it by hand with "all pages" once to submit the whole sitemap.
+# Run it by hand with mode "all" to submit the whole sitemap, or "test" to check the setup.
 on:
   workflow_dispatch:
     inputs:
-      all:
-        description: "Submit every page in the sitemap, not just recent changes"
-        type: boolean
-        default: false
+      mode:
+        description: "recent = latest build's changes, all = every page, test = home page only"
+        type: choice
+        options: [recent, all, test]
+        default: recent
   schedule:
     # Hourly; builds finish within minutes, so each one is picked up by the next run.
     - cron: "25 * * * *"
@@ -27,16 +28,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           sparse-checkout: frontend/scripts/indexnow-submit.mjs
           sparse-checkout-cone-mode: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
       - name: Submit to IndexNow
         env:
           SITE_URL: ${{ vars.SITE_URL || 'https://livebusite.pages.dev' }}
-          MODE: ${{ inputs.all && 'all' || 'recent' }}
+          MODE: ${{ inputs.mode || 'recent' }}
           WINDOW_MINUTES: "90"
         run: node frontend/scripts/indexnow-submit.mjs
