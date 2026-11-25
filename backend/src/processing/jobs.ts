@@ -24,8 +24,9 @@ const LEASE_MS = 10 * 60_000;
  * Bump when the watermark worker changes what it adds to every page. Items processed
  * by an older version are re-run by the sweep below, so nobody has to press "Apply".
  * 2 = clickable site name and link at the top of each page.
+ * 3 = the watermark is burned into rendered page images instead of a removable text layer.
  */
-export const WATERMARK_FORMAT = 2;
+export const WATERMARK_FORMAT = 3;
 const MAX_ATTEMPTS = 3;
 type Kind = "papers" | "notes";
 

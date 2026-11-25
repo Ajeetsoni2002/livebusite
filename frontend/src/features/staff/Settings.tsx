@@ -12,6 +12,7 @@ type Watermark = {
   fontSize: number;
   tiled: boolean;
   footer: boolean;
+  burnIn: boolean;
   skipIfContains: string;
   siteLink: boolean;
   siteLabel: string;
@@ -310,6 +311,19 @@ export default function Settings() {
                 onChange={(e) => set("footer", e.target.checked)}
               />
               <span>Footer line</span>
+            </label>
+            <label className="wide inline-check">
+              <input
+                type="checkbox"
+                checked={form.burnIn}
+                onChange={(e) => set("burnIn", e.target.checked)}
+              />
+              <span>
+                Burn into the page image (recommended). Each page is rendered
+                with the watermark in its pixels, so PDF editors and watermark
+                removers have no layer to delete. Text can no longer be selected
+                in the public copy, and processing takes longer.
+              </span>
             </label>
             <label className="wide inline-check">
               <input

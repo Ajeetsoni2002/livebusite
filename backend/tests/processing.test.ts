@@ -6,7 +6,7 @@ import request from "supertest";
 import { MongoMemoryReplSet } from "mongodb-memory-server";
 import { resolve } from "node:path";
 import { createHash } from "node:crypto";
-import { PDFDocument, degrees } from "pdf-lib";
+import { PDFDocument, PDFName, degrees } from "pdf-lib";
 import { getDocument } from "pdfjs-dist/legacy/build/pdf.mjs";
 import {
   User,
@@ -41,7 +41,50 @@ after(async () => {
 beforeEach(async () => {
   for (const model of [User, Paper, Note, ProcessingJob, Setting])
     await (model as any).deleteMany({});
+  // Most tests read page text, so they use the vector stamp; the burn test clears this.
+  await Setting.create({ key: "watermark", value: { burnIn: false } });
 });
+async function imagePages(bytes: Buffer) {
+  const pdf = await PDFDocument.load(bytes);
+  return pdf.getPages().map((page) => {
+    const xobjects = page.node.Resources()?.lookup(PDFName.of("XObject"));
+    const names = (xobjects as any)?.keys?.() || [];
+    return names.filter(
+      (name: any) =>
+        String(
+          (pdf.context.lookup((xobjects as any).get(name)) as any)?.dict?.get(
+            PDFName.of("Subtype"),
+          ),
+        ) === "/Image",
+    ).length;
+  });
+}
+/** Share of rendered pixels that are not white; the tiled stamp adds a lot of them. */
+async function inkRatio(bytes: Buffer, pageNumber = 1) {
+  const doc = await getDocument({ data: new Uint8Array(bytes), verbosity: 0 })
+    .promise;
+  const page = await doc.getPage(pageNumber);
+  const viewport = page.getViewport({ scale: 0.5 });
+  const factory = doc.canvasFactory as any;
+  const surface = factory.create(
+    Math.ceil(viewport.width),
+    Math.ceil(viewport.height),
+  );
+  await page.render({ canvasContext: surface.context, viewport } as any)
+    .promise;
+  const { data } = surface.context.getImageData(
+    0,
+    0,
+    surface.canvas.width,
+    surface.canvas.height,
+  );
+  let ink = 0;
+  for (let i = 0; i < data.length; i += 4)
+    if (data[i] < 240 || data[i + 1] < 240 || data[i + 2] < 240) ink++;
+  factory.destroy(surface);
+  await doc.loadingTask.destroy();
+  return ink / (data.length / 4);
+}
 
 async function account(role: string, trusted = false) {
   return User.create({
@@ -168,9 +211,10 @@ test("watermark text uses only the first subject code and drops an empty placeho
 
 test("new uploads stay private until every page is watermarked; the original is kept", async () => {
   const { runNextJob } = await import("../src/processing/jobs.js");
+  await Setting.deleteMany({}); // defaults: the watermark is burned into page images
   await account("contributor", true);
   const contributor = await login("contributor");
-  const { offering: o, code } = await offering();
+  const { offering: o } = await offering();
   const file = await samplePdf("Question 1", true);
   const created = await upload(contributor, "contributor", o._id, file);
   assert.equal(created.status, 201);
@@ -195,12 +239,32 @@ test("new uploads stay private until every page is watermarked; the original is 
   const original: any = await FileAsset.findById(item.files.original);
   assert.equal(original.hash, createHash("sha256").update(file).digest("hex"));
 
-  const pages = await pageTexts(await publicPdf(id));
+  // Burned: every page is one image, nothing is left as text to strip, and the
+  // watermark visibly adds ink compared with the unmarked original.
+  const marked = await publicPdf(id);
+  assert.deepEqual(await imagePages(marked), [1, 1]);
+  const pages = await pageTexts(marked);
   assert.equal(pages.length, 2);
-  for (const text of pages)
-    assert.match(text, new RegExp(`${code} \\| Ajeet Soni`));
-  assert.match(pages[0], /Question 1/);
-  assert.match(pages[1], /Question 2/);
+  for (const text of pages) assert.equal(text.trim(), "");
+  assert.ok(
+    (await inkRatio(marked)) > (await inkRatio(file)) * 3,
+    "the burned page carries the stamp",
+  );
+  const pdf = await PDFDocument.load(marked);
+  assert.match(String(pdf.getKeywords()), /buit-watermark.*buit-burned/);
+  for (const page of pdf.getPages()) {
+    const links = page.node
+      .Annots()
+      ?.asArray()
+      .map((ref) => String(pdf.context.lookup(ref)));
+    assert.ok(links?.some((a) => a.includes("(http://localhost:5173/)")));
+  }
+  // The source's second page was landscape rotated by 90 degrees, so it displayed
+  // upright; the burned page has that rotation baked in and no /Rotate left.
+  const [first, second] = pdf.getPages();
+  assert.ok(first.getHeight() > first.getWidth());
+  assert.ok(second.getHeight() > second.getWidth());
+  assert.equal(second.getRotation().angle, 0);
   const listed = (await request(app).get("/api/papers")).body.data[0];
   assert.equal("files" in listed || "watermark" in listed, false);
 });

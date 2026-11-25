@@ -20,6 +20,8 @@ export const watermarkSettingsInput = z
     fontSize: z.number().int().min(10).max(80),
     tiled: z.boolean(),
     footer: z.boolean(),
+    // Render each page to an image with the watermark in its pixels (see the worker).
+    burnIn: z.boolean().default(true),
     skipIfContains: z
       .string()
       .trim()
@@ -43,6 +45,7 @@ export const defaultWatermark: WatermarkSettings = {
   fontSize: 34,
   tiled: true,
   footer: true,
+  burnIn: true,
   skipIfContains: "Ajeet Soni",
   siteLink: true,
   siteLabel: "BUIT Papers - free previous year papers",
@@ -94,7 +97,8 @@ export function watermarkPdf(
     title?: string;
     siteLink?: ReturnType<typeof siteLinkFor>;
   },
-  timeoutMs = 180_000,
+  // Burning renders every page, which takes minutes for long scans on a small CPU.
+  timeoutMs = options.burnIn === false ? 180_000 : 900_000,
 ): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const child = spawn(
@@ -110,7 +114,8 @@ export function watermarkPdf(
       err: Buffer[] = [];
     let size = 0,
       settled = false;
-    const limit = bytes.length * 3 + 10 * 1024 * 1024;
+    // Burned pages are images, so a small text PDF can grow well past its own size.
+    const limit = bytes.length * 3 + 60 * 1024 * 1024;
     const finish = (error: Error | null, result?: Buffer) => {
       if (settled) return;
       settled = true;
