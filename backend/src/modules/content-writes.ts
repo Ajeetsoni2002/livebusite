@@ -19,6 +19,13 @@ async function afterUpload(kind: string, id: unknown, user: unknown) {
   await enqueueJob("thumbnail", kind as any, id, { requestedBy: user });
 }
 import { withSharedOfferings } from "./standard-subjects.js";
+import { PAYMENT_QR_REQUIRED } from "./profile.js";
+import { notifyUploads } from "./notifications.js";
+// Contributors are paid by UPI QR, so one must be on file before anything is uploaded.
+function requirePaymentQr(user: any) {
+  if (user.role !== "admin" && !user.profile?.paymentQrKey)
+    throw PAYMENT_QR_REQUIRED;
+}
 // The same PDF may sit in any version slot; it must not be uploaded twice.
 const usesAsset = (id: unknown) => ({
   $or: [{ asset: id }, { "files.original": id }, { "files.processed": id }],
@@ -313,6 +320,7 @@ export function contentWriteRouter(admin: boolean) {
           string,
           Express.Multer.File[]
         >;
+        requirePaymentQr(req.user);
         req.file = parts.file?.[0];
         const processedFile = parts.processed?.[0];
         const {
@@ -379,6 +387,7 @@ export function contentWriteRouter(admin: boolean) {
         const item = await model.create(data);
         if (asset) await afterUpload(kind, item._id, req.user._id);
         await audit(req, "upload", `${kind}/${item._id}`);
+        void notifyUploads(req.user, kind as any, [item]);
         res.status(201);
         ok(res, item);
       },
@@ -401,6 +410,7 @@ export function contentWriteRouter(admin: boolean) {
         const files = req.files as Express.Multer.File[];
         if (!files?.length || files.length !== rows.length)
           throw new HttpError(400, "Metadata rows must match the files.");
+        requirePaymentQr(req.user);
         const results = [];
         // Per-file results make partial success explicit and safe to retry selectively.
         for (let i = 0; i < files.length; i++) {
@@ -408,7 +418,6 @@ export function contentWriteRouter(admin: boolean) {
             const { status: _ignored, ...row } = rows[i],
               input: any = schema.parse(row);
             await validateOfferings(input.offerings);
-            input.offerings = await withSharedOfferings(input.offerings);
             input.offerings = await withSharedOfferings(input.offerings);
             const asset = await savePdf(files[i], light);
             if (await model.exists(usesAsset(asset._id)))
@@ -443,6 +452,11 @@ export function contentWriteRouter(admin: boolean) {
             });
           }
         }
+        void notifyUploads(
+          req.user,
+          kind as any,
+          results.flatMap((r: any) => (r.item ? [r.item] : [])),
+        );
         res.status(207);
         ok(res, results);
       },

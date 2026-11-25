@@ -17,7 +17,11 @@ import { fileRouter } from "./modules/files.js";
 import { catalogRouter } from "./modules/catalog.js";
 import mongoSanitize from "express-mongo-sanitize";
 import { contentWriteRouter } from "./modules/content-writes.js";
-import { avatarRouter, profileRouter } from "./modules/profile.js";
+import {
+  avatarRouter,
+  paymentQrAdminRouter,
+  profileRouter,
+} from "./modules/profile.js";
 import { adminRouter } from "./modules/admin.js";
 import { analyticsRouter, analyticsAdminRouter } from "./modules/analytics.js";
 import { earningsRouter, earningsAdminRouter } from "./modules/earnings.js";
@@ -110,6 +114,7 @@ export function createApp() {
     adminRouter,
     analyticsAdminRouter,
     earningsAdminRouter,
+    paymentQrAdminRouter,
     careersAdminRouter,
     syllabusAdminRouter,
   );

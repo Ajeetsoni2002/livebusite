@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Camera, EyeOff, Loader2, Trash2, UserRound } from "lucide-react";
+import {
+  Camera,
+  EyeOff,
+  Loader2,
+  QrCode,
+  Trash2,
+  UserRound,
+} from "lucide-react";
 import { api, apiUrl, errorMessage } from "../../lib/api";
+import { usePrivateImage } from "../../lib/privateImage";
 import { toast } from "../../components/Feedback";
 import { ContributorAvatar } from "../community/Leaderboard";
 
@@ -12,6 +20,7 @@ type Profile = {
   bio: string;
   photo: string | null;
   published: number;
+  paymentQr: boolean;
 };
 
 /** A contributor decides how the public sees them: name and photo, or anonymous. */
@@ -216,6 +225,13 @@ export default function ProfilePage() {
           </div>
         </section>
 
+        <PaymentQrCard
+          has={form.paymentQr}
+          onChange={(paymentQr) => {
+            setForm((f) => (f ? { ...f, paymentQr } : f));
+            void query.refetch();
+          }}
+        />
         <aside className="card staff-card profile-preview" aria-label="Preview">
           <span className="eyebrow">PREVIEW ON THE CONTRIBUTORS BOARD</span>
           <div className="leader-card preview-card">
@@ -240,5 +256,120 @@ export default function ProfilePage() {
         </aside>
       </div>
     </>
+  );
+}
+
+/*
+ * The UPI QR code the admin scans to pay for approved uploads. It is required before
+ * the first upload and is only ever shown to its owner and to admins.
+ */
+function PaymentQrCard({
+  has,
+  onChange,
+}: {
+  has: boolean;
+  onChange: (has: boolean) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [version, setVersion] = useState(0);
+  const input = useRef<HTMLInputElement>(null);
+  const image = usePrivateImage(
+    has ? `/contributor/profile/payment-qr?v=${version}` : null,
+  );
+  async function upload(file: File) {
+    if (file.size > 5 * 1024 * 1024)
+      return toast("Choose an image under 5 MB.", "error");
+    setBusy(true);
+    try {
+      const data = new FormData();
+      data.append("qr", file);
+      await api.post("/contributor/profile/payment-qr", data, {
+        timeout: 60_000,
+      });
+      setVersion((v) => v + 1);
+      onChange(true);
+      toast(
+        "Payment QR saved. You can upload papers and notes now.",
+        "success",
+      );
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    } finally {
+      setBusy(false);
+      if (input.current) input.current.value = "";
+    }
+  }
+  async function remove() {
+    setBusy(true);
+    try {
+      await api.delete("/contributor/profile/payment-qr");
+      onChange(false);
+      toast("Payment QR removed. Add one again before your next upload.");
+    } catch (e) {
+      toast(errorMessage(e), "error");
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <section
+      className="card staff-card profile-card qr-card"
+      aria-labelledby="payment-qr-heading"
+    >
+      <h3 id="payment-qr-heading">
+        <QrCode size={18} aria-hidden /> Payment QR code
+      </h3>
+      <p className="muted small">
+        Upload the QR code of your UPI app (PhonePe, Google Pay, Paytm, BHIM…).
+        The admin scans it to pay you for every approved paper or note. It is
+        required before your first upload and is never shown publicly.
+      </p>
+      {has ? (
+        image.loading ? (
+          <p role="status" className="muted small">
+            Loading your QR code…
+          </p>
+        ) : image.url ? (
+          <img
+            className="qr-preview"
+            src={image.url}
+            alt="Your payment QR code"
+          />
+        ) : (
+          <p className="notice error">{image.error}</p>
+        )
+      ) : (
+        <p className="notice" role="status">
+          No payment QR code yet. Add one to start uploading.
+        </p>
+      )}
+      <div className="row-actions">
+        <button
+          type="button"
+          onClick={() => input.current?.click()}
+          disabled={busy}
+        >
+          {busy ? <Loader2 className="spin" size={15} /> : <QrCode size={15} />}
+          {has ? "Replace QR code" : "Upload QR code"}
+        </button>
+        {has && (
+          <button
+            type="button"
+            className="danger-text"
+            onClick={remove}
+            disabled={busy}
+          >
+            <Trash2 size={15} /> Remove
+          </button>
+        )}
+      </div>
+      <input
+        ref={input}
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        hidden
+        onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
+      />
+    </section>
   );
 }

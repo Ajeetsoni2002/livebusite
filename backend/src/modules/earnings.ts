@@ -4,6 +4,7 @@ import { z } from "zod";
 import { HttpError, identifier, ok } from "../lib/http.js";
 import { audit, AuthRequest } from "./auth.js";
 import { Note, Paper, Payout, User } from "./models.js";
+import { notifyPayout } from "./notifications.js";
 
 /** Rupees paid for every approved (published) paper or note a contributor uploads. */
 export const RATE_PER_UPLOAD = 15;
@@ -93,12 +94,16 @@ earningsRouter.get("/earnings", async (req: AuthRequest, res) => {
 export const earningsAdminRouter = Router();
 earningsAdminRouter.get("/earnings", async (_req, res) => {
   const users = await User.find({ role: "contributor" })
-    .select("name email active")
+    .select("name email active profile.paymentQrKey")
     .sort({ name: 1 })
     .lean();
   const map = await tallies(users.map((u) => u._id));
   const rows = users
-    .map((u) => ({ ...u, ...summary(map.get(String(u._id))!) }))
+    .map(({ profile, ...u }) => ({
+      ...u,
+      paymentQr: Boolean(profile?.paymentQrKey),
+      ...summary(map.get(String(u._id))!),
+    }))
     .sort((a, b) => b.due - a.due || b.earned - a.earned);
   ok(res, {
     rate: RATE_PER_UPLOAD,
@@ -147,7 +152,9 @@ earningsAdminRouter.post(
       paidBy: req.user._id,
     });
     await audit(req, "payout-create", `users/${id}`, { amount });
+    const after = await earningsOf(id);
+    void notifyPayout(user, { amount, note: input.note }, after.due);
     res.status(201);
-    ok(res, { payout, ...(await earningsOf(id)) });
+    ok(res, { payout, ...after });
   },
 );

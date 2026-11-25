@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import type { StudioResult } from "./ProcessStudio";
 const ProcessStudio = lazy(() => import("./ProcessStudio"));
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { UploadCloud } from "lucide-react";
 import { api, apiUrl, errorMessage } from "../../lib/api";
 import { ensureAwake } from "../../lib/wake";
@@ -54,6 +54,17 @@ export default function Upload() {
       event.total &&
       setProgress(Math.round((event.loaded / event.total) * 100)),
   };
+  // Contributors are paid to the QR code on their profile, so it must exist before uploading.
+  const profile = useQuery({
+    queryKey: ["my-profile"],
+    queryFn: async () =>
+      (await api.get("/contributor/profile")).data.data as {
+        paymentQr: boolean;
+      },
+    enabled: user.role === "contributor",
+  });
+  const needsQr =
+    user.role === "contributor" && profile.data?.paymentQr === false;
   const edit = params.get("edit"),
     offerings = usePublic<Offering[]>("/offerings"),
     item = useQuery({
@@ -332,6 +343,16 @@ export default function Upload() {
           </label>
         )}
       </div>
+      {needsQr && (
+        <div className="notice error" role="alert">
+          <strong>Add your payment QR code first.</strong> You are paid for
+          every approved upload by UPI, so the QR code of your UPI app must be
+          on your profile before your first upload.{" "}
+          <Link className="text-link" to="/contributor/profile">
+            Add it on My profile →
+          </Link>
+        </div>
+      )}
       {data?.metadataNeedsReview && (
         <div className="notice">
           Source conflicts: {data.provenance?.conflicts?.join("; ")}. Verify the
@@ -604,14 +625,16 @@ export default function Upload() {
             </select>
           </label>
         )}
-        <button className="button wide" disabled={busy}>
-          {busy
-            ? "Saving…"
-            : edit
-              ? "Save changes"
-              : files.length > 1
-                ? "Upload batch"
-                : "Submit resource"}
+        <button className="button wide" disabled={busy || needsQr}>
+          {needsQr
+            ? "Add your payment QR code to upload"
+            : busy
+              ? "Saving…"
+              : edit
+                ? "Save changes"
+                : files.length > 1
+                  ? "Upload batch"
+                  : "Submit resource"}
         </button>
         {busy && progress !== null && (
           <div className="upload-progress wide" role="status">

@@ -43,13 +43,21 @@ beforeEach(async () => {
   await Paper.deleteMany({});
   await Note.deleteMany({});
 });
-async function account(role = "contributor", mustChangePassword = false) {
+async function account(
+  role = "contributor",
+  mustChangePassword = false,
+  paymentQr = true,
+) {
   return User.create({
     email: `${role}@example.test`,
     name: "Test account",
     role,
     passwordHash: await bcrypt.hash("TestPassword!12345", 12),
     mustChangePassword,
+    // Contributors must have a payment QR on file before they can upload.
+    ...(role === "contributor" && paymentQr
+      ? { profile: { paymentQrKey: "payment-qr/fixture.png" } }
+      : {}),
   });
 }
 async function login(role = "contributor") {
@@ -1053,6 +1061,98 @@ async function knownVerificationToken(email: string) {
   );
   return token;
 }
+test("contributors must add a payment QR before their first upload; admins can view it", async () => {
+  await account("contributor", false, false);
+  await account("admin");
+  const contributor = await login(),
+    admin = await login("admin");
+  const { offering } = await offeringFixture();
+  const note = () =>
+    contributor.agent
+      .post("/api/contributor/notes")
+      .set("X-CSRF-Token", contributor.csrf)
+      .send({
+        title: "Needs a QR first",
+        offerings: [String(offering._id)],
+        format: "markdown",
+        markdown: "# Content",
+      });
+  const blocked = await note();
+  assert.equal(blocked.status, 412);
+  assert.equal(blocked.body.error.code, "PAYMENT_QR_REQUIRED");
+  const bulk = await contributor.agent
+    .post("/api/contributor/papers/bulk")
+    .set("X-CSRF-Token", contributor.csrf)
+    .field("metadata", JSON.stringify([{ title: "Bulk", offerings: [] }]))
+    .attach("files", Buffer.from("fake"), {
+      filename: "fake.pdf",
+      contentType: "application/pdf",
+    });
+  assert.equal(bulk.status, 412);
+  const me = await contributor.agent.get("/api/contributor/profile");
+  assert.equal(me.body.data.paymentQr, false);
+  assert.equal(
+    (await contributor.agent.get("/api/contributor/profile/payment-qr")).status,
+    404,
+  );
+  const qr = await sharp({
+    create: { width: 300, height: 300, channels: 3, background: "#ffffff" },
+  })
+    .jpeg()
+    .toBuffer();
+  assert.equal(
+    (
+      await contributor.agent
+        .post("/api/contributor/profile/payment-qr")
+        .set("X-CSRF-Token", contributor.csrf)
+        .attach("qr", Buffer.from("not an image"), {
+          filename: "qr.png",
+          contentType: "image/png",
+        })
+    ).status,
+    400,
+  );
+  const added = await contributor.agent
+    .post("/api/contributor/profile/payment-qr")
+    .set("X-CSRF-Token", contributor.csrf)
+    .attach("qr", qr, { filename: "qr.jpg", contentType: "image/jpeg" });
+  assert.equal(added.status, 200);
+  assert.equal(added.body.data.paymentQr, true);
+  const user = await User.findOne({ email: "contributor@example.test" });
+  assert.match(user.profile.paymentQrKey, /^payment-qr\/.+\.png$/);
+  // Stored as PNG whoever uploaded what; owner and admin can see it, the public cannot.
+  const mine = await contributor.agent.get(
+    "/api/contributor/profile/payment-qr",
+  );
+  assert.equal(mine.status, 200);
+  assert.equal(mine.headers["content-type"], "image/png");
+  assert.equal(
+    (await admin.agent.get(`/api/admin/contributors/${user._id}/payment-qr`))
+      .status,
+    200,
+  );
+  assert.equal(
+    (await request(app).get(`/api/admin/contributors/${user._id}/payment-qr`))
+      .status,
+    401,
+  );
+  const rows = (await admin.agent.get("/api/admin/earnings")).body.data.rows;
+  assert.equal(rows[0].paymentQr, true);
+  assert.equal(
+    (await admin.agent.get("/api/admin/contributors")).body.data[0].paymentQr,
+    true,
+  );
+  assert.equal((await note()).status, 201);
+  assert.equal(
+    (
+      await contributor.agent
+        .delete("/api/contributor/profile/payment-qr")
+        .set("X-CSRF-Token", contributor.csrf)
+    ).body.data.paymentQr,
+    false,
+  );
+  assert.equal((await note()).status, 412);
+});
 test("sign-up creates the account only after the emailed link is opened", async () => {
   await EmailVerification.deleteMany({});
   const agent = request.agent(app);

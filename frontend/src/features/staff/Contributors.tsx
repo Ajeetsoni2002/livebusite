@@ -9,6 +9,7 @@ type Contributor = {
   email: string;
   active: boolean;
   trusted: boolean;
+  paymentQr?: boolean;
   papers: number;
   notes: number;
   selfRegistered?: boolean;
@@ -87,6 +88,10 @@ export default function Contributors() {
                   {user.trusted
                     ? "Trusted auto-publish"
                     : "Requires moderation"}
+                  <br />
+                  <small className="muted">
+                    {user.paymentQr ? "Payment QR added" : "No payment QR yet"}
+                  </small>
                 </td>
                 <td>
                   <div className="row-actions">

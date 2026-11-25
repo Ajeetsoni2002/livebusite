@@ -51,6 +51,10 @@ async function account(role: string, trusted = false) {
     trusted,
     mustChangePassword: false,
     passwordHash: await bcrypt.hash("TestPassword!12345", 12),
+    // Contributors must have a payment QR on file before they can upload.
+    ...(role === "contributor"
+      ? { profile: { paymentQrKey: "payment-qr/fixture.png" } }
+      : {}),
   });
 }
 async function login(role: string) {

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Upload } from "lucide-react";
+import { QrCode, Upload } from "lucide-react";
 import { api, errorMessage } from "../../lib/api";
+import { usePrivateImage } from "../../lib/privateImage";
 import { rupees } from "../../lib/earn";
 import { promptDialog, toast } from "../../components/Feedback";
 
@@ -130,11 +131,20 @@ export function MyEarnings() {
   );
 }
 
-type Row = Summary & { _id: string; name: string; email: string };
+type Row = Summary & {
+  _id: string;
+  name: string;
+  email: string;
+  paymentQr: boolean;
+};
 
 /** Admin view: every contributor's earnings, with a way to record a payment. */
 export function Payouts() {
   const [history, setHistory] = useState<{ name: string; rows: Payout[] }>();
+  const [qr, setQr] = useState<Row | null>(null);
+  const qrImage = usePrivateImage(
+    qr ? `/admin/contributors/${qr._id}/payment-qr` : null,
+  );
   const query = useQuery({
     queryKey: ["admin-earnings"],
     queryFn: async () =>
@@ -165,7 +175,10 @@ export function Payouts() {
         amount,
         ...(rest.length ? { note: rest.join(" ") } : {}),
       });
-      toast(`Recorded ${rupees(amount)} paid to ${row.name}.`, "success");
+      toast(
+        `Recorded ${rupees(amount)} paid to ${row.name}. They have been emailed.`,
+        "success",
+      );
       await query.refetch();
     } catch (error) {
       toast(errorMessage(error), "error");
@@ -218,6 +231,12 @@ export function Payouts() {
                       {row.name}
                       <br />
                       <small className="muted">{row.email}</small>
+                      {!row.paymentQr && (
+                        <>
+                          <br />
+                          <small className="muted">No payment QR yet</small>
+                        </>
+                      )}
                     </td>
                     <td>
                       {row.approved}
@@ -235,6 +254,17 @@ export function Payouts() {
                     </td>
                     <td>
                       <div className="row-actions">
+                        <button
+                          disabled={!row.paymentQr}
+                          title={
+                            row.paymentQr
+                              ? "Show the UPI QR code to pay"
+                              : "This contributor has not added a payment QR"
+                          }
+                          onClick={() => setQr(row)}
+                        >
+                          <QrCode size={14} /> QR
+                        </button>
                         <button disabled={!row.due} onClick={() => pay(row)}>
                           Mark paid
                         </button>
@@ -249,6 +279,37 @@ export function Payouts() {
             </table>
             {!data.rows.length && <p className="muted">No contributors yet.</p>}
           </div>
+          {qr && (
+            <section
+              className="card staff-card qr-card"
+              style={{ marginTop: 24 }}
+              aria-live="polite"
+            >
+              <div className="section-head">
+                <h3>Pay {qr.name} by UPI</h3>
+                <button type="button" onClick={() => setQr(null)}>
+                  Close
+                </button>
+              </div>
+              <p className="muted small">
+                Scan this with any UPI app, pay {rupees(qr.due)}, then use “Mark
+                paid” so {qr.name.split(/\s+/)[0]} gets the confirmation email.
+              </p>
+              {qrImage.loading ? (
+                <p role="status" className="muted small">
+                  Loading the QR code…
+                </p>
+              ) : qrImage.url ? (
+                <img
+                  className="qr-preview"
+                  src={qrImage.url}
+                  alt={`Payment QR code of ${qr.name}`}
+                />
+              ) : (
+                <p className="notice error">{qrImage.error}</p>
+              )}
+            </section>
+          )}
           {history && (
             <section className="card staff-card" style={{ marginTop: 24 }}>
               <h3>Payments to {history.name}</h3>

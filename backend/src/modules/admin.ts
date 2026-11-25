@@ -532,6 +532,7 @@ adminRouter.get("/contributors", async (_req, res) => {
     res,
     users.map((u) => ({
       ...u,
+      paymentQr: Boolean(u.profile?.paymentQrKey),
       papers: papers.find((p) => String(p._id) === String(u._id))?.total || 0,
       notes: notes.find((p) => String(p._id) === String(u._id))?.total || 0,
     })),

@@ -1982,6 +1982,24 @@ th[aria-sort="descending"] .sort-header {
   position: sticky;
   top: 190px;
 }
+.qr-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qr-card .section-head {
+  margin: 0;
+}
+.qr-preview {
+  display: block;
+  width: min(100%, 280px);
+  aspect-ratio: 1;
+  object-fit: contain;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
 .preview-card {
   grid-template-columns: 36px auto minmax(0, 1fr);
   border: 1px solid var(--border);

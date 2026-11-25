@@ -51,6 +51,10 @@ const faq = [
     "Sign in to your contributor workspace and open Earnings. It shows approved uploads, what you have earned, what has been paid and what is still due.",
   ],
   [
+    "How do I get paid?",
+    "By UPI. Before your first upload you add the QR code of your UPI app on My profile; the admin scans it to pay you, and you get an email each time a payment is made.",
+  ],
+  [
     "Is there a limit?",
     "No. Upload as many genuine papers and notes as you have.",
   ],

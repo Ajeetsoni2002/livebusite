@@ -218,6 +218,8 @@ const userSchema = new Schema(
       displayName: { type: String, maxlength: 60 },
       bio: { type: String, maxlength: 160 },
       photoKey: String,
+      // UPI QR image the admin scans to pay this contributor; required before uploading.
+      paymentQrKey: String,
     },
   },
   options,
