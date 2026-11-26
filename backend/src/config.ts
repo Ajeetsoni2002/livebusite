@@ -2,6 +2,12 @@ import { randomBytes } from "node:crypto";
 import dotenv from "dotenv";
 dotenv.config({ quiet: true });
 
+// The site owner's address: where contributors are told to write when an email says
+// "contact the admin", unless CONTACT_EMAIL says otherwise.
+const DEFAULT_CONTACT_EMAIL = "ajeetsoni.201@gmail.com";
+const realValue = (value?: string) =>
+  value && !/^REPLACE_WITH/i.test(value.trim()) ? value.trim() : "";
+
 export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
   const production = env.NODE_ENV === "production";
   const secret = (name: string) => {
@@ -91,7 +97,8 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
     },
     atlasSearch: env.ATLAS_SEARCH_ENABLED === "true",
     cfOriginSecret: env.CF_ORIGIN_SECRET || "",
-    contactEmail: env.CONTACT_EMAIL || "",
+    // A placeholder left in a dashboard ("REPLACE_WITH_...") must not reach an email.
+    contactEmail: realValue(env.CONTACT_EMAIL) || DEFAULT_CONTACT_EMAIL,
     // Outgoing mail (password resets, new-contributor alerts). Unset = log to console.
     smtp: {
       host: env.SMTP_HOST || "",
@@ -102,7 +109,10 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
     },
     // Preferred over SMTP: sends over HTTPS, which hosts that block SMTP still allow.
     brevoApiKey: (env.BREVO_API_KEY || "").trim().replace(/^["']|["']$/g, ""),
-    adminNotifyEmail: env.ADMIN_NOTIFY_EMAIL || env.CONTACT_EMAIL || "",
+    adminNotifyEmail:
+      realValue(env.ADMIN_NOTIFY_EMAIL) ||
+      realValue(env.CONTACT_EMAIL) ||
+      DEFAULT_CONTACT_EMAIL,
     // The fingerprint job reads scans without a text layer by OCR (slow on a small
     // instance; uploads bring their own OCR from the browser). OCR_ON_SERVER=false skips it.
     ocrOnServer: env.OCR_ON_SERVER !== "false",
