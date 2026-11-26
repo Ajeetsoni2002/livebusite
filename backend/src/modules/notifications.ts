@@ -87,6 +87,57 @@ export async function notifyUploads(user: any, kind: Kind, items: Uploaded[]) {
   ]);
 }
 
+/**
+ * Emails the contributor an admin's correction for one upload. Returns whether the mail
+ * went out, so the admin can be told when it did not.
+ */
+export async function notifyCorrection(
+  user: any,
+  kind: Kind,
+  item: { _id: unknown; title: string; status: string },
+  message: string,
+) {
+  const contact = config.contactEmail || config.adminNotifyEmail;
+  const editable = ["draft", "pending", "rejected"].includes(item.status);
+  return sendMail({
+    to: user.email,
+    subject: `Important: correction needed for "${item.title}"`,
+    ...renderEmail({
+      preheader: `The admin reviewed your ${singular[kind]} "${item.title}" and asked for a correction.`,
+      eyebrow: "Important · correction needed",
+      title: "Please correct your upload.",
+      paragraphs: [
+        `Hi ${firstName(user.name)},`,
+        `The admin reviewed your ${singular[kind]} "${item.title}" on BUIT Papers and needs the following correction:`,
+        ...message
+          .split(/\n+/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((line) => `“${line}”`),
+        editable
+          ? "Open the upload, make the change and save it. It goes back to the review queue, and you are paid once it is approved."
+          : `This upload is already published, so you cannot edit it yourself. Reply to the admin${contact ? ` at ${contact}` : ""} with the corrected file or details.`,
+      ],
+      rows: [
+        ["Title", item.title],
+        ["Type", singular[kind]],
+        ["Status", item.status],
+        ["Sent", now()],
+      ],
+      button: editable
+        ? {
+            label: "Fix this upload",
+            url: `${site()}/contributor/upload?kind=${kind}&edit=${item._id}`,
+          }
+        : {
+            label: `Open my ${kind}`,
+            url: `${site()}/contributor${kind === "notes" ? "/notes" : ""}`,
+          },
+      note: `Questions? Contact the admin${contact ? ` at ${contact}` : ""}.`,
+    }),
+  });
+}
+
 /** Tells the contributor that the admin marked a payment to them as done. */
 export async function notifyPayout(
   user: any,

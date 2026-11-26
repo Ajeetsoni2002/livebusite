@@ -6,6 +6,7 @@ import { api, errorMessage } from "../../lib/api";
 import { usePrivateImage } from "../../lib/privateImage";
 import { rupees } from "../../lib/earn";
 import { promptDialog, toast } from "../../components/Feedback";
+import ImageLightbox from "../../components/ImageLightbox";
 
 type Tally = { approved: number; pending: number };
 type Summary = {
@@ -280,35 +281,19 @@ export function Payouts() {
             {!data.rows.length && <p className="muted">No contributors yet.</p>}
           </div>
           {qr && (
-            <section
-              className="card staff-card qr-card"
-              style={{ marginTop: 24 }}
-              aria-live="polite"
+            <ImageLightbox
+              title={`Pay ${qr.name} by UPI`}
+              src={qrImage.url}
+              alt={`Payment QR code of ${qr.name}`}
+              loading={qrImage.loading}
+              error={qrImage.error}
+              onClose={() => setQr(null)}
             >
-              <div className="section-head">
-                <h3>Pay {qr.name} by UPI</h3>
-                <button type="button" onClick={() => setQr(null)}>
-                  Close
-                </button>
-              </div>
               <p className="muted small">
                 Scan this with any UPI app, pay {rupees(qr.due)}, then use “Mark
                 paid” so {qr.name.split(/\s+/)[0]} gets the confirmation email.
               </p>
-              {qrImage.loading ? (
-                <p role="status" className="muted small">
-                  Loading the QR code…
-                </p>
-              ) : qrImage.url ? (
-                <img
-                  className="qr-preview"
-                  src={qrImage.url}
-                  alt={`Payment QR code of ${qr.name}`}
-                />
-              ) : (
-                <p className="notice error">{qrImage.error}</p>
-              )}
-            </section>
+            </ImageLightbox>
           )}
           {history && (
             <section className="card staff-card" style={{ marginTop: 24 }}>

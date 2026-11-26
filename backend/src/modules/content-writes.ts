@@ -20,7 +20,7 @@ async function afterUpload(kind: string, id: unknown, user: unknown) {
 }
 import { withSharedOfferings } from "./standard-subjects.js";
 import { PAYMENT_QR_REQUIRED } from "./profile.js";
-import { notifyUploads } from "./notifications.js";
+import { notifyCorrection, notifyUploads } from "./notifications.js";
 // Contributors are paid by UPI QR, so one must be on file before anything is uploaded.
 function requirePaymentQr(user: any) {
   if (user.role !== "admin" && !user.profile?.paymentQrKey)
@@ -222,6 +222,7 @@ export function contentWriteRouter(admin: boolean) {
       if (!admin) {
         item.status = "pending";
         item.rejectionReason = undefined;
+        item.correction = undefined;
       }
       await item.save();
       await enqueueWatermark(kind as any, item._id, {
@@ -489,6 +490,7 @@ export function contentWriteRouter(admin: boolean) {
       if (!admin) {
         item.status = "pending";
         item.rejectionReason = undefined;
+        item.correction = undefined;
       }
       if (item.status === "published") {
         publishable(item);
@@ -546,6 +548,7 @@ export function contentWriteRouter(admin: boolean) {
             item.status = "published";
             item.publishedAt ||= new Date();
             item.rejectionReason = undefined;
+            item.correction = undefined;
             item.metadataNeedsReview = false;
           }
           if (action === "reject") {
@@ -565,6 +568,36 @@ export function contentWriteRouter(admin: boolean) {
           await audit(req, action, `${kind}/${item._id}`);
           ok(res, item);
         });
+    // Asks the contributor to fix something, by email and on the upload in their list.
+    if (admin)
+      router.post(`/${kind}/:id/correction`, async (req: AuthRequest, res) => {
+        const message = z
+          .string()
+          .trim()
+          .min(3, "Write what needs to be corrected.")
+          .max(2000)
+          .parse(req.body?.message);
+        const item: any = await model
+          .findOne({ _id: identifier(req.params.id), deletedAt: null })
+          .populate("author", "name email role");
+        if (!item) throw new HttpError(404, "Content not found");
+        const author = item.author;
+        if (!author?.email || author.role === "admin")
+          throw new HttpError(
+            409,
+            "This upload has no contributor to send a correction to.",
+          );
+        item.correction = { message, sentAt: new Date(), by: req.user._id };
+        await item.save();
+        await audit(req, "correction", `${kind}/${item._id}`);
+        const emailed = await notifyCorrection(
+          author,
+          kind as any,
+          item,
+          message,
+        );
+        ok(res, { item, emailed });
+      });
     if (admin)
       router.delete(`/${kind}/:id`, async (req: AuthRequest, res) => {
         const item = await model.findByIdAndUpdate(

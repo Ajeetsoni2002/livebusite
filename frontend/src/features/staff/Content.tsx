@@ -7,6 +7,7 @@ import {
   ArrowUpDown,
   Check,
   Eye,
+  MailWarning,
   MoreHorizontal,
   Stamp,
   Wand2,
@@ -315,6 +316,40 @@ export default function Content({
       return false;
     }
   }
+  // Emails the contributor what to fix; it also shows on the upload in their list.
+  async function sendCorrection(item: Row) {
+    const message = await promptDialog({
+      title: `Send a correction for “${item.title}”`,
+      body: `${item.author?.name || "The contributor"} gets this as an important email and sees it next to the upload until they edit it.`,
+      confirmLabel: "Send correction",
+      input: {
+        label: "What needs to be corrected",
+        placeholder:
+          "e.g. Page 3 is missing and the year should be 2023. Please upload the full paper again.",
+        minLength: 3,
+        maxLength: 2000,
+        multiline: true,
+      },
+    });
+    if (!message?.trim()) return false;
+    try {
+      const { data } = await api.post(
+        `/admin/${item._kind || kind}/${item._id}/correction`,
+        { message },
+      );
+      await client.invalidateQueries({ queryKey: ["staff-content"] });
+      toast(
+        data.data.emailed
+          ? `Correction emailed to ${item.author?.name || "the contributor"}.`
+          : "Correction saved on the upload, but the email could not be sent. Check the email settings.",
+        data.data.emailed ? "success" : "error",
+      );
+      return true;
+    } catch (e) {
+      toast(errorMessage(e), "error");
+      return false;
+    }
+  }
   async function bulk(name: "approve" | "reject" | "delete") {
     const targets = items.filter((item) => selected.has(item._id));
     if (!targets.length) return;
@@ -550,6 +585,19 @@ export default function Content({
                   {item.rejectionReason && (
                     <p className="muted">Reason: {item.rejectionReason}</p>
                   )}
+                  {item.correction && (
+                    <p className="notice correction-note">
+                      <strong>
+                        {admin
+                          ? `Correction sent ${new Date(item.correction.sentAt).toLocaleDateString("en-IN")}:`
+                          : "Correction from admin:"}
+                      </strong>{" "}
+                      {item.correction.message}
+                      {!admin &&
+                        editableByMe(item) &&
+                        " Edit this upload to fix it."}
+                    </p>
+                  )}
                   {item.deletedAt && (
                     <span className="badge">Soft-deleted</span>
                   )}
@@ -600,6 +648,14 @@ export default function Content({
                     {admin && item.status === "pending" && (
                       <button onClick={() => action(item, "reject")}>
                         <X size={15} /> Reject
+                      </button>
+                    )}
+                    {admin && item.author && !item.deletedAt && (
+                      <button
+                        title="Email the contributor what needs to be corrected"
+                        onClick={() => sendCorrection(item)}
+                      >
+                        <MailWarning size={15} /> Correction
                       </button>
                     )}
                     {(admin || editableByMe(item)) && (
@@ -706,7 +762,9 @@ export default function Content({
           onAction={
             admin
               ? async (name) => {
-                  if (await action(reviewing, name)) setReviewing(null);
+                  if (name === "correction") {
+                    if (await sendCorrection(reviewing)) setReviewing(null);
+                  } else if (await action(reviewing, name)) setReviewing(null);
                 }
               : undefined
           }

@@ -11,6 +11,7 @@ import {
 import { api, apiUrl, errorMessage } from "../../lib/api";
 import { usePrivateImage } from "../../lib/privateImage";
 import { toast } from "../../components/Feedback";
+import ImageLightbox from "../../components/ImageLightbox";
 import { ContributorAvatar } from "../community/Leaderboard";
 
 type Profile = {
@@ -271,6 +272,7 @@ function PaymentQrCard({
   onChange: (has: boolean) => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
   const [version, setVersion] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const image = usePrivateImage(
@@ -330,11 +332,28 @@ function PaymentQrCard({
             Loading your QR code…
           </p>
         ) : image.url ? (
-          <img
-            className="qr-preview"
-            src={image.url}
-            alt="Your payment QR code"
-          />
+          <>
+            <button
+              type="button"
+              className="qr-zoom"
+              title="Open the QR code larger"
+              onClick={() => setZoomed(true)}
+            >
+              <img
+                className="qr-preview zoomable"
+                src={image.url}
+                alt="Your payment QR code"
+              />
+            </button>
+            {zoomed && (
+              <ImageLightbox
+                title="Your payment QR code"
+                src={image.url}
+                alt="Your payment QR code"
+                onClose={() => setZoomed(false)}
+              />
+            )}
+          </>
         ) : (
           <p className="notice error">{image.error}</p>
         )

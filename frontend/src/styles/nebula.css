@@ -2397,3 +2397,66 @@ th[aria-sort="descending"] .sort-header {
     position: static;
   }
 }
+.qr-preview.zoomable {
+  cursor: zoom-in;
+}
+.image-lightbox {
+  margin: auto;
+  width: min(560px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
+}
+.image-lightbox::backdrop {
+  background: color-mix(in srgb, var(--ink) 75%, transparent);
+  backdrop-filter: blur(6px);
+}
+.image-lightbox-shell {
+  display: grid;
+  gap: 12px;
+  padding: 20px;
+}
+.image-lightbox-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.image-lightbox-head h2 {
+  margin: 0;
+  font-size: 19px;
+}
+.image-lightbox p {
+  margin: 0;
+}
+.image-lightbox img {
+  display: block;
+  width: 100%;
+  max-height: calc(100dvh - 190px);
+  object-fit: contain;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.confirm-dialog textarea {
+  width: 100%;
+  min-height: 130px;
+  resize: vertical;
+  font: inherit;
+}
+.correction-note {
+  margin: 6px 0 0;
+  font-size: 13px;
+}
+.qr-zoom {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  width: fit-content;
+}

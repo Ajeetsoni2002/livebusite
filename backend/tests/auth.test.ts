@@ -1303,3 +1303,64 @@ test("upload limits are public so the browser can compress oversized PDFs first"
   assert.equal(response.body.data.maxFiles, 5);
   assert.ok(response.body.data.maxFileBytes >= 1024 * 1024);
 });
+
+test("admins can send a contributor a correction for an upload", async () => {
+  const contributor = await account("contributor");
+  await account("admin");
+  const paper = await Paper.create({
+    title: "Needs a fix",
+    slug: "needs-a-fix",
+    author: contributor._id,
+    status: "pending",
+  });
+  const orphan = await Paper.create({
+    title: "Legacy archive item",
+    slug: "legacy-archive-item",
+    status: "pending",
+  });
+  const admin = await login("admin");
+  const send = (id: unknown, message: unknown) =>
+    admin.agent
+      .post(`/api/admin/papers/${id}/correction`)
+      .set("X-CSRF-Token", admin.csrf)
+      .send({ message });
+  assert.equal((await send(paper._id, "no")).status, 400);
+  assert.equal((await send(orphan._id, "Page 2 is missing")).status, 409);
+  const sent = await send(
+    paper._id,
+    "Page 2 is missing.\nPlease upload it again.",
+  );
+  assert.equal(sent.status, 200);
+  // Tests have no mail provider, so the route reports the mail as not sent.
+  assert.equal(sent.body.data.emailed, false);
+  assert.match(sent.body.data.item.correction.message, /Page 2 is missing/);
+
+  const own = await login("contributor");
+  assert.equal(
+    (
+      await own.agent
+        .post(`/api/contributor/papers/${paper._id}/correction`)
+        .set("X-CSRF-Token", own.csrf)
+        .send({ message: "Trying to send one myself" })
+    ).status,
+    404,
+  );
+  const mine = await own.agent.get("/api/contributor/papers");
+  const listed = mine.body.data.find((p: any) => p._id === String(paper._id));
+  assert.match(listed.correction.message, /Please upload it again/);
+
+  // Public pages never show it.
+  await Paper.updateOne({ _id: paper._id }, { status: "published" });
+  const shown = await request(app).get(`/api/papers/${paper._id}`);
+  assert.equal(shown.status, 200);
+  assert.equal(JSON.stringify(shown.body).includes("Page 2 is missing"), false);
+
+  // The contributor's edit clears it.
+  await Paper.updateOne({ _id: paper._id }, { status: "pending" });
+  const edited = await own.agent
+    .patch(`/api/contributor/papers/${paper._id}`)
+    .set("X-CSRF-Token", own.csrf)
+    .send({ title: "Needs a fix (corrected)" });
+  assert.equal(edited.status, 200);
+  assert.equal((await Paper.findById(paper._id))!.correction, undefined);
+});

@@ -35,6 +35,8 @@ export interface ContentItem {
   topic?: string;
   status?: string;
   rejectionReason?: string;
+  /** The last correction an admin emailed to the contributor. */
+  correction?: { message: string; sentAt: string };
   metadataNeedsReview?: boolean;
   featured?: boolean;
   hasThumbnail?: boolean;

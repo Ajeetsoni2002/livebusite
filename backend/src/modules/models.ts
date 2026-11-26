@@ -133,6 +133,14 @@ const contentFields = {
     default: "draft",
   },
   rejectionReason: String,
+  // The last correction an admin emailed to the contributor; cleared when they edit.
+  correction: {
+    type: new Schema(
+      { message: String, sentAt: Date, by: ref("User") },
+      { _id: false },
+    ),
+    default: undefined,
+  },
   featured: { type: Boolean, default: false },
   deletedAt: { type: Date, default: null },
   publishedAt: Date,

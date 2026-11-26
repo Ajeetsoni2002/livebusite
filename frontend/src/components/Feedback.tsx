@@ -15,7 +15,10 @@ type Ask = {
     label: string;
     placeholder?: string;
     minLength?: number;
+    maxLength?: number;
     type?: string;
+    /** A textarea for a longer message; Enter adds a line instead of submitting. */
+    multiline?: boolean;
   };
   resolve: (value: string | boolean | null) => void;
 };
@@ -123,14 +126,26 @@ export function FeedbackHost() {
             {ask.input && (
               <label>
                 {ask.input.label}
-                <input
-                  name="value"
-                  type={ask.input.type || "text"}
-                  required
-                  minLength={ask.input.minLength}
-                  placeholder={ask.input.placeholder}
-                  autoFocus
-                />
+                {ask.input.multiline ? (
+                  <textarea
+                    name="value"
+                    required
+                    minLength={ask.input.minLength}
+                    maxLength={ask.input.maxLength}
+                    placeholder={ask.input.placeholder}
+                    autoFocus
+                  />
+                ) : (
+                  <input
+                    name="value"
+                    type={ask.input.type || "text"}
+                    required
+                    minLength={ask.input.minLength}
+                    maxLength={ask.input.maxLength}
+                    placeholder={ask.input.placeholder}
+                    autoFocus
+                  />
+                )}
               </label>
             )}
             <div className="row-actions">

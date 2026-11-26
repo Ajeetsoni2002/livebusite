@@ -18,7 +18,7 @@ export default function ReviewPreview({
   item: ContentItem;
   kind: string;
   onClose: () => void;
-  onAction?: (name: "approve" | "reject") => void;
+  onAction?: (name: "approve" | "reject" | "correction") => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null),
     all = usePublic<Offering[]>("/offerings");
@@ -110,6 +110,9 @@ export default function ReviewPreview({
           <span />
           {onAction && (
             <div className="row-actions">
+              <button onClick={() => onAction("correction")}>
+                Send correction
+              </button>
               <button onClick={() => onAction("approve")}>Approve</button>
               <button onClick={() => onAction("reject")}>Reject</button>
               <button onClick={onClose}>Close</button>
