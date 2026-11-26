@@ -12,7 +12,10 @@ import { contentModels, FileAsset, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
 import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
-import { findDuplicates } from "../processing/fingerprint.js";
+import {
+  findDuplicates,
+  invalidateDuplicateReport,
+} from "../processing/fingerprint.js";
 import {
   DUPLICATE_THRESHOLD,
   FINGERPRINT_VERSION,
@@ -731,6 +734,8 @@ export function contentWriteRouter(admin: boolean) {
           }
           if (action === "delete") item.deletedAt = new Date();
           if (action === "restore") item.deletedAt = null;
+          if (action === "delete" || action === "restore")
+            invalidateDuplicateReport();
           if (action === "feature" || action === "unfeature")
             item.featured = action === "feature";
           await item.save();
@@ -775,6 +780,7 @@ export function contentWriteRouter(admin: boolean) {
           { returnDocument: "after" },
         );
         if (!item) throw new HttpError(404, "Content not found");
+        invalidateDuplicateReport();
         await audit(req, "delete", `${kind}/${item._id}`);
         ok(res, item);
       });

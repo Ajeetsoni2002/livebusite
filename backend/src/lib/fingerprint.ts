@@ -227,19 +227,80 @@ export function commonShingles(
   for (const [hash, count] of counts) if (count >= needed) common.add(hash);
   return common;
 }
-/** A sketch without the given hashes; the set size is scaled by the share kept. */
-function without(sketch: TextSketch, ignore?: ReadonlySet<number>): TextSketch {
-  if (!ignore?.size || !sketch.sketch.length) return sketch;
-  const kept = sketch.sketch.filter((hash) => !ignore.has(hash));
+/** A sketch sorted and stripped of boilerplate, ready for many comparisons. */
+type PreparedSketch = { sketch: number[]; shingles: number };
+/** Page hashes as nibble arrays, so comparing them is a table lookup per character. */
+type PreparedPage = Uint8Array;
+export type Prepared = {
+  text: PreparedSketch | null;
+  ocr: PreparedSketch | null;
+  pages: PreparedPage[];
+};
+function prepareSketch(
+  sketch: TextSketch | null | undefined,
+  ignore?: ReadonlySet<number>,
+): PreparedSketch | null {
+  if (!sketch?.sketch.length) return null;
+  const kept = ignore?.size
+    ? sketch.sketch.filter((hash) => !ignore.has(hash))
+    : sketch.sketch;
+  if (!kept.length) return null;
   return {
-    chars: sketch.chars,
+    sketch: [...kept].sort((x, y) => x - y),
+    // The share dropped from the sample estimates the share dropped from the set.
     shingles: Math.round(
       (sketch.shingles * kept.length) / sketch.sketch.length,
     ),
-    sketch: kept,
+  };
+}
+/**
+ * Does the one-off work of a comparison (sorting, boilerplate removal, hex parsing)
+ * so a document can be compared with the whole library cheaply.
+ */
+export function prepare(
+  fingerprint: Fingerprint,
+  boilerplate: Boilerplate = {},
+): Prepared {
+  return {
+    text: prepareSketch(fingerprint.text, boilerplate.text),
+    ocr: prepareSketch(fingerprint.ocr, boilerplate.ocr),
+    pages: fingerprint.pages
+      .filter(Boolean)
+      .map((hash) => Uint8Array.from(hash, (c) => parseInt(c, 16))),
   };
 }
 
+const clamp = (v: number) => Math.min(1, Math.max(0, v));
+function sketchSimilarity(a: PreparedSketch, b: PreparedSketch) {
+  const k = Math.min(a.sketch.length, b.sketch.length);
+  // The k smallest hashes of the union are a uniform sample of it: walk both sorted
+  // lists together and count the sampled hashes that sit in both.
+  let i = 0,
+    j = 0,
+    taken = 0,
+    shared = 0;
+  while (taken < k) {
+    const x = a.sketch[i],
+      y = b.sketch[j];
+    if (x === undefined && y === undefined) break;
+    if (y === undefined || x < y) i++;
+    else if (x === undefined || y < x) j++;
+    else {
+      shared++;
+      i++;
+      j++;
+    }
+    taken++;
+  }
+  const jaccard = shared / k;
+  const unionSize = (a.shingles + b.shingles) / (1 + jaccard);
+  const intersection = jaccard * unionSize;
+  return {
+    jaccard: clamp(jaccard),
+    aInB: clamp(intersection / a.shingles),
+    bInA: clamp(intersection / b.shingles),
+  };
+}
 /**
  * Jaccard similarity of two shingle sets from their bottom-k sketches, and the share
  * of each set contained in the other (derived from the set sizes). Hashes in `ignore`
@@ -250,33 +311,22 @@ export function textSimilarity(
   b: TextSketch,
   ignore?: ReadonlySet<number>,
 ) {
-  a = without(a, ignore);
-  b = without(b, ignore);
-  if (!a.sketch.length || !b.sketch.length)
-    return { jaccard: 0, aInB: 0, bInA: 0 };
-  const k = Math.min(a.sketch.length, b.sketch.length);
-  const inA = new Set(a.sketch),
-    inB = new Set(b.sketch);
-  // The k smallest hashes of the union are a uniform sample of it.
-  const union = [...new Set([...a.sketch, ...b.sketch])]
-    .sort((x, y) => x - y)
-    .slice(0, k);
-  const shared = union.filter((h) => inA.has(h) && inB.has(h)).length;
-  const jaccard = shared / k;
-  const unionSize = (a.shingles + b.shingles) / (1 + jaccard);
-  const intersection = jaccard * unionSize;
-  const clamp = (v: number) => Math.min(1, Math.max(0, v));
-  return {
-    jaccard: clamp(jaccard),
-    aInB: clamp(intersection / a.shingles),
-    bInA: clamp(intersection / b.shingles),
-  };
+  const pa = prepareSketch(a, ignore),
+    pb = prepareSketch(b, ignore);
+  if (!pa || !pb) return { jaccard: 0, aInB: 0, bInA: 0 };
+  return sketchSimilarity(pa, pb);
 }
 
-/** Pages of `a` that have a matching page in `b` (each page of `b` used once). */
-export function pageSimilarity(a: string[], b: string[]) {
-  const pagesA = a.filter(Boolean),
-    pagesB = b.filter(Boolean);
+function nibbleDistance(a: PreparedPage, b: PreparedPage) {
+  if (a.length !== b.length) return PAGE_HASH_BITS;
+  let bits = 0;
+  for (let i = 0; i < a.length; i++) bits += POPCOUNT[a[i] ^ b[i]];
+  return bits;
+}
+function preparedPageSimilarity(
+  pagesA: PreparedPage[],
+  pagesB: PreparedPage[],
+) {
   if (!pagesA.length || !pagesB.length) return null;
   const used = new Set<number>();
   let matched = 0;
@@ -285,7 +335,7 @@ export function pageSimilarity(a: string[], b: string[]) {
       bestBits = PAGE_MATCH_BITS + 1;
     for (let j = 0; j < pagesB.length; j++) {
       if (used.has(j)) continue;
-      const bits = hamming(hash, pagesB[j]);
+      const bits = nibbleDistance(hash, pagesB[j]);
       if (bits < bestBits) {
         bestBits = bits;
         best = j;
@@ -303,19 +353,26 @@ export function pageSimilarity(a: string[], b: string[]) {
     jaccard: matched / (pagesA.length + pagesB.length - matched),
   };
 }
+/** Pages of `a` that have a matching page in `b` (each page of `b` used once). */
+export function pageSimilarity(a: string[], b: string[]) {
+  const toNibbles = (hashes: string[]) =>
+    hashes
+      .filter(Boolean)
+      .map((hash) => Uint8Array.from(hash, (c) => parseInt(c, 16)));
+  return preparedPageSimilarity(toNibbles(a), toNibbles(b));
+}
 
-/** How much of `candidate` is already in `existing`. */
-export function compareFingerprints(
-  candidate: Fingerprint,
-  existing: Fingerprint,
-  boilerplate: Boilerplate = {},
+/** How much of the prepared `candidate` is already in the prepared `existing`. */
+export function comparePrepared(
+  candidate: Prepared,
+  existing: Prepared,
 ): Similarity {
   if (candidate.text && existing.text) {
-    const t = textSimilarity(candidate.text, existing.text, boilerplate.text);
+    const t = sketchSimilarity(candidate.text, existing.text);
     return { score: Math.max(t.jaccard, t.aInB), basis: "text" };
   }
   let best: Similarity = { score: 0, basis: "none" };
-  const p = pageSimilarity(candidate.pages, existing.pages);
+  const p = preparedPageSimilarity(candidate.pages, existing.pages);
   if (p)
     best = {
       score: Math.max(p.jaccard, p.aInB),
@@ -323,7 +380,7 @@ export function compareFingerprints(
       matchedPages: p.matched,
     };
   if (candidate.ocr && existing.ocr) {
-    const o = textSimilarity(candidate.ocr, existing.ocr, boilerplate.ocr);
+    const o = sketchSimilarity(candidate.ocr, existing.ocr);
     // Only the first pages of a scan are read, so when one text is much longer the
     // containment of the shorter one is the fairer measure; it must hold both ways
     // for a tiny text not to "match" everything.
@@ -333,16 +390,30 @@ export function compareFingerprints(
   }
   return best;
 }
+/** How much of `candidate` is already in `existing`. */
+export function compareFingerprints(
+  candidate: Fingerprint,
+  existing: Fingerprint,
+  boilerplate: Boilerplate = {},
+): Similarity {
+  return comparePrepared(
+    prepare(candidate, boilerplate),
+    prepare(existing, boilerplate),
+  );
+}
 
 /** Symmetric view of a pair, for the admin report: the smaller document inside the larger. */
+export function pairPrepared(a: Prepared, b: Prepared): Similarity {
+  const ab = comparePrepared(a, b),
+    ba = comparePrepared(b, a);
+  return ab.score >= ba.score ? ab : ba;
+}
 export function pairSimilarity(
   a: Fingerprint,
   b: Fingerprint,
   boilerplate: Boilerplate = {},
 ): Similarity {
-  const ab = compareFingerprints(a, b, boilerplate),
-    ba = compareFingerprints(b, a, boilerplate);
-  return ab.score >= ba.score ? ab : ba;
+  return pairPrepared(prepare(a, boilerplate), prepare(b, boilerplate));
 }
 
 /** Whether a document's text layer is too thin to compare on, so its scan needs OCR. */

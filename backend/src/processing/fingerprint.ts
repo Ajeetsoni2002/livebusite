@@ -10,9 +10,10 @@ import {
   SIMILAR_THRESHOLD,
   buildFingerprint,
   commonShingles,
-  compareFingerprints,
+  comparePrepared,
+  pairPrepared,
+  prepare,
   markdownFingerprint,
-  pairSimilarity,
   percent,
   type Boilerplate,
   type Fingerprint,
@@ -157,6 +158,7 @@ export async function fingerprintContent(
     if (!fingerprint.text && !fingerprint.ocr && keptOcr)
       fingerprint.ocr = keptOcr;
   }
+  invalidateDuplicateReport();
   await model.updateOne(
     { _id: id },
     {
@@ -216,10 +218,11 @@ export async function findDuplicates(
     .select("fingerprint")
     .lean();
   const boilerplate = boilerplateOf(rows);
+  const prepared = prepare(candidate, boilerplate);
   const scored = rows
     .map((row) => ({
       id: String(row._id),
-      ...compareFingerprints(candidate, row.fingerprint, boilerplate),
+      ...comparePrepared(prepared, prepare(row.fingerprint, boilerplate)),
     }))
     .filter((row) => row.score >= min)
     .sort((a, b) => b.score - a.score)
@@ -238,8 +241,33 @@ export async function findDuplicates(
     }));
 }
 
+/*
+ * The pairwise report grows with the square of the library and the API runs on a very
+ * small instance, so a computed report is reused for a while and dropped as soon as a
+ * fingerprint changes or an item is deleted or restored.
+ */
+const REPORT_TTL_MS = 10 * 60_000;
+let cachedReport: {
+  min: number;
+  at: number;
+  value: Awaited<ReturnType<typeof computePairs>>;
+} | null = null;
+export function invalidateDuplicateReport() {
+  cachedReport = null;
+}
 /** Every pair of live items of a kind that share at least `min` of their content. */
 export async function duplicatePairs(min = DUPLICATE_THRESHOLD) {
+  if (
+    cachedReport &&
+    cachedReport.min === min &&
+    Date.now() - cachedReport.at < REPORT_TTL_MS
+  )
+    return cachedReport.value;
+  const value = await computePairs(min);
+  cachedReport = { min, at: Date.now(), value };
+  return value;
+}
+async function computePairs(min: number) {
   const pairs: {
     kind: Kind;
     score: number;
@@ -258,13 +286,10 @@ export async function duplicatePairs(min = DUPLICATE_THRESHOLD) {
       .lean();
     const found: { a: string; b: string; similarity: Similarity }[] = [];
     const boilerplate = boilerplateOf(rows);
+    const prepared = rows.map((row) => prepare(row.fingerprint, boilerplate));
     for (let i = 0; i < rows.length; i++)
       for (let j = i + 1; j < rows.length; j++) {
-        const similarity = pairSimilarity(
-          rows[i].fingerprint,
-          rows[j].fingerprint,
-          boilerplate,
-        );
+        const similarity = pairPrepared(prepared[i], prepared[j]);
         if (similarity.score >= min)
           found.push({
             a: String(rows[i]._id),

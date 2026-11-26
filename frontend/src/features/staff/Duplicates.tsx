@@ -35,8 +35,13 @@ export default function Duplicates() {
   const report = useQuery({
     queryKey: ["duplicates", min],
     queryFn: async () =>
-      (await api.get("/admin/duplicates", { params: { min } })).data
-        .data as Report,
+      // Comparing every pair takes the small API instance a while the first time.
+      (
+        await api.get("/admin/duplicates", {
+          params: { min },
+          timeout: 180_000,
+        })
+      ).data.data as Report,
   });
   const unscanned =
     (report.data?.unscanned.papers || 0) + (report.data?.unscanned.notes || 0);
