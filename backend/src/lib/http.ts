@@ -6,6 +6,8 @@ export class HttpError extends Error {
     public status: number,
     message: string,
     public code = "REQUEST_FAILED",
+    /** Structured data the client can act on (for example, the duplicates found). */
+    public details?: unknown,
   ) {
     super(message);
   }
@@ -49,6 +51,9 @@ export function errorHandler(
       code: status >= 500 ? "SERVICE_ERROR" : err.code || "INVALID_REQUEST",
       message,
       requestId: res.locals.requestId,
+      ...(status < 500 && err.details !== undefined
+        ? { details: err.details }
+        : {}),
     },
   });
 }

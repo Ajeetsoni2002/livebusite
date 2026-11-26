@@ -19,7 +19,8 @@
     "snapshot:package": "node --import tsx frontend/scripts/package-snapshot.mjs",
     "thumbnails:backfill": "npm run thumbnails:backfill -w backend",
     "test:browser": "node --import tsx scripts/browser-smoke.mjs",
-    "test:thumbnails": "node --import tsx scripts/thumbnail-browser-smoke.mjs"
+    "test:thumbnails": "node --import tsx scripts/thumbnail-browser-smoke.mjs",
+    "test:fingerprint": "node --import tsx scripts/fingerprint-browser-smoke.mjs"
   },
   "devDependencies": {
     "concurrently": "^10.0.5",

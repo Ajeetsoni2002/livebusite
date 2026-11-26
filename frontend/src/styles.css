@@ -950,6 +950,28 @@ textarea {
   border-color: color-mix(in srgb, var(--danger) 20%, transparent);
   background: color-mix(in srgb, var(--danger) 3%, transparent);
 }
+/* Upload page: the library items a chosen PDF turned out to be a copy of. */
+.duplicate-panel {
+  color: var(--text);
+}
+.duplicate-panel > strong {
+  color: var(--danger);
+}
+.duplicate-list {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.duplicate-list li {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+}
+.duplicate-list .row-actions {
+  margin-top: 6px;
+}
 .notice button {
   margin-left: 12px;
   color: inherit;

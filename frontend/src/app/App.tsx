@@ -35,6 +35,7 @@ const Login = lazy(() =>
   Workspace = lazy(() => import("../features/staff/Workspace")),
   Dashboard = lazy(() => import("../features/staff/Dashboard")),
   Content = lazy(() => import("../features/staff/Content")),
+  Duplicates = lazy(() => import("../features/staff/Duplicates")),
   Upload = lazy(() => import("../features/staff/Upload")),
   ContributorProfile = lazy(() => import("../features/staff/Profile")),
   Taxonomy = lazy(() => import("../features/staff/Taxonomy")),
@@ -127,6 +128,7 @@ export default function App() {
                   <Route path="notes" element={<Content kind="notes" />} />
                   <Route path="upload" element={<Upload />} />
                   <Route path="moderation" element={<Content moderation />} />
+                  <Route path="duplicates" element={<Duplicates />} />
                   <Route path="taxonomy" element={<Taxonomy />} />
                   <Route path="contributors" element={<Contributors />} />
                   <Route path="inbox" element={<Inbox />} />

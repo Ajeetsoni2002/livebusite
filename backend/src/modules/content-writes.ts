@@ -12,12 +12,97 @@ import { contentModels, FileAsset, SubjectOffering } from "./models.js";
 import { audit, AuthRequest } from "./auth.js";
 import { slugify } from "../import/inventory.js";
 import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
+import { findDuplicates } from "../processing/fingerprint.js";
+import {
+  DUPLICATE_THRESHOLD,
+  FINGERPRINT_VERSION,
+  MAX_HASHED_PAGES,
+  PAGE_HASH_HEX,
+  SKETCH_SIZE,
+  markdownFingerprint,
+  type Fingerprint,
+} from "../lib/fingerprint.js";
 // The free API has 0.1 CPU: requests only validate and store; covers render in the queue.
 const light = { thumbnail: false };
 async function afterUpload(kind: string, id: unknown, user: unknown) {
   await enqueueWatermark(kind as any, id, { requestedBy: user, hold: true });
   await enqueueJob("thumbnail", kind as any, id, { requestedBy: user });
+  // The browser's fingerprint is kept meanwhile; this recomputes it from the stored file.
+  await enqueueJob("fingerprint", kind as any, id, { requestedBy: user });
 }
+type Kind = "papers" | "notes";
+// What the uploader's browser computed from the PDF (see lib/fingerprint.ts).
+const sketchInput = z
+  .object({
+    chars: z.number().int().min(0),
+    shingles: z.number().int().min(0),
+    sketch: z.array(z.number().int().min(0)).max(SKETCH_SIZE),
+  })
+  .strict()
+  .nullable();
+const fingerprintInput = z
+  .object({
+    v: z.literal(FINGERPRINT_VERSION),
+    pages: z
+      .array(
+        z
+          .string()
+          .regex(/^[0-9a-f]*$/)
+          .max(PAGE_HASH_HEX),
+      )
+      .max(MAX_HASHED_PAGES),
+    text: sketchInput,
+    ocr: sketchInput.optional(),
+  })
+  .strict();
+const parseFingerprint = (raw: unknown): Fingerprint => {
+  const parsed = fingerprintInput.parse(raw);
+  return {
+    v: parsed.v,
+    pages: parsed.pages,
+    text: parsed.text ?? null,
+    ocr: parsed.ocr ?? null,
+  };
+};
+const duplicateCheckInput = z
+  .object({
+    kind: z.enum(["papers", "notes"]),
+    fingerprint: fingerprintInput,
+    exclude: z
+      .string()
+      .regex(/^[a-f0-9]{24}$/i)
+      .optional(),
+  })
+  .strict();
+/**
+ * Refuses an upload whose content is already in the library. An admin can pass
+ * `allowDuplicate` to keep a copy on purpose (a better scan of the same paper, say).
+ */
+async function guardDuplicates(
+  kind: Kind,
+  fingerprint: Fingerprint,
+  {
+    admin,
+    allowDuplicate,
+    exclude,
+  }: { admin: boolean; allowDuplicate?: unknown; exclude?: unknown },
+) {
+  const matches = await findDuplicates(kind, fingerprint, { exclude });
+  const top = matches[0];
+  if (!top || top.score < DUPLICATE_THRESHOLD) return matches;
+  if (admin && allowDuplicate === true) return matches;
+  throw new HttpError(
+    409,
+    `This ${kind === "notes" ? "note" : "paper"} is already in the library: ${top.similarity}% of its content matches “${top.item.title}”. Only one copy of each is kept.`,
+    "DUPLICATE_CONTENT",
+    { matches },
+  );
+}
+const stamp = (fingerprint: Fingerprint, by: "browser" | "server") => ({
+  ...fingerprint,
+  by,
+  computedAt: new Date(),
+});
 import { withSharedOfferings } from "./standard-subjects.js";
 import { PAYMENT_QR_REQUIRED } from "./profile.js";
 import { notifyCorrection, notifyUploads } from "./notifications.js";
@@ -130,12 +215,27 @@ export function contentWriteRouter(admin: boolean) {
       Object.values(contentModels).map((m) =>
         m
           .find({ author: req.user._id })
+          .select("-fingerprint")
           .sort({ createdAt: -1 })
           .limit(200)
           .lean(),
       ),
     );
     ok(res, { papers, notes });
+  });
+  // The upload page asks before sending a file whether its content is already here.
+  router.post("/duplicates/check", async (req: AuthRequest, res) => {
+    const { kind, fingerprint, exclude } = duplicateCheckInput.parse(req.body);
+    const matches = await findDuplicates(
+      kind,
+      {
+        ...fingerprint,
+        text: fingerprint.text ?? null,
+        ocr: fingerprint.ocr ?? null,
+      },
+      { exclude },
+    );
+    ok(res, { matches, threshold: DUPLICATE_THRESHOLD });
   });
   for (const [kind, model] of Object.entries(contentModels)) {
     const schema = kind === "papers" ? paperInput : noteInput;
@@ -161,6 +261,7 @@ export function contentWriteRouter(admin: boolean) {
       const [data, total] = await Promise.all([
         model
           .find(query)
+          .select("-fingerprint")
           .populate("author", "name email")
           .populate({
             path: "offerings",
@@ -327,6 +428,8 @@ export function contentWriteRouter(admin: boolean) {
         const {
             useVersion: rawVersion,
             processedMeta: rawMeta,
+            fingerprint: rawFingerprint,
+            allowDuplicate,
             ...raw
           } = metadata(req),
           status = admin
@@ -349,6 +452,17 @@ export function contentWriteRouter(admin: boolean) {
           throw new HttpError(400, "Markdown content is required.");
         if ((kind === "papers" || input.format === "pdf") && !req.file)
           throw new HttpError(400, "A PDF is required.");
+        // Checked before the file is stored, so a refused copy leaves nothing behind.
+        const fingerprint: Fingerprint | null = rawFingerprint
+          ? parseFingerprint(rawFingerprint)
+          : kind === "notes" && input.format === "markdown"
+            ? markdownFingerprint(input.markdown)
+            : null;
+        if (fingerprint)
+          await guardDuplicates(kind as Kind, fingerprint, {
+            admin,
+            allowDuplicate,
+          });
         const asset = req.file ? await savePdf(req.file, light) : null;
         if (asset && (await model.exists(usesAsset(asset._id))))
           throw new HttpError(409, "This PDF is already in the library.");
@@ -383,11 +497,21 @@ export function contentWriteRouter(admin: boolean) {
           status,
           slug: `${slugify(input.title)}-${randomUUID().slice(0, 8)}`,
           publishedAt: status === "published" ? new Date() : null,
+          ...(fingerprint
+            ? {
+                fingerprint: stamp(
+                  fingerprint,
+                  rawFingerprint ? "browser" : "server",
+                ),
+              }
+            : {}),
         };
         if (status === "published") publishable(data);
         const item = await model.create(data);
         if (asset) await afterUpload(kind, item._id, req.user._id);
-        await audit(req, "upload", `${kind}/${item._id}`);
+        await audit(req, "upload", `${kind}/${item._id}`, {
+          duplicateOverride: Boolean(admin && allowDuplicate === true),
+        });
         void notifyUploads(req.user, kind as any, [item]);
         res.status(201);
         ok(res, item);
@@ -416,10 +540,23 @@ export function contentWriteRouter(admin: boolean) {
         // Per-file results make partial success explicit and safe to retry selectively.
         for (let i = 0; i < files.length; i++) {
           try {
-            const { status: _ignored, ...row } = rows[i],
+            const {
+                status: _ignored,
+                fingerprint: rawFingerprint,
+                allowDuplicate,
+                ...row
+              } = rows[i],
               input: any = schema.parse(row);
             await validateOfferings(input.offerings);
             input.offerings = await withSharedOfferings(input.offerings);
+            const fingerprint: Fingerprint | null = rawFingerprint
+              ? parseFingerprint(rawFingerprint)
+              : null;
+            if (fingerprint)
+              await guardDuplicates(kind as Kind, fingerprint, {
+                admin,
+                allowDuplicate,
+              });
             const asset = await savePdf(files[i], light);
             if (await model.exists(usesAsset(asset._id)))
               throw new HttpError(409, "Duplicate PDF");
@@ -440,6 +577,9 @@ export function contentWriteRouter(admin: boolean) {
               status: state,
               slug: `${slugify(input.title)}-${randomUUID().slice(0, 8)}`,
               publishedAt: state === "published" ? new Date() : null,
+              ...(fingerprint
+                ? { fingerprint: stamp(fingerprint, "browser") }
+                : {}),
             };
             if (state === "published") publishable(data);
             const item = await model.create(data);
@@ -474,13 +614,28 @@ export function contentWriteRouter(admin: boolean) {
             }),
       });
       if (!item) throw new HttpError(404, "Editable upload not found");
-      const { status, ...fields } = req.body;
+      const { status, allowDuplicate, ...fields } = req.body;
       if (!admin && status)
         throw new HttpError(403, "Only an admin can publish");
       const input: any = parsePatch(schema, fields);
       if (input.offerings) {
         await validateOfferings(input.offerings);
         input.offerings = await withSharedOfferings(input.offerings);
+      }
+      // Rewritten Markdown is content too: it is checked against the other notes.
+      if (
+        kind === "notes" &&
+        typeof input.markdown === "string" &&
+        input.markdown !== item.markdown
+      ) {
+        const fingerprint = markdownFingerprint(input.markdown);
+        await guardDuplicates("notes", fingerprint, {
+          admin,
+          allowDuplicate,
+          exclude: item._id,
+        });
+        if (!item.asset || item.format === "markdown")
+          item.fingerprint = stamp(fingerprint, "server");
       }
       Object.assign(item, input);
       if (admin && status)
@@ -513,6 +668,17 @@ export function contentWriteRouter(admin: boolean) {
         });
         if (!item) throw new HttpError(404, "Editable upload not found");
         if (!req.file) throw new HttpError(400, "Upload a PDF");
+        // A replacement must not turn this upload into a copy of another item.
+        const { fingerprint: rawFingerprint, allowDuplicate } = metadata(req);
+        const fingerprint: Fingerprint | null = rawFingerprint
+          ? parseFingerprint(rawFingerprint)
+          : null;
+        if (fingerprint)
+          await guardDuplicates(kind as Kind, fingerprint, {
+            admin,
+            allowDuplicate,
+            exclude: item._id,
+          });
         const asset = await savePdf(req.file, light);
         if (item.asset)
           item.revisions.push({
@@ -524,6 +690,9 @@ export function contentWriteRouter(admin: boolean) {
         item.files = { original: asset._id };
         item.activeVersion = "original";
         item.watermark = { status: "queued", hold: true };
+        item.fingerprint = fingerprint
+          ? stamp(fingerprint, "browser")
+          : undefined;
         if (kind === "notes") item.format = "pdf";
         await item.save();
         await afterUpload(kind, item._id, req.user._id);

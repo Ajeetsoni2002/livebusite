@@ -103,6 +103,11 @@ export function parseConfig(env: NodeJS.ProcessEnv = process.env) {
     // Preferred over SMTP: sends over HTTPS, which hosts that block SMTP still allow.
     brevoApiKey: (env.BREVO_API_KEY || "").trim().replace(/^["']|["']$/g, ""),
     adminNotifyEmail: env.ADMIN_NOTIFY_EMAIL || env.CONTACT_EMAIL || "",
+    // The fingerprint job reads scans without a text layer by OCR (slow on a small
+    // instance; uploads bring their own OCR from the browser). OCR_ON_SERVER=false skips it.
+    ocrOnServer: env.OCR_ON_SERVER !== "false",
+    // Where tesseract.js keeps its downloaded language data.
+    ocrCacheDir: env.OCR_CACHE_DIR || ".npm-cache/tesseract",
   };
 }
 export const config = parseConfig();

@@ -29,7 +29,7 @@
 | 🔍 **Search fast** | Search by subject name, paper code (e.g. `CSE-703`) or branch code. |
 | 👀 **Preview before downloading** | Read papers in the browser, page by page. |
 | 📝 **Subject notes** | Short notes alongside the papers. |
-| 🤝 **Contribute** | Students can request a contributor account and upload papers. Uploads go through admin review. |
+| 🤝 **Contribute** | Students can request a contributor account and upload papers. Uploads go through admin review, and a paper whose content is already on the site is flagged before it is sent. |
 | 🏆 **Contributor profiles** | Public profiles and a leaderboard credit everyone who helps. |
 | 🌙 **Light and dark mode** | Works well on mobile. |
 

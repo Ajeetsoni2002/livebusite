@@ -25,6 +25,8 @@ import { randomUUID } from "node:crypto";
 import { Setting, ProcessingJob, ContributorRequest } from "./models.js";
 import { randomBytes } from "node:crypto";
 import { enqueueJob, enqueueWatermark } from "../processing/jobs.js";
+import { duplicatePairs, unscannedFilter } from "../processing/fingerprint.js";
+import { DUPLICATE_THRESHOLD } from "../lib/fingerprint.js";
 import { storage } from "../storage/index.js";
 import { THUMBNAIL_VERSION } from "../storage/thumbnail.js";
 import { FileAsset } from "./models.js";
@@ -358,6 +360,43 @@ adminRouter.post("/thumbnails/repair", async (req: AuthRequest, res) => {
     count: targets.length,
   });
   ok(res, { batch, queued: targets.length });
+});
+// Pairs of live items whose content overlaps, from their stored fingerprints.
+adminRouter.get("/duplicates", async (req, res) => {
+  const min = z.coerce
+    .number()
+    .min(0.3)
+    .max(1)
+    .default(DUPLICATE_THRESHOLD)
+    .parse(req.query.min);
+  ok(res, { ...(await duplicatePairs(min)), threshold: DUPLICATE_THRESHOLD });
+});
+// Queues fingerprint jobs for items that have none (or, with `all`, for every live PDF).
+adminRouter.post("/duplicates/scan", async (req: AuthRequest, res) => {
+  const { all } = z
+    .object({ all: z.boolean().default(false) })
+    .strict()
+    .parse(req.body ?? {});
+  const batch = randomUUID();
+  let queued = 0;
+  for (const [kind, model] of Object.entries(contentModels) as [
+    "papers" | "notes",
+    any,
+  ][]) {
+    const rows = await model
+      .find(all ? { deletedAt: null } : unscannedFilter)
+      .select("_id")
+      .lean();
+    for (const row of rows) {
+      await enqueueJob("fingerprint", kind, row._id, {
+        requestedBy: req.user._id,
+        batch,
+      });
+      queued++;
+    }
+  }
+  await audit(req, "duplicates-scan", "duplicates", { batch, queued, all });
+  ok(res, { batch, queued });
 });
 adminRouter.get("/jobs/summary", async (req, res) => {
   const batch = req.query.batch

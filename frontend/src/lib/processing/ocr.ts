@@ -20,6 +20,11 @@ function ocr() {
   return worker;
 }
 
+/** Plain text of a rendered page, for the duplicate check of scans without a text layer. */
+export async function readPageText(canvas: HTMLCanvasElement) {
+  return (await (await ocr()).recognize(canvas)).data.text;
+}
+
 /** Finds a handwritten roll number on a rendered page; null when there is none. */
 export async function detectRollNumber(
   canvas: HTMLCanvasElement,

@@ -231,10 +231,13 @@ test("new uploads stay private until every page is watermarked; the original is 
 
   assert.equal(await runNextJob(), true, "watermark job");
   assert.equal(await runNextJob(), true, "cover thumbnail job");
+  assert.equal(await runNextJob(), true, "content fingerprint job");
   assert.equal(await runNextJob(), false);
   const item: any = await Paper.findById(id).lean();
   assert.equal(item.watermark.status, "done");
   assert.equal(item.watermark.hold, false);
+  assert.equal(item.fingerprint.by, "server");
+  assert.equal(item.fingerprint.pages.length, 2);
   assert.notEqual(String(item.asset), String(item.files.original));
   const original: any = await FileAsset.findById(item.files.original);
   assert.equal(original.hash, createHash("sha256").update(file).digest("hex"));

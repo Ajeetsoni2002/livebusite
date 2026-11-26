@@ -13,6 +13,7 @@ import {
   siteLinkFor,
   watermarkPdf,
 } from "./watermark.js";
+import { fingerprintContent, unscannedFilter } from "./fingerprint.js";
 
 /*
  * A small MongoDB-backed queue (no Redis on the free plan). One job at a time, a lease
@@ -217,7 +218,7 @@ async function thumbnailJob(job: any) {
 }
 
 export async function enqueueJob(
-  type: "thumbnail",
+  type: "thumbnail" | "fingerprint",
   contentType: Kind,
   content: unknown,
   options: { requestedBy?: unknown; batch?: string } = {},
@@ -338,6 +339,52 @@ export async function queueOutdatedWatermarks(limit = 500) {
   return queued;
 }
 
+/**
+ * Queues a fingerprint job for live items that have none yet (older uploads, or ones
+ * whose browser never sent one), so the duplicate check covers the whole library.
+ * A small batch per sweep keeps the free instance responsive.
+ */
+export async function queueMissingFingerprints(limit = 50) {
+  let queued = 0;
+  for (const [kind, model] of Object.entries(contentModels) as [Kind, any][]) {
+    const rows = await model
+      .find(unscannedFilter)
+      .select("_id")
+      .sort({ createdAt: -1 })
+      .lean();
+    if (!rows.length) continue;
+    const busy = new Set(
+      (
+        await ProcessingJob.find({
+          type: "fingerprint",
+          content: { $in: rows.map((r: any) => r._id) },
+          $or: [
+            { status: { $in: ["queued", "running"] } },
+            {
+              status: "failed",
+              finishedAt: { $gte: new Date(Date.now() - 7 * 86_400_000) },
+            },
+          ],
+        })
+          .select("content")
+          .lean()
+      ).map((j: any) => String(j.content)),
+    );
+    for (const row of rows) {
+      if (queued >= limit) break;
+      if (busy.has(String(row._id))) continue;
+      await ProcessingJob.create({
+        type: "fingerprint",
+        contentType: kind,
+        content: row._id,
+      });
+      queued++;
+    }
+  }
+  if (queued) kickJobs();
+  return queued;
+}
+
 /** Runs the sweep shortly after start and then every few hours. */
 export function startThumbnailSweep(everyMs = 6 * 3600_000, firstMs = 30_000) {
   const sweep = () =>
@@ -346,7 +393,10 @@ export function startThumbnailSweep(everyMs = 6 * 3600_000, firstMs = 30_000) {
       .catch(() => console.warn("Watermark sweep failed; will retry later."))
       .then(() => queueMissingThumbnails())
       .then((n) => n && console.info(`Queued ${n} missing thumbnails`))
-      .catch(() => console.warn("Thumbnail sweep failed; will retry later."));
+      .catch(() => console.warn("Thumbnail sweep failed; will retry later."))
+      .then(() => queueMissingFingerprints())
+      .then((n) => n && console.info(`Queued ${n} missing fingerprints`))
+      .catch(() => console.warn("Fingerprint sweep failed; will retry later."));
   const first = setTimeout(sweep, firstMs);
   const timer = setInterval(sweep, everyMs);
   first.unref();
@@ -360,6 +410,9 @@ export function startThumbnailSweep(everyMs = 6 * 3600_000, firstMs = 30_000) {
 const handlers: Record<string, (job: any) => Promise<void>> = {
   watermark: watermarkJob,
   thumbnail: thumbnailJob,
+  fingerprint: async (job) => {
+    await fingerprintContent(job.contentType as Kind, job.content);
+  },
 };
 
 /** Claims and runs one due job. Returns false when the queue is empty. */

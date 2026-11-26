@@ -17,6 +17,15 @@ import {
   formatMB,
   planBatches,
 } from "../../lib/processing/compress-plan";
+import {
+  checkDuplicates,
+  duplicateDetails,
+  fingerprintPdf,
+  type DuplicateMatch,
+  type Fingerprint,
+} from "../../lib/processing/fingerprint";
+import { contentPath } from "../../lib/types";
+import ReviewPreview from "./ReviewPreview";
 type Row = {
   title: string;
   offerings: string[];
@@ -43,7 +52,11 @@ export default function Upload() {
       file: File;
     } | null>(null),
     [studioStatus, setStudioStatus] = useState(""),
-    [limit, setLimit] = useState(DEFAULT_MAX_FILE_BYTES);
+    [limit, setLimit] = useState(DEFAULT_MAX_FILE_BYTES),
+    // Library items the chosen PDF turned out to be a copy of; the upload stops here.
+    [duplicates, setDuplicates] = useState<DuplicateMatch[] | null>(null),
+    [allowDuplicate, setAllowDuplicate] = useState(false),
+    [preview, setPreview] = useState<DuplicateMatch | null>(null);
   useEffect(() => {
     void uploadLimit().then(setLimit);
   }, []);
@@ -85,6 +98,8 @@ export default function Upload() {
     }
   }, [item.data]);
   function choose(list: File[]) {
+    setDuplicates(null);
+    setAllowDuplicate(false);
     setFiles(list.slice(0, 5));
     setRows(
       list.slice(0, 5).map((file) => ({
@@ -111,17 +126,62 @@ export default function Upload() {
       setMessage("Waking up the server… this can take up to a minute.");
       toast("Waking up the server… your upload starts automatically.");
     });
+  const noun = kind === "notes" ? "note" : "paper";
+  /** Fingerprints a PDF in this browser; the API compares it with the library. */
+  async function fingerprint(file: File | Blob, name: string) {
+    return fingerprintPdf(
+      new Uint8Array(await file.arrayBuffer()),
+      (done, total, phase) =>
+        setMessage(
+          phase === "ocr"
+            ? `${name}: reading the scanned text so it can be compared with the library… page ${Math.min(done + 1, total)} of ${total}. This takes a little while.`
+            : `${name}: checking the library for a copy… page ${Math.min(done + 1, total)} of ${total}`,
+        ),
+    );
+  }
+  /**
+   * Stops the upload when the PDF's content is already in the library, so the uploader
+   * sees which item it matches. Returns the fingerprint to send along otherwise.
+   */
+  async function screen(
+    file: File | Blob,
+    name: string,
+    exclude?: string,
+  ): Promise<Fingerprint | null> {
+    const print = await fingerprint(file, name);
+    if (allowDuplicate) return print;
+    let result;
+    try {
+      result = await checkDuplicates(user.role, kind, print, exclude);
+    } catch {
+      // The API checks again on upload; an unreachable pre-check must not block.
+      return print;
+    }
+    const top = result.matches[0];
+    if (top && top.score >= result.threshold) {
+      setDuplicates(result.matches);
+      setMessage("");
+      return null;
+    }
+    if (top)
+      toast(
+        `Similar to “${top.item.title}” (${top.similarity}% of the content matches). Make sure this is a different ${noun}.`,
+      );
+    return print;
+  }
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
     setProgress(null);
     setMessage("");
+    setDuplicates(null);
     const form = new FormData(event.currentTarget);
+    const override = user.role === "admin" && allowDuplicate;
     try {
       if (files.length > 1 && !edit) {
         if (rows.some((r) => !r.offerings.length))
           throw new Error("Choose at least one subject for every PDF.");
-        const meta = rows.map((row) => ({
+        const meta: Record<string, unknown>[] = rows.map((row) => ({
           title: row.title,
           offerings: row.offerings,
           ...(kind === "papers"
@@ -143,6 +203,9 @@ export default function Upload() {
           try {
             const fit = await fitForUpload(file, file.name, setMessage);
             if (fit.compressed) notes.push(describeFit(fit));
+            // The API refuses a file whose content is already in the library.
+            meta[index].fingerprint = await fingerprint(fit.file, file.name);
+            if (override) meta[index].allowDuplicate = true;
             ready.push({ index, file: fit.file });
           } catch (error) {
             results.push({ index, error: errorMessage(error) });
@@ -210,26 +273,39 @@ export default function Upload() {
         }
         if (user.role === "admin")
           metadata.status = String(form.get("status") || "pending");
+        if (override) metadata.allowDuplicate = true;
         if (edit) {
-          await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
           if (files[0]) {
+            // Checked before the metadata is saved, so a refused copy changes nothing.
             const fit = await fitForUpload(files[0], files[0].name, setMessage);
             await wakeFirst();
+            const print = await screen(fit.file, files[0].name, edit);
+            if (!print) return;
+            await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
             const replacement = new FormData();
             replacement.append("file", fit.file);
+            replacement.append(
+              "metadata",
+              JSON.stringify({
+                fingerprint: print,
+                ...(override ? { allowDuplicate: true } : {}),
+              }),
+            );
             await api.post(
               `/${user.role}/${kind}/${edit}/replace-file`,
               replacement,
               upload,
             );
-          }
+          } else await api.patch(`/${user.role}/${kind}/${edit}`, metadata);
         } else if (files[0] && format === "pdf") {
           // An oversized original is compressed first, so both versions start from it.
           const fit = await fitForUpload(files[0], files[0].name, setMessage);
-          if (fit.compressed) {
-            setMessage(describeFit(fit));
-            toast(describeFit(fit), "success");
-          }
+          if (fit.compressed) toast(describeFit(fit), "success");
+          await wakeFirst();
+          const print = await screen(fit.file, files[0].name);
+          if (!print) return;
+          metadata.fingerprint = print;
+          setMessage(fit.compressed ? describeFit(fit) : "");
           // Preview the cleaned/split version first; the upload happens on the choice.
           setStudio({
             bytes: new Uint8Array(await fit.file.arrayBuffer()),
@@ -249,8 +325,12 @@ export default function Upload() {
         navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
       }
     } catch (error) {
-      setMessage(errorMessage(error));
-      toast(errorMessage(error), "error");
+      const found = duplicateDetails(error);
+      if (found) setDuplicates(found);
+      else {
+        setMessage(errorMessage(error));
+        toast(errorMessage(error), "error");
+      }
     } finally {
       setBusy(false);
       setProgress(null);
@@ -294,6 +374,13 @@ export default function Upload() {
       await client.invalidateQueries({ queryKey: ["staff-content"] });
       navigate(`/${user.role}${user.role === "admin" ? `/${kind}` : ""}`);
     } catch (error) {
+      const found = duplicateDetails(error);
+      if (found) {
+        // Another copy arrived meanwhile: close the studio and show what it matches.
+        setStudio(null);
+        setDuplicates(found);
+        return;
+      }
       // The studio stays open and shows this, so the choice can be retried.
       setMessage(errorMessage(error));
       throw new Error(`Upload failed: ${errorMessage(error)}`);
@@ -625,6 +712,72 @@ export default function Upload() {
             </select>
           </label>
         )}
+        {duplicates && (
+          <div className="notice error wide duplicate-panel" role="alert">
+            <strong>
+              This {noun} is already on the site, so it was not uploaded.
+            </strong>
+            <p>
+              {duplicates[0].similarity}% of its content matches an existing
+              upload. Only one copy of each {noun} is kept. Check the match
+              below; if yours is a different {noun} (another year, exam or
+              unit), choose that file again and tell the admin.
+            </p>
+            <ul className="duplicate-list">
+              {duplicates.map((match) => (
+                <li key={match.item._id}>
+                  <strong>{match.item.title}</strong>
+                  <span className="muted">
+                    {" "}
+                    · {match.similarity}% match
+                    {match.item.year ? ` · ${match.item.year}` : ""}
+                    {match.item.examType && match.item.examType !== "Unknown"
+                      ? ` · ${match.item.examType}`
+                      : ""}
+                    {" · "}
+                    {match.item.status === "published"
+                      ? "published"
+                      : "awaiting review"}
+                    {match.item.author?.name
+                      ? ` · by ${match.item.author.name}`
+                      : ""}
+                  </span>
+                  <span className="row-actions">
+                    {match.item.status === "published" &&
+                      match.item.offerings?.length > 0 && (
+                        <Link
+                          className="text-link"
+                          to={contentPath(match.item, match.kind)}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open on the site →
+                        </Link>
+                      )}
+                    {user.role === "admin" && (
+                      <button type="button" onClick={() => setPreview(match)}>
+                        Preview
+                      </button>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {user.role === "admin" && (
+              <label className="inline-check">
+                <input
+                  type="checkbox"
+                  checked={allowDuplicate}
+                  onChange={(e) => setAllowDuplicate(e.target.checked)}
+                />
+                <span>
+                  Upload anyway and keep both copies (for a clearer scan of the
+                  same {noun}, delete the old one afterwards)
+                </span>
+              </label>
+            )}
+          </div>
+        )}
         <button className="button wide" disabled={busy || needsQr}>
           {needsQr
             ? "Add your payment QR code to upload"
@@ -665,6 +818,13 @@ export default function Upload() {
           </p>
         )}
       </form>
+      {preview && (
+        <ReviewPreview
+          item={preview.item}
+          kind={preview.kind}
+          onClose={() => setPreview(null)}
+        />
+      )}
       {studio && (
         <Suspense fallback={<p role="status">Opening the preview…</p>}>
           <ProcessStudio

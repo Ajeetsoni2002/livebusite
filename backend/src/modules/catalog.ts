@@ -57,7 +57,7 @@ const filters = z
   })
   .strict();
 const privateFields =
-  "-revisions -provenance -rejectionReason -correction -files -watermark -activeVersion";
+  "-revisions -provenance -rejectionReason -correction -files -watermark -activeVersion -fingerprint";
 /**
  * Branches a free-text query refers to: exact code/slug/alias ("ECE", "it"), or the
  * name for longer queries ("electronics"). Short codes never match by substring, so

@@ -158,6 +158,36 @@ const contentFields = {
     default: "original",
   },
   watermark: { type: watermarkState, default: undefined },
+  // Content fingerprint for duplicate detection (see lib/fingerprint.ts). `by` says whether
+  // the uploader's browser sent it or the fingerprint job computed it from the stored file.
+  fingerprint: {
+    type: new Schema(
+      {
+        v: { type: Number, required: true },
+        pages: [String],
+        text: {
+          type: new Schema(
+            { chars: Number, shingles: Number, sketch: [Number] },
+            { _id: false },
+          ),
+          default: null,
+        },
+        // Word-group sketch of the text layer or, for a scan, of its OCR text.
+        ocr: {
+          type: new Schema(
+            { chars: Number, shingles: Number, sketch: [Number] },
+            { _id: false },
+          ),
+          default: null,
+        },
+        source: ref("FileAsset"),
+        by: { type: String, enum: ["browser", "server"] },
+        computedAt: Date,
+      },
+      { _id: false },
+    ),
+    default: undefined,
+  },
 };
 const paperSchema = new Schema(
   {
@@ -480,7 +510,11 @@ export const Setting = model(
 );
 const jobSchema = new Schema(
   {
-    type: { type: String, enum: ["watermark", "thumbnail"], required: true },
+    type: {
+      type: String,
+      enum: ["watermark", "thumbnail", "fingerprint"],
+      required: true,
+    },
     contentType: { type: String, enum: ["papers", "notes"], required: true },
     content: { type: Schema.Types.ObjectId, required: true },
     status: {
